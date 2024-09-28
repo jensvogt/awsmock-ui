@@ -8,7 +8,7 @@ RUN cd /app && \
     git clone https://github.com/jensvogt/awsmock-ui.git && \
     cd /app/awsmock-ui && \
     npm install && \
-    npm run build
+    npm run docker-build
 
 # Serve Application using Nginx Server
 

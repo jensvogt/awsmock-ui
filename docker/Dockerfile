@@ -14,6 +14,6 @@ RUN cd /app && \
 
 FROM nginx:alpine
 
-COPY --from=build /app/dist/awsmock-ui/ /usr/share/nginx/html
+COPY --from=build /app/awsmock-ui/dist/awsmock-ui/browser /usr/share/nginx/html
 
 EXPOSE 80

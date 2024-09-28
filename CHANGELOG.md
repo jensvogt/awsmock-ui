@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/jensvogt/awsmock-ui/compare/v1.0.0...v1.1.0) (2024-09-28)
+
+
+### Features
+
+* **001-initial-load:** Initial load ([a68d47d](https://github.com/jensvogt/awsmock-ui/commit/a68d47d4cf9435d8a15dfbc4d5e80aae3357342a))
+
 ## 1.0.0 (2024-09-28)
 
 

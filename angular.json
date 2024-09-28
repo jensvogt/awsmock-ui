@@ -49,6 +49,21 @@
               ],
               "outputHashing": "all"
             },
+            "docker": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "4MB",
+                  "maximumError": "5MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,

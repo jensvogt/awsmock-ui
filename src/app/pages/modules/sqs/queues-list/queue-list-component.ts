@@ -26,9 +26,11 @@ import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
 import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {SqsService} from "../../../../services/sqs-service.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {SendMessageComponentDialog} from "./send-message/send-message.component";
 
 @Component({
-    selector: 'app-home',
+    selector: 'sqs-queue-list',
     templateUrl: './queue-list-component.html',
     standalone: true,
     imports: [
@@ -85,7 +87,7 @@ export class QueueListComponent implements OnInit, AfterViewInit {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private dialog: MatDialog, private sqsService: SqsService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private sqsService: SqsService) {
     }
 
     // @ts-ignore
@@ -201,6 +203,24 @@ export class QueueListComponent implements OnInit, AfterViewInit {
             .finally(() => {
                 this.sqsService.cleanup();
             });
+    }
+
+    sendMessage(queueUrl: string) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {queueUrl: queueUrl};
+        dialogConfig.height = '400px';
+        dialogConfig.width = '600px';
+
+        this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.sqsService.sendMessage(queueUrl, result);
+                this.loadQueues();
+            }
+        });
     }
 
     deleteQueue(queueUrl: string) {

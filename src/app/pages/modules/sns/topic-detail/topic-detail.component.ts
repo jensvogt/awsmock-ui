@@ -5,19 +5,19 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatNoDataRow,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource,
-  MatTextColumn
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatNoDataRow,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource,
+    MatTextColumn
 } from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -33,6 +33,8 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {environment} from "../../../../../environments/environment";
 import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-add.component";
+import {SnsService} from "../../../../services/sns-service.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'add-connection-dialog',
@@ -79,7 +81,8 @@ import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-ad
         MatPaginator,
         BreadcrumbComponent
     ],
-    styleUrls: ['./topic-detail.component.scss']
+    styleUrls: ['./topic-detail.component.scss'],
+    providers: [SnsService]
 })
 export class TopicDetailComponent implements OnInit, OnDestroy {
 
@@ -110,7 +113,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     });
     private sub: any;
 
-    constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
+    constructor(private snackBar: MatSnackBar, private snsService: SnsService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -181,6 +184,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
             SubscriptionArn: subscriptionArn,
         };
         this.client.send(new UnsubscribeCommand(input))
+            .then(() => this.loadSubscriptions())
             .catch((error: any) => console.error(error))
             .finally(() => {
                 this.client.destroy();
@@ -200,12 +204,19 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
         this.dialog.open(SubscriptionAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 this.subscribe(result)
-                this.loadSubscriptions();
             }
         });
     }
 
-    subscribe(name: string) {
-
+    subscribe(subscription: any) {
+        this.snsService.subscribe(subscription.topicArn, subscription.endpoint, subscription.protocol)
+            .then((data: any) => {
+                this.loadSubscriptions();
+                this.snackBar.open('Subscription saved, subscription ARN:' + data.SubscriptionArn, 'Done', {duration: 5000});
+            })
+            .catch((error: any) => console.error(error))
+            .finally(() => {
+                this.client.destroy();
+            });
     }
 }

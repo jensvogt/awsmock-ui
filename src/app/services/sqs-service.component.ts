@@ -7,6 +7,7 @@ import {
     ListQueuesCommand,
     PurgeQueueCommand,
     QueueAttributeName,
+    SendMessageCommand,
     SQSClient
 } from "@aws-sdk/client-sqs";
 
@@ -50,11 +51,28 @@ export class SqsService {
         return this.client.send(new GetQueueAttributesCommand(input));
     }
 
+    getQueueArn(queueUrl: string) {
+        const input = {
+            QueueUrl: queueUrl,
+            AttributeNames: [QueueAttributeName.QueueArn],
+        };
+        return this.client.send(new GetQueueAttributesCommand(input));
+    }
+
     saveQueue(queueName: string) {
         const input = {
             QueueName: queueName
         };
         return this.client.send(new CreateQueueCommand(input));
+    }
+
+    sendMessage(queueUrl: string, message: string) {
+        const input = {
+            QueueUrl: queueUrl,
+            MessageBody: message,
+            DelaySeconds: 0
+        };
+        return this.client.send(new SendMessageCommand(input));
     }
 
     deleteQueue(queueUrl: string) {

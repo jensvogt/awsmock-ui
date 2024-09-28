@@ -33,8 +33,11 @@
                 <td *matCellDef="let element" mat-cell> {{ element.messagesInFlight }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                 <td *matCellDef="let row" mat-cell>
+                    <button (click)="sendMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message">
+                        <mat-icon>send</mat-icon>
+                    </button>
                     <button (click)="purgeQueue(row.queueUrl)" aria-label="Purge" mat-icon-button matTooltip="Purge the queue">
                         <mat-icon>clear_all</mat-icon>
                     </button>
@@ -61,14 +64,6 @@
                        [showFirstLastButtons]="showFirstLastButtons"
                        aria-label="Select page">
         </mat-paginator>
-        <!--mat-card-actions class="head-buttons">
-          <button (click)="saveConfig()" aria-label="Save" mat-icon-button>
-            <span class="material-symbols-outlined">save</span>
-          </button>
-          <button (click)="setDefault()" aria-label="Default" mat-icon-button>
-            <span class="material-symbols-outlined">location_away</span>
-          </button>
-        </mat-card-actions-->
         <div class="footer">
             Last update: {{ lastUpdate }}
         </div>

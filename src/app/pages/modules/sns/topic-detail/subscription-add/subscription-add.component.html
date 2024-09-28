@@ -12,11 +12,15 @@
             }
         </mat-select>
     </mat-form-field>
-    <mat-form-field *ngIf="protocol=='sqs'" style="width: 100%">
-        <mat-label>SQS Queue</mat-label>
-        <input [(ngModel)]="endpoint" matInput value="">
+    <mat-form-field *ngIf="protocol == 'sqs'" style="width: 100%">
+        <mat-label>Endpoint</mat-label>
+        <mat-select [(ngModel)]="endpoint" style="width:100%">
+            @for (arn of queueArnData; track $index) {
+                <mat-option [value]="arn">{{ arn }}</mat-option>
+            }
+        </mat-select>
     </mat-form-field>
-    <mat-form-field *ngIf="protocol!='sqs'" style="width: 100%">
+    <mat-form-field *ngIf="protocol != 'sqs'" style="width: 100%">
         <mat-label>Not supported yet</mat-label>
         <input matInput readonly value="">
     </mat-form-field>

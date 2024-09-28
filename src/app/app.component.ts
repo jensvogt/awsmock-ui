@@ -7,8 +7,6 @@ import {NgIf} from "@angular/common";
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {DomSanitizer} from "@angular/platform-browser";
-import {FormBuilder} from "@angular/forms";
-import {BreakpointObserver} from "@angular/cdk/layout";
 import {MatListItem, MatNavList} from "@angular/material/list";
 import {
     MatAccordion,
@@ -59,7 +57,7 @@ export class AppComponent {
         ["icon_s3", "sns.s3"]
     ];
 
-    constructor(private observer: BreakpointObserver, private router: Router, fb: FormBuilder, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+    constructor(private router: Router, matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
         this.customIcons.forEach(([iconName, iconPath]) => {
             matIconRegistry.addSvgIcon(iconName, domSanitizer.bypassSecurityTrustResourceUrl(iconPath));
         });

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.2](https://github.com/jensvogt/awsmock-ui/compare/v1.2.1...v1.2.2) (2024-09-28)
+
+
+### Bug Fixes
+
+* **001-initial-load:** Initial load ([d1fbdb8](https://github.com/jensvogt/awsmock-ui/commit/d1fbdb832f30384a6f2f0ca984267fdc0b9f8432))
+* **001-initial-load:** Initial load ([7ea1da9](https://github.com/jensvogt/awsmock-ui/commit/7ea1da95318e52f2997c3f8dad2db22a1df9ec5c))
+* **001-initial-load:** Initial load ([69e5036](https://github.com/jensvogt/awsmock-ui/commit/69e5036e4bfecb90b8ab3db2d5c4fd571c46da8d))
+
 ## [1.2.1](https://github.com/jensvogt/awsmock-ui/compare/v1.2.0...v1.2.1) (2024-09-28)
 
 

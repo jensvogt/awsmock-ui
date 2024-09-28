@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {
     MatCell,
@@ -61,7 +61,7 @@ import {SendMessageComponentDialog} from "./send-message/send-message.component"
     styleUrls: ['./queue-list-component.scss'],
     providers: [SqsService]
 })
-export class QueueListComponent implements OnInit, AfterViewInit {
+export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     lastUpdate: string = '';
 
     // Table
@@ -98,6 +98,10 @@ export class QueueListComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.loadQueues();
         this.updateSubscription = interval(60000).subscribe(() => this.loadQueues());
+    }
+
+    ngOnDestroy(): void {
+        this.updateSubscription?.unsubscribe();
     }
 
     ngAfterViewInit() {

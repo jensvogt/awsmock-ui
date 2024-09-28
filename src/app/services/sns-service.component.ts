@@ -1,5 +1,11 @@
 import {Injectable} from "@angular/core";
-import {CreateTopicCommand, DeleteTopicCommand, ListTopicsCommand, SNSClient} from "@aws-sdk/client-sns";
+import {
+    CreateTopicCommand,
+    DeleteTopicCommand,
+    ListTopicsCommand,
+    SNSClient,
+    SubscribeCommand
+} from "@aws-sdk/client-sns";
 import {environment} from "../../environments/environment";
 
 @Injectable({providedIn: 'root'})
@@ -39,6 +45,16 @@ export class SnsService {
             TopicArn: topicArn,
         };
         return this.client.send(new DeleteTopicCommand(input));
+    }
+
+    subscribe(topicArn: string, endpoint: string, protocol: string) {
+        const input = {
+            TopicArn: topicArn,
+            Protocol: protocol,
+            Endpoint: endpoint,
+            ReturnSubscriptionArn: true
+        };
+        return this.client.send(new SubscribeCommand(input));
     }
 
     cleanup() {

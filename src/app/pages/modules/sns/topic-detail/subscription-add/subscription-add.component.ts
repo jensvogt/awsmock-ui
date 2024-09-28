@@ -14,6 +14,8 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
+import {SqsService} from "../../../../../services/sqs-service.component";
+import {AwsMockHttpService} from "../../../../../services/awsmock-http.service";
 
 export const Protocols: string[] = [
     'http',
@@ -47,7 +49,8 @@ export const Protocols: string[] = [
         ReactiveFormsModule,
         NgIf
     ],
-    styleUrls: ['./subscription-add.component.scss']
+    styleUrls: ['./subscription-add.component.scss'],
+    providers: [SqsService, AwsMockHttpService]
 })
 export class SubscriptionAddComponentDialog implements OnInit {
 
@@ -57,9 +60,10 @@ export class SubscriptionAddComponentDialog implements OnInit {
     topicName: string = '';
     endpoint: string = '';
     protocol: string = 'sqs';
+    queueArnData: Array<string> = [];
     protected readonly Protocols = Protocols;
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService, private fb: FormBuilder, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicName;
     }
@@ -70,17 +74,26 @@ export class SubscriptionAddComponentDialog implements OnInit {
             endpoint: [""],
             protocol: [""],
         });
+        this.loadQueueArns();
     }
 
     protocolSelectionChanged() {
+        this.queueArnData = [];
         if (this.protocol == 'sqs') {
-
+            this.loadQueueArns();
         }
     }
 
+    loadQueueArns() {
+        this.awsmockHttpService.getQueueArns()
+            .subscribe((data: any) => {
+                this.queueArnData = data.QueueArns;
+            });
+    }
+
     save() {
-        console.log("Formdata: ", this.topicArn);
-        this.dialogRef.close(this.topicArn);
+        console.log("Formdata: ", this.topicArn, this.endpoint, this.protocol);
+        this.dialogRef.close({topicArn: this.topicArn, endpoint: this.endpoint, protocol: this.protocol});
     }
 
     close() {

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
 import {
@@ -60,7 +60,7 @@ import {SnsService} from "../../../../services/sns-service.component";
     styleUrls: ['./topic-list.component.scss'],
     providers: [SnsService]
 })
-export class TopicListComponent implements OnInit {
+export class TopicListComponent implements OnInit, OnDestroy {
 
     lastUpdate: Date | undefined;
 
@@ -100,6 +100,10 @@ export class TopicListComponent implements OnInit {
         this.updateSubscription = interval(60000).subscribe(() => this.loadTopics());
     }
 
+    ngOnDestroy(): void {
+        this.updateSubscription?.unsubscribe();
+    }
+
     lastUpdateTime() {
         return new Date().toLocaleTimeString('DE-de');
     }
@@ -125,6 +129,7 @@ export class TopicListComponent implements OnInit {
     }
 
     loadTopics() {
+        this.topicData = [];
         this.snsService.listTopics(this.pageIndex, this.pageSize)
             .then((data: any) => {
                 this.lastUpdate = new Date();

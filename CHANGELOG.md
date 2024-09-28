@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/jensvogt/awsmock-ui/compare/v1.2.2...v1.2.3) (2024-09-28)
+
+
+### Bug Fixes
+
+* **001-initial-load:** Fix environments ([b2a6356](https://github.com/jensvogt/awsmock-ui/commit/b2a6356a1e466834f4b6243d9b55ae305cf43161))
+
 ## [1.2.2](https://github.com/jensvogt/awsmock-ui/compare/v1.2.1...v1.2.2) (2024-09-28)
 
 

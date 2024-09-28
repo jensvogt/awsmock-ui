@@ -1,0 +1,47 @@
+import {Injectable} from "@angular/core";
+import {CreateTopicCommand, DeleteTopicCommand, ListTopicsCommand, SNSClient} from "@aws-sdk/client-sns";
+import {environment} from "../../environments/environment";
+
+@Injectable({providedIn: 'root'})
+export class SnsService {
+
+    client = new SNSClient({
+        region: environment.awsmockRegion,
+        endpoint: environment.awsmockEndpoint,
+        credentials: {
+            accessKeyId: 'test',
+            secretAccessKey: 'test',
+        },
+        requestHandler: {
+            requestTimeout: 3_000,
+            httpsAgent: {maxSockets: 25},
+        },
+    });
+
+    listTopics(pageIndex: number, pageSize: number): any {
+
+        const input = {
+            NextToken: (pageIndex * pageSize).toString(),
+            MaxResults: pageSize,
+        };
+        return this.client.send(new ListTopicsCommand(input));
+    }
+
+    saveTopic(topicName: string) {
+        const input = {
+            Name: topicName
+        };
+        return this.client.send(new CreateTopicCommand(input));
+    }
+
+    deleteTopic(topicArn: string) {
+        const input = {
+            TopicArn: topicArn,
+        };
+        return this.client.send(new DeleteTopicCommand(input));
+    }
+
+    cleanup() {
+        this.client.destroy();
+    }
+}

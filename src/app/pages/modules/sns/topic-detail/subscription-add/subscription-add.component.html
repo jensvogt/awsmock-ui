@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Add Topic Subscription</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px">
+    <mat-form-field style="width: 100%">
+        <mat-label>Topic ARN</mat-label>
+        <input [(ngModel)]="topicArn" matInput readonly value="">
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Protocol</mat-label>
+        <mat-select (selectionChange)="protocolSelectionChanged()" [(ngModel)]="protocol" style="width:100%">
+            @for (protocol of Protocols; track protocol) {
+                <mat-option [value]="protocol">{{ protocol }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="protocol=='sqs'" style="width: 100%">
+        <mat-label>SQS Queue</mat-label>
+        <input [(ngModel)]="endpoint" matInput value="">
+    </mat-form-field>
+    <mat-form-field *ngIf="protocol!='sqs'" style="width: 100%">
+        <mat-label>Not supported yet</mat-label>
+        <input matInput readonly value="">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+</mat-dialog-actions>

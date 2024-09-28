@@ -1,0 +1,6 @@
+<ng-container *ngFor="let bc of breadcrumbs; let last = last">
+  <a [ngClass]="{ 'font-weight-bold': last }" [routerLink]="bc.link">{{
+      bc.label
+    }}</a>
+  <span *ngIf="!last"> / </span>
+</ng-container>

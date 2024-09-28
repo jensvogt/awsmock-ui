@@ -1,0 +1,108 @@
+<mat-card appearance="outlined" style="margin-top: 5px;">
+    <mat-card-header>
+        <div>
+            <mat-card-title>Details: {{ this.topicName }}</mat-card-title>
+            <app-breadcrumb></app-breadcrumb>
+        </div>
+    </mat-card-header>
+
+    <mat-card appearance="outlined" style="margin-top: 5px;">
+        <mat-card-header>
+            <mat-card-title>Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form class="form">
+                <mat-form-field style="width:49%;margin:10px">
+                    <mat-label>Topic Name</mat-label>
+                    <input matInput placeholder="Topic Name" readonly value="{{topicName}}">
+                </mat-form-field>
+                <mat-form-field style="width:49%;margin:10px">
+                    <mat-label>Topic ARN</mat-label>
+                    <input matInput placeholder="Topic ARN" readonly value="{{topicArn}}">
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+        <!--mat-card-actions align="end">
+          <button (click)=close() mat-button>Close</button>
+          <button (click)=save() mat-button>Save</button>
+        </mat-card-actions-->
+    </mat-card>
+    <mat-card appearance="outlined" style="margin-top: 5px;">
+        <mat-card-header>
+            <mat-card-title>Attributes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-tab-group>
+                <mat-tab label="Subscriptions">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button (click)="refreshSubscriptions()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <table (matSortChange)="subscriptionSortChange($event)" [dataSource]="subscriptionDataSource" class="mat-elevation-z8" mat-table matSort>
+                        <ng-container matColumnDef="id">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by subscriptionArn">ID</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.id }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="endpoint">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Endpoint" sortActionDescription="Sort by endpoint">Endpoint</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.endpoint }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="protocol">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Protocol" sortActionDescription="Sort by endpoint">Protocol</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.protocol }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="owner">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Owner" sortActionDescription="Sort by endpoint">Owner</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.owner }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="unsubscribe(row.subscriptionArn)" aria-label="Delete" mat-icon-button matTooltip="Unsubscribe from the topic">
+                                    <mat-icon>unsubscribe</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="columns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                    <mat-paginator (page)="handleSubscriptionPageEvent($event)"
+                                   [disabled]="false"
+                                   [hidePageSize]="false"
+                                   [length]="subscriptionLength"
+                                   [pageIndex]="subscriptionPageIndex"
+                                   [pageSizeOptions]="subscriptionPageSizeOptions"
+                                   [pageSize]="subscriptionPageSize"
+                                   [showFirstLastButtons]="true"
+                                   aria-label="Select page">
+                    </mat-paginator>
+                </mat-tab>
+                <mat-tab label="Access Policy">
+                    Access Control
+                </mat-tab>
+                <mat-tab label="Tags">
+                    Tags
+                </mat-tab>
+                <mat-tab label="Attributes">
+                    Attributes
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+    <mat-card-actions align="end">
+        <button (click)=close() mat-button>Close</button>
+        <button (click)=save() mat-button>Save</button>
+    </mat-card-actions>
+</mat-card>

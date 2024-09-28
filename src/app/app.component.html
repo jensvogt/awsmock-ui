@@ -1,0 +1,110 @@
+<mat-toolbar class="mat-elevation-z8 mat-toolbar">
+  <div style="display: flex;flex-direction: row;align-content: center;justify-content: flex-start;align-items: center;">
+    <button (click)="sidenav.toggle()" *ngIf="sidenav.mode === 'over'" mat-icon-button style="color: white">
+      <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+      <mat-icon *ngIf="sidenav.opened">close</mat-icon>
+    </button>
+    AWS Mock UI
+  </div>
+  <div
+    style="display: flex; flex-direction: row; align-content: center; justify-content: right; align-items: end;width: 90%;">
+    <button (click)="logOut()" class="menu-button" mat-icon-button style="color: white">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8" mode="over" style="width:240px">
+
+    <mat-nav-list>
+      <mat-accordion>
+        <mat-expansion-panel style="box-shadow: none; background: #002b5c">
+          <mat-expansion-panel-header style="margin-left: -8px">
+            <mat-panel-title style="color: white">
+              <mat-icon svgIcon="icon_sqs"></mat-icon>
+              &nbsp;SQS
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div style="display: flex">
+            <a (click)="navigateMenu('sqs-queues')" [routerLinkActive]="['active']" class="sidenav__list-item list-sub-item" mat-list-item
+               routerLink="sqs-queues">
+              <mat-icon svgIcon="icon_sqs"></mat-icon>
+              <span style="position: relative;top: -7px; margin-left: 5px; color:white;">&nbsp;Queues</span>
+            </a>
+          </div>
+          <div style="display: flex">
+            <a (click)="navigateMenu('sqs-messages')" [routerLinkActive]="['active']" class="sidenav__list-item list-sub-item" mat-list-item
+               routerLink="test1">
+              <mat-icon svgIcon="icon_sqs"></mat-icon>
+              <span style="position: relative;top: -7px; margin-left: 5px; color:white;">&nbsp;Messages</span>
+            </a>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion>
+        <mat-expansion-panel style="box-shadow: none; background: #002b5c">
+          <mat-expansion-panel-header style="margin-left: -8px">
+            <mat-panel-title style="color: white">
+              <mat-icon svgIcon="icon_sqs"></mat-icon>
+              &nbsp;SNS
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <a (click)="navigateMenu('sns-topic-list')" [routerLinkActive]="['active']" class="sidenav__list-item list-sub-item center-flex" mat-list-item
+             routerLink="sqs-queues"
+             style="display: flex; flex-direction: row; align-items: flex-start; align-content: flex-start">
+            <mat-icon svgIcon="icon_sqs"></mat-icon>
+            <span matLine style="color:white;">&nbsp;Topics</span>
+          </a>
+          <a (click)="navigateMenu('sns-messages')" [routerLinkActive]="['active']" class="sidenav__list-item list-sub-item center-flex" mat-list-item
+             routerLink="test1">
+            <mat-icon svgIcon="icon_sqs"></mat-icon>
+            <span matLine style="color:white">&nbsp;Messages</span>
+          </a>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-nav-list>
+
+    <!--div style="align-items: flex-start; display: flex; justify-content: flex-start; align-content: flex-start; flex-direction: column;">
+      <button (click)="navigateMenu('sqs-queues')" class="menu-button" mat-button style="color: white">
+        <mat-icon svgIcon="icon_sqs"></mat-icon>
+        <span>SQS</span>
+      </button>
+      <button (click)="navigateMenu('sns-topics')" class="menu-button" mat-button style="color: white">
+        <mat-icon svgIcon="icon_sns"></mat-icon>
+        <span>SNS</span>
+      </button>
+      <button (click)="navigateMenu('s3-buckets')" class="menu-button" mat-button style="color: white">
+        <mat-icon svgIcon="icon_s3"></mat-icon>
+        <span>S3</span>
+      </button>
+    </div-->
+    <mat-divider style="color: white"></mat-divider>
+    <div style="align-items: flex-start; display: flex; justify-content: flex-start; align-content: flex-start; flex-direction: column;">
+
+      <button class="menu-button" mat-button routerLink="/home" style="color: white">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+      </button>
+      <button class="menu-button" mat-button routerLink="/profile" style="color: white">
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </button>
+      <button class="menu-button" mat-button routerLink="/about" style="color: white">
+        <mat-icon>info</mat-icon>
+        <span>About</span>
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div style="align-items: flex-start; display: flex; justify-content: flex-start; align-content: flex-start; flex-direction: column;">
+
+      <button class="menu-button" mat-button routerLink="/help" style="color: white">
+        <mat-icon>help</mat-icon>
+        <span>Help</span>
+      </button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

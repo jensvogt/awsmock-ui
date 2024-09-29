@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/jensvogt/awsmock-ui/compare/v1.2.3...v1.2.4) (2024-09-29)
+
+
+### Bug Fixes
+
+* **001-initial-load:** Unsubscribe from auto updates ([786008d](https://github.com/jensvogt/awsmock-ui/commit/786008daa895f6fdb80c7788fc515f2d4c3b11f0))
+
 ## [1.2.3](https://github.com/jensvogt/awsmock-ui/compare/v1.2.2...v1.2.3) (2024-09-28)
 
 

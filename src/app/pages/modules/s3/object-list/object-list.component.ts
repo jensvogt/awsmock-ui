@@ -27,7 +27,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {S3Service} from "../../../../services/s3-service.component";
 import {ObjectItem} from "../model/object-item";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ObjectUploadComponent} from "../object-upload/object-upload.component";
 
 @Component({
@@ -57,7 +57,8 @@ import {ObjectUploadComponent} from "../object-upload/object-upload.component";
         MatPaginator,
         MatSort,
         MatTooltip,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        RouterLink
     ],
     styleUrls: ['./object-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]

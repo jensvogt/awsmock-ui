@@ -1,7 +1,7 @@
 <mat-card>
     <mat-card-header>
-        <button (click)="uploadObject()" aria-label="Upload" class="head-buttons-left" mat-icon-button>
-            <mat-icon>close</mat-icon>
+        <button aria-label="Upload" class="head-buttons-left" mat-icon-button routerLink="/s3-bucket-list">
+            <mat-icon>arrow_back</mat-icon>
         </button>
         <h4>S3 Objects {{ bucketName }}</h4>
     </mat-card-header>

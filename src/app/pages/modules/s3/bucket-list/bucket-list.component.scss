@@ -21,6 +21,16 @@
   justify-content: flex-end;
 }
 
+.head-buttons-left {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+  justify-content: start;
+}
+
 .footer-buttons {
   display: flex;
   flex-direction: row;

@@ -29,6 +29,7 @@ import {SqsService} from "../../../../services/sqs-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SendMessageComponentDialog} from "./send-message/send-message.component";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
+import {RouterLink} from "@angular/router";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -57,7 +58,8 @@ import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
         MatPaginator,
         MatSort,
         MatTooltip,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        RouterLink
     ],
     styleUrls: ['./queue-list.component.scss'],
     providers: [SqsService, AwsMockHttpService]

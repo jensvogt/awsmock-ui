@@ -24,7 +24,7 @@ import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {TopicItem} from "../model/topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {SnsService} from "../../../../services/sns-service.component";
 
@@ -55,7 +55,8 @@ import {SnsService} from "../../../../services/sns-service.component";
         MatTooltip,
         MatNoDataRow,
         MatHeaderCellDef,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        RouterLink
     ],
     styleUrls: ['./topic-list.component.scss'],
     providers: [SnsService]

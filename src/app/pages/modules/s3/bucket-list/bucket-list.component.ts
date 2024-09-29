@@ -28,7 +28,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {S3Service} from "../../../../services/s3-service.component";
 import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
     selector: 's3-bucket-list',
@@ -57,7 +57,8 @@ import {Router} from "@angular/router";
         MatPaginator,
         MatSort,
         MatTooltip,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        RouterLink
     ],
     styleUrls: ['./bucket-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]

@@ -2,7 +2,7 @@ import {Routes} from '@angular/router';
 import {NotFoundComponent} from "./pages/not-found/not-found.component";
 import {HomeComponent} from "./pages/home/home.component";
 import {QueueListComponent} from "./pages/modules/sqs/queues-list/queue-list.component";
-import {SqsMessageComponent} from "./pages/modules/sqs/messages/sqs-message.component";
+import {SqsMessageListComponent} from "./pages/modules/sqs/message-list/sqs-message-list.component";
 import {TopicListComponent} from "./pages/modules/sns/topic-list/topic-list.component";
 import {TopicDetailComponent} from "./pages/modules/sns/topic-detail/topic-detail.component";
 import {BucketListComponent} from "./pages/modules/s3/bucket-list/bucket-list.component";
@@ -19,12 +19,12 @@ export const routes: Routes = [
         component: HomeComponent,
     },
     {
-        path: 'sqs-queues',
+        path: 'sqs-queue-list',
         component: QueueListComponent,
     },
     {
-        path: 'sqs-messages',
-        component: SqsMessageComponent,
+        path: 'sqs-message-list/:queueArn',
+        component: SqsMessageListComponent,
     },
     {
         path: 'sns-topic-list',

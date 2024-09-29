@@ -29,7 +29,8 @@ import {SqsService} from "../../../../services/sqs-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SendMessageComponentDialog} from "./send-message/send-message.component";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
+import {Location} from "@angular/common";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -90,7 +91,8 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService) {
+    constructor(private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog,
+                private location: Location, private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService) {
     }
 
     // @ts-ignore
@@ -110,6 +112,10 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         // @ts-ignore
         this.queueData.sort = this.sort;
+    }
+
+    back() {
+        this.location.back();
     }
 
     refresh() {
@@ -149,11 +155,12 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
                         messagesInFlight: q.invisible,
                         messagesDelayed: q.delayed,
                         queueUrl: q.queueUrl,
+                        queueArn: q.queueArn,
                         queueName: q.queueName
                     });
                 });
                 this.queueDataDataSource.data = this.queueData;
-            })
+            });
     }
 
     addQueue() {
@@ -169,6 +176,10 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.loadQueues();
             }
         });
+    }
+
+    listMessages(queueArn: string) {
+        this.router.navigate(['/sqs-message-list', encodeURI(queueArn)]);
     }
 
     purgeQueue(name: string) {

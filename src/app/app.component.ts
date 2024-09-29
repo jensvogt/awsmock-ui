@@ -61,7 +61,6 @@ export class AppComponent {
         this.customIcons.forEach(([iconName, iconPath]) => {
             matIconRegistry.addSvgIcon(iconName, domSanitizer.bypassSecurityTrustResourceUrl(iconPath));
         });
-        console.log("Icons loaded");
     }
 
     navigateMenu(module: string) {

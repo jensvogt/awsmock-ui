@@ -2,8 +2,10 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../environments/environment";
 import {
     CreateQueueCommand,
+    DeleteMessageCommand,
     DeleteQueueCommand,
     GetQueueAttributesCommand,
+    GetQueueUrlCommand,
     ListQueuesCommand,
     PurgeQueueCommand,
     QueueAttributeName,
@@ -66,6 +68,20 @@ export class SqsService {
         return this.client.send(new CreateQueueCommand(input));
     }
 
+    getQueueUrl(queueName: string) {
+        const input = {
+            QueueName: queueName
+        };
+        return this.client.send(new GetQueueUrlCommand(input));
+    }
+
+    deleteQueue(queueUrl: string) {
+        const input = {
+            QueueUrl: queueUrl
+        };
+        return this.client.send(new DeleteQueueCommand(input));
+    }
+
     sendMessage(queueUrl: string, message: string) {
         const input = {
             QueueUrl: queueUrl,
@@ -75,11 +91,13 @@ export class SqsService {
         return this.client.send(new SendMessageCommand(input));
     }
 
-    deleteQueue(queueUrl: string) {
+
+    deleteMessage(queueUrl: string, receiptHandle: string) {
         const input = {
-            QueueUrl: queueUrl
+            QueueUrl: queueUrl,
+            ReceiptHandle: receiptHandle,
         };
-        return this.client.send(new DeleteQueueCommand(input));
+        return this.client.send(new DeleteMessageCommand(input));
     }
 
     cleanup() {

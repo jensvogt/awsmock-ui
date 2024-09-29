@@ -1,9 +1,9 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-subtitle>
-            <h4>SQS Queues</h4>
-            <app-breadcrumb></app-breadcrumb>
-        </mat-card-subtitle>
+        <button aria-label="Back" class="head-buttons-left" mat-icon-button routerLink="/home">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h4>SQS Queues</h4>
     </mat-card-header>
     <mat-card-content>
         <mat-card-actions class="head-buttons">
@@ -16,7 +16,7 @@
         </mat-card-actions>
         <table (matSortChange)="sortChange($event)" [dataSource]="queueDataDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
             <ng-container matColumnDef="queueName">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">URL</th>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                 <td *matCellDef="let element" mat-cell> {{ element.queueName }}</td>
             </ng-container>
             <ng-container matColumnDef="messagesAvailable">
@@ -31,6 +31,12 @@
                     sortActionDescription="Sort by messagesInFlight">Messages in flight
                 </th>
                 <td *matCellDef="let element" mat-cell> {{ element.messagesInFlight }}</td>
+            </ng-container>
+            <ng-container matColumnDef="messagesDelayed">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages delayed"
+                    sortActionDescription="Sort by messagesDelyed">Messages delayed
+                </th>
+                <td *matCellDef="let element" mat-cell> {{ element.messagesDelayed }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>

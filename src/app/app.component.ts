@@ -54,7 +54,7 @@ export class AppComponent {
     customIcons: Array<[string, string]> = [
         ["icon_sqs", "sqs.svg"],
         ["icon_sns", "sns.svg"],
-        ["icon_s3", "sns.s3"]
+        ["icon_s3", "s3.svg"]
     ];
 
     constructor(private router: Router, matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
@@ -67,6 +67,10 @@ export class AppComponent {
     navigateMenu(module: string) {
         this.router.navigate(['/' + module]);
         this.sidenav.close();
+    }
+
+    home() {
+        this.router.navigate(['/']);
     }
 
     logOut() {

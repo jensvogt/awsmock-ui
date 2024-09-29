@@ -18,20 +18,21 @@ import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {interval, Subscription} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {QueueItem} from "../model/queue-item";
+import {BucketItem} from "../model/bucket-item";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
 import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
-import {SqsService} from "../../../../services/sqs-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SendMessageComponentDialog} from "./send-message/send-message.component";
+import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
+import {S3Service} from "../../../../services/s3-service.component";
+import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
-    selector: 'sqs-queue-list',
-    templateUrl: './queue-list-component.html',
+    selector: 's3-bucket-list',
+    templateUrl: './bucket-list.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -56,18 +57,19 @@ import {SendMessageComponentDialog} from "./send-message/send-message.component"
         MatPaginator,
         MatSort,
         MatTooltip,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        RouterLink
     ],
-    styleUrls: ['./queue-list-component.scss'],
-    providers: [SqsService]
+    styleUrls: ['./bucket-list.component.scss'],
+    providers: [S3Service, AwsMockHttpService]
 })
-export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     lastUpdate: string = '';
 
     // Table
-    queueData: Array<QueueItem> = [];
-    queueDataDataSource = new MatTableDataSource(this.queueData);
-    columns: any[] = ['queueName', 'messagesAvailable', 'messagesInFlight', 'actions'];
+    bucketData: Array<BucketItem> = [];
+    bucketDataDataSource = new MatTableDataSource(this.bucketData);
+    columns: any[] = ['bucketName', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -87,17 +89,17 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private sqsService: SqsService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private router: Router, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
     }
 
     // @ts-ignore
     @ViewChild(MatSort) set matSort(sort: MatSort) {
-        this.queueDataDataSource.sort = sort;
+        this.bucketDataDataSource.sort = sort;
     }
 
     ngOnInit(): void {
-        this.loadQueues();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadQueues());
+        this.loadBuckets();
+        this.updateSubscription = interval(60000).subscribe(() => this.loadBuckets());
     }
 
     ngOnDestroy(): void {
@@ -106,11 +108,11 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         // @ts-ignore
-        this.queueData.sort = this.sort;
+        this.bucketData.sort = this.sort;
     }
 
     refresh() {
-        this.loadQueues();
+        this.loadBuckets();
     }
 
     handlePageEvent(e: PageEvent) {
@@ -118,7 +120,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.length = e.length;
         this.pageSize = e.pageSize;
         this.pageIndex = e.pageIndex;
-        this.loadQueues();
+        this.loadBuckets();
     }
 
     sortChange(sortState: Sort) {
@@ -133,108 +135,75 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         return new Date().toLocaleTimeString('DE-de');
     }
 
-    loadQueues() {
-        this.queueData = [];
-        this.sqsService.listQueues(this.pageIndex, this.pageSize, "")
+    loadBuckets() {
+        this.bucketData = [];
+        this.s3Service.listBuckets(this.pageSize, this.pageIndex)
             .then((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
                 this.nextToken = data.NextToken;
                 this.length = data.Total;
-                data.QueueUrls.forEach((q: string) => {
-                    this.queueData.push({
-                        messagesAvailable: undefined,
-                        messagesInFlight: undefined,
-                        queueUrl: q,
-                        queueName: q.substring(q.lastIndexOf('/') + 1)
+                data.Buckets.forEach((b: any) => {
+                    this.bucketData.push({
+                        bucketName: b.Name,
                     });
-                    this.getQueueAttributes(q);
                 });
-                this.queueDataDataSource.data = this.queueData;
+                this.bucketDataDataSource.data = this.bucketData;
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
-                this.sqsService.cleanup();
+                this.s3Service.cleanup();
             });
     }
 
-    addQueue() {
+    addBucket() {
 
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
 
-        this.dialog.open(QueueAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(BucketAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.saveQueue(result)
-                this.loadQueues();
+                this.createBucket(result)
+                this.loadBuckets();
             }
         });
     }
 
-    purgeQueue(name: string) {
-        this.sqsService.purgeQueue(name)
+    createBucket(bucketName: string) {
+        this.s3Service.createBucket(bucketName)
             .then(() => {
-                this.loadQueues();
+                this.loadBuckets();
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
-                this.sqsService.cleanup();
+                this.s3Service.cleanup();
             });
     }
 
-    getQueueAttributes(queueUrl: string) {
-        this.sqsService.getQueueAttributes(queueUrl)
-            .then((data: any) => {
-                let item = this.queueData.find((q) => q.queueUrl == queueUrl);
-                if (item) {
-                    item.messagesAvailable = +data.Attributes.ApproximateNumberOfMessages;
-                    item.messagesInFlight = +data.Attributes.ApproximateNumberOfMessagesNotVisible;
-                }
+    listObjects(bucketName: string) {
+        this.router.navigate(['/s3-object-list', bucketName]);
+    }
+
+    deleteObjects(bucketName: string) {
+        this.s3Service.deleteObjects(bucketName)
+            .then(() => {
+                this.loadBuckets();
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
-                this.sqsService.cleanup();
+                this.s3Service.cleanup();
             });
     }
 
-    saveQueue(name: string) {
-        this.sqsService.saveQueue(name)
+    deleteBucket(bucketName: string) {
+        this.s3Service.deleteBucket(bucketName)
             .then(() => {
-                this.loadQueues();
+                this.loadBuckets();
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
-                this.sqsService.cleanup();
-            });
-    }
-
-    sendMessage(queueUrl: string) {
-
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {queueUrl: queueUrl};
-        dialogConfig.height = '400px';
-        dialogConfig.width = '600px';
-
-        this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                this.sqsService.sendMessage(queueUrl, result);
-                this.loadQueues();
-            }
-        });
-    }
-
-    deleteQueue(queueUrl: string) {
-        this.sqsService.deleteQueue(queueUrl)
-            .then(() => {
-                this.loadQueues();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.sqsService.cleanup();
+                this.s3Service.cleanup();
             });
     }
 }

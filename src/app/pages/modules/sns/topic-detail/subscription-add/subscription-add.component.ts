@@ -85,7 +85,7 @@ export class SubscriptionAddComponentDialog implements OnInit {
     }
 
     loadQueueArns() {
-        this.awsmockHttpService.getQueueArns()
+        this.awsmockHttpService.listQueueArns()
             .subscribe((data: any) => {
                 this.queueArnData = data.QueueArns;
             });

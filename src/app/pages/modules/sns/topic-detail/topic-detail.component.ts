@@ -212,7 +212,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
         this.snsService.subscribe(subscription.topicArn, subscription.endpoint, subscription.protocol)
             .then((data: any) => {
                 this.loadSubscriptions();
-                this.snackBar.open('Subscription saved, subscription ARN:' + data.SubscriptionArn, 'Done', {duration: 5000});
+                this.snackBar.open('Subscription saved, subscription ARN:' + data.SubscriptionArn, 'Dismiss', {duration: 5000});
             })
             .catch((error: any) => console.error(error))
             .finally(() => {

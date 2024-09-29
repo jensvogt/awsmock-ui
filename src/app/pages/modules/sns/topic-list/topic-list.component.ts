@@ -67,7 +67,7 @@ export class TopicListComponent implements OnInit, OnDestroy {
     // Table
     topicData: TopicItem[] = [];
     topicDataSource = new MatTableDataSource(this.topicData);
-    columndefs: any[] = ['topicName', 'actions'];
+    columns: any[] = ['topicName', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;

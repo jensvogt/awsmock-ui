@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Add S3 Bucket</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px">
+    <mat-form-field style="width: 100%">
+        <mat-label>Bucket Name</mat-label>
+        <input [(ngModel)]="bucketName" matInput value="">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+</mat-dialog-actions>

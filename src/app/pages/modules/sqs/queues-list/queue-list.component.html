@@ -16,7 +16,7 @@
         </mat-card-actions>
         <table (matSortChange)="sortChange($event)" [dataSource]="queueDataDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
             <ng-container matColumnDef="queueName">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">URL</th>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                 <td *matCellDef="let element" mat-cell> {{ element.queueName }}</td>
             </ng-container>
             <ng-container matColumnDef="messagesAvailable">
@@ -31,6 +31,12 @@
                     sortActionDescription="Sort by messagesInFlight">Messages in flight
                 </th>
                 <td *matCellDef="let element" mat-cell> {{ element.messagesInFlight }}</td>
+            </ng-container>
+            <ng-container matColumnDef="messagesDelayed">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages delayed"
+                    sortActionDescription="Sort by messagesDelyed">Messages delayed
+                </th>
+                <td *matCellDef="let element" mat-cell> {{ element.messagesDelayed }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>

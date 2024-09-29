@@ -1,31 +1,34 @@
 <mat-card>
     <mat-card-header>
         <mat-card-subtitle>
-            <h4>SNS Topics</h4>
+            <h4>S3 Buckets</h4>
             <app-breadcrumb></app-breadcrumb>
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <mat-card-actions class="head-buttons">
-            <button (click)="addTopic()" aria-label="Refresh" mat-icon-button>
+            <button (click)="addBucket()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>add</mat-icon>
             </button>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
             </button>
         </mat-card-actions>
-        <table (matSortChange)="sortChange($event)" [dataSource]="topicDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
-            <ng-container matColumnDef="topicName">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Name</th>
-                <td *matCellDef="let element" mat-cell> {{ element.topicName }}</td>
+        <table (matSortChange)="sortChange($event)" [dataSource]="bucketDataDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
+            <ng-container matColumnDef="bucketName">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
+                <td *matCellDef="let element" mat-cell> {{ element.bucketName }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="editTopic(row.topicArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the topic">
-                        <mat-icon>edit</mat-icon>
+                    <button (click)="listObjects(row.bucketName)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                        <mat-icon>list</mat-icon>
                     </button>
-                    <button (click)="deleteTopic(row.topicArn)" aria-label="Delete" mat-icon-button matTooltip="Delete the topic">
+                    <button (click)="deleteObjects(row.bucketName)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete all objects in the bucket">
+                        <mat-icon>folder_delete</mat-icon>
+                    </button>
+                    <button (click)="deleteBucket(row.bucketName)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
@@ -48,14 +51,6 @@
                        [showFirstLastButtons]="showFirstLastButtons"
                        aria-label="Select page">
         </mat-paginator>
-        <!--mat-card-actions class="head-buttons">
-          <button (click)="saveConfig()" aria-label="Save" mat-icon-button>
-            <span class="material-symbols-outlined">save</span>
-          </button>
-          <button (click)="setDefault()" aria-label="Default" mat-icon-button>
-            <span class="material-symbols-outlined">location_away</span>
-          </button>
-        </mat-card-actions-->
         <div class="footer">
             Last update: {{ lastUpdate }}
         </div>

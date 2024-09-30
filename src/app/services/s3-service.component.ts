@@ -45,7 +45,7 @@ export class S3Service {
     listObjects(bucketName: string, pageSize: number, pageIndex: number) {
         const command = new ListObjectsV2Command({
             Bucket: bucketName,
-            MaxKeys: 10,
+            MaxKeys: pageSize * pageIndex,
         });
         return this.client.send(command);
     }

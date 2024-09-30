@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {
     MatCell,
@@ -20,7 +20,6 @@ import {interval, Subscription} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {BucketItem} from "../model/bucket-item";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
@@ -33,6 +32,7 @@ import {NavigationService} from "../../../../services/navigation.service";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {SortColumn} from "../../../../shared/sorting/sorting.component";
 
 @Component({
     selector: 's3-bucket-list',
@@ -79,7 +79,7 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     // Table
     bucketData: Array<BucketItem> = [];
     bucketDataDataSource = new MatTableDataSource(this.bucketData);
-    columns: any[] = ['bucketName', 'objects', 'size', 'actions'];
+    columns: any[] = ['name', 'objects', 'size', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -99,15 +99,10 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
     // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
+    sortColumns: SortColumn[] = [];
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private router: Router,
                 private navigation: NavigationService, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
-    }
-
-    // @ts-ignore
-    @ViewChild(MatSort) set matSort(sort: MatSort) {
-        this.bucketDataDataSource.sort = sort;
     }
 
     ngOnInit(): void {
@@ -145,11 +140,13 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     sortChange(sortState: Sort) {
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+        this.sortColumns = [];
+        if (sortState.direction === 'asc') {
+            this.sortColumns.push({column: sortState.active, sortDirection: 1});
         } else {
-            this._liveAnnouncer.announce('Sorting cleared');
+            this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
+        this.loadBuckets();
     }
 
     lastUpdateTime() {
@@ -158,15 +155,14 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     loadBuckets() {
         this.bucketData = [];
-        const sortColumns: string[] = ['name'];
-        this.awsmockHttpService.listBucketCounters(this.prefix, this.pageSize, this.pageIndex, sortColumns)
+        this.awsmockHttpService.listBucketCounters(this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
                 this.length = data.total;
                 if (data.bucketCounters) {
                     data.bucketCounters.forEach((b: any) => {
                         this.bucketData.push({
-                            bucketName: b.bucketName,
+                            name: b.bucketName,
                             keys: b.keys,
                             size: b.size,
                         });

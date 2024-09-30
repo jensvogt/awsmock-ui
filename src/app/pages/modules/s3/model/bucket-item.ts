@@ -1,5 +1,5 @@
 export interface BucketItem {
-    bucketName: string | undefined;
+    name: string | undefined;
     keys: number | undefined;
     size: number | undefined;
 }

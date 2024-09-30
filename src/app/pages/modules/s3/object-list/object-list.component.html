@@ -7,6 +7,14 @@
     </mat-card-header>
     <mat-card-content>
         <mat-card-actions class="head-buttons">
+            <mat-form-field style="width:400px">
+                <mat-label>Prefix</mat-label>
+                <input [(ngModel)]="prefix" matInput name="search" placeholder="Search" type="text">
+                <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                    <mat-icon matSuffix>search</mat-icon>
+                </button>
+            </mat-form-field>
+            <div flex style="width:80%"></div>
             <button (click)="uploadObject()" aria-label="Upload" mat-icon-button>
                 <mat-icon>upload</mat-icon>
             </button>

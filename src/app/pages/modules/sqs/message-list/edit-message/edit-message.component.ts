@@ -7,7 +7,7 @@ import {
     MatDialogTitle
 } from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -15,10 +15,11 @@ import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {MessageItem} from "../../model/sqs-message-item";
 
 @Component({
-    selector: 'queue-send-message-dialog',
-    templateUrl: './send-message.component.html',
+    selector: 'edit-message-dialog',
+    templateUrl: './edit-message.component.html',
     standalone: true,
     imports: [
         MatDialogContent,
@@ -38,30 +39,25 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
         CdkDragHandle,
         CdkTextareaAutosize
     ],
-    styleUrls: ['./send-message.component.scss']
+    styleUrls: ['./edit-message.component.scss']
 })
-export class SendMessageComponentDialog implements OnInit {
+export class EditMessageComponentDialog implements OnInit {
 
-    // @ts-ignore
-    form: FormGroup;
-    queueUrl: string = '';
-    queueName: string = '';
-    message: string = '';
+    body: string | undefined = '';
+    messageId: string | undefined = '';
+    message: MessageItem | undefined;
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.queueUrl = data.queueUrl;
-        this.queueName = data.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
+    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<EditMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.message = data.message;
+        this.body = this.message?.body;
+        this.messageId = this.message?.messageId;
     }
 
     ngOnInit() {
-        //this.dialogRef.updateSize('90%', '90%');
-        this.form = this.fb.group({
-            queueName: [""],
-        });
     }
 
     sendMessage() {
-        this.dialogRef.close(this.message);
+        this.dialogRef.close(true);
     }
 
     close() {

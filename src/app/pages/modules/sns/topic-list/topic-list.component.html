@@ -1,6 +1,6 @@
 <mat-card>
     <mat-card-header>
-        <button aria-label="Back" class="head-buttons-left" mat-icon-button routerLink="/home">
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
         </button>
         <h4>SNS Topics</h4>
@@ -20,10 +20,16 @@
                 <td *matCellDef="let element" mat-cell> {{ element.topicName }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
                 <td *matCellDef="let row" mat-cell>
+                    <button (click)="publishMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message">
+                        <mat-icon>send</mat-icon>
+                    </button>
                     <button (click)="editTopic(row.topicArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the topic">
                         <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="listMessages(row.topicArn)" aria-label="MessageList" mat-icon-button matTooltip="Lists all messages">
+                        <mat-icon>list</mat-icon>
                     </button>
                     <button (click)="deleteTopic(row.topicArn)" aria-label="Delete" mat-icon-button matTooltip="Delete the topic">
                         <mat-icon>delete</mat-icon>

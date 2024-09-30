@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
-  MatCard,
-  MatCardActions,
-  MatCardContent,
-  MatCardHeader,
-  MatCardImage,
-  MatCardTitle
+    MatCard,
+    MatCardActions,
+    MatCardContent,
+    MatCardHeader,
+    MatCardImage,
+    MatCardTitle
 } from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
@@ -14,16 +14,16 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexDataLabels,
-  ApexGrid,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexTooltip,
-  ApexXAxis,
-  ApexYAxis,
-  ChartComponent
+    ApexAxisChartSeries,
+    ApexChart,
+    ApexDataLabels,
+    ApexGrid,
+    ApexStroke,
+    ApexTitleSubtitle,
+    ApexTooltip,
+    ApexXAxis,
+    ApexYAxis,
+    ChartComponent
 } from "ng-apexcharts";
 import {PrometheusHttpService} from "../../shared/performance/prometheus-http.service";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -172,7 +172,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                     type: "datetime",
                     title: {
                         text: "Time (UTC)"
-                    }
+                    },
+                    min: this.getStartTime(this.selectedCpuChoice).getTime(),
+                    max: this.getEndTime().getTime(),
                 },
                 yaxis: {
                     min: 0,
@@ -190,30 +192,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     getCpuUrl(query: string) {
-        const start = new Date();
-        const end = new Date();
-        let step = '60s';
-        if (this.selectedCpuChoice == 'Today') {
-            start.setUTCHours(0, 0, 0, 0);
-            step = '5m';
-        } else if (this.selectedCpuChoice == 'LastHour') {
-            start.setHours(start.getHours() - 1);
-            start.setMinutes(start.getMinutes() % 1)
-            step = '60s';
-        } else if (this.selectedCpuChoice == 'Last3Hours') {
-            start.setHours(start.getHours() - 3);
-            step = '5m';
-        } else if (this.selectedCpuChoice == 'Last6Hours') {
-            start.setHours(start.getHours() - 6);
-            step = '20m';
-        } else if (this.selectedCpuChoice == 'Last12Hours') {
-            start.setHours(start.getHours() - 12);
-            step = '30m';
-        }
-        start.setSeconds(0);
-        start.setMilliseconds(0);
-        end.setSeconds(0);
-        end.setMilliseconds(0);
+        let start = this.getStartTime(this.selectedCpuChoice);
+        let end = this.getEndTime();
+        let step = this.getSteps(this.selectedCpuChoice);
         return 'http://localhost:9090/api/v1/query_range?query=' + query + '&start=' + start.toISOString() + '&end=' + end.toISOString() + '&step=' + step;
     }
 
@@ -274,7 +255,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                     type: "datetime",
                     title: {
                         text: "Time (UTC)"
-                    }
+                    },
+                    min: this.getStartTime(this.selectedMemoryChoice).getTime(),
+                    max: this.getEndTime().getTime(),
                 },
                 yaxis: {
                     min: 0,
@@ -293,34 +276,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     getMemoryUrl(query: string) {
-        const start = new Date();
-        const end = new Date();
-        end.setSeconds(0);
-        end.setMilliseconds(0);
-        let step = '60s';
-        if (this.selectedMemoryChoice == 'Today') {
-            start.setUTCHours(0, 0, 0, 0);
-            step = '5m';
-        } else if (this.selectedMemoryChoice == 'LastHour') {
-            start.setHours(start.getHours() - 1);
-            step = '5m';
-        } else if (this.selectedMemoryChoice == 'Last3Hours') {
-            start.setHours(start.getHours() - 3);
-            step = '5m';
-        } else if (this.selectedMemoryChoice == 'Last6Hours') {
-            start.setHours(start.getHours() - 6);
-            step = '20m';
-        } else if (this.selectedMemoryChoice == 'Last12Hours') {
-            start.setHours(start.getHours() - 12);
-            step = '30m';
-        }
-        start.setSeconds(0);
-        start.setMilliseconds(0);
+        let start = this.getStartTime(this.selectedMemoryChoice);
+        let end = this.getEndTime();
+        let step = this.getSteps(this.selectedMemoryChoice);
         return 'http://localhost:9090/api/v1/query_range?query=' + query + '&start=' + start.toISOString() + '&end=' + end.toISOString() + '&step=' + step;
     }
 
     // ===================================================================================================================
-    // Memory Performance
+    // HTTP response time performance
     // ===================================================================================================================
     loadHttpTimeChart() {
 
@@ -376,7 +339,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                     type: "datetime",
                     title: {
                         text: "Time (UTC)"
-                    }
+                    },
+                    min: this.getStartTime(this.selectedHttpTimeChoice).getTime(),
+                    max: this.getEndTime().getTime(),
                 },
                 yaxis: {
                     min: 0,
@@ -391,30 +356,51 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     getHttpTimeUrl(query: string) {
-        let start = new Date();
-        const end = new Date();
-        end.setSeconds(0);
-        end.setMilliseconds(0);
-        let step = '60s';
-        if (this.selectedHttpTimeChoice == 'Today') {
-            start.setUTCHours(0, 0, 0, 0);
+        let start = this.getStartTime(this.selectedHttpTimeChoice);
+        let end = this.getEndTime();
+        let step = this.getSteps(this.selectedHttpTimeChoice);
+        return 'http://localhost:9090/api/v1/query_range?query=' + query + '&start=' + start.toISOString() + '&end=' + end.toISOString() + '&step=' + step;
+    }
+
+    getStartTime(choice: string): Date {
+        let startTime = new Date();
+        if (choice == 'Today') {
+            startTime.setUTCHours(0, 0, 0, 0);
+        } else if (choice == 'LastHour') {
+            startTime.setUTCHours(startTime.getUTCHours() - 1);
+        } else if (choice == 'Last3Hours') {
+            startTime.setUTCHours(startTime.getUTCHours() - 3);
+        } else if (choice == 'Last6Hours') {
+            startTime.setUTCHours(startTime.getUTCHours() - 6);
+        } else if (choice == 'Last12Hours') {
+            startTime.setUTCHours(startTime.getUTCHours() - 12);
+        }
+        startTime.setSeconds(0);
+        startTime.setMilliseconds(0);
+        return startTime;
+    }
+
+    getEndTime(): Date {
+        let endTime = new Date();
+        endTime.setSeconds(0);
+        endTime.setMilliseconds(0);
+        return endTime;
+    }
+
+    getSteps(choice: string): string {
+        let step: string = '60s';
+        if (choice == 'Today') {
             step = '5m';
-        } else if (this.selectedHttpTimeChoice == 'LastHour') {
-            start.setHours(start.getHours() - 1);
+        } else if (choice == 'LastHour') {
             step = '5m';
-        } else if (this.selectedHttpTimeChoice == 'Last3Hours') {
-            start.setHours(start.getHours() - 3);
+        } else if (choice == 'Last3Hours') {
             step = '5m';
-        } else if (this.selectedHttpTimeChoice == 'Last6Hours') {
-            start.setHours(start.getHours() - 6);
+        } else if (choice == 'Last6Hours') {
             step = '20m';
-        } else if (this.selectedHttpTimeChoice == 'Last12Hours') {
-            start.setHours(start.getHours() - 12);
+        } else if (choice == 'Last12Hours') {
             step = '30m';
         }
-        start.setSeconds(0);
-        start.setMilliseconds(0);
-        return 'http://localhost:9090/api/v1/query_range?query=' + query + '&start=' + start.toISOString() + '&end=' + end.toISOString() + '&step=' + step;
+        return step;
     }
 
     updateHttpTimeChart() {

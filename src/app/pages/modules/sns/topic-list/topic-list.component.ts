@@ -27,6 +27,7 @@ import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
 import {Router, RouterLink} from "@angular/router";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {SnsService} from "../../../../services/sns-service.component";
+import {NavigationService} from "../../../../services/navigation.service";
 
 @Component({
     selector: 'app-home',
@@ -88,7 +89,8 @@ export class TopicListComponent implements OnInit, OnDestroy {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private router: Router, private dialog: MatDialog, private snsService: SnsService) {
+    constructor(private router: Router, private dialog: MatDialog, private snsService: SnsService,
+                private navigation: NavigationService) {
     }
 
     // @ts-ignore
@@ -103,6 +105,10 @@ export class TopicListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    back() {
+        this.navigation.back();
     }
 
     lastUpdateTime() {
@@ -180,6 +186,10 @@ export class TopicListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/sns-topic-detail', topicArn]);
     }
 
+    publishMessage(topicArn: string) {
+
+    }
+
     deleteTopic(topicArn: string) {
         this.snsService.saveTopic(topicArn)
             .then(() => {
@@ -190,4 +200,9 @@ export class TopicListComponent implements OnInit, OnDestroy {
                 this.snsService.cleanup();
             });
     }
+
+    listMessages(topicArn: string) {
+        this.router.navigate(['/sns-message-list', encodeURI(topicArn)]);
+    }
+
 }

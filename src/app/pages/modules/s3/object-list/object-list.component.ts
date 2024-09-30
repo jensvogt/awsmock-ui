@@ -29,6 +29,7 @@ import {S3Service} from "../../../../services/s3-service.component";
 import {ObjectItem} from "../model/object-item";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ObjectUploadComponent} from "../object-upload/object-upload.component";
+import {NavigationService} from "../../../../services/navigation.service";
 
 @Component({
     selector: 's3-object-list',
@@ -91,7 +92,8 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute,
+                private navigation: NavigationService, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
     }
 
     // @ts-ignore
@@ -114,6 +116,10 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         // @ts-ignore
         this.objectData.sort = this.sort;
+    }
+
+    back() {
+        this.navigation.back();
     }
 
     refresh() {

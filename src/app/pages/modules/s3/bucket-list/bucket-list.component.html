@@ -1,23 +1,39 @@
 <mat-card>
     <mat-card-header>
-        <button aria-label="Back" class="head-buttons-left" mat-icon-button routerLink="/home">
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
         </button>
         <h4>S3 Buckets</h4>
     </mat-card-header>
     <mat-card-content>
-        <mat-card-actions class="head-buttons">
+        <mat-card-actions align="start">
+            <mat-form-field style="width:400px">
+                <mat-label>Prefix</mat-label>
+                <input [(ngModel)]="prefix" matInput name="search" placeholder="Search" type="text">
+                <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                    <mat-icon matSuffix>search</mat-icon>
+                </button>
+            </mat-form-field>
+            <div flex style="width:80%"></div>
             <button (click)="addBucket()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>add</mat-icon>
             </button>
-            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <button (click)="refresh()" align="end" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
             </button>
         </mat-card-actions>
-        <table (matSortChange)="sortChange($event)" [dataSource]="bucketDataDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
+        <table (matSortChange)="sortChange($event)" [dataSource]="bucketDataDataSource" class="mat-elevation-z8" mat-table matSort>
             <ng-container matColumnDef="bucketName">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                 <td *matCellDef="let element" mat-cell> {{ element.bucketName }}</td>
+            </ng-container>
+            <ng-container matColumnDef="objects">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Objects" sortActionDescription="Sort by objects">Objects</th>
+                <td *matCellDef="let element" mat-cell> {{ element.keys }}</td>
+            </ng-container>
+            <ng-container matColumnDef="size">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by size">Size</th>
+                <td *matCellDef="let element" mat-cell> {{ element.size }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>

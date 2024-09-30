@@ -30,7 +30,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {SendMessageComponentDialog} from "./send-message/send-message.component";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {Router, RouterLink} from "@angular/router";
-import {Location} from "@angular/common";
+import {NavigationService} from "../../../../services/navigation.service";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -92,7 +92,8 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     private _liveAnnouncer = inject(LiveAnnouncer);
 
     constructor(private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog,
-                private location: Location, private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService) {
+                private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService,
+                private navigation: NavigationService) {
     }
 
     // @ts-ignore
@@ -115,7 +116,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     back() {
-        this.location.back();
+        this.navigation.back();
     }
 
     refresh() {
@@ -226,8 +227,9 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {queueUrl: queueUrl};
-        dialogConfig.height = '400px';
-        dialogConfig.width = '600px';
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
 
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

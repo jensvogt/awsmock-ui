@@ -38,3 +38,32 @@
   font-size: x-small;
   color: black;
 }
+
+.full-screen-modal .mat-dialog-container {
+  padding: 1em;
+  width: 90%;
+  height: 80%;
+  overflow-y: scroll;
+}
+
+.cdk-global-overlay-wrapper {
+  pointer-events: auto;
+  display: block;
+  position: relative;
+  overflow: auto;
+  text-align: center;
+}
+
+.cdk-global-overlay-wrapper::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.cdk-overlay-pane {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  white-space: normal;
+}

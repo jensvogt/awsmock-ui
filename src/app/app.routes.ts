@@ -7,6 +7,7 @@ import {TopicListComponent} from "./pages/modules/sns/topic-list/topic-list.comp
 import {TopicDetailComponent} from "./pages/modules/sns/topic-detail/topic-detail.component";
 import {BucketListComponent} from "./pages/modules/s3/bucket-list/bucket-list.component";
 import {ObjectListComponent} from "./pages/modules/s3/object-list/object-list.component";
+import {SnsMessageListComponent} from "./pages/modules/sns/message-list/sns-message-list.component";
 
 export const routes: Routes = [
     {
@@ -33,6 +34,10 @@ export const routes: Routes = [
     {
         path: 'sns-topic-detail/:topicArn',
         component: TopicDetailComponent,
+    },
+    {
+        path: 'sns-message-list/:topicArn',
+        component: SnsMessageListComponent,
     },
     {
         path: 's3-bucket-list',

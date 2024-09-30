@@ -1,9 +1,5 @@
-import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute, RouterLink} from "@angular/router";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {SqsService} from "../../../../services/sqs-service.component";
 import {
     MatCell,
     MatCellDef,
@@ -23,16 +19,18 @@ import {MatIconButton} from "@angular/material/button";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
-import {interval, Subscription} from "rxjs";
-import {MessageItem} from "../model/sqs-message-item";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {ActivatedRoute} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
-import {EditMessageComponentDialog} from "./edit-message/edit-message.component";
+import {MessageItem} from "../../sqs/model/sqs-message-item";
+import {interval, Subscription} from "rxjs";
 import {NavigationService} from "../../../../services/navigation.service";
 
 @Component({
-    selector: 'sqs-message-list',
-    templateUrl: './sqs-message-list.component.html',
+    selector: 'app-home',
+    templateUrl: './sns-message-list.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -54,14 +52,13 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatSortHeader,
         MatTable,
         MatTooltip,
-        RouterLink,
         MatNoDataRow,
         MatHeaderCellDef
     ],
-    styleUrls: ['./sqs-message-list.component.scss'],
+    styleUrls: ['./sns-message-list.component.scss'],
     providers: [AwsMockHttpService]
 })
-export class SqsMessageListComponent implements OnInit, OnDestroy {
+export class SnsMessageListComponent implements OnInit {
     lastUpdate: string = '';
 
     // Table
@@ -83,42 +80,24 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     // Auto-update
     updateSubscription: Subscription | undefined;
 
-    queueArn: string = '';
-    queueUrl: string = '';
-    queueName: string = '';
+    topicArn: string = '';
+    topicName: string = '';
     private sub: any;
 
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute,
+    constructor(private snackBar: MatSnackBar, private route: ActivatedRoute,
                 private navigation: NavigationService, private dialog: MatDialog, private awsmockHttpService: AwsMockHttpService) {
-    }
-
-    // @ts-ignore
-    @ViewChild(MatSort) set matSort(sort: MatSort) {
-        this.messageDataSource.sort = sort;
     }
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
-            this.queueArn = decodeURI(params['queueArn']); // (+) converts string 'id' to a number
+            this.topicArn = decodeURI(params['queueArn']); // (+) converts string 'id' to a number
         });
         this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
-        this.queueName = this.queueArn.substring(this.queueArn.lastIndexOf(':') + 1);
-        this.sqsService.getQueueUrl(this.queueName)
-            .then((data: any) => {
-                this.queueUrl = data;
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.sqsService.cleanup();
-            });
+        this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':'));
         this.loadMessages();
-    }
-
-    ngOnDestroy(): void {
-        this.updateSubscription?.unsubscribe();
     }
 
     back() {
@@ -143,7 +122,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     loadMessages() {
         this.messageData = [];
-        this.awsmockHttpService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex)
+        this.awsmockHttpService.listSnsMessages(this.topicArn, this.pageSize, this.pageIndex)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date().toLocaleTimeString('DE-de');
                 this.length = data.Total;
@@ -159,33 +138,5 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
                 });
                 this.messageDataSource.data = this.messageData;
             });
-    }
-
-    editMessage(message: MessageItem) {
-
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {message: message};
-        dialogConfig.maxWidth = '100vw';
-        dialogConfig.maxHeight = '80vh';
-        dialogConfig.panelClass = 'full-screen-modal';
-
-        this.dialog.open(EditMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-        });
-    }
-
-    deleteMessage(receiptHandle: string) {
-        this.sqsService.deleteMessage(this.queueUrl, receiptHandle)
-            .then(() => {
-                this.loadMessages();
-                this.snackBar.open('Message deleted, receiptHandle:' + receiptHandle, 'Dismiss', {duration: 5000});
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.sqsService.cleanup();
-            });
-
     }
 }

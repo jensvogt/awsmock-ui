@@ -23,9 +23,9 @@
             </button>
         </mat-card-actions>
         <table (matSortChange)="sortChange($event)" [dataSource]="bucketDataDataSource" class="mat-elevation-z8" mat-table matSort>
-            <ng-container matColumnDef="bucketName">
+            <ng-container matColumnDef="name">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
-                <td *matCellDef="let element" mat-cell> {{ element.bucketName }}</td>
+                <td *matCellDef="let element" mat-cell> {{ element.name }}</td>
             </ng-container>
             <ng-container matColumnDef="objects">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Objects" sortActionDescription="Sort by objects">Objects</th>
@@ -38,13 +38,13 @@
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="listObjects(row.bucketName)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                    <button (click)="listObjects(row.name)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
                         <mat-icon>list</mat-icon>
                     </button>
-                    <button (click)="deleteObjects(row.bucketName)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete all objects in the bucket">
+                    <button (click)="deleteObjects(row.name)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete all objects in the bucket">
                         <mat-icon>folder_delete</mat-icon>
                     </button>
-                    <button (click)="deleteBucket(row.bucketName)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket">
+                    <button (click)="deleteBucket(row.name)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {
     MatCell,
@@ -19,7 +19,6 @@ import {MatIcon} from "@angular/material/icon";
 import {interval, Subscription} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
@@ -30,6 +29,10 @@ import {ObjectItem} from "../model/object-item";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ObjectUploadComponent} from "../object-upload/object-upload.component";
 import {NavigationService} from "../../../../services/navigation.service";
+import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {FormsModule} from "@angular/forms";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
 
 @Component({
     selector: 's3-object-list',
@@ -59,7 +62,12 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatSort,
         MatTooltip,
         BreadcrumbComponent,
-        RouterLink
+        RouterLink,
+        FormsModule,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatSuffix
     ],
     styleUrls: ['./object-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
@@ -69,6 +77,7 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Table
     bucketName: string = '';
+    prefix: string = '';
     objectData: Array<ObjectItem> = [];
     objectDataDataSource = new MatTableDataSource(this.objectData);
     columns: any[] = ['key', 'size', 'actions'];
@@ -87,18 +96,12 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     disabled = false;
     nextToken: string = '';
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
-    private sub: any;
-
     // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
+    sortColumns: SortColumn[] = [];
+    private sub: any;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute,
                 private navigation: NavigationService, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
-    }
-
-    // @ts-ignore
-    @ViewChild(MatSort) set matSort(sort: MatSort) {
-        this.objectDataDataSource.sort = sort;
     }
 
     ngOnInit(): void {
@@ -118,6 +121,10 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.objectData.sort = this.sort;
     }
 
+    setPrefix() {
+        this.loadObjects();
+    }
+
     back() {
         this.navigation.back();
     }
@@ -135,11 +142,13 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     sortChange(sortState: Sort) {
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+        this.sortColumns = [];
+        if (sortState.direction === 'asc') {
+            this.sortColumns.push({column: sortState.active, sortDirection: 1});
         } else {
-            this._liveAnnouncer.announce('Sorting cleared');
+            this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
+        this.loadObjects();
     }
 
     lastUpdateTime() {
@@ -148,25 +157,21 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     loadObjects() {
         this.objectData = [];
-        this.s3Service.listObjects(this.bucketName, this.pageSize, this.pageIndex)
-            .then((data: any) => {
+        this.awsmockHttpService.listObjectsCounters(this.bucketName, this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
+            .subscribe((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
                 this.nextToken = data.NextContinuationToken;
-                if (data.Contents) {
-                    this.length = data.Contents?.length;
-                    data.Contents.forEach((b: any) => {
+                if (data.objectCounters) {
+                    this.length = data.total;
+                    data.objectCounters.forEach((b: any) => {
                         this.objectData.push({
                             bucket: this.bucketName,
-                            key: b.Key,
-                            size: b.Size,
+                            key: b.keys,
+                            size: b.size,
                         });
                     });
                 }
                 this.objectDataDataSource.data = this.objectData;
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.s3Service.cleanup();
             });
     }
 

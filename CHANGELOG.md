@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/jensvogt/awsmock-ui/compare/v1.2.4...v1.2.5) (2024-09-30)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** Add message list ([9ae6889](https://github.com/jensvogt/awsmock-ui/commit/9ae6889b4b2376179ed7754675fc82ca7aa089d1))
+
 ## [1.2.4](https://github.com/jensvogt/awsmock-ui/compare/v1.2.3...v1.2.4) (2024-09-29)
 
 

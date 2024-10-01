@@ -33,6 +33,7 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
+import {NgIf} from "@angular/common";
 
 @Component({
     selector: 's3-object-list',
@@ -67,7 +68,8 @@ import {MatInput} from "@angular/material/input";
         MatFormField,
         MatInput,
         MatLabel,
-        MatSuffix
+        MatSuffix,
+        NgIf
     ],
     styleUrls: ['./object-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
@@ -78,6 +80,7 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     // Table
     bucketName: string = '';
     prefix: string = '';
+    prefixSet: boolean = false;
     objectData: Array<ObjectItem> = [];
     objectDataDataSource = new MatTableDataSource(this.objectData);
     columns: any[] = ['key', 'size', 'actions'];
@@ -122,6 +125,13 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     setPrefix() {
+        this.prefixSet = true;
+        this.loadObjects();
+    }
+
+    unsetPrefix() {
+        this.prefix = '';
+        this.prefixSet = false;
         this.loadObjects();
     }
 

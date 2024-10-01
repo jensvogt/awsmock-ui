@@ -33,6 +33,8 @@ import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {NgIf} from "@angular/common";
+import {byteConversion} from "../../../../shared/byte-utils.component";
 
 @Component({
     selector: 's3-bucket-list',
@@ -68,7 +70,8 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
         MatLabel,
         FormsModule,
         MatButton,
-        MatSuffix
+        MatSuffix,
+        NgIf
     ],
     styleUrls: ['./bucket-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
@@ -85,6 +88,7 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     updateSubscription: Subscription | undefined;
 
     // Prefix
+    prefixSet: boolean = false;
     prefix: string = '';
 
     // Paging
@@ -100,6 +104,7 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Sorting
     sortColumns: SortColumn[] = [];
+    protected readonly byteConversion = byteConversion;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private router: Router,
                 private navigation: NavigationService, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
@@ -128,7 +133,18 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     setPrefix() {
+        this.prefixSet = true;
         this.loadBuckets();
+    }
+
+    unsetPrefix() {
+        this.prefix = '';
+        this.prefixSet = false;
+        this.loadBuckets();
+    }
+
+    editBucket(bucketName: string) {
+        this.router.navigate(['/s3-bucket-detail', bucketName]);
     }
 
     handlePageEvent(e: PageEvent) {
@@ -162,9 +178,15 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (data.bucketCounters) {
                     data.bucketCounters.forEach((b: any) => {
                         this.bucketData.push({
+                            id: undefined,
+                            owner: b.owner,
+                            arn: undefined, region: undefined,
                             name: b.bucketName,
                             keys: b.keys,
                             size: b.size,
+                            created: undefined,
+                            modified: undefined,
+                            lambdaConfigurations: undefined
                         });
                     });
                 }

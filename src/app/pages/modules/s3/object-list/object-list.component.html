@@ -10,8 +10,11 @@
             <mat-form-field style="width:400px">
                 <mat-label>Prefix</mat-label>
                 <input [(ngModel)]="prefix" matInput name="search" placeholder="Search" type="text">
-                <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                <button (click)="setPrefix()" *ngIf="!prefixSet" mat-icon-button matSuffix style="float: right">
                     <mat-icon matSuffix>search</mat-icon>
+                </button>
+                <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
+                    <mat-icon matSuffix>close</mat-icon>
                 </button>
             </mat-form-field>
             <div flex style="width:80%"></div>

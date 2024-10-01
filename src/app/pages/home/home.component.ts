@@ -10,7 +10,7 @@ import {
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
 import {NgForOf, NgIf} from "@angular/common";
-import {MatList, MatListItem} from "@angular/material/list";
+import {MatList, MatListItem, MatListOption, MatNavList, MatSelectionList} from "@angular/material/list";
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {
@@ -79,6 +79,9 @@ export type ChartOptions = {
         FormsModule,
         MatOption,
         MatIconButton,
+        MatListOption,
+        MatSelectionList,
+        MatNavList,
     ],
     providers: [PrometheusHttpService],
     styleUrls: ['./home.component.scss']

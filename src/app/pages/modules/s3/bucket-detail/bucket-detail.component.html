@@ -11,9 +11,9 @@
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <mat-grid-list cols="2" rowHeight="240px">
+            <mat-grid-list cols="2" rowHeight="260px">
                 <mat-grid-tile [colspan]="1" [rowspan]="1">
-                    <div style="width: 100%; display: flex; align-items: flex-start;">
+                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
                             <mat-list-item style="display: flex;justify-content: flex-start;">
                                 <span matListItemTitle style="font-size:small;font-style: italic">Region:</span>
@@ -31,11 +31,15 @@
                                 <span matListItemTitle style="font-size:small;font-style: italic">Owner</span>
                                 <p matLine style="font-size:small">{{ bucketItem.owner }}</p>
                             </mat-list-item>
+                            <mat-list-item>
+                                <span matListItemTitle style="font-size:small;font-style: italic">Version Status</span>
+                                <p matLine style="font-size:small">{{ bucketItem.versionStatus }}</p>
+                            </mat-list-item>
                         </mat-list>
                     </div>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1" [rowspan]="1">
-                    <div style="width: 100%; display: flex; align-items: flex-start;">
+                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
                             <mat-list-item>
                                 <span matListItemTitle style="font-size:small;font-style: italic">Number of objects:</span>
@@ -53,6 +57,8 @@
                                 <span matListItemTitle style="font-size:small;font-style: italic">Modified</span>
                                 <p matLine style="font-size:small">{{ bucketItem.modified }}</p>
                             </mat-list-item>
+                            <mat-list-item>
+                            </mat-list-item>
                         </mat-list>
                     </div>
                 </mat-grid-tile>
@@ -69,10 +75,10 @@
                     <mat-card-actions class="head-buttons">
                         <!--button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="refreshSubscriptions()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
                         </button-->
+                        <button (click)="loadBucket()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
                     </mat-card-actions>
                     <table (matSortChange)="lambdaNotificationSortChange($event)" [dataSource]="lambdaNotificationDataSource" class="mat-elevation-z8" mat-table
                            matSort>
@@ -89,10 +95,10 @@
                             <td *matCellDef="let row" mat-cell>
                                 <!--button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
                                     <mat-icon>edit</mat-icon>
-                                </button>
-                                <button (click)="unsubscribe(row.subscriptionArn)" aria-label="Delete" mat-icon-button matTooltip="Unsubscribe from the topic">
-                                    <mat-icon>unsubscribe</mat-icon>
                                 </button-->
+                                <button (click)="deleteLambdaNotification(row.lambdaArn)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
                             </td>
                         </ng-container>
                         <tr *matHeaderRowDef="lambdaNotificationColumns" mat-header-row></tr>
@@ -103,16 +109,16 @@
                             </td>
                         </tr>
                     </table>
-                    <!--mat-paginator (page)="handleSubscriptionPageEvent($event)"
+                    <mat-paginator (page)="handleLambdaNotificationPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="subscriptionLength"
-                                   [pageIndex]="subscriptionPageIndex"
-                                   [pageSizeOptions]="subscriptionPageSizeOptions"
-                                   [pageSize]="subscriptionPageSize"
+                                   [length]="lambdaNotificationLength"
+                                   [pageIndex]="lambdaNotificationPageIndex"
+                                   [pageSizeOptions]="lambdaNotificationPageSizeOptions"
+                                   [pageSize]="lambdaNotificationPageSize"
                                    [showFirstLastButtons]="true"
                                    aria-label="Select page">
-                    </mat-paginator-->
+                    </mat-paginator>
                 </mat-tab>
                 <mat-tab label="Queue Notifications">
                     Queue Notifications
@@ -127,4 +133,7 @@
         <button (click)=back() mat-button>Close</button>
         <button (click)=save() mat-button>Save</button>
     </mat-card-actions>
+    <div class="footer">
+        Last update: {{ lastUpdate }}
+    </div>
 </mat-card>

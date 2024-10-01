@@ -178,6 +178,7 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (data.bucketCounters) {
                     data.bucketCounters.forEach((b: any) => {
                         this.bucketData.push({
+                            versionStatus: undefined,
                             id: undefined,
                             owner: b.owner,
                             arn: undefined, region: undefined,

@@ -27,7 +27,7 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {SnsService} from "../../../../services/sns-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -164,6 +164,14 @@ export class BucketDetailComponent implements OnInit, OnDestroy {
         this.loadBucket();
     }
 
+    handleLambdaNotificationPageEvent(e: PageEvent) {
+
+    }
+
+    deleteLambdaNotification(lambdaNotificationArn: string) {
+
+    }
+
     // ===================================================================================================================
     // Queue Notifications
     // ===================================================================================================================
@@ -173,5 +181,6 @@ export class BucketDetailComponent implements OnInit, OnDestroy {
     // ===================================================================================================================
 
     save() {
+        this.navigation.back();
     }
 }

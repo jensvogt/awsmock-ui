@@ -10,8 +10,11 @@
             <mat-form-field style="width:400px">
                 <mat-label>Prefix</mat-label>
                 <input [(ngModel)]="prefix" matInput name="search" placeholder="Search" type="text">
-                <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                <button (click)="setPrefix()" *ngIf="!prefixSet" mat-icon-button matSuffix style="float: right">
                     <mat-icon matSuffix>search</mat-icon>
+                </button>
+                <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
+                    <mat-icon matSuffix>close</mat-icon>
                 </button>
             </mat-form-field>
             <div flex style="width:80%"></div>
@@ -22,41 +25,46 @@
                 <mat-icon>refresh</mat-icon>
             </button>
         </mat-card-actions>
-        <table (matSortChange)="sortChange($event)" [dataSource]="bucketDataDataSource" class="mat-elevation-z8" mat-table matSort>
-            <ng-container matColumnDef="name">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
-                <td *matCellDef="let element" mat-cell> {{ element.name }}</td>
-            </ng-container>
-            <ng-container matColumnDef="objects">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Objects" sortActionDescription="Sort by objects">Objects</th>
-                <td *matCellDef="let element" mat-cell> {{ element.keys }}</td>
-            </ng-container>
-            <ng-container matColumnDef="size">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by size">Size</th>
-                <td *matCellDef="let element" mat-cell> {{ element.size }}</td>
-            </ng-container>
-            <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
-                <td *matCellDef="let row" mat-cell>
-                    <button (click)="listObjects(row.name)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
-                        <mat-icon>list</mat-icon>
-                    </button>
-                    <button (click)="deleteObjects(row.name)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete all objects in the bucket">
-                        <mat-icon>folder_delete</mat-icon>
-                    </button>
-                    <button (click)="deleteBucket(row.name)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </td>
-            </ng-container>
-            <tr *matHeaderRowDef="columns" mat-header-row></tr>
-            <tr *matRowDef="let row; columns: columns;" mat-row></tr>
-            <tr *matNoDataRow class="mat-row">
-                <td [attr.colspan]="columns.length" class="mat-cell">
-                    No data matching the filter.
-                </td>
-            </tr>
-        </table>
+        <div style="">
+            <table (matSortChange)="sortChange($event)" [dataSource]="bucketDataDataSource" class="mat-elevation-z8" mat-table matSort style="width:100%">
+                <ng-container matColumnDef="name">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.name }}</td>
+                </ng-container>
+                <ng-container matColumnDef="objects">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Objects" sortActionDescription="Sort by objects">Objects</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.keys }}</td>
+                </ng-container>
+                <ng-container matColumnDef="size">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by size">Size</th>
+                    <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
+                    <td *matCellDef="let row" mat-cell>
+                        <button (click)="editBucket(row.name)" aria-label="Edit" mat-icon-button matTooltip="Edit the bucket">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button (click)="listObjects(row.name)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                            <mat-icon>list</mat-icon>
+                        </button>
+                        <button (click)="deleteObjects(row.name)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete all objects in the bucket">
+                            <mat-icon>folder_delete</mat-icon>
+                        </button>
+                        <button (click)="deleteBucket(row.name)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                    <td [attr.colspan]="columns.length" class="mat-cell">
+                        No data matching the filter.
+                    </td>
+                </tr>
+            </table>
+        </div>
         <mat-paginator (page)="handlePageEvent($event)"
                        [disabled]="disabled"
                        [hidePageSize]="hidePageSize"

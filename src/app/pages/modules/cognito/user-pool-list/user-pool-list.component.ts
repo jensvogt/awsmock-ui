@@ -19,25 +19,24 @@ import {MatIcon} from "@angular/material/icon";
 import {interval, Subscription} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {S3Service} from "../../../../services/s3-service.component";
-import {ObjectItem} from "../model/object-item";
 import {ActivatedRoute, RouterLink} from "@angular/router";
-import {ObjectUploadComponent} from "../object-upload/object-upload.component";
 import {NavigationService} from "../../../../services/navigation.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
+import {UserPoolItem} from "../model/user-pool-item";
 
 @Component({
-    selector: 's3-object-list',
-    templateUrl: './object-list.component.html',
+    selector: 'cognito-user-pool-list',
+    templateUrl: './user-pool-list.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -71,18 +70,18 @@ import {NgIf} from "@angular/common";
         MatSuffix,
         NgIf
     ],
-    styleUrls: ['./object-list.component.scss'],
+    styleUrls: ['./user-pool-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
 })
-export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     lastUpdate: string = '';
 
     // Table
     bucketName: string = '';
     prefix: string = '';
     prefixSet: boolean = false;
-    objectData: Array<ObjectItem> = [];
-    objectDataDataSource = new MatTableDataSource(this.objectData);
+    userPoolData: Array<UserPoolItem> = [];
+    userPoolDataSource = new MatTableDataSource(this.userPoolData);
     columns: any[] = ['key', 'size', 'actions'];
 
     // Auto-update
@@ -166,22 +165,22 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     loadObjects() {
-        this.objectData = [];
+        this.userPoolData = [];
         this.awsmockHttpService.listObjectsCounters(this.bucketName, this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
                 this.nextToken = data.NextContinuationToken;
                 if (data.objectCounters) {
                     this.length = data.total;
-                    data.objectCounters.forEach((b: any) => {
+                    /*data.objectCounters.forEach((b: any) => {
                         this.objectData.push({
                             bucket: this.bucketName,
                             key: b.keys,
                             size: b.size,
                         });
-                    });
+                    });*/
                 }
-                this.objectDataDataSource.data = this.objectData;
+                this.userPoolDataSource.data = this.userPoolData;
             });
     }
 
@@ -199,7 +198,7 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     uploadObject() {
 
-        const dialogConfig = new MatDialogConfig();
+        /*const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
@@ -210,7 +209,7 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.loadObjects();
                 this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result, 'Done', {duration: 5000});
             }
-        });
+        });*/
     }
 
     //

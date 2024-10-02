@@ -4,17 +4,12 @@
             <mat-card-title>Services</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <mat-list>
-                <mat-list-item routerLink="/sqs-queue-list" style="cursor:pointer">
-                    <span matListItemLine style="font-size: medium">Simple Queueing Service</span>
-                </mat-list-item>
-                <mat-list-item routerLink="/sns-topic-list" style="cursor:pointer">
-                    <span matListItemLine style="font-size: medium">Simple Notification Service</span>
-                </mat-list-item>
-                <mat-list-item routerLink="/s3-bucket-list" style="cursor:pointer">
-                    <span matListItemLine style="font-size: medium">S3 Storage Service</span>
-                </mat-list-item>
-            </mat-list>
+            <mat-nav-list>
+                <a href="/sqs-queue-list" mat-list-item>Simple Queueing Service</a>
+                <a href="/sns-topic-list" mat-list-item>Simple Notification Service</a>
+                <a href="/s3-bucket-list" mat-list-item>S3 Storage Service</a>
+                <a href="/cognito-user-pool-list" mat-list-item>Cognito Service</a>
+            </mat-nav-list>
         </mat-card-content>
     </mat-card>
     <mat-card class="mat-elevation-z4">

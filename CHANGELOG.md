@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.6](https://github.com/jensvogt/awsmock-ui/compare/v1.2.5...v1.2.6) (2024-10-02)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** Add S3 bucket lambda configuration ([211a01f](https://github.com/jensvogt/awsmock-ui/commit/211a01f22addc8cc75c6a0c664a8162952139e10))
+* **1-create-first-release:** Add S3 bucket lambda configuration ([2673bc2](https://github.com/jensvogt/awsmock-ui/commit/2673bc2a537f48642424376759373914329ff638))
+* **1-create-first-release:** Add S3 bucket lambda configuration ([85982fc](https://github.com/jensvogt/awsmock-ui/commit/85982fc6050ee20f080d0bf613cbb17a5da1df71))
+* **1-create-first-release:** Add S3 bucket lambda configuration ([f8a8f88](https://github.com/jensvogt/awsmock-ui/commit/f8a8f88bb906f0e19a6e8629a4bdfc92726d752e))
+* **1-create-first-release:** Add S3 bucket/object paging ([64ddf58](https://github.com/jensvogt/awsmock-ui/commit/64ddf5857754a1b8686e363f90ae088e7ea524be))
+
 ## [1.2.5](https://github.com/jensvogt/awsmock-ui/compare/v1.2.4...v1.2.5) (2024-09-30)
 
 

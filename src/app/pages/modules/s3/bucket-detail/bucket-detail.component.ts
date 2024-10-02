@@ -169,7 +169,11 @@ export class BucketDetailComponent implements OnInit, OnDestroy {
     }
 
     deleteLambdaNotification(lambdaNotificationArn: string) {
-
+        this.bucketItem.lambdaConfigurations = this.bucketItem.lambdaConfigurations?.filter((ele) => ele.lambdaArn !== lambdaNotificationArn);
+        if (this.bucketItem.lambdaConfigurations) {
+            this.lambdaNotificationData = this.bucketItem.lambdaConfigurations;
+            this.lambdaNotificationDataSource.data = this.lambdaNotificationData;
+        }
     }
 
     // ===================================================================================================================

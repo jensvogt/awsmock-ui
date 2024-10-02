@@ -44,12 +44,16 @@ export class AwsMockHttpService {
 
     public getBucket(bucketName: string) {
         let headers = this.S3Config.s3HttpOptions.headers.set('X-AwsMock-Target', 'GetBucket');
-        headers = headers.set('X-AwsMock-Target', 'GetBucket');
         const body = {
             region: environment.awsmockRegion,
             bucketName: bucketName
         }
         return this.http.post(this.url, body, {headers: headers});
+    }
+
+    public saveBucket(bucket: any) {
+        let headers = this.S3Config.s3HttpOptions.headers.set('X-AwsMock-Target', 'SaveBucket');
+        return this.http.post(this.url, bucket, {headers: headers});
     }
 
     /**

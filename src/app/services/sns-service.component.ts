@@ -57,6 +57,14 @@ export class SnsService {
         return this.client.send(new SubscribeCommand(input));
     }
 
+    publishMessage(topicArn: string, body: string) {
+        /*        const input = {
+                    TopicArn: topicArn,
+                    ReturnSubscriptionArn: true
+                };
+                return this.client.send(new SubscribeCommand(input));*/
+    }
+
     cleanup() {
         this.client.destroy();
     }

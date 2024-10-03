@@ -7,7 +7,7 @@ import {
     MatDialogTitle
 } from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -15,11 +15,10 @@ import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {SqsMessageItem} from "../../model/sqs-message-item";
 
 @Component({
-    selector: 'edit-message-dialog',
-    templateUrl: './edit-message.component.html',
+    selector: 'queue-send-message-dialog',
+    templateUrl: './publish-message.component.html',
     standalone: true,
     imports: [
         MatDialogContent,
@@ -39,25 +38,26 @@ import {SqsMessageItem} from "../../model/sqs-message-item";
         CdkDragHandle,
         CdkTextareaAutosize
     ],
-    styleUrls: ['./edit-message.component.scss']
+    styleUrls: ['./publish-message.component.scss']
 })
-export class EditMessageComponentDialog implements OnInit {
+export class PublishMessageComponentDialog implements OnInit {
 
-    body: string | undefined = '';
-    messageId: string | undefined = '';
-    message: SqsMessageItem | undefined;
+    // @ts-ignore
+    form: FormGroup;
+    topicArn: string = '';
+    topicName: string = '';
+    message: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<EditMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.message = data.message;
-        this.body = this.message?.body;
-        this.messageId = this.message?.messageId;
+    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<PublishMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.topicArn = data.topicArn;
+        this.topicName = data.queueUrl.substring(this.topicArn.lastIndexOf(':') + 1);
     }
 
     ngOnInit() {
     }
 
     sendMessage() {
-        this.dialogRef.close(true);
+        this.dialogRef.close(this.message);
     }
 
     close() {

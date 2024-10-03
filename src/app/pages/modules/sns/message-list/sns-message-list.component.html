@@ -7,12 +7,12 @@
     </mat-card-header>
     <mat-card-content>
         <mat-card-actions class="head-buttons">
-            <!--button (click)="addQueue()" aria-label="Refresh" mat-icon-button>
+            <button (click)="publishMessage()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>add</mat-icon>
             </button>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
-            </button-->
+            </button>
         </mat-card-actions>
         <table (matSortChange)="sortChange($event)" [dataSource]="messageDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
             <ng-container matColumnDef="messageId">

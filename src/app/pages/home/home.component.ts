@@ -254,7 +254,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                     xaxis: {
                         type: "datetime",
                         title: {
-                            text: "Time (UTC)"
+                            text: "Time"
                         },
                         labels: {
                             datetimeUTC: false
@@ -341,7 +341,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                     xaxis: {
                         type: "datetime",
                         title: {
-                            text: "Time (UTC)"
+                            text: "Time"
                         },
                         labels: {
                             datetimeUTC: false

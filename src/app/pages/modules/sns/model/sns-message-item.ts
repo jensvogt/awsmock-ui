@@ -1,4 +1,4 @@
-export interface SqsMessageItem {
+export interface SnsMessageItem {
     region: string | undefined
     id: string | undefined;
     messageId: string | undefined;
@@ -6,5 +6,4 @@ export interface SqsMessageItem {
     receiptHandle: string | undefined;
     md5Sum: string | undefined;
     created: Date | undefined;
-    modified: Date | undefined;
 }

@@ -10,6 +10,7 @@ import {ObjectListComponent} from "./pages/modules/s3/object-list/object-list.co
 import {SnsMessageListComponent} from "./pages/modules/sns/message-list/sns-message-list.component";
 import {BucketDetailComponent} from "./pages/modules/s3/bucket-detail/bucket-detail.component";
 import {UserPoolListComponent} from "./pages/modules/cognito/user-pool-list/user-pool-list.component";
+import {UserListComponent} from "./pages/modules/cognito/user-list/user-list.component";
 
 export const routes: Routes = [
     {
@@ -56,6 +57,10 @@ export const routes: Routes = [
     {
         path: 'cognito-user-pool-list',
         component: UserPoolListComponent,
+    },
+    {
+        path: 'cognito-user-list/:userPoolId',
+        component: UserListComponent,
     },
     {
         path: '**',

@@ -3,7 +3,7 @@
         <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
         </button>
-        <h4>Cognito User pools</h4>
+        <h4>Cognito Users: {{ userPoolId }}</h4>
     </mat-card-header>
     <mat-card-content>
         <mat-card-actions class="head-buttons">
@@ -18,29 +18,33 @@
                 </button>
             </mat-form-field>
             <div flex style="width:80%"></div>
-            <button (click)="addUserPool()" aria-label="Upload" mat-icon-button>
+            <button (click)="addUser()" aria-label="Upload" mat-icon-button>
                 <mat-icon>add</mat-icon>
             </button>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
             </button>
         </mat-card-actions>
-        <table (matSortChange)="sortChange($event)" [dataSource]="userPoolDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
-            <ng-container matColumnDef="key" matTooltip="User PoolId">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User Pool ID" sortActionDescription="Sort by userPoolId">ID</th>
-                <td *matCellDef="let element" mat-cell> {{ element.userPoolId }}</td>
+        <table (matSortChange)="sortChange($event)" [dataSource]="userDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
+            <ng-container matColumnDef="userName" matTooltip="User name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User name" sortActionDescription="Sort by userName">Name</th>
+                <td *matCellDef="let element" mat-cell> {{ element.userName }}</td>
             </ng-container>
-            <ng-container matColumnDef="size" matTooltip="Created">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object size" sortActionDescription="Sort by created">Created</th>
-                <td *matCellDef="let element" mat-cell> {{ element.created | date: 'dd-MM-yyyy' }}</td>
+            <ng-container matColumnDef="status" matTooltip="status">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User status" sortActionDescription="Sort by created">Status</th>
+                <td *matCellDef="let element" mat-cell> {{ element.status }}</td>
+            </ng-container>
+            <ng-container matColumnDef="enabled" matTooltip="enabled">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User enabled" sortActionDescription="Sort by enabled">Enabled</th>
+                <td *matCellDef="let element" mat-cell> {{ element.enabled }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="listUsers(row.userPoolId)" aria-label="ListUsers" mat-icon-button matTooltip="Lists all users of that user pool">
+                    <!--button (click)="listUsers(row.userPoolId)" aria-label="List" mat-icon-button matTooltip="Lists all users of the user pool">
                         <mat-icon>group</mat-icon>
-                    </button>
-                    <button (click)="deleteUserPool(row.userPoolId)" aria-label="DeleteUserPool" mat-icon-button matTooltip="Delete user pool">
+                    </button-->
+                    <button (click)="deleteUser(row.userName)" aria-label="DeleteUser" mat-icon-button matTooltip="Delete user">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>

@@ -23,20 +23,20 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {DatePipe, NgIf} from "@angular/common";
-import {UserPoolItem} from "../model/user-pool-item";
 import {AwsMockCognitoService} from "../../../../services/cognito.service";
-import {UserPoolAddComponentDialog} from "../user-pool-add/user-pool-add.component";
+import {UserItem} from "../model/user-item";
+import {UserAddComponentDialog} from "../user-add/user-add.component";
 
 @Component({
-    selector: 'cognito-user-pool-list',
-    templateUrl: './user-pool-list.component.html',
+    selector: 'cognito-user-list',
+    templateUrl: './user-list.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -71,19 +71,19 @@ import {UserPoolAddComponentDialog} from "../user-pool-add/user-pool-add.compone
         NgIf,
         DatePipe
     ],
-    styleUrls: ['./user-pool-list.component.scss'],
+    styleUrls: ['./user-list.component.scss'],
     providers: [AwsMockCognitoService]
 })
-export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     lastUpdate: string = '';
 
     // Table
-    bucketName: string = '';
+    userPoolId: string = '';
     prefix: string = '';
     prefixSet: boolean = false;
-    userPoolData: Array<UserPoolItem> = [];
-    userPoolDataSource = new MatTableDataSource(this.userPoolData);
-    columns: any[] = ['key', 'size', 'actions'];
+    userData: Array<UserItem> = [];
+    userDataSource = new MatTableDataSource(this.userData);
+    columns: any[] = ['userName', 'status', 'enabled', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -105,16 +105,15 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute,
-                private router: Router, private navigation: NavigationService,
-                private cognitoService: AwsMockCognitoService) {
+                private navigation: NavigationService, private cognitoService: AwsMockCognitoService) {
     }
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
-            this.bucketName = params['bucketName'];
+            this.userPoolId = params['userPoolId'];
         });
-        this.loadUserpools();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadUserpools());
+        this.loadUsers();
+        this.updateSubscription = interval(60000).subscribe(() => this.loadUsers());
     }
 
     ngOnDestroy(): void {
@@ -123,18 +122,18 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         // @ts-ignore
-        // this.userData.sort = this.sort;
+        //this.objectData.sort = this.sort;
     }
 
     setPrefix() {
         this.prefixSet = true;
-        this.loadUserpools();
+        this.loadUsers();
     }
 
     unsetPrefix() {
         this.prefix = '';
         this.prefixSet = false;
-        this.loadUserpools();
+        this.loadUsers();
     }
 
     back() {
@@ -142,7 +141,7 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     refresh() {
-        this.loadUserpools();
+        this.loadUsers();
     }
 
     handlePageEvent(e: PageEvent) {
@@ -150,7 +149,7 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.length = e.length;
         this.pageSize = e.pageSize;
         this.pageIndex = e.pageIndex;
-        this.loadUserpools();
+        this.loadUsers();
     }
 
     sortChange(sortState: Sort) {
@@ -160,65 +159,60 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
-        this.loadUserpools();
+        this.loadUsers();
     }
 
     lastUpdateTime() {
         return new Date().toLocaleTimeString('DE-de');
     }
 
-    loadUserpools() {
-        this.userPoolData = [];
-        this.cognitoService.listUserPools(this.pageSize, this.pageIndex, this.sortColumns)
+    loadUsers() {
+        this.userData = [];
+        this.cognitoService.listUsers(this.userPoolId, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
-                this.nextToken = data.NextContinuationToken;
-                if (data.UserPools) {
+                if (data.Users) {
                     this.length = data.Total;
-                    data.UserPools.forEach((b: any) => {
-                        this.userPoolData.push({
-                            id: b.Id,
-                            userPoolId: b.Id,
-                            created: new Date(b.CreationDate * 1000),
-                            modified: new Date(b.LastModifiedDate),
-                            region: b.Region
+                    data.Users.forEach((b: any) => {
+                        this.userData.push({
+                            id: b.oid,
+                            userName: b.Username,
+                            userPoolId: this.userPoolId,
+                            enabled: b.Enabled,
+                            status: b.UserStatus
                         });
                     });
                 }
-                this.userPoolDataSource.data = this.userPoolData;
+                this.userDataSource.data = this.userData;
             });
     }
 
-    addUserPool() {
+    addUser() {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
 
-        this.dialog.open(UserPoolAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(UserAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.createUserPool(result)
+                this.createUser(result)
             }
         });
     }
 
-    createUserPool(userPoolName: string) {
-        this.cognitoService.createUserPool(userPoolName)
+    createUser(userName: string) {
+        this.cognitoService.createUser(this.userPoolId, userName)
             .subscribe(() => {
-                this.snackBar.open('Userpool created, name: ' + userPoolName, 'Done', {duration: 5000});
-                this.loadUserpools();
+                this.snackBar.open('User created, name: ' + userName, 'Done', {duration: 5000});
+                this.loadUsers();
             });
     }
 
-    deleteUserPool(userPoolId: string) {
-        this.cognitoService.deleteUserPool(userPoolId)
+    deleteUser(userName: string) {
+        this.cognitoService.deleteUser(this.userPoolId, userName)
             .subscribe(() => {
-                this.snackBar.open('Userpool deleted, Id: ' + userPoolId, 'Done', {duration: 5000});
-                this.loadUserpools();
+                this.snackBar.open('User deleted, name: ' + userName, 'Done', {duration: 5000});
+                this.loadUsers();
             });
-    }
-
-    listUsers(userPoolId: string) {
-        this.router.navigate(['/cognito-user-list', userPoolId]);
     }
 }

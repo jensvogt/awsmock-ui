@@ -1,5 +1,7 @@
 export interface UserItem {
-    bucket: string | undefined;
-    key: string | undefined;
-    size: number | undefined;
+    id: string | undefined;
+    userName: string | undefined;
+    userPoolId: string | undefined;
+    enabled: boolean | undefined;
+    status: string | undefined;
 }

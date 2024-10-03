@@ -121,7 +121,7 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         // @ts-ignore
-        this.bucketData.sort = this.sort;
+        //this.bucketData.sort = this.sort;
     }
 
     back() {

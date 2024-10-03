@@ -358,7 +358,6 @@ export class HomeComponent implements OnInit, OnDestroy {
                         },
                         labels: {
                             formatter: function (val, index) {
-                                val /= 1000;
                                 return val.toFixed(0)
                             }
                         }

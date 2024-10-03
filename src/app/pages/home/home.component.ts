@@ -136,28 +136,16 @@ export class HomeComponent implements OnInit, OnDestroy {
         let end = this.getEndTime();
         this.monitoringService.getCounters('total_cpu', start, end, 5)
             .subscribe((data: any) => {
-                let performanceData: Array<number[]> = [];
-                data.counters.forEach((e: Counter) => {
-                    let c: number[] = [];
-                    c[0] = new Date(e.timestamp).getTime();
-                    c[1] = Number(e.value.toFixed(3));
-                    performanceData.push(c);
-                });
                 this.cpuChartOptions = {
                     series: [
                         {
                             name: "CPU Usage",
-                            data: performanceData,
+                            data: data.counters,
                         }
                     ],
                     chart: {
                         height: 350,
                         type: "line",
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
                     },
                     dataLabels: {
                         enabled: false
@@ -189,10 +177,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                     xaxis: {
                         type: "datetime",
                         title: {
-                            text: "Time (UTC)"
-                        },
-                        labels: {
-                            datetimeUTC: false
+                            text: "Time"
                         },
                         min: start.getTime(),
                         max: end.getTime(),
@@ -221,18 +206,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         let end = this.getEndTime();
         this.monitoringService.getCounters('real_memory_used', start, end, 5)
             .subscribe((data: any) => {
-                let performanceData: Array<number[]> = [];
-                data.counters.forEach((e: Counter) => {
-                    let c: number[] = [];
-                    c[0] = new Date(e.timestamp).getTime();
-                    c[1] = Number(e.value) / 1024;
-                    performanceData.push(c);
-                });
                 this.memChartOptions = {
                     series: [
                         {
                             name: "Memory Usage",
-                            data: performanceData,
+                            data: data.counters,
                         }
                     ],
                     chart: {
@@ -290,6 +268,12 @@ export class HomeComponent implements OnInit, OnDestroy {
                         decimalsInFloat: 0,
                         title: {
                             text: "Memory [MB]"
+                        },
+                        labels: {
+                            formatter: function (val, index) {
+                                val /= 1024;
+                                return val.toFixed(0);
+                            }
                         }
                     }
                 };
@@ -309,18 +293,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         let end = this.getEndTime();
         this.monitoringService.getCounters('gateway_http_timer', start, end, 5)
             .subscribe((data: any) => {
-                let performanceData: Array<number[]> = [];
-                data.counters.forEach((e: Counter) => {
-                    let c: number[] = [];
-                    c[0] = new Date(e.timestamp).getTime();
-                    c[1] = Number(e.value) / 1000;
-                    performanceData.push(c);
-                });
                 this.httpTimeChartOptions = {
                     series: [
                         {
                             name: "HTTP Response Time",
-                            data: performanceData,
+                            data: data.counters,
                         }
                     ],
                     chart: {
@@ -378,6 +355,12 @@ export class HomeComponent implements OnInit, OnDestroy {
                         decimalsInFloat: 0,
                         title: {
                             text: "HTTP Response Time [ms]"
+                        },
+                        labels: {
+                            formatter: function (val, index) {
+                                val /= 1000;
+                                return val.toFixed(0)
+                            }
                         }
                     }
                 };

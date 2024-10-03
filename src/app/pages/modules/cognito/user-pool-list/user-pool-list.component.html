@@ -18,21 +18,21 @@
                 </button>
             </mat-form-field>
             <div flex style="width:80%"></div>
-            <button (click)="uploadObject()" aria-label="Upload" mat-icon-button>
-                <mat-icon>upload</mat-icon>
+            <button (click)="addUserPool()" aria-label="Upload" mat-icon-button>
+                <mat-icon>add</mat-icon>
             </button>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
             </button>
         </mat-card-actions>
         <table (matSortChange)="sortChange($event)" [dataSource]="userPoolDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
-            <ng-container matColumnDef="key" matTooltip="Object key">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object key" sortActionDescription="Sort by key">Name</th>
-                <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+            <ng-container matColumnDef="key" matTooltip="User PoolId">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User Pool ID" sortActionDescription="Sort by userPoolId">ID</th>
+                <td *matCellDef="let element" mat-cell> {{ element.userPoolId }}</td>
             </ng-container>
-            <ng-container matColumnDef="size" matTooltip="Object size in bytes">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object size" sortActionDescription="Sort by key">Size in bytes</th>
-                <td *matCellDef="let element" mat-cell> {{ element.size }}</td>
+            <ng-container matColumnDef="size" matTooltip="Created">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object size" sortActionDescription="Sort by created">Created</th>
+                <td *matCellDef="let element" mat-cell> {{ element.created | date: 'dd-MM-yyyy' }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
@@ -40,7 +40,7 @@
                     <!--button (click)="listObjects(row.bucketName)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
                         <mat-icon>list</mat-icon>
                     </button-->
-                    <button (click)="deleteObject(row.key)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete object">
+                    <button (click)="deleteUserPool(row.userPoolId)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete object">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>

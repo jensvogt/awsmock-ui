@@ -19,11 +19,10 @@ import {MatIcon} from "@angular/material/icon";
 import {interval, Subscription} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {S3Service} from "../../../../services/s3-service.component";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";
@@ -31,8 +30,10 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {NgIf} from "@angular/common";
+import {DatePipe, formatDate, NgIf} from "@angular/common";
 import {UserPoolItem} from "../model/user-pool-item";
+import {AwsMockCognitoService} from "../../../../services/cognito.service";
+import {UserPoolAddComponentDialog} from "../user-pool-add/user-pool-add.component";
 
 @Component({
     selector: 'cognito-user-pool-list',
@@ -68,10 +69,11 @@ import {UserPoolItem} from "../model/user-pool-item";
         MatInput,
         MatLabel,
         MatSuffix,
-        NgIf
+        NgIf,
+        DatePipe
     ],
     styleUrls: ['./user-pool-list.component.scss'],
-    providers: [S3Service, AwsMockHttpService]
+    providers: [AwsMockCognitoService]
 })
 export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     lastUpdate: string = '';
@@ -98,20 +100,23 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     disabled = false;
     nextToken: string = '';
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
+
     // Sorting
     sortColumns: SortColumn[] = [];
+    // }
+    protected readonly formatDate = formatDate;
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute,
-                private navigation: NavigationService, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
+                private navigation: NavigationService, private s3Service: S3Service, private cognitoService: AwsMockCognitoService) {
     }
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
             this.bucketName = params['bucketName'];
         });
-        this.loadObjects();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadObjects());
+        this.loadUserpools();
+        this.updateSubscription = interval(60000).subscribe(() => this.loadUserpools());
     }
 
     ngOnDestroy(): void {
@@ -125,13 +130,13 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setPrefix() {
         this.prefixSet = true;
-        this.loadObjects();
+        this.loadUserpools();
     }
 
     unsetPrefix() {
         this.prefix = '';
         this.prefixSet = false;
-        this.loadObjects();
+        this.loadUserpools();
     }
 
     back() {
@@ -139,7 +144,7 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     refresh() {
-        this.loadObjects();
+        this.loadUserpools();
     }
 
     handlePageEvent(e: PageEvent) {
@@ -147,7 +152,7 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.length = e.length;
         this.pageSize = e.pageSize;
         this.pageIndex = e.pageIndex;
-        this.loadObjects();
+        this.loadUserpools();
     }
 
     sortChange(sortState: Sort) {
@@ -157,59 +162,62 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
-        this.loadObjects();
+        this.loadUserpools();
     }
 
     lastUpdateTime() {
         return new Date().toLocaleTimeString('DE-de');
     }
 
-    loadObjects() {
+    loadUserpools() {
         this.userPoolData = [];
-        this.awsmockHttpService.listObjectsCounters(this.bucketName, this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
+        this.cognitoService.listUserPools(this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
                 this.nextToken = data.NextContinuationToken;
-                if (data.objectCounters) {
-                    this.length = data.total;
-                    /*data.objectCounters.forEach((b: any) => {
-                        this.objectData.push({
-                            bucket: this.bucketName,
-                            key: b.keys,
-                            size: b.size,
+                if (data.UserPools) {
+                    this.length = data.Total;
+                    data.UserPools.forEach((b: any) => {
+                        this.userPoolData.push({
+                            id: b.Id,
+                            userPoolId: b.Id,
+                            created: new Date(b.CreationDate * 1000),
+                            modified: new Date(b.LastModifiedDate),
+                            region: b.Region
                         });
-                    });*/
+                    });
                 }
                 this.userPoolDataSource.data = this.userPoolData;
             });
     }
 
-    deleteObject(key: string) {
-        this.s3Service.deleteObject(this.bucketName, key)
-            .then(() => {
-                this.snackBar.open('Object deleted, bucket: ' + this.bucketName + ' key: ' + key, 'Done', {duration: 5000});
-                this.loadObjects();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.s3Service.cleanup();
-            });
-    }
-
-    uploadObject() {
-
-        /*const dialogConfig = new MatDialogConfig();
+    addUserPool() {
+        const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {bucketName: this.bucketName}
 
-        this.dialog.open(ObjectUploadComponent, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(UserPoolAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.loadObjects();
-                this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result, 'Done', {duration: 5000});
+                this.createUserPool(result)
             }
-        });*/
+        });
+    }
+
+    createUserPool(userPoolName: string) {
+        this.cognitoService.createUserPool(userPoolName)
+            .subscribe(() => {
+                this.snackBar.open('Userpool created, name: ' + userPoolName, 'Done', {duration: 5000});
+                this.loadUserpools();
+            });
+    }
+
+    deleteUserPool(userPoolId: string) {
+        this.cognitoService.deleteUserPool(userPoolId)
+            .subscribe(() => {
+                this.snackBar.open('Userpool deleted, Id: ' + userPoolId, 'Done', {duration: 5000});
+                this.loadUserpools();
+            });
     }
 
     //
@@ -253,5 +261,20 @@ export class UserPoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     //         .finally(() => {
     //             this.s3Service.cleanup();
     //         });
-    // }
+
+    uploadObject() {
+
+        /*const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {bucketName: this.bucketName}
+
+        this.dialog.open(ObjectUploadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.loadObjects();
+                this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result, 'Done', {duration: 5000});
+            }
+        });*/
+    }
 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.7](https://github.com/jensvogt/awsmock-ui/compare/v1.2.6...v1.2.7) (2024-10-03)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** Add cognito user pools ([b32c5f4](https://github.com/jensvogt/awsmock-ui/commit/b32c5f45b5c4f8c3af8a78eb8b62401f278bcbca))
+* **1-create-first-release:** Add cognito user pools ([eff3dd3](https://github.com/jensvogt/awsmock-ui/commit/eff3dd33e9bad2d0be21ce207ade9f4e1ffaa67b))
+
 ## [1.2.6](https://github.com/jensvogt/awsmock-ui/compare/v1.2.5...v1.2.6) (2024-10-02)
 
 

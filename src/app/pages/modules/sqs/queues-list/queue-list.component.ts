@@ -27,7 +27,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {SqsService} from "../../../../services/sqs-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SendMessageComponentDialog} from "./send-message/send-message.component";
+import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {Router, RouterLink} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";

@@ -1,0 +1,11 @@
+<h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Publish SNS message: {{ topicName }}</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-form-field style="width: 100%;height:100%">
+        <mat-label>Message:</mat-label>
+        <textarea [(ngModel)]="message" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Message" style="width:100%; height:100%"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="sendMessage()" cdkFocusInitial mat-button>Send</button>
+</mat-dialog-actions>

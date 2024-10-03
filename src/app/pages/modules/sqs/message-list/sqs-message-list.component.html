@@ -7,24 +7,32 @@
     </mat-card-header>
     <mat-card-content>
         <mat-card-actions class="head-buttons">
-            <!--button (click)="addQueue()" aria-label="Refresh" mat-icon-button>
+            <button (click)="sendMessage()" aria-label="Add message" mat-icon-button>
                 <mat-icon>add</mat-icon>
             </button>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
-            </button-->
+            </button>
         </mat-card-actions>
         <table (matSortChange)="sortChange($event)" [dataSource]="messageDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
             <ng-container matColumnDef="messageId">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Name</th>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
                 <td *matCellDef="let element" mat-cell> {{ element.messageId }}</td>
             </ng-container>
             <ng-container matColumnDef="region">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Region" sortActionDescription="Sort by region">Region</th>
                 <td *matCellDef="let element" mat-cell> {{ element.region }}</td>
             </ng-container>
+            <ng-container matColumnDef="created">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by created">Created</th>
+                <td *matCellDef="let element" mat-cell> {{ element.created|date:'dd-MM-yyyy HH:mm:ss' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="modified">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
+                <td *matCellDef="let element" mat-cell> {{ element.modified|date:'dd-MM-yyyy HH:mm:ss' }}</td>
+            </ng-container>
             <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
+                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                 <td *matCellDef="let row" mat-cell>
                     <button (click)="editMessage(row)" aria-label="Send" mat-icon-button matTooltip="Send a message">
                         <mat-icon>edit</mat-icon>

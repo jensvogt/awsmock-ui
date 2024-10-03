@@ -22,11 +22,12 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
-import {MessageItem} from "../../sqs/model/sqs-message-item";
 import {interval, Subscription} from "rxjs";
 import {NavigationService} from "../../../../services/navigation.service";
+import {SnsMessageItem} from "../model/sns-message-item";
+import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
 
 @Component({
     selector: 'app-home',
@@ -62,7 +63,7 @@ export class SnsMessageListComponent implements OnInit {
     lastUpdate: string = '';
 
     // Table
-    messageData: Array<MessageItem> = [];
+    messageData: Array<SnsMessageItem> = [];
     messageDataSource = new MatTableDataSource(this.messageData);
     columns: any[] = ['messageId', 'region', 'actions'];
 
@@ -104,6 +105,10 @@ export class SnsMessageListComponent implements OnInit {
         this.navigation.back();
     }
 
+    refresh() {
+        this.loadMessages();
+    }
+
     sortChange(sortState: Sort) {
         if (sortState.direction) {
             this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -133,10 +138,29 @@ export class SnsMessageListComponent implements OnInit {
                         body: m.body,
                         md5Sum: m.md5Sum,
                         receiptHandle: m.receiptHandle,
-                        region: m.region
+                        region: m.region,
+                        created: undefined,
                     });
                 });
                 this.messageDataSource.data = this.messageData;
             });
+    }
+
+    publishMessage() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {topicArn: this.topicArn};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+
+        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                //this.snsService.publishMessage(this.topicArn, result);
+                this.loadMessages();
+            }
+        });
     }
 }

@@ -28,6 +28,7 @@ import {Router, RouterLink} from "@angular/router";
 import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {SnsService} from "../../../../services/sns-service.component";
 import {NavigationService} from "../../../../services/navigation.service";
+import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
 
 @Component({
     selector: 'app-home',
@@ -187,7 +188,21 @@ export class TopicListComponent implements OnInit, OnDestroy {
     }
 
     publishMessage(topicArn: string) {
+        const dialogConfig = new MatDialogConfig();
 
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {topicArn: topicArn};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+
+        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.snsService.publishMessage(topicArn, result);
+                this.loadTopics();
+            }
+        });
     }
 
     deleteTopic(topicArn: string) {

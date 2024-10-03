@@ -24,11 +24,13 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
 import {interval, Subscription} from "rxjs";
-import {MessageItem} from "../model/sqs-message-item";
+import {SqsMessageItem} from "../model/sqs-message-item";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {EditMessageComponentDialog} from "./edit-message/edit-message.component";
 import {NavigationService} from "../../../../services/navigation.service";
+import {DatePipe} from "@angular/common";
+import {SendMessageComponentDialog} from "../send-message/send-message.component";
 
 @Component({
     selector: 'sqs-message-list',
@@ -56,7 +58,8 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatTooltip,
         RouterLink,
         MatNoDataRow,
-        MatHeaderCellDef
+        MatHeaderCellDef,
+        DatePipe
     ],
     styleUrls: ['./sqs-message-list.component.scss'],
     providers: [AwsMockHttpService]
@@ -65,9 +68,9 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
     // Table
-    messageData: Array<MessageItem> = [];
+    messageData: Array<SqsMessageItem> = [];
     messageDataSource = new MatTableDataSource(this.messageData);
-    columns: any[] = ['messageId', 'region', 'actions'];
+    columns: any[] = ['messageId', 'region', 'created', 'modified', 'actions'];
 
     // Paging
     length = 0;
@@ -108,7 +111,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         this.queueName = this.queueArn.substring(this.queueArn.lastIndexOf(':') + 1);
         this.sqsService.getQueueUrl(this.queueName)
             .then((data: any) => {
-                this.queueUrl = data;
+                this.queueUrl = data.QueueUrl;
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
@@ -123,6 +126,10 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     back() {
         this.navigation.back();
+    }
+
+    refresh() {
+        this.loadMessages();
     }
 
     sortChange(sortState: Sort) {
@@ -154,14 +161,16 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
                         body: m.body,
                         md5Sum: m.md5Sum,
                         receiptHandle: m.receiptHandle,
-                        region: m.region
+                        region: m.region,
+                        created: m.created,
+                        modified: m.modified,
                     });
                 });
                 this.messageDataSource.data = this.messageData;
             });
     }
 
-    editMessage(message: MessageItem) {
+    editMessage(message: SqsMessageItem) {
 
         const dialogConfig = new MatDialogConfig();
 
@@ -172,7 +181,28 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.maxHeight = '80vh';
         dialogConfig.panelClass = 'full-screen-modal';
 
-        this.dialog.open(EditMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(EditMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
+        });
+    }
+
+    sendMessage() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {queueUrl: this.queueUrl};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+
+        this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.sqsService.sendMessage(this.queueUrl, result).then(() => {
+                    this.loadMessages();
+                    this.snackBar.open('Message send, queueArn: ' + this.queueArn, 'Done', {duration: 5000});
+                });
+            }
         });
     }
 

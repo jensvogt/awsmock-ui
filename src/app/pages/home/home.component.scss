@@ -67,6 +67,11 @@ body {
   justify-content: flex-end;
 }
 
-.mat-pseudo-checkbox {
-  display: none !important;
+.full-screen-modal .mat-dialog-container {
+  max-width: none;
+}
+
+.body {
+  flex-grow: 1;
+  overflow: hidden;
 }

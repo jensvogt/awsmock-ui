@@ -101,7 +101,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     // Aws client
     client = new SNSClient({
         region: environment.awsmockRegion,
-        endpoint: environment.awsmockEndpoint,
+        endpoint: environment.gatewayEndpoint,
         credentials: {
             accessKeyId: 'test',
             secretAccessKey: 'test',

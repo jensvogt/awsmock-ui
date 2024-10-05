@@ -11,7 +11,6 @@ import {SnsMessageListComponent} from "./pages/modules/sns/message-list/sns-mess
 import {BucketDetailComponent} from "./pages/modules/s3/bucket-detail/bucket-detail.component";
 import {UserPoolListComponent} from "./pages/modules/cognito/user-pool-list/user-pool-list.component";
 import {UserListComponent} from "./pages/modules/cognito/user-list/user-list.component";
-import {ExportInfrastructureComponent} from "./pages/export/export-infrastructure.component";
 
 export const routes: Routes = [
     {
@@ -61,14 +60,6 @@ export const routes: Routes = [
     },
     {
         path: 'cognito-user-list/:userPoolId',
-        component: UserListComponent,
-    },
-    {
-        path: 'export-to-json',
-        component: ExportInfrastructureComponent,
-    },
-    {
-        path: 'import-from-json',
         component: UserListComponent,
     },
     {

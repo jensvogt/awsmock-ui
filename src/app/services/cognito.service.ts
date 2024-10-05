@@ -9,7 +9,7 @@ import {SortColumn} from "../shared/sorting/sorting.component";
 export class AwsMockCognitoService {
 
     cognitoConfig = new CognitoConfig;
-    url: string = environment.awsmockEndpoint + '/';
+    url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
     }

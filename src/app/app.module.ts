@@ -1,6 +1,6 @@
 import {NgModule} from "@angular/core";
 import {AppComponent} from "./app.component";
-import {BrowserModule, provideClientHydration} from "@angular/platform-browser";
+import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatToolbar, MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenav, MatSidenavContainer, MatSidenavContent, MatSidenavModule} from "@angular/material/sidenav";
@@ -13,12 +13,13 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {provideRouter, RouterModule, RouterOutlet, withComponentInputBinding} from "@angular/router";
 import {NgIf} from "@angular/common";
 import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {EchartsxModule} from 'echarts-for-angular';
 
 @NgModule({
     declarations: [AppComponent],
     exports: [AppComponent],
     bootstrap: [AppComponent],
-    providers: [provideClientHydration(), provideRouter(routes, withComponentInputBinding()), provideHttpClient(withInterceptorsFromDi())],
+    providers: [provideRouter(routes, withComponentInputBinding()), provideHttpClient(withInterceptorsFromDi())],
     imports: [
         BrowserModule,
         routes,
@@ -40,6 +41,7 @@ import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
         MatSidenavContent,
         RouterOutlet,
         NgIf,
+        EchartsxModule
     ],
 })
 export class AppModule {

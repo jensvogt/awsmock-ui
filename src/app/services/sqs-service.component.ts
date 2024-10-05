@@ -18,7 +18,7 @@ export class SqsService {
 
     client = new SQSClient({
         region: environment.awsmockRegion,
-        endpoint: environment.awsmockEndpoint,
+        endpoint: environment.gatewayEndpoint,
         credentials: {
             accessKeyId: 'test',
             secretAccessKey: 'test',

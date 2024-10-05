@@ -26,3 +26,11 @@ export class MonitoringConfig {
         })
     }
 }
+
+export class ManagerConfig {
+    managerHttpOptions: any = {
+        headers: new HttpHeaders({
+            'Content-Type': 'application/json'
+        })
+    }
+}

@@ -9,7 +9,7 @@ import {S3Config} from "./awsmock-http-config";
 export class AwsMockHttpService {
 
     S3Config = new S3Config;
-    url: string = environment.awsmockEndpoint + '/';
+    url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
     }

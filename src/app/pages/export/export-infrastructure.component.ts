@@ -1,22 +1,19 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
 import {ChartComponent} from "ng-apexcharts";
-import {
-    MatCard,
-    MatCardActions,
-    MatCardContent,
-    MatCardHeader,
-    MatCardImage,
-    MatCardTitle
-} from "@angular/material/card";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
 import {NgForOf, NgIf} from "@angular/common";
 import {MatList, MatListItem, MatListOption, MatNavList, MatSelectionList} from "@angular/material/list";
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
-import {MatOption, MatSelect} from "@angular/material/select";
+import {MatFormField, MatLabel, MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {AwsMockMonitoringService} from "../../services/monitoring.service";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MatInput} from "@angular/material/input";
+import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 
 @Component({
     selector: 'export-infrastructure-component',
@@ -45,15 +42,35 @@ import {AwsMockMonitoringService} from "../../services/monitoring.service";
         MatListOption,
         MatSelectionList,
         MatNavList,
+        MatDialogActions,
+        MatDialogClose,
+        MatDialogContent,
+        MatDialogTitle,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        CdkDrag,
+        CdkDragHandle,
+        CdkTextareaAutosize,
     ],
     providers: [AwsMockMonitoringService],
     styleUrls: ['./export-infrastructure.component.scss']
 })
-export class ExportInfrastructureComponent implements OnInit, OnDestroy {
+export class ExportInfrastructureComponentDialog implements OnInit, OnDestroy {
+
+    body: string | undefined;
+
+    constructor(private dialogRef: MatDialogRef<ExportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.body = JSON.stringify(data, null, 4);
+    }
 
     ngOnInit(): void {
     }
 
     ngOnDestroy(): void {
+    }
+
+    exportInfrastructure() {
+
     }
 }

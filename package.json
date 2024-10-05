@@ -24,6 +24,8 @@
     "@aws-sdk/client-s3": "^3.658.1",
     "@aws-sdk/client-sns": "^3.658.1",
     "@aws-sdk/client-sqs": "^3.658.1",
+    "echarts": "^5.5.1",
+    "echarts-for-angular": "^0.4.0",
     "ng-apexcharts": "^1.12.0",
     "rxjs": "~7.8.0",
     "sass": "^1.79.3",

@@ -1,13 +1,6 @@
-import {
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle
-} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -18,7 +11,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {SqsMessageItem} from "../../model/sqs-message-item";
 
 @Component({
-    selector: 'edit-message-dialog',
+    selector: 'sqs-edit-message-dialog',
     templateUrl: './edit-message.component.html',
     standalone: true,
     imports: [
@@ -47,7 +40,7 @@ export class EditMessageComponentDialog implements OnInit {
     messageId: string | undefined = '';
     message: SqsMessageItem | undefined;
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<EditMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private dialogRef: MatDialogRef<EditMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.message = data.message;
         this.body = this.message?.body;
         this.messageId = this.message?.messageId;

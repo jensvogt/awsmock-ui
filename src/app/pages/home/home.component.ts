@@ -1,15 +1,8 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {
-    MatCard,
-    MatCardActions,
-    MatCardContent,
-    MatCardHeader,
-    MatCardImage,
-    MatCardTitle
-} from "@angular/material/card";
+import {Component, LOCALE_ID, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, registerLocaleData} from "@angular/common";
 import {MatList, MatListItem, MatListOption, MatNavList, MatSelectionList} from "@angular/material/list";
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
@@ -29,11 +22,17 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
 import {AwsMockMonitoringService} from "../../services/monitoring.service";
+import localeDECH from '@angular/common/locales/de';
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {ExportInfrastructureComponentDialog} from "../export/export-infrastructure.component";
+import {AwsMockExportService} from "../../services/export.service";
 
 interface Range {
     value: string;
     viewValue: string;
 }
+
+registerLocaleData(localeDECH);
 
 interface Counter {
     name: string;
@@ -89,17 +88,16 @@ export type ChartOptions = {
         MatIconButton,
         MatListOption,
         MatSelectionList,
-        MatNavList,
+        MatNavList
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [AwsMockMonitoringService, AwsMockExportService, {provide: LOCALE_ID, useValue: 'de-CH'}],
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-    @ViewChild("chart") chart: ChartComponent | undefined;
-    public cpuChartOptions: ChartOptions | undefined;
-    public memChartOptions: ChartOptions | undefined;
-    public httpTimeChartOptions: ChartOptions | undefined;
+    public cpuChartOptions: Partial<ChartOptions> | undefined;
+    public memChartOptions: Partial<ChartOptions> | undefined;
+    public httpTimeChartOptions: Partial<ChartOptions> | undefined;
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -108,8 +106,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     selectedCpuChoice: string = this.ranges[0].value;
     selectedMemoryChoice: string = this.ranges[0].value;
     selectedHttpTimeChoice: string = this.ranges[0].value;
+    @ViewChild("cpuChart") cpuChart: ChartComponent | undefined;
+    @ViewChild("memoryChart") memoryChart: ChartComponent | undefined;
+    @ViewChild("httpTimerChart") httpTimerChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: AwsMockMonitoringService) {
+    constructor(private monitoringService: AwsMockMonitoringService, private exportService: AwsMockExportService, private dialog: MatDialog) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.loadCpuChart();
             this.loadMemoryChart();
@@ -155,7 +156,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                         width: 1
                     },
                     tooltip: {
-                        shared: false,
+                        shared: true,
                         x: {
                             format: "dd/MM HH:mm:ss"
                         }
@@ -179,6 +180,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                         title: {
                             text: "Time"
                         },
+                        labels: {
+                            datetimeUTC: false
+                        },
                         min: start.getTime(),
                         max: end.getTime(),
                     },
@@ -193,10 +197,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             });
     }
 
-    updateCpuChart() {
-        this.loadCpuChart();
-    }
-
     // ===================================================================================================================
     // Memory Performance
     // ===================================================================================================================
@@ -209,21 +209,13 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.memChartOptions = {
                     series: [
                         {
-                            name: "Memory Usage",
+                            name: "memoryChart",
                             data: data.counters,
                         }
                     ],
                     chart: {
                         height: 350,
                         type: "line",
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        },
                     },
                     dataLabels: {
                         enabled: false
@@ -280,10 +272,6 @@ export class HomeComponent implements OnInit, OnDestroy {
             });
     }
 
-    updateMemoryChart() {
-        this.loadMemoryChart();
-    }
-
     // ===================================================================================================================
     // HTTP response time performance
     // ===================================================================================================================
@@ -303,14 +291,6 @@ export class HomeComponent implements OnInit, OnDestroy {
                     chart: {
                         height: 350,
                         type: "line",
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        },
                     },
                     dataLabels: {
                         enabled: false
@@ -358,13 +338,35 @@ export class HomeComponent implements OnInit, OnDestroy {
                         },
                         labels: {
                             formatter: function (val, index) {
-                                val /= 1000;
                                 return val.toFixed(0)
                             }
                         }
                     }
                 };
             });
+    }
+
+    exportInfrastructure() {
+
+        this.exportService.getInfrastructure().subscribe((data: any) => {
+
+            const dialogConfig = new MatDialogConfig();
+            dialogConfig.disableClose = true;
+            dialogConfig.autoFocus = true;
+            dialogConfig.maxWidth = '100vw';
+            dialogConfig.maxHeight = '100vh';
+            dialogConfig.panelClass = 'full-screen-modal';
+            dialogConfig.width = "90%"
+            dialogConfig.data = data;
+
+            this.dialog.open(ExportInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+                if (result) {
+                    console.log(result);
+                    // this.sqsService.sendMessage(queueUrl, result);
+                    // this.loadQueues();
+                }
+            });
+        });
     }
 
     getStartTime(choice: string): Date {

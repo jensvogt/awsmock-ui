@@ -1,11 +1,5 @@
 import {Injectable} from "@angular/core";
-import {
-    CreateTopicCommand,
-    DeleteTopicCommand,
-    ListTopicsCommand,
-    SNSClient,
-    SubscribeCommand
-} from "@aws-sdk/client-sns";
+import {CreateTopicCommand, DeleteTopicCommand, ListTopicsCommand, SNSClient, SubscribeCommand} from "@aws-sdk/client-sns";
 import {environment} from "../../environments/environment";
 
 @Injectable({providedIn: 'root'})
@@ -13,7 +7,7 @@ export class SnsService {
 
     client = new SNSClient({
         region: environment.awsmockRegion,
-        endpoint: environment.awsmockEndpoint,
+        endpoint: environment.gatewayEndpoint,
         credentials: {
             accessKeyId: 'test',
             secretAccessKey: 'test',

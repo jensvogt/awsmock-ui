@@ -94,7 +94,7 @@ export type ChartOptions = {
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-
+    lastUpdate: string = '';
     public cpuChartOptions: Partial<ChartOptions> | undefined;
     public memChartOptions: Partial<ChartOptions> | undefined;
     public httpTimeChartOptions: Partial<ChartOptions> | undefined;
@@ -115,6 +115,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.loadCpuChart();
             this.loadMemoryChart();
             this.loadHttpTimeChart();
+            this.lastUpdate = new Date().toLocaleTimeString('DE-de');
         });
     }
 
@@ -122,6 +123,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.loadCpuChart();
         this.loadMemoryChart();
         this.loadHttpTimeChart();
+        this.lastUpdate = new Date().toLocaleTimeString('DE-de');
     }
 
     ngOnDestroy(): void {
@@ -152,8 +154,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                         enabled: false
                     },
                     stroke: {
-                        curve: "monotoneCubic",
-                        width: 1
+                        show: true,
+                        curve: "smooth",
+                        width: 2
                     },
                     tooltip: {
                         shared: true,
@@ -221,8 +224,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                         enabled: false
                     },
                     stroke: {
-                        curve: "monotoneCubic",
-                        width: 1
+                        show: true,
+                        curve: "smooth",
+                        width: 2
                     },
                     title: {
                         text: "Memory",
@@ -296,8 +300,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                         enabled: false
                     },
                     stroke: {
-                        curve: "monotoneCubic",
-                        width: 1
+                        show: true,
+                        curve: "smooth",
+                        width: 2
                     },
                     title: {
                         text: "HTTP Response Time",

@@ -8,7 +8,7 @@ import {ManagerConfig} from "./awsmock-http-config";
 export class AwsMockExportService {
 
     managerConfig = new ManagerConfig;
-    url: string = environment.managerEndpoint + '/?pretty=true';
+    url: string = environment.managerEndpoint + '/';
 
     constructor(private http: HttpClient) {
     }

@@ -10,15 +10,14 @@ import {RouterLink} from "@angular/router";
 import {MatFormField, MatLabel, MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {AwsMockMonitoringService} from "../../services/monitoring.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {FileExportComponent} from "./file-export/file-export.component";
 
 @Component({
     selector: 'export-infrastructure-component',
-    templateUrl: './export-infrastructure.component.html',
+    templateUrl: './import-infrastructure.component.html',
     standalone: true,
     imports: [
         ChartComponent,
@@ -55,13 +54,13 @@ import {FileExportComponent} from "./file-export/file-export.component";
         CdkTextareaAutosize,
     ],
     providers: [AwsMockMonitoringService],
-    styleUrls: ['./export-infrastructure.component.scss']
+    styleUrls: ['./import-infrastructure.component.scss']
 })
-export class ExportInfrastructureComponentDialog implements OnInit, OnDestroy {
+export class ImportInfrastructureComponentDialog implements OnInit, OnDestroy {
 
     body: string | undefined;
 
-    constructor(private dialogRef: MatDialogRef<ExportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private dialog: MatDialog) {
+    constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.body = JSON.stringify(data, null, 4);
     }
 
@@ -71,17 +70,7 @@ export class ExportInfrastructureComponentDialog implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
-    fileExport() {
+    exportInfrastructure() {
 
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = this.body;
-
-        this.dialog.open(FileExportComponent, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                this.dialogRef.close(true);
-            }
-        });
     }
 }

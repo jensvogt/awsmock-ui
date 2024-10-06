@@ -21,119 +21,13 @@
                 <mat-card-content>
                     <mat-nav-list>
                         <a (click)="exportInfrastructure()" mat-list-item>Export Infrastructure</a>
-                        <a href="/import-from-json" mat-list-item>Import Infrastructure</a>
+                        <a (click)="importInfrastructure()" mat-list-item>Import Infrastructure</a>
                     </mat-nav-list>
                 </mat-card-content>
             </mat-card>
-            <mat-card class="mat-elevation-z4">
-                <mat-card-header>
-                    <div class="container">
-                        <div class="flex-container-left">
-                            <div class="flex-item">
-                                <!--mat-card-title class="one">Performance</mat-card-title-->
-                            </div>
-                        </div>
-                        <div class="flex-container-right">
-                            <div class="flex-item">
-                                <mat-card-actions>
-                                    <mat-select (selectionChange)="loadCpuChart()" [(ngModel)]="selectedCpuChoice" style="width:200px">
-                                        @for (range of ranges; track range) {
-                                            <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
-                                        }
-                                    </mat-select>
-                                </mat-card-actions>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card-header>
-                <mat-card-content>
-                    <apx-chart
-                            [chart]="cpuChartOptions?.chart"
-                            [dataLabels]="cpuChartOptions?.dataLabels"
-                            [grid]="cpuChartOptions?.grid"
-                            [series]="cpuChartOptions?.series"
-                            [stroke]="cpuChartOptions?.stroke"
-                            [title]="cpuChartOptions?.title"
-                            [tooltip]="cpuChartOptions?.tooltip"
-                            [xaxis]="cpuChartOptions?.xaxis"
-                            [yaxis]="cpuChartOptions?.yaxis"
-                    ></apx-chart>
-                </mat-card-content>
-            </mat-card>
-            <mat-card class="mat-elevation-z3">
-                <mat-card-header>
-                    <div class="container">
-                        <div class="flex-container-left">
-                            <div class="flex-item">
-                                <!--mat-card-title class="one">Performance</mat-card-title-->
-                            </div>
-                        </div>
-                        <div class="flex-container-right">
-                            <div class="flex-item">
-                                <mat-card-actions>
-                                    <mat-select (selectionChange)="loadMemoryChart()" [(ngModel)]="selectedMemoryChoice" style="width:200px">
-                                        @for (range of ranges; track range) {
-                                            <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
-                                        }
-                                    </mat-select>
-                                </mat-card-actions>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card-header>
-                <mat-card-content>
-                    <div>
-                        <apx-chart
-                                [chart]="memChartOptions?.chart"
-                                [dataLabels]="memChartOptions?.dataLabels"
-                                [grid]="memChartOptions?.grid"
-                                [series]="memChartOptions?.series"
-                                [stroke]="memChartOptions?.stroke"
-                                [title]="memChartOptions?.title"
-                                [tooltip]="memChartOptions?.tooltip"
-                                [xaxis]="memChartOptions?.xaxis"
-                                [yaxis]="memChartOptions?.yaxis"
-                        ></apx-chart>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-            <mat-card class="mat-elevation-z3">
-                <mat-card-header>
-                    <div class="container">
-                        <div class="flex-container-left">
-                            <div class="flex-item">
-                                <!--mat-card-title class="one">Performance</mat-card-title-->
-                            </div>
-                        </div>
-                        <div class="flex-container-right">
-                            <div class="flex-item">
-                                <mat-card-actions>
-                                    <mat-select (selectionChange)="loadHttpTimeChart()" [(ngModel)]="selectedHttpTimeChoice" style="width:200px">
-                                        @for (range of ranges; track range) {
-                                            <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
-                                        }
-                                    </mat-select>
-                                </mat-card-actions>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card-header>
-                <mat-card-content>
-                    <div>
-                        <apx-chart
-                                [chart]="httpTimeChartOptions?.chart"
-                                [dataLabels]="httpTimeChartOptions?.dataLabels"
-                                [grid]="httpTimeChartOptions?.grid"
-                                [series]="httpTimeChartOptions?.series"
-                                [stroke]="httpTimeChartOptions?.stroke"
-                                [title]="httpTimeChartOptions?.title"
-                                [tooltip]="httpTimeChartOptions?.tooltip"
-                                [xaxis]="httpTimeChartOptions?.xaxis"
-                                [yaxis]="httpTimeChartOptions?.yaxis"
-                        ></apx-chart>
-                    </div>
-                </mat-card-content>
-            </mat-card>
+            <cpu-chart-component></cpu-chart-component>
+            <memory-chart-component></memory-chart-component>
+            <gateway-time-chart-component></gateway-time-chart-component>
         </div>
         <div class="footer">
             Last update: {{ lastUpdate }}

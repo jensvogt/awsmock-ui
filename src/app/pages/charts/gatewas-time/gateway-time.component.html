@@ -1,0 +1,37 @@
+<mat-card class="mat-elevation-z3">
+    <mat-card-header>
+        <div class="container">
+            <div class="flex-container-left">
+                <div class="flex-item">
+                    <!--mat-card-title class="one">Performance</mat-card-title-->
+                </div>
+            </div>
+            <div class="flex-container-right">
+                <div class="flex-item">
+                    <mat-card-actions>
+                        <mat-select (selectionChange)="loadHttpTimeChart()" [(ngModel)]="selectedHttpTimeChoice" style="width:200px">
+                            @for (range of ranges; track range) {
+                                <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-card-actions>
+                </div>
+            </div>
+        </div>
+    </mat-card-header>
+    <mat-card-content>
+        <div>
+            <apx-chart
+                    [chart]="httpTimeChartOptions?.chart"
+                    [dataLabels]="httpTimeChartOptions?.dataLabels"
+                    [grid]="httpTimeChartOptions?.grid"
+                    [series]="httpTimeChartOptions?.series"
+                    [stroke]="httpTimeChartOptions?.stroke"
+                    [title]="httpTimeChartOptions?.title"
+                    [tooltip]="httpTimeChartOptions?.tooltip"
+                    [xaxis]="httpTimeChartOptions?.xaxis"
+                    [yaxis]="httpTimeChartOptions?.yaxis"
+            ></apx-chart>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -1,13 +1,6 @@
-import {
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle
-} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -42,8 +35,6 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 })
 export class SendMessageComponentDialog implements OnInit {
 
-    // @ts-ignore
-    form: FormGroup;
     queueUrl: string = '';
     queueName: string = '';
     message: string = '';
@@ -54,10 +45,6 @@ export class SendMessageComponentDialog implements OnInit {
     }
 
     ngOnInit() {
-        //this.dialogRef.updateSize('90%', '90%');
-        this.form = this.fb.group({
-            queueName: [""],
-        });
     }
 
     sendMessage() {

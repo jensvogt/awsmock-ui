@@ -43,7 +43,7 @@ export class PublishMessageComponentDialog implements OnInit {
 
     constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<PublishMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
-        this.topicName = data.queueUrl.substring(this.topicArn.lastIndexOf(':') + 1);
+        this.topicName = data.topicArn.substring(this.topicArn.lastIndexOf(':') + 1);
     }
 
     ngOnInit() {

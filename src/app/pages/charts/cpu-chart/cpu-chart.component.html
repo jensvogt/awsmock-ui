@@ -1,0 +1,35 @@
+<mat-card class="mat-elevation-z4">
+    <mat-card-header>
+        <div class="container">
+            <div class="flex-container-left">
+                <div class="flex-item">
+                    <!--mat-card-title class="one">Performance</mat-card-title-->
+                </div>
+            </div>
+            <div class="flex-container-right">
+                <div class="flex-item">
+                    <mat-card-actions>
+                        <mat-select (selectionChange)="loadCpuChart()" [(ngModel)]="selectedCpuChoice" style="width:200px">
+                            @for (range of ranges; track range) {
+                                <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-card-actions>
+                </div>
+            </div>
+        </div>
+    </mat-card-header>
+    <mat-card-content>
+        <apx-chart
+                [chart]="cpuChartOptions?.chart"
+                [dataLabels]="cpuChartOptions?.dataLabels"
+                [grid]="cpuChartOptions?.grid"
+                [series]="cpuChartOptions?.series"
+                [stroke]="cpuChartOptions?.stroke"
+                [title]="cpuChartOptions?.title"
+                [tooltip]="cpuChartOptions?.tooltip"
+                [xaxis]="cpuChartOptions?.xaxis"
+                [yaxis]="cpuChartOptions?.yaxis"
+        ></apx-chart>
+    </mat-card-content>
+</mat-card>

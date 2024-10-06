@@ -396,9 +396,4 @@ export class HomeComponent implements OnInit, OnDestroy {
         endTime.setMilliseconds(0);
         return endTime;
     }
-
-    updateHttpTimeChart() {
-        this.loadHttpTimeChart();
-    }
-
 }

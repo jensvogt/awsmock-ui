@@ -3,7 +3,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from "../../environments/environment";
 import {MonitoringConfig} from "./awsmock-http-config";
-import {formatDate} from "@angular/common";
 
 @Injectable()
 export class AwsMockMonitoringService {
@@ -22,8 +21,8 @@ export class AwsMockMonitoringService {
         const body = {
             region: environment.awsmockRegion,
             name: name,
-            start: formatDate(start, 'yyyy-MM-ddTHH:mm:ss', 'de-De'),
-            end: formatDate(end, 'yyyy-MM-ddTHH:mm:ss', 'de-De'),
+            start: start.getTime(),
+            end: end.getTime(),
             step: step
         }
         return this.http.post(this.url, body, {headers: headers});

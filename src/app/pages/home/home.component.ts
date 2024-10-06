@@ -34,14 +34,6 @@ interface Range {
 
 registerLocaleData(localeDECH);
 
-interface Counter {
-    name: string;
-    labelName: string;
-    labelValue: string;
-    timestamp: Date;
-    value: number;
-}
-
 const Ranges: Array<Range> = [
     {value: 'Today', viewValue: 'Today'},
     {value: 'LastHour', viewValue: 'Last Hour'},
@@ -139,64 +131,66 @@ export class HomeComponent implements OnInit, OnDestroy {
         let end = this.getEndTime();
         this.monitoringService.getCounters('total_cpu', start, end, 5)
             .subscribe((data: any) => {
-                this.cpuChartOptions = {
-                    series: [
-                        {
-                            name: "CPU Usage",
-                            data: data.counters,
-                        }
-                    ],
-                    chart: {
-                        height: 350,
-                        type: "line",
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        show: true,
-                        curve: "smooth",
-                        width: 2
-                    },
-                    tooltip: {
-                        shared: true,
-                        x: {
-                            format: "dd/MM HH:mm:ss"
-                        }
-                    },
-                    title: {
-                        text: "CPU",
-                        align: "center"
-                    },
-                    grid: {
-                        row: {
-                            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                            opacity: 0.5
+                if (data) {
+                    this.cpuChartOptions = {
+                        series: [
+                            {
+                                name: "CPU Usage",
+                                data: data.counters,
+                            }
+                        ],
+                        chart: {
+                            height: 350,
+                            type: "line",
                         },
-                        column: {
-                            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                            opacity: 0.5
-                        }
-                    },
-                    xaxis: {
-                        type: "datetime",
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            show: true,
+                            curve: "smooth",
+                            width: 2
+                        },
+                        tooltip: {
+                            shared: true,
+                            x: {
+                                format: "dd/MM HH:mm:ss"
+                            }
+                        },
                         title: {
-                            text: "Time"
+                            text: "CPU",
+                            align: "center"
                         },
-                        labels: {
-                            datetimeUTC: false
+                        grid: {
+                            row: {
+                                colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            },
+                            column: {
+                                colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            }
                         },
-                        min: start.getTime(),
-                        max: end.getTime(),
-                    },
-                    yaxis: {
-                        min: 0,
-                        decimalsInFloat: 3,
-                        title: {
-                            text: "CPU [%]"
+                        xaxis: {
+                            type: "datetime",
+                            title: {
+                                text: "Time"
+                            },
+                            labels: {
+                                datetimeUTC: false
+                            },
+                            min: start.getTime(),
+                            max: end.getTime(),
+                        },
+                        yaxis: {
+                            min: 0,
+                            decimalsInFloat: 3,
+                            title: {
+                                text: "CPU [%]"
+                            }
                         }
-                    }
-                };
+                    };
+                }
             });
     }
 
@@ -209,70 +203,72 @@ export class HomeComponent implements OnInit, OnDestroy {
         let end = this.getEndTime();
         this.monitoringService.getCounters('real_memory_used', start, end, 5)
             .subscribe((data: any) => {
-                this.memChartOptions = {
-                    series: [
-                        {
-                            name: "memoryChart",
-                            data: data.counters,
-                        }
-                    ],
-                    chart: {
-                        height: 350,
-                        type: "line",
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        show: true,
-                        curve: "smooth",
-                        width: 2
-                    },
-                    title: {
-                        text: "Memory",
-                        align: "center"
-                    },
-                    tooltip: {
-                        x: {
-                            format: "dd/MM HH:mm:ss"
-                        }
-                    },
-                    grid: {
-                        row: {
-                            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                            opacity: 0.5
+                if (data) {
+                    this.memChartOptions = {
+                        series: [
+                            {
+                                name: "memoryChart",
+                                data: data.counters,
+                            }
+                        ],
+                        chart: {
+                            height: 350,
+                            type: "line",
                         },
-                        column: {
-                            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                            opacity: 0.5
-                        }
-                    },
-                    xaxis: {
-                        type: "datetime",
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            show: true,
+                            curve: "smooth",
+                            width: 2
+                        },
                         title: {
-                            text: "Time"
+                            text: "Memory",
+                            align: "center"
                         },
-                        labels: {
-                            datetimeUTC: false
+                        tooltip: {
+                            x: {
+                                format: "dd/MM HH:mm:ss"
+                            }
                         },
-                        min: start.getTime(),
-                        max: end.getTime(),
-                    },
-                    yaxis: {
-                        min: 0,
-                        forceNiceScale: true,
-                        decimalsInFloat: 0,
-                        title: {
-                            text: "Memory [MB]"
+                        grid: {
+                            row: {
+                                colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            },
+                            column: {
+                                colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            }
                         },
-                        labels: {
-                            formatter: function (val, index) {
-                                val /= 1024;
-                                return val.toFixed(0);
+                        xaxis: {
+                            type: "datetime",
+                            title: {
+                                text: "Time"
+                            },
+                            labels: {
+                                datetimeUTC: false
+                            },
+                            min: start.getTime(),
+                            max: end.getTime(),
+                        },
+                        yaxis: {
+                            min: 0,
+                            forceNiceScale: true,
+                            decimalsInFloat: 0,
+                            title: {
+                                text: "Memory [MB]"
+                            },
+                            labels: {
+                                formatter: function (val) {
+                                    val /= 1024;
+                                    return val.toFixed(0);
+                                }
                             }
                         }
-                    }
-                };
+                    };
+                }
             });
     }
 
@@ -285,69 +281,71 @@ export class HomeComponent implements OnInit, OnDestroy {
         let end = this.getEndTime();
         this.monitoringService.getCounters('gateway_http_timer', start, end, 5)
             .subscribe((data: any) => {
-                this.httpTimeChartOptions = {
-                    series: [
-                        {
-                            name: "HTTP Response Time",
-                            data: data.counters,
-                        }
-                    ],
-                    chart: {
-                        height: 350,
-                        type: "line",
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        show: true,
-                        curve: "smooth",
-                        width: 2
-                    },
-                    title: {
-                        text: "HTTP Response Time",
-                        align: "center"
-                    },
-                    tooltip: {
-                        x: {
-                            format: "dd/MM HH:mm:ss"
-                        }
-                    },
-                    grid: {
-                        row: {
-                            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                            opacity: 0.5
+                if (data) {
+                    this.httpTimeChartOptions = {
+                        series: [
+                            {
+                                name: "HTTP Response Time",
+                                data: data.counters,
+                            }
+                        ],
+                        chart: {
+                            height: 350,
+                            type: "line",
                         },
-                        column: {
-                            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-                            opacity: 0.5
-                        }
-                    },
-                    xaxis: {
-                        type: "datetime",
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            show: true,
+                            curve: "smooth",
+                            width: 2
+                        },
                         title: {
-                            text: "Time"
+                            text: "HTTP Response Time",
+                            align: "center"
                         },
-                        labels: {
-                            datetimeUTC: false
+                        tooltip: {
+                            x: {
+                                format: "dd/MM HH:mm:ss"
+                            }
                         },
-                        min: start.getTime(),
-                        max: end.getTime(),
-                    },
-                    yaxis: {
-                        min: 0,
-                        forceNiceScale: true,
-                        decimalsInFloat: 0,
-                        title: {
-                            text: "HTTP Response Time [ms]"
+                        grid: {
+                            row: {
+                                colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            },
+                            column: {
+                                colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                                opacity: 0.5
+                            }
                         },
-                        labels: {
-                            formatter: function (val, index) {
-                                return val.toFixed(0)
+                        xaxis: {
+                            type: "datetime",
+                            title: {
+                                text: "Time"
+                            },
+                            labels: {
+                                datetimeUTC: false
+                            },
+                            min: start.getTime(),
+                            max: end.getTime(),
+                        },
+                        yaxis: {
+                            min: 0,
+                            forceNiceScale: true,
+                            decimalsInFloat: 0,
+                            title: {
+                                text: "HTTP Response Time [ms]"
+                            },
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toFixed(0)
+                                }
                             }
                         }
-                    }
-                };
+                    };
+                }
             });
     }
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.10](https://github.com/jensvogt/awsmock-ui/compare/v1.2.9...v1.2.10) (2024-10-06)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** add export request/response ([c257b23](https://github.com/jensvogt/awsmock-ui/commit/c257b23641f76afab8da4305112db18f11607cdd))
+* **1-create-first-release:** add export to file using file-saver ([d3cfc3b](https://github.com/jensvogt/awsmock-ui/commit/d3cfc3bdd06fed772c127a7ef1908e79a5955a16))
+* **1-create-first-release:** fix timezone issues ([e9e71ee](https://github.com/jensvogt/awsmock-ui/commit/e9e71ee66b7f4ce63bbb45b18950a0300947f429))
+* **1-create-first-release:** save as json file ([b97bfe6](https://github.com/jensvogt/awsmock-ui/commit/b97bfe62be1e5445f069cd21d73fb7d40818881d))
+
 ## [1.2.9](https://github.com/jensvogt/awsmock-ui/compare/v1.2.8...v1.2.9) (2024-10-06)
 
 

@@ -80,10 +80,7 @@ export class ExportInfrastructureComponentDialog implements OnInit, OnDestroy {
 
         this.dialog.open(FileExportComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                console.log(result);
-                // this.moduleService.setInfrastructure().subscribe((data: any) => {
-                //
-                // });
+                this.dialogRef.close(true);
             }
         });
     }

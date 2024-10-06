@@ -77,16 +77,12 @@ export class FileExportComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    download(event: any) {
-        console.log("Event: ", event);
-    }
-
     // Method to handle file upload
-    doUpload(): void {
-        console.log("Event: ", this.fileName);
+    download(): void {
         if (this.fileName) {
-            const blob = new Blob([this.body], {type: "text/plain;charset=utf-8"});
+            const blob = new Blob([this.body], {type: "application/json"});
             saveAs(blob, this.fileName);
+            this.snackBar.open("Infrastructure saved to local file", 'Done', {duration: 5000});
             this.dialogRef.close(true);
         }
     }

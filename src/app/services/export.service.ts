@@ -25,4 +25,9 @@ export class AwsMockExportService {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'export');
         return this.http.post(this.url, body, {headers: headers});
     }
+
+    public setInfrastructure(body: string) {
+        let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'import');
+        return this.http.post(this.url, body, {headers: headers});
+    }
 }

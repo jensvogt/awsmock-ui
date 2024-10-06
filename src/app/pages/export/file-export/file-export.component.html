@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Upload Object</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
+    <!--div (click)="downloadFile.click()"-->
+    <mat-form-field style="width: 100%">
+        <mat-label>File name</mat-label>
+        <input [(ngModel)]="fileName" matInput value="">
+    </mat-form-field>
+    <!--button color="primary" mat-raised-button>Choose File</button-->
+    <!--input #downloadFile (change)="download($event)" style="display:none" type='file'/-->
+    <!--/div-->
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="doUpload()" cdkFocusInitial mat-button>Download</button>
+</mat-dialog-actions>

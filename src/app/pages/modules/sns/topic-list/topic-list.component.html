@@ -22,7 +22,7 @@
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="publishMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message">
+                    <button (click)="publishMessage(row.topicArn)" aria-label="Send" mat-icon-button matTooltip="Send a message">
                         <mat-icon>send</mat-icon>
                     </button>
                     <button (click)="editTopic(row.topicArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the topic">

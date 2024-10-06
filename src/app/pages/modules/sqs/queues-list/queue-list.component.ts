@@ -230,6 +230,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "90%"
 
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

@@ -18,7 +18,7 @@ export class AwsMockMonitoringService {
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
     public getCounters(name: string, start: Date, end: Date, step: number) {
-        let headers = this.monitoringConfig.monitoringHttpOptions.headers.set('X-AwsMock-Target', "get-counters");
+        let headers = this.monitoringConfig.monitoringHttpOptions.headers.set('x-awsmock-Target', "monitoring").set('x-awsmock-action', "get-counters");
         const body = {
             region: environment.awsmockRegion,
             name: name,

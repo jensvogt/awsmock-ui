@@ -360,7 +360,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             dialogConfig.maxHeight = '100vh';
             dialogConfig.panelClass = 'full-screen-modal';
             dialogConfig.width = "90%"
-            dialogConfig.data = data;
+            dialogConfig.data = data.infrastructure;
 
             this.dialog.open(ExportInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
                 if (result) {

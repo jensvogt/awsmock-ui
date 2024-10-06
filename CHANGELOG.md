@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.9](https://github.com/jensvogt/awsmock-ui/compare/v1.2.8...v1.2.9) (2024-10-06)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** new monitoring port ([5eab3ac](https://github.com/jensvogt/awsmock-ui/commit/5eab3ac5b93c25c3be9ef63f218719ec9343d5c1))
+
 ## [1.2.8](https://github.com/jensvogt/awsmock-ui/compare/v1.2.7...v1.2.8) (2024-10-05)
 
 

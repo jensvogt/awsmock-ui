@@ -16,6 +16,7 @@ import {AwsMockExportService} from "../../services/export.service";
 import {CpuChartComponent} from "../charts/cpu-chart/cpu-chart.component";
 import {MemoryChartComponent} from "../charts/memory-chart/memory-chart.component";
 import {GatewayTimeComponent} from "../charts/gatewas-time/gateway-time.component";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
     selector: 'app-home',
@@ -45,7 +46,8 @@ import {GatewayTimeComponent} from "../charts/gatewas-time/gateway-time.componen
         MatNavList,
         CpuChartComponent,
         MemoryChartComponent,
-        GatewayTimeComponent
+        GatewayTimeComponent,
+        MatTooltip
     ],
     providers: [AwsMockMonitoringService, AwsMockExportService, {provide: LOCALE_ID, useValue: 'de-CH'}],
     styleUrls: ['./home.component.scss']
@@ -117,5 +119,13 @@ export class HomeComponent implements OnInit, OnDestroy {
                 // });
             }
         });
+    }
+
+    cleanInfrastructure() {
+
+    }
+
+    eraseInfrastructure() {
+
     }
 }

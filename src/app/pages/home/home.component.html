@@ -20,8 +20,14 @@
                 </mat-card-header>
                 <mat-card-content>
                     <mat-nav-list>
-                        <a (click)="exportInfrastructure()" mat-list-item>Export Infrastructure</a>
-                        <a (click)="importInfrastructure()" mat-list-item>Import Infrastructure</a>
+                        <a (click)="exportInfrastructure()" [matTooltipShowDelay]="1000" mat-list-item matTooltip="Export infrastructure to local JSON file">Export
+                            Infrastructure</a>
+                        <a (click)="importInfrastructure()" [matTooltipShowDelay]="1000" mat-list-item matTooltip="Import infrastructure from local JSON file">Import
+                            Infrastructure</a>
+                        <a (click)="cleanInfrastructure()" [matTooltipShowDelay]="1000" mat-list-item
+                           matTooltip="Clean infrastructure, removes S3 objects, SQS message, etc.">Clean Infrastructure</a>
+                        <a (click)="eraseInfrastructure()" [matTooltipShowDelay]="1000" mat-list-item
+                           matTooltip="Erases infrastructure complety.">Erase Infrastructure</a>
                     </mat-nav-list>
                 </mat-card-content>
             </mat-card>

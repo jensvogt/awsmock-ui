@@ -8,7 +8,7 @@ import {ManagerConfig} from "./awsmock-http-config";
 export class AwsMockExportService {
 
     managerConfig = new ManagerConfig;
-    url: string = environment.managerEndpoint + '/';
+    url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
     }
@@ -17,7 +17,12 @@ export class AwsMockExportService {
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
     public getInfrastructure() {
-        let headers = this.managerConfig.managerHttpOptions.headers.set('Target', "manager").set('Action', 'export').set("pretty", "true");
-        return this.http.get(this.url, {headers: headers});
+        let body = {
+            prettyPrint: true,
+            includeObjects: true,
+            modules: ['s3', 'sqs', 'sns', 'kms', 'lambda', 'secretsmanager', 'cognito', 'ssm', 'dynamodb']
+        }
+        let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'export');
+        return this.http.post(this.url, body, {headers: headers});
     }
 }

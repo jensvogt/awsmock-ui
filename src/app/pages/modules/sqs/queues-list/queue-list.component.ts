@@ -31,6 +31,7 @@ import {SendMessageComponentDialog} from "../send-message/send-message.component
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {Router, RouterLink} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";
+import {SortColumn} from "../../../../shared/sorting/sorting.component";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -89,6 +90,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
     // Sorting
+    sortColumns: SortColumn[] = [];
     private _liveAnnouncer = inject(LiveAnnouncer);
 
     constructor(private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog,
@@ -132,11 +134,19 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     sortChange(sortState: Sort) {
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-            this._liveAnnouncer.announce('Sorting cleared');
+        this.sortColumns = [];
+        let column = 'attributes.approximateNumberOfMessages';
+        if (sortState.active === 'messagesInFlight') {
+            column = 'attribute.approximateNumberOfMessagesNotVisible'
+        } else if (sortState.active === 'messagesDelayed') {
+            column = 'attributes.approximateNumberOfMessagesDelayed';
         }
+        if (sortState.direction === 'asc') {
+            this.sortColumns.push({column: column, sortDirection: 1});
+        } else {
+            this.sortColumns.push({column: column, sortDirection: -1});
+        }
+        this.loadQueues();
     }
 
     lastUpdateTime() {
@@ -145,7 +155,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     loadQueues() {
         this.queueData = [];
-        this.awsmockHttpService.listQueueCounters(this.pageSize, this.pageIndex)
+        this.awsmockHttpService.listQueueCounters(this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
                 this.nextToken = data.NextToken;

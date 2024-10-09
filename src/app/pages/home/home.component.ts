@@ -1,4 +1,4 @@
-import {Component, Input, LOCALE_ID, OnDestroy, OnInit} from '@angular/core';
+import {Component, LOCALE_ID, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
@@ -11,12 +11,15 @@ import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
 import {AwsMockMonitoringService} from "../../services/monitoring.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {ExportInfrastructureComponentDialog} from "../export/export-infrastructure.component";
+import {ExportInfrastructureComponentDialog} from "../infrastructure/export/export-infrastructure.component";
 import {AwsMockExportService} from "../../services/export.service";
 import {CpuChartComponent} from "../charts/cpu-chart/cpu-chart.component";
 import {MemoryChartComponent} from "../charts/memory-chart/memory-chart.component";
 import {GatewayTimeComponent} from "../charts/gatewas-time/gateway-time.component";
 import {MatTooltip} from "@angular/material/tooltip";
+import {CleanInfrastructureComponentDialog} from "../infrastructure/clean/clean-infrastructure.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {ThreadsChartComponent} from "../charts/thread-chart/threads-chart.component";
 
 @Component({
     selector: 'app-home',
@@ -47,7 +50,8 @@ import {MatTooltip} from "@angular/material/tooltip";
         CpuChartComponent,
         MemoryChartComponent,
         GatewayTimeComponent,
-        MatTooltip
+        MatTooltip,
+        ThreadsChartComponent
     ],
     providers: [AwsMockMonitoringService, AwsMockExportService, {provide: LOCALE_ID, useValue: 'de-CH'}],
     styleUrls: ['./home.component.scss']
@@ -57,16 +61,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // Auto-update
     updateSubscription: Subscription | undefined;
-    @Input() public cpuChart: CpuChartComponent | undefined;
-    @Input() public memoryChart: MemoryChartComponent | undefined;
-    @Input() public gatewayTimeChart: GatewayTimeComponent | undefined;
+    @ViewChild(CpuChartComponent) cpuChart: CpuChartComponent | undefined;
+    @ViewChild(MemoryChartComponent) memoryChart: MemoryChartComponent | undefined;
+    @ViewChild(GatewayTimeComponent) gatewayTimeChart: GatewayTimeComponent | undefined;
+    @ViewChild(ThreadsChartComponent) threadsChart: ThreadsChartComponent | undefined;
 
-    constructor(private moduleService: AwsMockExportService, private dialog: MatDialog) {
+    constructor(private snackBar: MatSnackBar, private moduleService: AwsMockExportService, private dialog: MatDialog) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
             this.cpuChart?.loadCpuChart();
             this.memoryChart?.loadMemoryChart();
             this.gatewayTimeChart?.loadHttpTimeChart();
+            this.threadsChart?.loadThreadChart();
         });
     }
 
@@ -123,6 +129,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     cleanInfrastructure() {
 
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.width = "40%"
+        dialogConfig.data = {title: "Clean Infrastructure"}
+        this.dialog.open(CleanInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const moduleList = result.modules.filter((ele: any) => {
+                    return ele.selected;
+                }).map((ele: any) => ele.name);
+                this.moduleService.cleanInfrastructure({modules: moduleList, onlyObjects: result.onlyObjects}).subscribe(() => {
+                    this.snackBar.open('Infrastructure cleaned', 'Done', {duration: 5000})
+                });
+            }
+        });
     }
 
     eraseInfrastructure() {

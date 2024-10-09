@@ -1,0 +1,84 @@
+body {
+  margin: 40px;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  background-color: #fff;
+  color: #444;
+  padding: 10px
+}
+
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  height: 400px;
+  //  font-size: 150%;
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-container-left {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.flex-container-right {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.flex-item {
+  margin: 5px;
+  height: 100%;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+  justify-content: flex-start;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+  justify-content: flex-end;
+}
+
+.full-screen-modal .mat-dialog-container {
+  max-width: none;
+}
+
+.body {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.footer {
+  display: flex;
+  width: 50%;
+  font-size: x-small;
+  color: black;
+}

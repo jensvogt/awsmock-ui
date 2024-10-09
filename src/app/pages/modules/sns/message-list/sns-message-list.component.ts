@@ -94,7 +94,7 @@ export class SnsMessageListComponent implements OnInit {
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
-            this.topicArn = decodeURI(params['queueArn']); // (+) converts string 'id' to a number
+            this.topicArn = decodeURI(params['topicArn']); // (+) converts string 'id' to a number
         });
         this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
         this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':'));
@@ -130,8 +130,8 @@ export class SnsMessageListComponent implements OnInit {
         this.awsmockHttpService.listSnsMessages(this.topicArn, this.pageSize, this.pageIndex)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-                this.length = data.Total;
-                data.Messages.forEach((m: any) => {
+                this.length = data.total;
+                data.messages.forEach((m: any) => {
                     this.messageData.push({
                         id: m.id,
                         messageId: m.messageId,

@@ -1,6 +1,6 @@
 // Angular Modules
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {environment} from "../../environments/environment";
 import {SortColumn} from "../shared/sorting/sorting.component";
 import {S3Config} from "./awsmock-http-config";
@@ -18,7 +18,7 @@ export class AwsMockHttpService {
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
     public listBucketCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('X-AwsMock-Target', 'ListBucketCounters');
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'ListBucketCounters');
         const body = {
             region: environment.awsmockRegion,
             prefix: prefix,
@@ -30,7 +30,7 @@ export class AwsMockHttpService {
     }
 
     public listObjectsCounters(bucket: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('X-AwsMock-Target', 'ListObjectCounters');
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'ListObjectCounters');
         const body = {
             region: environment.awsmockRegion,
             bucket: bucket,
@@ -43,7 +43,7 @@ export class AwsMockHttpService {
     }
 
     public getBucket(bucketName: string) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('X-AwsMock-Target', 'GetBucket');
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'GetBucket');
         const body = {
             region: environment.awsmockRegion,
             bucketName: bucketName
@@ -52,7 +52,7 @@ export class AwsMockHttpService {
     }
 
     public saveBucket(bucket: any) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('X-AwsMock-Target', 'SaveBucket');
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'SaveBucket');
         return this.http.post(this.url, bucket, {headers: headers});
     }
 
@@ -60,32 +60,23 @@ export class AwsMockHttpService {
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
     public listQueueArns() {
-        let headers = new HttpHeaders();
-        headers = headers.set('Content-Type', 'application/x-amz-json-1.0');
-        headers = headers.set('Authorization', 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/sqs/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41');
-        headers = headers.set('X-Amz-Target', 'AmazonSQS.ListQueueArns');
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueArns');
         return this.http.post(this.url, {}, {headers: headers});
     }
 
     /**
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
-    public listQueueCounters(pageSize: number, pageIndex: number) {
-        let headers = new HttpHeaders();
-        headers = headers.set('Content-Type', 'application/x-amz-json-1.0');
-        headers = headers.set('Authorization', 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/sqs/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41');
-        headers = headers.set('X-Amz-Target', 'AmazonSQS.ListQueueCounters');
-        return this.http.post(this.url, {pageSize: pageSize, pageIndex: pageIndex}, {headers: headers});
+    public listQueueCounters(pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueCounters');
+        return this.http.post(this.url, {pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
     public listSqsMessages(queueArn: string, pageSize: number, pageIndex: number) {
-        let headers = new HttpHeaders();
-        headers = headers.set('Content-Type', 'application/x-amz-json-1.0');
-        headers = headers.set('Authorization', 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/sqs/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41');
-        headers = headers.set('X-Amz-Target', 'AmazonSQS.ListMessages');
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListMessages');
         return this.http.post(this.url, {
             queueArn: queueArn,
             pageSize: pageSize,
@@ -96,13 +87,10 @@ export class AwsMockHttpService {
     /**
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
-    public listSnsMessages(queueArn: string, pageSize: number, pageIndex: number) {
-        let headers = new HttpHeaders();
-        headers = headers.set('Content-Type', 'application/x-amz-json-1.0');
-        headers = headers.set('Authorization', 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/sns/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41');
-        headers = headers.set('X-Amz-Target', 'AmazonSNS.ListMessages');
+    public listSnsMessages(topicArn: string, pageSize: number, pageIndex: number) {
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListMessages');
         return this.http.post(this.url, {
-            queueArn: queueArn,
+            topicArn: topicArn,
             pageSize: pageSize,
             pageIndex: pageIndex
         }, {headers: headers});

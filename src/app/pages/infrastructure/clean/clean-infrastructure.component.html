@@ -1,0 +1,40 @@
+<h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>{{ title }}</h2>
+<mat-dialog-content class="mat-typography">
+    <h6>Select your modules:</h6>
+    <div class="container">
+        <div class="item">
+            <mat-list>
+                <mat-list-item>
+                    <mat-checkbox (click)="setAll()" [(ngModel)]="allSelected">All</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="item">
+        </div>
+        <div class="item">
+            <mat-list>
+                <mat-list-item *ngFor="let module of allModules| slice:0:5">
+                    <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="item">
+            <mat-list>
+                <mat-list-item *ngFor="let module of allModules| slice:5:10">
+                    <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="item">
+            <mat-list>
+                <mat-list-item>
+                    <mat-checkbox [(ngModel)]="onlyObjects">Only Objects</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Ok</button>
+</mat-dialog-actions>

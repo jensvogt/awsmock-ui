@@ -1,0 +1,12 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 3fr);
+  gap: 1rem;
+  width: 30ch;
+}
+
+.item {
+  padding: 1rem;
+  //box-sizing: border-box;
+  //border: 1px solid black;
+}

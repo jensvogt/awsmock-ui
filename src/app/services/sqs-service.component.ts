@@ -48,7 +48,7 @@ export class SqsService {
     getQueueAttributes(queueUrl: string) {
         const input = {
             QueueUrl: queueUrl,
-            AttributeNames: [QueueAttributeName.ApproximateNumberOfMessages, QueueAttributeName.ApproximateNumberOfMessagesNotVisible],
+            AttributeNames: [QueueAttributeName.All],
         };
         return this.client.send(new GetQueueAttributesCommand(input));
     }
@@ -61,18 +61,18 @@ export class SqsService {
         return this.client.send(new GetQueueAttributesCommand(input));
     }
 
-    saveQueue(queueName: string) {
-        const input = {
-            QueueName: queueName
-        };
-        return this.client.send(new CreateQueueCommand(input));
-    }
-
     getQueueUrl(queueName: string) {
         const input = {
             QueueName: queueName
         };
         return this.client.send(new GetQueueUrlCommand(input));
+    }
+
+    saveQueue(queueName: string) {
+        const input = {
+            QueueName: queueName
+        };
+        return this.client.send(new CreateQueueCommand(input));
     }
 
     deleteQueue(queueUrl: string) {

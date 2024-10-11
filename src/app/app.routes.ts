@@ -11,6 +11,7 @@ import {SnsMessageListComponent} from "./pages/modules/sns/message-list/sns-mess
 import {BucketDetailComponent} from "./pages/modules/s3/bucket-detail/bucket-detail.component";
 import {UserPoolListComponent} from "./pages/modules/cognito/user-pool-list/user-pool-list.component";
 import {UserListComponent} from "./pages/modules/cognito/user-list/user-list.component";
+import {QueueDetailComponent} from "./pages/modules/sqs/queue-detail/queue-detail.component";
 
 export const routes: Routes = [
     {
@@ -25,6 +26,10 @@ export const routes: Routes = [
     {
         path: 'sqs-queue-list',
         component: QueueListComponent,
+    },
+    {
+        path: 'sqs-queue-detail/:queueArn',
+        component: QueueDetailComponent,
     },
     {
         path: 'sqs-message-list/:queueArn',

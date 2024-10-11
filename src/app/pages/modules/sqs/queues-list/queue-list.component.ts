@@ -137,7 +137,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.sortColumns = [];
         let column = 'attributes.approximateNumberOfMessages';
         if (sortState.active === 'messagesInFlight') {
-            column = 'attribute.approximateNumberOfMessagesNotVisible'
+            column = 'attributes.approximateNumberOfMessagesNotVisible'
         } else if (sortState.active === 'messagesDelayed') {
             column = 'attributes.approximateNumberOfMessagesDelayed';
         }
@@ -193,25 +193,14 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.router.navigate(['/sqs-message-list', encodeURI(queueArn)]);
     }
 
+    editQueue(queueArn: string) {
+        this.router.navigate(['/sqs-queue-detail', encodeURI(queueArn)]);
+    }
+
     purgeQueue(name: string) {
         this.sqsService.purgeQueue(name)
             .then(() => {
                 this.loadQueues();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.sqsService.cleanup();
-            });
-    }
-
-    getQueueAttributes(queueUrl: string) {
-        this.sqsService.getQueueAttributes(queueUrl)
-            .then((data: any) => {
-                let item = this.queueData.find((q) => q.queueUrl == queueUrl);
-                if (item) {
-                    item.messagesAvailable = +data.Attributes.ApproximateNumberOfMessages;
-                    item.messagesInFlight = +data.Attributes.ApproximateNumberOfMessagesNotVisible;
-                }
             })
             .catch((error: any) => console.error(error))
             .finally(() => {

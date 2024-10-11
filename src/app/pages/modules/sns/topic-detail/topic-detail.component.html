@@ -1,15 +1,19 @@
 <mat-card appearance="outlined" style="margin-top: 5px;">
     <mat-card-header>
-        <div>
-            <mat-card-title>Details: {{ this.topicName }}</mat-card-title>
-            <app-breadcrumb></app-breadcrumb>
-        </div>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h4>Queue Details: {{ topicName }}</h4>
     </mat-card-header>
-
     <mat-card appearance="outlined" style="margin-top: 5px;">
         <mat-card-header>
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>
+        <mat-card-actions class="head-buttons">
+            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </mat-card-actions>
         <mat-card-content>
             <form class="form">
                 <mat-form-field style="width:49%;margin:10px">
@@ -105,4 +109,7 @@
         <button (click)=close() mat-button>Close</button>
         <button (click)=save() mat-button>Save</button>
     </mat-card-actions>
+    <div class="footer">
+        Last update: {{ lastUpdate }}
+    </div>
 </mat-card>

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.12](https://github.com/jensvogt/awsmock-ui/compare/v1.2.11...v1.2.12) (2024-10-11)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** save as json file ([88fec0a](https://github.com/jensvogt/awsmock-ui/commit/88fec0a443eed38d99156c344f3ceb51d68e62ca))
+
 ## [1.2.11](https://github.com/jensvogt/awsmock-ui/compare/v1.2.10...v1.2.11) (2024-10-09)
 
 

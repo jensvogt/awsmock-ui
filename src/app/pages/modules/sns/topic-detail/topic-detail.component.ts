@@ -35,6 +35,7 @@ import {environment} from "../../../../../environments/environment";
 import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-add.component";
 import {SnsService} from "../../../../services/sns-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {NavigationService} from "../../../../services/navigation.service";
 
 @Component({
     selector: 'add-connection-dialog',
@@ -85,6 +86,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     providers: [SnsService]
 })
 export class TopicDetailComponent implements OnInit, OnDestroy {
+    lastUpdate: string = new Date().toLocaleTimeString('DE-de');
 
     topicName: string = '';
     topicArn: string = '';
@@ -113,7 +115,8 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     });
     private sub: any;
 
-    constructor(private snackBar: MatSnackBar, private snsService: SnsService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
+    constructor(private snackBar: MatSnackBar, private snsService: SnsService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog,
+                private navigation: NavigationService) {
     }
 
     ngOnInit() {
@@ -126,6 +129,14 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    back() {
+        this.navigation.back();
+    }
+
+    refresh() {
+        this.loadSubscriptions();
     }
 
     // ===================================================================================================================
@@ -154,6 +165,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
         this.client.send(new ListSubscriptionsByTopicCommand(input))
             .then((data: any) => {
                 this.subscriptionLength = data.NextToken;
+                this.lastUpdate = new Date().toLocaleTimeString('DE-de');
                 data.Subscriptions.forEach((q: any) => {
                     this.subscriptionData.push({
                         id: q.SubscriptionArn.substring(q.SubscriptionArn.lastIndexOf(':') + 1),

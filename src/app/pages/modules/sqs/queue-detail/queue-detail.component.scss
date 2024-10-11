@@ -1,11 +1,3 @@
-body {
-  margin: 40px;
-}
-
-.container {
-  width: 100%;
-}
-
 .form {
   min-width: 150px;
   //  max-width: 500px;
@@ -23,6 +15,29 @@ body {
   align-items: end;
   box-sizing: border-box;
   min-height: 52px;
+  padding: 8px;
+  justify-content: flex-end;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 3fr);
+  gap: 1rem;
+  width: 30ch;
+}
+
+.item {
+  padding: 1rem;
+  //box-sizing: border-box;
+  //border: 1px solid black;
+}
+
+.head-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  box-sizing: border-box;
+  min-height: 52px;
   padding-right: 30px;
   justify-content: flex-end;
 }
@@ -32,5 +47,4 @@ body {
   width: 50%;
   font-size: x-small;
   color: black;
-  padding-left: 10px;
 }

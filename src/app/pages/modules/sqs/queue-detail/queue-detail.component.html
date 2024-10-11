@@ -1,0 +1,82 @@
+<mat-card appearance="outlined" style="margin-top: 5px;">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h4>Queue Details: {{ queueName }}</h4>
+    </mat-card-header>
+    <mat-card appearance="outlined" style="margin-top: 5px;">
+        <mat-card-header>
+            <mat-card-title>Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-actions class="head-buttons">
+            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </mat-card-actions>
+        <mat-card-content>
+            <form class="form">
+                <mat-form-field style="width:49%;margin:10px">
+                    <mat-label>Queue Name</mat-label>
+                    <input matInput placeholder="Queue Name" readonly value="{{ queueName }}">
+                </mat-form-field>
+                <mat-form-field style="width:49%;margin:10px">
+                    <mat-label>Queue ARN</mat-label>
+                    <input matInput placeholder="Queue ARN" readonly value="{{ queueArn }}">
+                </mat-form-field>
+                <mat-form-field style="width:49%;margin:10px">
+                    <mat-label>Queue URL</mat-label>
+                    <input matInput placeholder="Queue URL" readonly value="{{ queueUrl }}">
+                </mat-form-field>
+                <mat-form-field style="width:49%;margin:10px">
+                    <mat-label>Visibility Timeout (s)</mat-label>
+                    <input matInput placeholder="Visibility timeout in deconds" readonly value="{{ visibilityTimeout }}">
+                </mat-form-field>
+                <mat-form-field style="width:49%;margin:10px">
+                    <mat-label>Delay (s)</mat-label>
+                    <input matInput placeholder="Queue delay in seconds" readonly value="{{ queueDelay }}">
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+    </mat-card>
+    <mat-card appearance="outlined" style="margin-top: 5px;">
+        <mat-card-header>
+            <mat-card-title>Attributes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-tab-group>
+                <mat-tab label="Attributes">
+                    <div class="container">
+                        <div class="item">
+
+                            <mat-list>
+                                <mat-list-item>Available:</mat-list-item>
+                                <mat-list-item>InFlight:</mat-list-item>
+                                <mat-list-item>Delayed:</mat-list-item>
+                            </mat-list>
+                        </div>
+                        <div class="item">
+                            <mat-list>
+                                <mat-list-item>{{ messagedAvailable }}</mat-list-item>
+                                <mat-list-item>{{ messagedInFlight }}</mat-list-item>
+                                <mat-list-item>{{ messagedDelayed }}</mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Tags">
+                    Tags
+                </mat-tab>
+                <mat-tab label="Access Policy">
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+    <mat-card-actions align="end">
+        <button (click)=close() mat-button>Close</button>
+        <button (click)=save() mat-button>Save</button>
+    </mat-card-actions>
+    <div class="footer">
+        Last update: {{ lastUpdate }}
+    </div>
+</mat-card>

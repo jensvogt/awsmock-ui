@@ -3,9 +3,9 @@
   flex: 1 1 auto;
 }
 
-
 .table-container {
   max-height: calc(100vh - 10px); // or height:calc(100vh - 155px); depending on your need  change
+  max-width: calc(100vw - 15px); // or height:calc(100vh - 155px); depending on your need  change
   overflow: hidden;
 }
 

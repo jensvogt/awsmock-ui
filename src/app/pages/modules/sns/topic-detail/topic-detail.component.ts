@@ -1,4 +1,4 @@
-import {MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog, MatDialogClose, MatDialogConfig} from "@angular/material/dialog";
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -20,7 +20,7 @@ import {
     MatTextColumn
 } from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
 import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
@@ -38,6 +38,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {NavigationService} from "../../../../services/navigation.service";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {DatePipe} from "@angular/common";
+import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
+import {TopicDetails} from "../model/topic-details";
 
 @Component({
     selector: 'add-connection-dialog',
@@ -62,8 +64,6 @@ import {DatePipe} from "@angular/common";
         MatIcon,
         MatList,
         MatListItem,
-        RouterLink,
-        MatDialogActions,
         MatTab,
         MatTabGroup,
         MatCell,
@@ -90,15 +90,13 @@ import {DatePipe} from "@angular/common";
         DatePipe
     ],
     styleUrls: ['./topic-detail.component.scss'],
-    providers: [SnsService]
+    providers: [SnsService, AwsMockHttpService]
 })
 export class TopicDetailComponent implements OnInit, OnDestroy {
-    lastUpdate: string = new Date().toLocaleTimeString('DE-de');
+    lastUpdate: Date = new Date();
 
-    topicName: string = '';
     topicArn: string = '';
-    created: Date | undefined;
-    modified: Date | undefined;
+    topicDetails = {} as TopicDetails;
 
     // Subscription Table
     subscriptionData: Array<SubscriptionItem> = [];
@@ -125,17 +123,16 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private snsService: SnsService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog,
-                private navigation: NavigationService) {
+                private navigation: NavigationService, private awsmockService: AwsMockHttpService) {
     }
 
     ngOnInit() {
+
         this.sub = this.route.params.subscribe(params => {
             this.topicArn = params['topicArn']; // (+) converts string 'id' to a number
-            this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':') + 1);
-            this.created = new Date();
-            this.modified = new Date();
+            this.loadTopicDetails();
+            this.loadSubscriptions();
         });
-        this.loadSubscriptions();
     }
 
     ngOnDestroy() {
@@ -147,12 +144,23 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
+        this.loadTopicDetails();
         this.loadSubscriptions();
     }
 
     // ===================================================================================================================
     // Details
     // ===================================================================================================================
+    loadTopicDetails() {
+        this.awsmockService.getTopicDetails(this.topicArn).subscribe((data) => {
+            if (data) {
+                // @ts-ignore
+                this.topicDetails = data;
+                console.log(this.topicDetails);
+            }
+        });
+    }
+
     save() {
     }
 
@@ -176,7 +184,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
         this.client.send(new ListSubscriptionsByTopicCommand(input))
             .then((data: any) => {
                 this.subscriptionLength = data.NextToken;
-                this.lastUpdate = new Date().toLocaleTimeString('DE-de');
+                this.lastUpdate = new Date();
                 data.Subscriptions.forEach((q: any) => {
                     this.subscriptionData.push({
                         id: q.SubscriptionArn.substring(q.SubscriptionArn.lastIndexOf(':') + 1),
@@ -222,7 +230,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName};
+        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicDetails.topicName};
 
         this.dialog.open(SubscriptionAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

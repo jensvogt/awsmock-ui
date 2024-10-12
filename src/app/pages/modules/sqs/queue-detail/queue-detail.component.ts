@@ -103,13 +103,7 @@ export class QueueDetailComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.queueArn = params['queueArn']; // (+) converts string 'id' to a number
-            this.awsmockService.getQueueDetails(this.queueArn).subscribe((data) => {
-                if (data) {
-                    // @ts-ignore
-                    this.queueDetails = data;
-                    console.log(this.queueDetails);
-                }
-            });
+            this.loadQueueDetails();
         });
     }
 
@@ -119,6 +113,7 @@ export class QueueDetailComponent implements OnInit, OnDestroy {
 
     refresh() {
         if (this.queueDetails && this.queueDetails.queueUrl) {
+            this.loadQueueDetails();
             this.getQueueAttributes(this.queueDetails.queueUrl);
         }
     }
@@ -130,6 +125,17 @@ export class QueueDetailComponent implements OnInit, OnDestroy {
     // ===================================================================================================================
     // Details
     // ===================================================================================================================
+
+    loadQueueDetails() {
+        this.awsmockService.getQueueDetails(this.queueArn).subscribe((data) => {
+            if (data) {
+                // @ts-ignore
+                this.queueDetails = data;
+                console.log(this.queueDetails);
+            }
+        });
+    }
+
     save() {
     }
 

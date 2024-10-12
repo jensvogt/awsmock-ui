@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.14](https://github.com/jensvogt/awsmock-ui/compare/v1.2.13...v1.2.14) (2024-10-12)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** add links for queue/topic/bucket lists ([49de806](https://github.com/jensvogt/awsmock-ui/commit/49de806860fa1ee90ae9e707ccd141d6e785801e))
+* **1-create-first-release:** some minor style changes ([ecc1ef2](https://github.com/jensvogt/awsmock-ui/commit/ecc1ef20f46253d2ba7faa850efadf538040974a))
+
 ## [1.2.13](https://github.com/jensvogt/awsmock-ui/compare/v1.2.12...v1.2.13) (2024-10-12)
 
 

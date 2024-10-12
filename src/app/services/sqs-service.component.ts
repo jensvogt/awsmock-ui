@@ -91,7 +91,6 @@ export class SqsService {
         return this.client.send(new SendMessageCommand(input));
     }
 
-
     deleteMessage(queueUrl: string, receiptHandle: string) {
         const input = {
             QueueUrl: queueUrl,

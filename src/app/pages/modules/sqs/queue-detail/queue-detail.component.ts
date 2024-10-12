@@ -32,6 +32,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsService} from "../../../../services/sqs-service.component";
 import {NavigationService} from "../../../../services/navigation.service";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
+import {QueueDetails} from "../model/queue-details";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'queue-detail-connection',
@@ -80,35 +83,32 @@ import {MatGridList, MatGridTile} from "@angular/material/grid-list";
         MatGridList,
         MatGridTile,
         MatListItemLine,
-        MatListItemTitle
+        MatListItemTitle,
+        DatePipe
     ],
     styleUrls: ['./queue-detail.component.scss'],
-    providers: [SqsService]
+    providers: [SqsService, AwsMockHttpService]
 })
 export class QueueDetailComponent implements OnInit, OnDestroy {
     lastUpdate: string = new Date().toLocaleTimeString('DE-de');
 
-    queueName: string = '';
-    queueUrl: string = '';
     queueArn: string = '';
-    messagedAvailable: number = 0;
-    messagedInFlight: number = 0;
-    messagedDelayed: number = 0;
-    queueDelay: number = 0;
-    visibilityTimeout: number = 0;
+    queueDetails = {} as QueueDetails;
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private router: Router, private route: ActivatedRoute,
-                private navigation: NavigationService) {
+                private navigation: NavigationService, private awsmockService: AwsMockHttpService) {
     }
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.queueArn = params['queueArn']; // (+) converts string 'id' to a number
-            this.queueName = this.queueArn.substring(this.queueArn.lastIndexOf(':') + 1);
-            this.sqsService.getQueueUrl(this.queueName).then((data: any) => {
-                this.queueUrl = data.QueueUrl;
-                this.getQueueAttributes(this.queueUrl);
+            this.awsmockService.getQueueDetails(this.queueArn).subscribe((data) => {
+                if (data) {
+                    // @ts-ignore
+                    this.queueDetails = data;
+                    console.log(this.queueDetails);
+                }
             });
         });
     }
@@ -118,7 +118,9 @@ export class QueueDetailComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-        this.getQueueAttributes(this.queueUrl);
+        if (this.queueDetails && this.queueDetails.queueUrl) {
+            this.getQueueAttributes(this.queueDetails.queueUrl);
+        }
     }
 
     back() {
@@ -142,11 +144,11 @@ export class QueueDetailComponent implements OnInit, OnDestroy {
         this.sqsService.getQueueAttributes(queueUrl)
             .then((data: any) => {
                 this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-                this.messagedAvailable = data.Attributes.ApproximateNumberOfMessages;
+                /*this.messagedAvailable = data.Attributes.ApproximateNumberOfMessages;
                 this.messagedInFlight = data.Attributes.ApproximateNumberOfMessagesNotVisible;
                 this.messagedDelayed = data.Attributes.ApproximateNumberOfMessagesDelayed;
                 this.queueDelay = data.Attributes.DelaySeconds;
-                this.visibilityTimeout = data.Attributes.VisibilityTimeout;
+                this.visibilityTimeout = data.Attributes.VisibilityTimeout;*/
             })
             .catch((error: any) => console.error(error))
             .finally(() => {

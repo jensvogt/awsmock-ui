@@ -32,6 +32,7 @@ import {Router, RouterLink} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {MatListItem, MatNavList} from "@angular/material/list";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -63,13 +64,14 @@ import {MatListItem, MatNavList} from "@angular/material/list";
         BreadcrumbComponent,
         RouterLink,
         MatListItem,
-        MatNavList
+        MatNavList,
+        DatePipe
     ],
     styleUrls: ['./queue-list.component.scss'],
     providers: [SqsService, AwsMockHttpService]
 })
 export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
-    lastUpdate: string = '';
+    lastUpdate: Date = new Date();
 
     // Table
     queueData: Array<QueueItem> = [];
@@ -158,7 +160,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.queueData = [];
         this.awsmockHttpService.listQueueCounters(this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
-                this.lastUpdate = this.lastUpdateTime();
+                this.lastUpdate = new Date();
                 this.nextToken = data.NextToken;
                 this.length = data.Total;
                 data.QueueCounters.forEach((q: any) => {

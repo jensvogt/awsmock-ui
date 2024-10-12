@@ -3,6 +3,11 @@
   height: 100%;
 }
 
+.table-container {
+  max-height: calc(100vh - 10px); // or height:calc(100vh - 155px); depending on your need  change
+  overflow: auto;
+}
+
 .head-buttons {
   display: flex;
   flex-direction: row;
@@ -29,6 +34,7 @@
   width: 50%;
   font-size: x-small;
   color: black;
+  padding-top: 15px;
 }
 
 .full-screen-modal .mat-dialog-container {

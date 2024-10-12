@@ -37,7 +37,7 @@
             <tr *matHeaderRowDef="columns" mat-header-row></tr>
             <tr *matRowDef="let row; columns: columns;" mat-row></tr>
             <tr *matNoDataRow class="mat-row">
-                <td [attr.colspan]="columns.length" class="mat-cell">
+                <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
                     No data matching the filter.
                 </td>
             </tr>

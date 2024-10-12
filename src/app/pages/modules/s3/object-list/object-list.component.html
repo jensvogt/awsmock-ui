@@ -3,11 +3,20 @@
         <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
         </button>
-        <h4>S3 Objects {{ bucketName }}</h4>
+        <h4>SNS Topics</h4>
+        <span class="fill-remaining-space">
+            <h4>S3 Objects {{ bucketName }}</h4>
+        </span>
+        <button (click)="uploadObject()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>upload</mat-icon>
+        </button>
+        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+        </button>
     </mat-card-header>
     <mat-card-content>
         <mat-card-actions class="head-buttons">
-            <mat-form-field style="width:400px">
+            <mat-form-field style="width:100%">
                 <mat-label>Prefix</mat-label>
                 <input [(ngModel)]="prefix" matInput name="search" placeholder="Search" type="text">
                 <button (click)="setPrefix()" *ngIf="!prefixSet" mat-icon-button matSuffix style="float: right">
@@ -17,13 +26,6 @@
                     <mat-icon matSuffix>close</mat-icon>
                 </button>
             </mat-form-field>
-            <div flex style="width:80%"></div>
-            <button (click)="uploadObject()" aria-label="Upload" mat-icon-button>
-                <mat-icon>upload</mat-icon>
-            </button>
-            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
-                <mat-icon>refresh</mat-icon>
-            </button>
         </mat-card-actions>
         <table (matSortChange)="sortChange($event)" [dataSource]="objectDataDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
             <ng-container matColumnDef="key" matTooltip="Object key">
@@ -48,7 +50,7 @@
             <tr *matHeaderRowDef="columns" mat-header-row></tr>
             <tr *matRowDef="let row; columns: columns;" mat-row></tr>
             <tr *matNoDataRow class="mat-row">
-                <td [attr.colspan]="columns.length" class="mat-cell">
+                <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
                     No data matching the filter.
                 </td>
             </tr>

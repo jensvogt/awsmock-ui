@@ -96,4 +96,9 @@ export class AwsMockHttpService {
             pageIndex: pageIndex
         }, {headers: headers});
     }
+
+    public getQueueDetails(queueArn: string) {
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'GetQueueDetails');
+        return this.http.post(this.url, {QueueArn: queueArn}, {headers: headers});
+    }
 }

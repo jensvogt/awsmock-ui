@@ -1,4 +1,14 @@
 
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+
+.table-container {
+  max-height: calc(100vh - 10px); // or height:calc(100vh - 155px); depending on your need  change
+  overflow: hidden;
+}
+
 .footer {
   display: flex;
   width: 50%;

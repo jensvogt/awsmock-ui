@@ -30,6 +30,7 @@ import {SnsService} from "../../../../services/sns-service.component";
 import {NavigationService} from "../../../../services/navigation.service";
 import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
 import {MatListItem, MatNavList} from "@angular/material/list";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'app-home',
@@ -61,7 +62,8 @@ import {MatListItem, MatNavList} from "@angular/material/list";
         BreadcrumbComponent,
         RouterLink,
         MatNavList,
-        MatListItem
+        MatListItem,
+        DatePipe
     ],
     styleUrls: ['./topic-list.component.scss'],
     providers: [SnsService]

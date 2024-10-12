@@ -17,7 +17,7 @@ export interface BucketItem {
     arn: string | undefined;
     owner: string | undefined;
     versionStatus: string | undefined;
-    created: string | undefined;
-    modified: string | undefined;
+    created: Date;
+    modified: Date;
     lambdaConfigurations: LambdaConfiguration[] | undefined;
 }

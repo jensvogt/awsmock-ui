@@ -8,13 +8,7 @@ import {Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/route
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatListItem, MatNavList} from "@angular/material/list";
-import {
-    MatAccordion,
-    MatExpansionPanel,
-    MatExpansionPanelContent,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle
-} from "@angular/material/expansion";
+import {MatAccordion, MatExpansionPanel, MatExpansionPanelContent, MatExpansionPanelHeader, MatExpansionPanelTitle} from "@angular/material/expansion";
 import {MatLine} from "@angular/material/core";
 import {MatRow} from "@angular/material/table";
 
@@ -61,6 +55,7 @@ export class AppComponent {
         this.customIcons.forEach(([iconName, iconPath]) => {
             matIconRegistry.addSvgIcon(iconName, domSanitizer.bypassSecurityTrustResourceUrl(iconPath));
         });
+
     }
 
     navigateMenu(module: string) {

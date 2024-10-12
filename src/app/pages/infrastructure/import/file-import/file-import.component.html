@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Upload Infrastructure</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
+    <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
+        <input #fileInput (change)="onFileChange($event)" accept="application/json" hidden type="file"/>
+        <div (click)="fileInput.click()" class="file-dropper">
+            <mat-icon>upload</mat-icon>
+            <p>Upload file</p>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <!--button (click)="upload($event)" cdkFocusInitial mat-button>Upload</button-->
+</mat-dialog-actions>

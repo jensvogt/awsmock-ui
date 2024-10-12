@@ -3,12 +3,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from "../../environments/environment";
 import {SortColumn} from "../shared/sorting/sorting.component";
-import {S3Config} from "./awsmock-http-config";
+import {ManagerConfig, S3Config} from "./awsmock-http-config";
 
 @Injectable()
 export class AwsMockHttpService {
 
     S3Config = new S3Config;
+    ModuleConfig = new ManagerConfig;
     url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {

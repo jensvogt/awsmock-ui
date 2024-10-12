@@ -1,11 +1,50 @@
-<h2 mat-dialog-title>Add SQS Queue</h2>
-<mat-dialog-content class="mat-typography" style="width: 500px">
-  <mat-form-field style="width: 100%">
-    <mat-label>Queue Name</mat-label>
-    <input [(ngModel)]="queueName" matInput value="">
-  </mat-form-field>
+<h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>{{ title }}</h2>
+<mat-dialog-content class="mat-typography">
+    <h6>Select your modules:</h6>
+    <div class="container">
+        <div class="item">
+            <mat-list>
+                <mat-list-item>
+                    <mat-checkbox (click)="setAll()" [(ngModel)]="allSelected">All</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="item">
+        </div>
+        <div class="item">
+            <mat-list>
+                <mat-list-item *ngFor="let module of allModules | slice:0:5">
+                    <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="item">
+            <mat-list>
+                <mat-list-item *ngFor="let module of allModules | slice:5:10">
+                    <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="item">
+            <mat-list>
+                <mat-list-item *ngIf="onlyObjectsVisible">
+                    <mat-checkbox [(ngModel)]="onlyObjects">Only Objects</mat-checkbox>
+                </mat-list-item>
+                <mat-list-item *ngIf="includeObjectsVisible">
+                    <mat-checkbox (click)="includeObjectsSelected()" [(ngModel)]="includeObjects">Include Objects</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="item">
+            <mat-list>
+                <mat-list-item *ngIf="prettyPrintVisible">
+                    <mat-checkbox [(ngModel)]="prettyPrint">Pretty Print</mat-checkbox>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+    <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Ok</button>
 </mat-dialog-actions>

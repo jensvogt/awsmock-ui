@@ -9,11 +9,13 @@ import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {MatFormField, MatLabel, MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {FileImportComponent} from "./file-import/file-import.component";
+import {ModuleService} from "../../../services/module.service";
 
 @Component({
     selector: 'export-infrastructure-component',
@@ -53,15 +55,15 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
         CdkDragHandle,
         CdkTextareaAutosize,
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [ModuleService],
     styleUrls: ['./import-infrastructure.component.scss']
 })
 export class ImportInfrastructureComponentDialog implements OnInit, OnDestroy {
 
-    body: string | undefined;
+    body: string | undefined = '';
 
-    constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.body = JSON.stringify(data, null, 4);
+    constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar,
+                private dialog: MatDialog, private moduleService: ModuleService) {
     }
 
     ngOnInit(): void {
@@ -70,7 +72,32 @@ export class ImportInfrastructureComponentDialog implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
-    exportInfrastructure() {
+    importInfrastructure() {
+        if (this.body === undefined || this.body.length === 0) {
+            this.snackBar.open('Empty infrastructure JSON', 'Done', {duration: 5000});
+            return;
+        }
+        this.moduleService.importInfrastructure(this.body).subscribe(() => {
+            this.snackBar.open('Infrastructure imported', 'Done', {duration: 5000})
+            this.dialogRef.close(true);
+        });
+    }
 
+    loadFromFile() {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = this.body;
+
+        this.dialog.open(FileImportComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.body = result;
+            }
+        });
+    }
+
+    close() {
+        this.dialogRef.close(false);
     }
 }

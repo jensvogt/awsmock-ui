@@ -23,7 +23,7 @@ import {MatInput} from "@angular/material/input";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
-import {MatList, MatListItem} from "@angular/material/list";
+import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -36,6 +36,8 @@ import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-ad
 import {SnsService} from "../../../../services/sns-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NavigationService} from "../../../../services/navigation.service";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'add-connection-dialog',
@@ -80,7 +82,12 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatNoDataRow,
         MatHeaderCellDef,
         MatPaginator,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        MatGridList,
+        MatGridTile,
+        MatListItemLine,
+        MatListItemTitle,
+        DatePipe
     ],
     styleUrls: ['./topic-detail.component.scss'],
     providers: [SnsService]
@@ -90,6 +97,8 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
 
     topicName: string = '';
     topicArn: string = '';
+    created: Date | undefined;
+    modified: Date | undefined;
 
     // Subscription Table
     subscriptionData: Array<SubscriptionItem> = [];
@@ -123,6 +132,8 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.topicArn = params['topicArn']; // (+) converts string 'id' to a number
             this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':') + 1);
+            this.created = new Date();
+            this.modified = new Date();
         });
         this.loadSubscriptions();
     }

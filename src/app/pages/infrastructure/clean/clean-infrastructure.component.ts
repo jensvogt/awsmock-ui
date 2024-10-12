@@ -29,7 +29,10 @@ const AllModules = {
         {name: 'lambda', displayName: 'Lambda', selected: false},
         {name: 'transfer', displayName: 'Transfer', selected: false},
     ],
-    onlyObjects: true
+    // For clean
+    onlyObjects: true,
+    // For export/import
+    includeObjects: true
 }
 
 @Component({
@@ -82,10 +85,13 @@ export class CleanInfrastructureComponentDialog implements OnInit, OnDestroy {
 
     onlyObjects: boolean = true;
     allSelected: boolean = true;
+    includeObjects: boolean = true;
+    mode: string = 'export';
     protected readonly allModules = AllModules.modules;
 
     constructor(private dialogRef: MatDialogRef<CleanInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.title = data.title;
+        this.mode = data.mode;
     }
 
     ngOnInit(): void {
@@ -106,6 +112,6 @@ export class CleanInfrastructureComponentDialog implements OnInit, OnDestroy {
     }
 
     save() {
-        this.dialogRef.close({modules: this.allModules, onlyObjects: this.onlyObjects});
+        this.dialogRef.close({modules: this.allModules, onlyObjects: this.onlyObjects, includeObjects: this.includeObjects});
     }
 }

@@ -101,4 +101,9 @@ export class AwsMockHttpService {
         let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'GetQueueDetails');
         return this.http.post(this.url, {QueueArn: queueArn}, {headers: headers});
     }
+
+    public getTopicDetails(topicArn: string) {
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'GetTopicDetails');
+        return this.http.post(this.url, {topicArn: topicArn}, {headers: headers});
+    }
 }

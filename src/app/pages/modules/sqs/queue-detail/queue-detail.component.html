@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" style="margin-top: 5px;">
+<mat-card appearance="outlined" style="margin: 3px;">
     <mat-card-header>
         <span>
             <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
@@ -6,7 +6,7 @@
             </button>
         </span>
         <span class="fill-remaining-space">
-            <h4>Queue Details: {{ queueDetails.queueName }}</h4>
+            <h4>Queue: {{ queueDetails.queueName }}</h4>
         </span>
         <span>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
@@ -14,7 +14,7 @@
             </button>
         </span>
     </mat-card-header>
-    <mat-card appearance="outlined">
+    <mat-card appearance="outlined" style="margin: 3px;">
         <mat-card-header>
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>

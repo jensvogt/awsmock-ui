@@ -1,11 +1,10 @@
-<mat-card>
+<mat-card appearance="outlined" style="margin: 3px">
     <mat-card-header>
         <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
         </button>
-        <h4>SNS Topics</h4>
         <span class="fill-remaining-space">
-            <h4>SQS Queues</h4>
+            <h4>SNS Topics</h4>
         </span>
         <button (click)="addTopic()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
@@ -15,7 +14,7 @@
         </button>
     </mat-card-header>
     <mat-card-content>
-        <mat-card>
+        <mat-card appearance="outlined" style="margin: -10px;">
             <div class="table-container">
                 <table (matSortChange)="sortChange($event)" [dataSource]="topicDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
                     <ng-container matColumnDef="topicName">
@@ -57,7 +56,7 @@
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
                            [pageSize]="pageSize"
                            [showFirstLastButtons]="showFirstLastButtons"
-                           aria-label="Select page">
+                           aria-label="Select page" style="width:99%; margin-left:15px">
             </mat-paginator>
         </mat-card>
         <div class="footer">

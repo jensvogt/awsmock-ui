@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" style="margin-top: 5px;">
+<mat-card appearance="outlined" style="margin: 3px;">
     <mat-card-header>
         <span>
             <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
@@ -6,7 +6,7 @@
             </button>
         </span>
         <span class="fill-remaining-space">
-            <h4>Queue Details: {{ topicName }}</h4>
+            <h4>Topic: {{ topicDetails.topicName }}</h4>
         </span>
         <span>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
@@ -15,24 +15,40 @@
         </span>
     </mat-card-header>
     <mat-card appearance="outlined" style="margin-top: 5px;">
-        <mat-card-header>
-            <span></span>
-            <span class="fill-remaining-space">
-                <h4>Details</h4>
-            </span>
-        </mat-card-header>
         <mat-card-content>
-            <mat-grid-list cols="2" rowHeight="120px">
-                <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <mat-grid-list cols="4" rowHeight="200px">
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
                             <mat-list-item>
                                 <span class="mat-list-span-title" matListItemTitle>Topic Name: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ topicName }}</span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.topicName }}</span>
                             </mat-list-item>
                             <mat-list-item>
                                 <span class="mat-list-span-title" matListItemTitle>ARN: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ topicArn }}</span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.topicArn }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span class="mat-list-span-title" matListItemTitle>URL: </span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.topicUrl }}</span>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                        <mat-list>
+                            <mat-list-item>
+                                <span class="mat-list-span-title" matListItemTitle>Owner: </span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.owner }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span class="mat-list-span-title" matListItemTitle>Messages: </span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.messageCount }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span class="mat-list-span-title" matListItemTitle>Size (kB): </span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.size }}</span>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -42,11 +58,13 @@
                         <mat-list>
                             <mat-list-item>
                                 <span class="mat-list-span-title" matListItemTitle>Created: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ created | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.created | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
                             </mat-list-item>
                             <mat-list-item>
                                 <span class="mat-list-span-title" matListItemTitle>Modified: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ created| date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+                                <span class="mat-list-span-value" matListItemLine>{{ topicDetails.modified | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -133,6 +151,6 @@
         <button (click)=save() mat-button>Save</button>
     </mat-card-actions>
     <div class="footer">
-        Last update: {{ lastUpdate }}
+        Last update: {{ lastUpdate |date: 'HH:mm:ss' }}
     </div>
 </mat-card>

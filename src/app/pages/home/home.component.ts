@@ -12,14 +12,15 @@ import {interval, Subscription} from "rxjs";
 import {AwsMockMonitoringService} from "../../services/monitoring.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ExportInfrastructureComponentDialog} from "../infrastructure/export/export-infrastructure.component";
-import {AwsMockExportService} from "../../services/export.service";
+import {ModuleService} from "../../services/module.service";
 import {CpuChartComponent} from "../charts/cpu-chart/cpu-chart.component";
 import {MemoryChartComponent} from "../charts/memory-chart/memory-chart.component";
 import {GatewayTimeComponent} from "../charts/gatewas-time/gateway-time.component";
 import {MatTooltip} from "@angular/material/tooltip";
-import {CleanInfrastructureComponentDialog} from "../infrastructure/clean/clean-infrastructure.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ThreadsChartComponent} from "../charts/thread-chart/threads-chart.component";
+import {ImportInfrastructureComponentDialog} from "../infrastructure/import/import-infrastructure.component";
+import {ModuleSelectionComponentDialog} from "../infrastructure/selection/module-selection.component";
 
 @Component({
     selector: 'app-home',
@@ -53,7 +54,7 @@ import {ThreadsChartComponent} from "../charts/thread-chart/threads-chart.compon
         MatTooltip,
         ThreadsChartComponent
     ],
-    providers: [AwsMockMonitoringService, AwsMockExportService, {provide: LOCALE_ID, useValue: 'de-CH'}],
+    providers: [AwsMockMonitoringService, ModuleService, {provide: LOCALE_ID, useValue: 'de-CH'}],
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
@@ -66,7 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     @ViewChild(GatewayTimeComponent) gatewayTimeChart: GatewayTimeComponent | undefined;
     @ViewChild(ThreadsChartComponent) threadsChart: ThreadsChartComponent | undefined;
 
-    constructor(private snackBar: MatSnackBar, private moduleService: AwsMockExportService, private dialog: MatDialog) {
+    constructor(private snackBar: MatSnackBar, private moduleService: ModuleService, private dialog: MatDialog) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
             this.cpuChart?.loadCpuChart();
@@ -86,25 +87,46 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     exportInfrastructure() {
 
-        this.moduleService.getInfrastructure().subscribe((data: any) => {
+        const moduleSelectedDialogConfig = new MatDialogConfig();
+        moduleSelectedDialogConfig.disableClose = true;
+        moduleSelectedDialogConfig.autoFocus = true;
+        moduleSelectedDialogConfig.maxWidth = '100vw';
+        moduleSelectedDialogConfig.maxHeight = '100vh';
+        moduleSelectedDialogConfig.panelClass = 'full-screen-modal';
+        moduleSelectedDialogConfig.width = "20%"
+        moduleSelectedDialogConfig.minWidth = '280px'
+        moduleSelectedDialogConfig.data = {title: 'Export modules', mode: 'export'};
 
-            const dialogConfig = new MatDialogConfig();
-            dialogConfig.disableClose = true;
-            dialogConfig.autoFocus = true;
-            dialogConfig.maxWidth = '100vw';
-            dialogConfig.maxHeight = '100vh';
-            dialogConfig.panelClass = 'full-screen-modal';
-            dialogConfig.width = "90%"
-            dialogConfig.data = data.infrastructure;
+        this.dialog.open(ModuleSelectionComponentDialog, moduleSelectedDialogConfig).afterClosed().subscribe(result => {
+            if (result) {
 
-            this.dialog.open(ExportInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-                if (result) {
-                    console.log(result);
-                    // this.sqsService.sendMessage(queueUrl, result);
-                    // this.loadQueues();
-                }
-            });
+                // Process parameters
+                const moduleList = result.modules.filter((ele: any) => {
+                    return ele.selected;
+                }).map((ele: any) => ele.name);
+                const includeObjects = result.includeObjects;
+                const prettyPrint = result.prettyPrint;
+
+                this.moduleService.exportInfrastructure(moduleList, includeObjects, prettyPrint).subscribe((data: any) => {
+
+                    const exportDialogConfig = new MatDialogConfig();
+                    exportDialogConfig.disableClose = true;
+                    exportDialogConfig.autoFocus = true;
+                    exportDialogConfig.maxWidth = '100vw';
+                    exportDialogConfig.maxHeight = '100vh';
+                    exportDialogConfig.panelClass = 'full-screen-modal';
+                    exportDialogConfig.width = "90%"
+                    exportDialogConfig.data = data;
+
+                    this.dialog.open(ExportInfrastructureComponentDialog, exportDialogConfig).afterClosed().subscribe(result => {
+                        if (result) {
+                            console.log(result);
+                        }
+                    });
+                });
+            }
         });
+
     }
 
     importInfrastructure() {
@@ -117,7 +139,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "90%"
 
-        this.dialog.open(ExportInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(ImportInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 console.log(result);
                 // this.moduleService.setInfrastructure().subscribe((data: any) => {
@@ -133,8 +155,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.width = "40%"
-        dialogConfig.data = {title: "Clean Infrastructure"}
-        this.dialog.open(CleanInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        dialogConfig.data = {title: 'Clean Infrastructure', mode: 'clean'}
+
+        this.dialog.open(ModuleSelectionComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 const moduleList = result.modules.filter((ele: any) => {
                     return ele.selected;

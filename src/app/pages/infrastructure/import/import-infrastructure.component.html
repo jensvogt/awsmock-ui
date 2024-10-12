@@ -1,12 +1,13 @@
-<h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Export Infrastructure</h2>
+<h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Import Infrastructure</h2>
 <mat-dialog-content class="mat-typography">
     <mat-form-field style="width: 100%;height:100%">
         <mat-label>Infrastructure:</mat-label>
         <textarea [(ngModel)]="body" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Infrastructure" readonly
-                  style="width:100%; height:100%"></textarea>
+                  style="width:100%; height:100%">{{ body }}</textarea>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <!--button (click)="exportInfrastructure()" cdkFocusInitial mat-button>Send</button-->
+    <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
+    <button (click)="loadFromFile()" mat-button>Load File</button>
+    <button (click)="importInfrastructure()" cdkFocusInitial mat-button>Import</button>
 </mat-dialog-actions>

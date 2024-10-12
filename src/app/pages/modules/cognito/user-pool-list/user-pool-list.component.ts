@@ -33,6 +33,7 @@ import {DatePipe, NgIf} from "@angular/common";
 import {UserPoolItem} from "../model/user-pool-item";
 import {AwsMockCognitoService} from "../../../../services/cognito.service";
 import {UserPoolAddComponentDialog} from "../user-pool-add/user-pool-add.component";
+import {MatListItem, MatNavList} from "@angular/material/list";
 
 @Component({
     selector: 'cognito-user-pool-list',
@@ -69,7 +70,9 @@ import {UserPoolAddComponentDialog} from "../user-pool-add/user-pool-add.compone
         MatLabel,
         MatSuffix,
         NgIf,
-        DatePipe
+        DatePipe,
+        MatListItem,
+        MatNavList
     ],
     styleUrls: ['./user-pool-list.component.scss'],
     providers: [AwsMockCognitoService]

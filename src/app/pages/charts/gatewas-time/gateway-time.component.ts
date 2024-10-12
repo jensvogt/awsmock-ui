@@ -17,7 +17,7 @@ import {
 import {MatOption, MatSelect} from "@angular/material/select";
 import {AwsMockMonitoringService} from "../../../services/monitoring.service";
 import localeDECH from '@angular/common/locales/de';
-import {AwsMockExportService} from "../../../services/export.service";
+import {ModuleService} from "../../../services/module.service";
 import {FormsModule} from "@angular/forms";
 
 interface Range {
@@ -64,7 +64,7 @@ export type ChartOptions = {
         MatOption,
         FormsModule
     ],
-    providers: [AwsMockMonitoringService, AwsMockExportService, {provide: LOCALE_ID, useValue: 'de-CH'}],
+    providers: [AwsMockMonitoringService, ModuleService, {provide: LOCALE_ID, useValue: 'de-CH'}],
     styleUrls: ['./gateway-time.component.scss']
 })
 export class GatewayTimeComponent implements OnInit {

@@ -29,6 +29,7 @@ import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.comp
 import {SnsService} from "../../../../services/sns-service.component";
 import {NavigationService} from "../../../../services/navigation.service";
 import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
+import {MatListItem, MatNavList} from "@angular/material/list";
 
 @Component({
     selector: 'app-home',
@@ -58,7 +59,9 @@ import {PublishMessageComponentDialog} from "../publish-message/publish-message.
         MatNoDataRow,
         MatHeaderCellDef,
         BreadcrumbComponent,
-        RouterLink
+        RouterLink,
+        MatNavList,
+        MatListItem
     ],
     styleUrls: ['./topic-list.component.scss'],
     providers: [SnsService]
@@ -181,10 +184,6 @@ export class TopicListComponent implements OnInit, OnDestroy {
             .finally(() => {
                 this.snsService.cleanup();
             });
-    }
-
-    editTopic(topicArn: string) {
-        this.router.navigate(['/sns-topic-detail', topicArn]);
     }
 
     publishMessage(topicArn: string) {

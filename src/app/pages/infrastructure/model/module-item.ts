@@ -1,5 +1,6 @@
 export interface ModuleItem {
     name: string | undefined;
+    displayName: string | undefined;
     selected: boolean | undefined;
 }
 

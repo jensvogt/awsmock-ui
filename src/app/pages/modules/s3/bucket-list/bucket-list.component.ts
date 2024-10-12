@@ -35,6 +35,7 @@ import {FormsModule} from "@angular/forms";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {NgIf} from "@angular/common";
 import {byteConversion} from "../../../../shared/byte-utils.component";
+import {MatListItem, MatNavList} from "@angular/material/list";
 
 @Component({
     selector: 's3-bucket-list',
@@ -71,7 +72,9 @@ import {byteConversion} from "../../../../shared/byte-utils.component";
         FormsModule,
         MatButton,
         MatSuffix,
-        NgIf
+        NgIf,
+        MatListItem,
+        MatNavList
     ],
     styleUrls: ['./bucket-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
@@ -142,11 +145,7 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.prefixSet = false;
         this.loadBuckets();
     }
-
-    editBucket(bucketName: string) {
-        this.router.navigate(['/s3-bucket-detail', bucketName]);
-    }
-
+    
     handlePageEvent(e: PageEvent) {
         this.pageEvent = e;
         this.length = e.length;
@@ -185,8 +184,8 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
                             name: b.bucketName,
                             keys: b.keys,
                             size: b.size,
-                            created: undefined,
-                            modified: undefined,
+                            created: new Date(),
+                            modified: new Date(),
                             lambdaConfigurations: undefined
                         });
                     });

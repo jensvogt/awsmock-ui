@@ -23,7 +23,7 @@ import {MatInput} from "@angular/material/input";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
-import {MatList, MatListItem} from "@angular/material/list";
+import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -38,9 +38,11 @@ import {MatLine} from "@angular/material/core";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {byteConversion} from "../../../../shared/byte-utils.component";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
+import {DatePipe} from "@angular/common";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
-    selector: 'add-connection-dialog',
+    selector: 'bucket-detail-component',
     templateUrl: './bucket-detail.component.html',
     standalone: true,
     imports: [
@@ -85,7 +87,11 @@ import {LiveAnnouncer} from "@angular/cdk/a11y";
         BreadcrumbComponent,
         MatLine,
         MatGridList,
-        MatGridTile
+        MatGridTile,
+        MatListItemLine,
+        MatListItemTitle,
+        DatePipe,
+        TranslateModule
     ],
     styleUrls: ['./bucket-detail.component.scss'],
     providers: [SnsService, AwsMockHttpService]
@@ -129,6 +135,10 @@ export class BucketDetailComponent implements OnInit, OnDestroy {
 
     back() {
         this.navigation.back();
+    }
+
+    refresh() {
+        this.loadBucket();
     }
 
     lastUpdateTime() {

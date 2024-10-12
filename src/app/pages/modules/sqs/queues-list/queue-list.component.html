@@ -17,7 +17,11 @@
         <table (matSortChange)="sortChange($event)" [dataSource]="queueDataDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
             <ng-container matColumnDef="queueName">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
-                <td *matCellDef="let element" mat-cell> {{ element.queueName }}</td>
+                <td *matCellDef="let element" mat-cell>
+                    <mat-nav-list>
+                        <a mat-list-item routerLink="/sqs-queue-detail/{{ element.queueArn }}"> {{ element.queueName }}</a>
+                    </mat-nav-list>
+                </td>
             </ng-container>
             <ng-container matColumnDef="messagesAvailable">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages available" sortActionDescription="Sort by messageAvailable">
@@ -42,9 +46,6 @@
                 <td *matCellDef="let row" mat-cell>
                     <button (click)="sendMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message">
                         <mat-icon>send</mat-icon>
-                    </button>
-                    <button (click)="editQueue(row.queueArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the queue">
-                        <mat-icon>edit</mat-icon>
                     </button>
                     <button (click)="listMessages(row.queueArn)" aria-label="MessageList" mat-icon-button matTooltip="Lists all messages">
                         <mat-icon>list</mat-icon>

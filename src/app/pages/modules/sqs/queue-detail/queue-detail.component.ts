@@ -22,7 +22,7 @@ import {MatInput} from "@angular/material/input";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
-import {MatList, MatListItem} from "@angular/material/list";
+import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -31,6 +31,7 @@ import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.comp
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsService} from "../../../../services/sqs-service.component";
 import {NavigationService} from "../../../../services/navigation.service";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 
 @Component({
     selector: 'queue-detail-connection',
@@ -75,7 +76,11 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatNoDataRow,
         MatHeaderCellDef,
         MatPaginator,
-        BreadcrumbComponent
+        BreadcrumbComponent,
+        MatGridList,
+        MatGridTile,
+        MatListItemLine,
+        MatListItemTitle
     ],
     styleUrls: ['./queue-detail.component.scss'],
     providers: [SqsService]

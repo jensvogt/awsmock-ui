@@ -9,7 +9,6 @@ import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {MatFormField, MatLabel, MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
@@ -54,7 +53,7 @@ import {FileExportComponent} from "./file-export/file-export.component";
         CdkDragHandle,
         CdkTextareaAutosize,
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [],
     styleUrls: ['./export-infrastructure.component.scss']
 })
 export class ExportInfrastructureComponentDialog implements OnInit, OnDestroy {

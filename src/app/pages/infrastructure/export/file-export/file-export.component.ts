@@ -82,7 +82,7 @@ export class FileExportComponent implements OnInit {
         if (this.fileName) {
             const blob = new Blob([this.body], {type: "application/json"});
             saveAs(blob, this.fileName);
-            this.snackBar.open("Infrastructure saved to local file", 'Done', {duration: 5000});
+            this.snackBar.open("Infrastructure saved to local file: " + this.fileName, 'Done', {duration: 5000});
             this.dialogRef.close(true);
         }
     }

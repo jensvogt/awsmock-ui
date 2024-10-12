@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {
     MatCell,
@@ -20,7 +20,6 @@ import {interval, Subscription} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {QueueItem} from "../model/queue-item";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -32,6 +31,7 @@ import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {Router, RouterLink} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {MatListItem, MatNavList} from "@angular/material/list";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -61,7 +61,9 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
         MatSort,
         MatTooltip,
         BreadcrumbComponent,
-        RouterLink
+        RouterLink,
+        MatListItem,
+        MatNavList
     ],
     styleUrls: ['./queue-list.component.scss'],
     providers: [SqsService, AwsMockHttpService]
@@ -91,7 +93,6 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Sorting
     sortColumns: SortColumn[] = [];
-    private _liveAnnouncer = inject(LiveAnnouncer);
 
     constructor(private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog,
                 private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService,
@@ -191,10 +192,6 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     listMessages(queueArn: string) {
         this.router.navigate(['/sqs-message-list', encodeURI(queueArn)]);
-    }
-
-    editQueue(queueArn: string) {
-        this.router.navigate(['/sqs-queue-detail', encodeURI(queueArn)]);
     }
 
     purgeQueue(name: string) {

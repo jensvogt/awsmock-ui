@@ -28,7 +28,11 @@
         <table (matSortChange)="sortChange($event)" [dataSource]="userPoolDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
             <ng-container matColumnDef="key" matTooltip="User PoolId">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User Pool ID" sortActionDescription="Sort by userPoolId">ID</th>
-                <td *matCellDef="let element" mat-cell> {{ element.userPoolId }}</td>
+                <td *matCellDef="let element" mat-cell>
+                    <mat-nav-list>
+                        <a mat-list-item routerLink="/cognito-user-list/{{ element.userPoolId }}">{{ element.userPoolId }}</a>
+                    </mat-nav-list>
+                </td>
             </ng-container>
             <ng-container matColumnDef="size" matTooltip="Created">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object size" sortActionDescription="Sort by created">Created</th>

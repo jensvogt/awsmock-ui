@@ -12,6 +12,7 @@ import {BucketDetailComponent} from "./pages/modules/s3/bucket-detail/bucket-det
 import {UserPoolListComponent} from "./pages/modules/cognito/user-pool-list/user-pool-list.component";
 import {UserListComponent} from "./pages/modules/cognito/user-list/user-list.component";
 import {QueueDetailComponent} from "./pages/modules/sqs/queue-detail/queue-detail.component";
+import {SqsChartsComponent} from "./pages/modules/sqs/charts/sqs-charts.component";
 
 export const routes: Routes = [
     {
@@ -23,6 +24,9 @@ export const routes: Routes = [
         path: 'home',
         component: HomeComponent,
     },
+    //=========================================================================
+    // SQS
+    //=========================================================================
     {
         path: 'sqs-queue-list',
         component: QueueListComponent,
@@ -36,6 +40,13 @@ export const routes: Routes = [
         component: SqsMessageListComponent,
     },
     {
+        path: 'sqs-charts',
+        component: SqsChartsComponent,
+    },
+    //=========================================================================
+    // SNS
+    //=========================================================================
+    {
         path: 'sns-topic-list',
         component: TopicListComponent,
     },
@@ -47,6 +58,9 @@ export const routes: Routes = [
         path: 'sns-message-list/:topicArn',
         component: SnsMessageListComponent,
     },
+    //=========================================================================
+    // S3
+    //=========================================================================
     {
         path: 's3-bucket-list',
         component: BucketListComponent,

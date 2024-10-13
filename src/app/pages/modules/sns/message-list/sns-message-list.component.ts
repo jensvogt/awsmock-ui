@@ -21,13 +21,17 @@ import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {interval, Subscription} from "rxjs";
 import {NavigationService} from "../../../../services/navigation.service";
 import {SnsMessageItem} from "../model/sns-message-item";
 import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {EditSNSMessageComponentDialog} from "./edit-message/edit-message.component";
+import {SqsMessageItem} from "../../sqs/model/sqs-message-item";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'app-home',
@@ -54,7 +58,11 @@ import {PublishMessageComponentDialog} from "../publish-message/publish-message.
         MatTable,
         MatTooltip,
         MatNoDataRow,
-        MatHeaderCellDef
+        MatHeaderCellDef,
+        MatListItem,
+        MatNavList,
+        RouterLink,
+        DatePipe
     ],
     styleUrls: ['./sns-message-list.component.scss'],
     providers: [AwsMockHttpService]
@@ -65,7 +73,7 @@ export class SnsMessageListComponent implements OnInit {
     // Table
     messageData: Array<SnsMessageItem> = [];
     messageDataSource = new MatTableDataSource(this.messageData);
-    columns: any[] = ['messageId', 'region', 'actions'];
+    columns: any[] = ['messageId', 'region', 'created', 'modified', 'actions'];
 
     // Paging
     length = 0;
@@ -134,15 +142,37 @@ export class SnsMessageListComponent implements OnInit {
                 data.messages.forEach((m: any) => {
                     this.messageData.push({
                         id: m.id,
-                        messageId: m.messageId,
-                        body: m.body,
-                        md5Sum: m.md5Sum,
-                        receiptHandle: m.receiptHandle,
                         region: m.region,
-                        created: undefined,
+                        topicArn: m.topicArn,
+                        messageId: m.messageId,
+                        message: m.message,
+                        created: m.created,
+                        modified: m.modified,
                     });
                 });
                 this.messageDataSource.data = this.messageData;
+            });
+    }
+
+    editMessage(message: SqsMessageItem) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {message: message};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '80vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+
+        this.dialog.open(EditSNSMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
+        });
+    }
+
+    deleteMessage(messageId: string) {
+        this.awsmockHttpService.deleteSnsMessages(messageId)
+            .subscribe((data: any) => {
+                this.loadMessages();
             });
     }
 

@@ -1,6 +1,5 @@
-import {Component, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {registerLocaleData} from "@angular/common";
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -15,23 +14,8 @@ import {
 } from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {AwsMockMonitoringService} from "../../../services/monitoring.service";
-import localeDECH from '@angular/common/locales/de';
 import {FormsModule} from "@angular/forms";
-
-interface Range {
-    value: string;
-    viewValue: string;
-}
-
-registerLocaleData(localeDECH);
-
-const Ranges: Array<Range> = [
-    {value: 'Today', viewValue: 'Today'},
-    {value: 'LastHour', viewValue: 'Last Hour'},
-    {value: 'Last3Hours', viewValue: 'Last 3 Hours'},
-    {value: 'Last6Hours', viewValue: 'Last 6 Hours'},
-    {value: 'Last12Hours', viewValue: 'Last 12 Hours'},
-];
+import {ChartService, TimeRange} from "../../../services/chart-service.component";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -59,34 +43,36 @@ export type ChartOptions = {
         MatOption,
         FormsModule,
     ],
-    providers: [AwsMockMonitoringService, {provide: LOCALE_ID, useValue: 'de-CH'}],
+    providers: [AwsMockMonitoringService],
     styleUrls: ['./memory-chart.component.scss']
 })
 export class MemoryChartComponent implements OnInit {
 
     public memChartOptions: Partial<ChartOptions> | undefined;
 
-    ranges: Range[] = Ranges;
-    selectedMemoryChoice: string = this.ranges[0].value;
+    ranges: TimeRange[] = [];
+    selectedTimeRange: string = '';
     @ViewChild("memoryChart") memoryChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: AwsMockMonitoringService) {
+    constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
     }
 
     ngOnInit(): void {
+        this.ranges = this.chartService.getRanges();
+        this.selectedTimeRange = this.chartService.getDefaultRange();
         this.loadMemoryChart();
     }
 
     loadMemoryChart() {
 
-        let start = this.getStartTime(this.selectedMemoryChoice);
-        let end = this.getEndTime();
+        let start = this.chartService.getStartTime(this.selectedTimeRange);
+        let end = this.chartService.getEndTime();
         this.monitoringService.getCounters('real_memory_used', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
                     this.memChartOptions = {
                         series: [{name: "memoryChart", data: data.counters}],
-                        chart: {height: 350, type: "line"},
+                        chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         title: {text: "Memory", align: "center"},
@@ -104,30 +90,5 @@ export class MemoryChartComponent implements OnInit {
                     };
                 }
             });
-    }
-
-    getStartTime(choice: string): Date {
-        let startTime = new Date();
-        if (choice == 'Today') {
-            startTime.setHours(0, 0, 0, 0);
-        } else if (choice == 'LastHour') {
-            startTime.setHours(startTime.getHours() - 1);
-        } else if (choice == 'Last3Hours') {
-            startTime.setHours(startTime.getHours() - 3);
-        } else if (choice == 'Last6Hours') {
-            startTime.setHours(startTime.getHours() - 6);
-        } else if (choice == 'Last12Hours') {
-            startTime.setHours(startTime.getHours() - 12);
-        }
-        startTime.setSeconds(0);
-        startTime.setMilliseconds(0);
-        return startTime;
-    }
-
-    getEndTime(): Date {
-        let endTime = new Date();
-        endTime.setSeconds(0);
-        endTime.setMilliseconds(0);
-        return endTime;
     }
 }

@@ -31,6 +31,7 @@ import {EditMessageComponentDialog} from "./edit-message/edit-message.component"
 import {NavigationService} from "../../../../services/navigation.service";
 import {DatePipe} from "@angular/common";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
+import {SortColumn} from "../../../../shared/sorting/sorting.component";
 
 @Component({
     selector: 'sqs-message-list',
@@ -89,8 +90,9 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     queueArn: string = '';
     queueUrl: string = '';
     queueName: string = '';
+    // Sorting
+    sortColumns: SortColumn[] = [];
     private sub: any;
-
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
@@ -133,11 +135,13 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+        this.sortColumns = [];
+        if (sortState.direction === 'asc') {
+            this.sortColumns.push({column: sortState.active, sortDirection: 1});
         } else {
-            this._liveAnnouncer.announce('Sorting cleared');
+            this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
+        this.loadMessages();
     }
 
     handlePageEvent(e: PageEvent) {
@@ -150,7 +154,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     loadMessages() {
         this.messageData = [];
-        this.awsmockHttpService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex)
+        this.awsmockHttpService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date().toLocaleTimeString('DE-de');
                 this.length = data.Total;

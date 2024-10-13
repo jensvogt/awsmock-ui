@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.15](https://github.com/jensvogt/awsmock-ui/compare/v1.2.14...v1.2.15) (2024-10-13)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** some minor style changes ([3272e1b](https://github.com/jensvogt/awsmock-ui/commit/3272e1be5f4a0adb16645020b7101a96a5b0fe3d))
+
 ## [1.2.14](https://github.com/jensvogt/awsmock-ui/compare/v1.2.13...v1.2.14) (2024-10-12)
 
 

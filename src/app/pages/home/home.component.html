@@ -31,6 +31,19 @@
                     </mat-nav-list>
                 </mat-card-content>
             </mat-card>
+            <mat-card class="mat-elevation-z4">
+                <mat-card-header>
+                    <mat-card-title>Monitoring</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-nav-list>
+                        <a href="/sqs-charts" mat-list-item>Simple Queueing Service</a>
+                        <a href="/sns-charts" mat-list-item>Simple Notification Service</a>
+                        <a href="/s3-charts" mat-list-item>S3 Storage Service</a>
+                        <a href="/cognito-charts" mat-list-item>Cognito Service</a>
+                    </mat-nav-list>
+                </mat-card-content>
+            </mat-card>
             <cpu-chart-component></cpu-chart-component>
             <memory-chart-component></memory-chart-component>
             <gateway-time-chart-component></gateway-time-chart-component>

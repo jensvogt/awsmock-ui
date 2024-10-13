@@ -9,7 +9,7 @@
             <div class="flex-container-right">
                 <div class="flex-item">
                     <mat-card-actions>
-                        <mat-select (selectionChange)="loadThreadChart()" [(ngModel)]="selectedThreadChoice" style="width:200px">
+                        <mat-select (selectionChange)="loadThreadChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
                             @for (range of ranges; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }

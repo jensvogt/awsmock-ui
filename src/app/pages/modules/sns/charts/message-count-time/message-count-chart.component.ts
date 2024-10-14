@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
-import {MatSelectionList} from "@angular/material/list";
+import {MatButton} from "@angular/material/button";
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -14,9 +14,9 @@ import {
     ChartComponent
 } from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
+import {AwsMockMonitoringService} from "../../../../../services/monitoring.service";
+import {ChartService, TimeRange} from "../../../../../services/chart-service.component";
 import {FormsModule} from "@angular/forms";
-import {ChartService, TimeRange} from "../../../services/chart-service.component";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -31,8 +31,8 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'gateway-time-chart-component',
-    templateUrl: './gateway-time.component.html',
+    selector: 'sns-message-count-chart-component',
+    templateUrl: './message-count-chart.component.html',
     standalone: true,
     imports: [
         ChartComponent,
@@ -42,21 +42,21 @@ export type ChartOptions = {
         MatCardActions,
         MatCardImage,
         MatCardTitle,
+        MatButton,
         MatSelect,
-        MatSelectionList,
         MatOption,
-        FormsModule
+        FormsModule,
     ],
     providers: [AwsMockMonitoringService],
-    styleUrls: ['./gateway-time.component.scss']
+    styleUrls: ['./message-count-chart.component.scss']
 })
-export class GatewayTimeComponent implements OnInit {
+export class SnsMessageCountChartComponent implements OnInit {
 
-    public httpTimeChartOptions: Partial<ChartOptions> | undefined;
+    public messageCountChartOptions: Partial<ChartOptions> | undefined;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("httpTimerChart") httpTimerChart: ChartComponent | undefined;
+    @ViewChild("messageCountChart") messageCountChart: ChartComponent | undefined;
 
     constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
     }
@@ -64,33 +64,26 @@ export class GatewayTimeComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadHttpTimeChart();
+        this.loadMessageCountChart();
     }
 
-    loadHttpTimeChart() {
+    loadMessageCountChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('gateway_http_timer', start, end, 5)
+        this.monitoringService.getCounters('sns_message_counter', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    this.httpTimeChartOptions = {
-                        series: [{name: "HTTP Response Time", data: data.counters}],
-                        chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
+                    this.messageCountChartOptions = {
+                        series: [{name: "Service Time", data: data.counters}],
+                        chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
-                        title: {text: "HTTP Response Time", align: "center"},
-                        tooltip: {x: {format: "dd/MM HH:mm:ss"}},
+                        tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
+                        title: {text: "SNS Message Count", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {
-                            min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "HTTP Response Time [ms]"}, labels: {
-                                formatter: function (val) {
-                                    return val.toFixed(0)
-                                },
-                                offsetX: 10
-                            }
-                        }
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Message Count"}, labels: {offsetX: 10}}
                     };
                 }
             });

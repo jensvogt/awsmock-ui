@@ -93,8 +93,8 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     nextToken: string = '';
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
-    // Sorting
-    sortColumns: SortColumn[] = [];
+    // Sorting, default available
+    sortColumns: SortColumn[] = [{column: 'attributes.approximateNumberOfMessages', sortDirection: -1}];
 
     constructor(private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog,
                 private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService,

@@ -84,7 +84,8 @@ export class MemoryChartComponent implements OnInit {
                                 formatter: function (val) {
                                     val /= 1024;
                                     return val.toFixed(0);
-                                }
+                                },
+                                offsetX: 10
                             }
                         }
                     };

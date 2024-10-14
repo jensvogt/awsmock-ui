@@ -17,6 +17,7 @@ export class S3Service {
     client = new S3Client({
         region: environment.awsmockRegion,
         endpoint: environment.gatewayEndpoint,
+        forcePathStyle: true,
         credentials: {
             accessKeyId: 'none',
             secretAccessKey: 'none',

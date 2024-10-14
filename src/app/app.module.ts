@@ -12,7 +12,7 @@ import {HomeComponent} from "./pages/home/home.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {provideRouter, RouterModule, RouterOutlet, withComponentInputBinding} from "@angular/router";
 import {NgIf, registerLocaleData} from "@angular/common";
-import {HttpClient, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {HttpClient, provideHttpClient, withFetch} from "@angular/common/http";
 import localeDe from '@angular/common/locales/de';
 import localeDeExtra from '@angular/common/locales/extra/de';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
@@ -30,7 +30,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     declarations: [AppComponent],
     exports: [AppComponent],
     bootstrap: [AppComponent],
-    providers: [provideRouter(routes, withComponentInputBinding()), provideHttpClient(withInterceptorsFromDi())],
+    providers: [provideRouter(routes, withComponentInputBinding()), provideHttpClient(withFetch())],
     imports: [
         BrowserModule,
         routes,

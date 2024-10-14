@@ -83,7 +83,7 @@ export class CpuChartComponent implements OnInit {
                         title: {text: "CPU", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}}
+                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
                     };
                 }
             });

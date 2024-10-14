@@ -19,7 +19,11 @@
                 <table (matSortChange)="sortChange($event)" [dataSource]="messageDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
                     <ng-container matColumnDef="messageId">
                         <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.messageId }}</td>
+                        <td *matCellDef="let element" mat-cell>
+                            <mat-nav-list>
+                                <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
+                            </mat-nav-list>
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="region">
                         <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Region" sortActionDescription="Sort by region">Region</th>
@@ -36,9 +40,6 @@
                     <ng-container matColumnDef="actions">
                         <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                         <td *matCellDef="let row" mat-cell>
-                            <button (click)="editMessage(row)" aria-label="Send" mat-icon-button matTooltip="Send a message">
-                                <mat-icon>edit</mat-icon>
-                            </button>
                             <button (click)="deleteMessage(row.receiptHandle)" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
                                 <mat-icon>delete</mat-icon>
                             </button>

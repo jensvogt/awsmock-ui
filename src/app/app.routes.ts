@@ -13,6 +13,7 @@ import {UserPoolListComponent} from "./pages/modules/cognito/user-pool-list/user
 import {UserListComponent} from "./pages/modules/cognito/user-list/user-list.component";
 import {QueueDetailComponent} from "./pages/modules/sqs/queue-detail/queue-detail.component";
 import {SqsChartsComponent} from "./pages/modules/sqs/charts/sqs-charts.component";
+import {SnsChartsComponent} from "./pages/modules/sns/charts/sns-charts.component";
 
 export const routes: Routes = [
     {
@@ -57,6 +58,10 @@ export const routes: Routes = [
     {
         path: 'sns-message-list/:topicArn',
         component: SnsMessageListComponent,
+    },
+    {
+        path: 'sns-charts',
+        component: SnsChartsComponent,
     },
     //=========================================================================
     // S3

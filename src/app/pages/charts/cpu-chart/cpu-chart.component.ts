@@ -17,6 +17,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {AwsMockMonitoringService} from "../../../services/monitoring.service";
 import {FormsModule} from "@angular/forms";
 import {ChartService, TimeRange} from "../../../services/chart-service.component";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -46,6 +47,7 @@ export type ChartOptions = {
         MatSelect,
         MatOption,
         FormsModule,
+        NgIf,
     ],
     providers: [AwsMockMonitoringService],
     styleUrls: ['./cpu-chart.component.scss']

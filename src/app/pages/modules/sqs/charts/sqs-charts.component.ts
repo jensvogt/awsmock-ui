@@ -14,6 +14,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
 import {SqsMessageWaitTimeChartComponent} from "./message-wait-time/message-wait-time-chart.component";
+import {NavigationService} from "../../../../services/navigation.service";
 
 @Component({
     selector: 'sqs-charts-component',
@@ -58,7 +59,7 @@ export class SqsChartsComponent implements OnInit, OnDestroy {
     updateSubscription: Subscription | undefined;
     @ViewChild(SqsServiceTimeChartComponent) serviceTimeChart: SqsServiceTimeChartComponent | undefined;
 
-    constructor(private snackBar: MatSnackBar) {
+    constructor(private snackBar: MatSnackBar, private navigation: NavigationService) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
             this.serviceTimeChart?.loadServiceTimeChart();
@@ -71,5 +72,13 @@ export class SqsChartsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    back() {
+        this.navigation.back();
+    }
+
+    refresh() {
+
     }
 }

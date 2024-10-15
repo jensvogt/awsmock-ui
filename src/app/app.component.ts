@@ -11,6 +11,8 @@ import {MatListItem, MatNavList} from "@angular/material/list";
 import {MatAccordion, MatExpansionPanel, MatExpansionPanelContent, MatExpansionPanelHeader, MatExpansionPanelTitle} from "@angular/material/expansion";
 import {MatLine} from "@angular/material/core";
 import {MatRow} from "@angular/material/table";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {ConfigComponentDialog} from "./pages/home/settings/config.component";
 
 @Component({
     selector: 'app-root',
@@ -51,7 +53,7 @@ export class AppComponent {
         ["icon_s3", "s3.svg"]
     ];
 
-    constructor(private router: Router, matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+    constructor(private router: Router, matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer, private dialog: MatDialog) {
         this.customIcons.forEach(([iconName, iconPath]) => {
             matIconRegistry.addSvgIcon(iconName, domSanitizer.bypassSecurityTrustResourceUrl(iconPath));
         });
@@ -65,6 +67,16 @@ export class AppComponent {
 
     home() {
         this.router.navigate(['/']);
+    }
+
+    config() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+
+        this.dialog.open(ConfigComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        });
     }
 
     logOut() {

@@ -11,26 +11,14 @@ import {routes} from "./app.routes";
 import {HomeComponent} from "./pages/home/home.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {provideRouter, RouterModule, RouterOutlet, withComponentInputBinding} from "@angular/router";
-import {NgIf, registerLocaleData} from "@angular/common";
-import {HttpClient, provideHttpClient, withFetch} from "@angular/common/http";
-import localeDe from '@angular/common/locales/de';
-import localeDeExtra from '@angular/common/locales/extra/de';
-import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MultiTranslateHttpLoader} from 'ngx-translate-multi-http-loader';
-
-registerLocaleData(localeDe, 'de', localeDeExtra);
-
-export function HttpLoaderFactory(http: HttpClient) {
-    return new MultiTranslateHttpLoader(http, [
-        {prefix: './assets/i18n/general/', suffix: '.json'}
-    ]);
-}
+import {NgIf} from "@angular/common";
+import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {TranslateService} from '@ngx-translate/core';
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [],
     exports: [AppComponent],
-    bootstrap: [AppComponent],
-    providers: [provideRouter(routes, withComponentInputBinding()), provideHttpClient(withFetch())],
+    providers: [provideRouter(routes, withComponentInputBinding()), provideHttpClient(withInterceptorsFromDi())],
     imports: [
         BrowserModule,
         routes,
@@ -52,13 +40,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatSidenavContent,
         RouterOutlet,
         NgIf,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
+        AppComponent,
 
     ],
 })

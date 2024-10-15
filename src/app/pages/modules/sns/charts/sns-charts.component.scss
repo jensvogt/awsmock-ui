@@ -47,6 +47,10 @@ body {
   height: 100%;
 }
 
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
 .card-header {
   display: flex;
   flex-direction: row;

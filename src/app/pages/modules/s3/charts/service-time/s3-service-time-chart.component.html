@@ -9,7 +9,7 @@
             <div class="flex-container-right">
                 <div class="flex-item">
                     <mat-card-actions>
-                        <mat-select (selectionChange)="loadCpuChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
+                        <mat-select (selectionChange)="loadS3ServiceTimeChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
                             @for (range of ranges; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }
@@ -20,16 +20,16 @@
         </div>
     </mat-card-header>
     <mat-card-content>
-        <apx-chart *ngIf="cpuChartOptions"
-                   [chart]="cpuChartOptions?.chart"
-                   [dataLabels]="cpuChartOptions?.dataLabels"
-                   [grid]="cpuChartOptions?.grid"
-                   [series]="cpuChartOptions?.series"
-                   [stroke]="cpuChartOptions?.stroke"
-                   [title]="cpuChartOptions?.title"
-                   [tooltip]="cpuChartOptions?.tooltip"
-                   [xaxis]="cpuChartOptions?.xaxis"
-                   [yaxis]="cpuChartOptions?.yaxis"
+        <apx-chart
+                [chart]="s3ServiceTimeChartOptions?.chart"
+                [dataLabels]="s3ServiceTimeChartOptions?.dataLabels"
+                [grid]="s3ServiceTimeChartOptions?.grid"
+                [series]="s3ServiceTimeChartOptions?.series"
+                [stroke]="s3ServiceTimeChartOptions?.stroke"
+                [title]="s3ServiceTimeChartOptions?.title"
+                [tooltip]="s3ServiceTimeChartOptions?.tooltip"
+                [xaxis]="s3ServiceTimeChartOptions?.xaxis"
+                [yaxis]="s3ServiceTimeChartOptions?.yaxis"
         ></apx-chart>
     </mat-card-content>
 </mat-card>

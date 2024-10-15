@@ -3,7 +3,7 @@
         <mat-icon>arrow_back</mat-icon>
     </button>
     <span class="fill-remaining-space">
-            <h4>SQS Monitoring</h4>
+            <h4>S3 Monitoring</h4>
         </span>
     <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
         <mat-icon>refresh</mat-icon>
@@ -13,8 +13,7 @@
     <mat-card class="mat-elevation-z4">
         <mat-card-content>
             <div class="wrapper">
-                <sqs-service-time-chart-component></sqs-service-time-chart-component>
-                <sqs-message-wait-time-chart-component></sqs-message-wait-time-chart-component>
+                <s3-service-time-chart-component></s3-service-time-chart-component>
             </div>
             <div class="footer">
                 Last update: {{ lastUpdate }}

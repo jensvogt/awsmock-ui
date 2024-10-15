@@ -21,16 +21,16 @@
     </mat-card-header>
     <mat-card-content>
         <div>
-            <apx-chart
-                    [chart]="memChartOptions?.chart"
-                    [dataLabels]="memChartOptions?.dataLabels"
-                    [grid]="memChartOptions?.grid"
-                    [series]="memChartOptions?.series"
-                    [stroke]="memChartOptions?.stroke"
-                    [title]="memChartOptions?.title"
-                    [tooltip]="memChartOptions?.tooltip"
-                    [xaxis]="memChartOptions?.xaxis"
-                    [yaxis]="memChartOptions?.yaxis"
+            <apx-chart *ngIf="memChartOptions"
+                       [chart]="memChartOptions?.chart"
+                       [dataLabels]="memChartOptions?.dataLabels"
+                       [grid]="memChartOptions?.grid"
+                       [series]="memChartOptions?.series"
+                       [stroke]="memChartOptions?.stroke"
+                       [title]="memChartOptions?.title"
+                       [tooltip]="memChartOptions?.tooltip"
+                       [xaxis]="memChartOptions?.xaxis"
+                       [yaxis]="memChartOptions?.yaxis"
             ></apx-chart>
         </div>
     </mat-card-content>

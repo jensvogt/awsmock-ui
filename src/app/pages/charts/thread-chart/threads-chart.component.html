@@ -20,16 +20,16 @@
         </div>
     </mat-card-header>
     <mat-card-content>
-        <apx-chart
-                [chart]="threadsChartOptions?.chart"
-                [dataLabels]="threadsChartOptions?.dataLabels"
-                [grid]="threadsChartOptions?.grid"
-                [series]="threadsChartOptions?.series"
-                [stroke]="threadsChartOptions?.stroke"
-                [title]="threadsChartOptions?.title"
-                [tooltip]="threadsChartOptions?.tooltip"
-                [xaxis]="threadsChartOptions?.xaxis"
-                [yaxis]="threadsChartOptions?.yaxis"
+        <apx-chart *ngIf="threadsChartOptions"
+                   [chart]="threadsChartOptions?.chart"
+                   [dataLabels]="threadsChartOptions?.dataLabels"
+                   [grid]="threadsChartOptions?.grid"
+                   [series]="threadsChartOptions?.series"
+                   [stroke]="threadsChartOptions?.stroke"
+                   [title]="threadsChartOptions?.title"
+                   [tooltip]="threadsChartOptions?.tooltip"
+                   [xaxis]="threadsChartOptions?.xaxis"
+                   [yaxis]="threadsChartOptions?.yaxis"
         ></apx-chart>
     </mat-card-content>
 </mat-card>

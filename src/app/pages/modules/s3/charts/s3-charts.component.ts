@@ -12,14 +12,12 @@ import {interval, Subscription} from "rxjs";
 import {AwsMockMonitoringService} from "../../../../services/monitoring.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SqsServiceTimeChartComponent} from "../../sqs/charts/service-time/service-time-chart.component";
-import {SnsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
-import {SnsMessageCountChartComponent} from "./message-count-time/message-count-chart.component";
 import {NavigationService} from "../../../../services/navigation.service";
+import {S3ServiceTimeChartComponent} from "./service-time/s3-service-time-chart.component";
 
 @Component({
-    selector: 'sns-charts-component',
-    templateUrl: './sns-charts.component.html',
+    selector: 's3-chart-component',
+    templateUrl: './s3-charts.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -44,23 +42,22 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatSelectionList,
         MatNavList,
         MatTooltip,
-        SnsServiceTimeChartComponent,
-        SnsMessageCountChartComponent,
+        S3ServiceTimeChartComponent,
     ],
     providers: [AwsMockMonitoringService],
-    styleUrls: ['./sns-charts.component.scss']
+    styleUrls: ['./s3-charts.component.scss']
 })
-export class SnsChartsComponent implements OnInit, OnDestroy {
+export class S3ChartsComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
     // Auto-update
     updateSubscription: Subscription | undefined;
-    @ViewChild(SqsServiceTimeChartComponent) serviceTimeChart: SqsServiceTimeChartComponent | undefined;
+    @ViewChild(S3ServiceTimeChartComponent) s3ServiceTimeChart: S3ServiceTimeChartComponent | undefined;
 
     constructor(private snackBar: MatSnackBar, private navigation: NavigationService) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-            this.serviceTimeChart?.loadServiceTimeChart();
+            this.s3ServiceTimeChart?.loadS3ServiceTimeChart();
         });
     }
 

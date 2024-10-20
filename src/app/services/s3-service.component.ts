@@ -24,7 +24,7 @@ export class S3Service {
         },
         requestHandler: {
             requestTimeout: 3_000,
-            httpsAgent: {maxSockets: 25},
+            httpsAgent: {maxSockets: 25, keepAlive: false},
         },
     });
 

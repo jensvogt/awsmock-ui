@@ -32,7 +32,10 @@ import {Router, RouterLink} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {MatListItem, MatNavList} from "@angular/material/list";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -65,7 +68,14 @@ import {DatePipe} from "@angular/common";
         RouterLink,
         MatListItem,
         MatNavList,
-        DatePipe
+        DatePipe,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatSuffix,
+        NgIf,
+        ReactiveFormsModule,
+        FormsModule
     ],
     styleUrls: ['./queue-list.component.scss'],
     providers: [SqsService, AwsMockHttpService]
@@ -95,6 +105,10 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Sorting, default available
     sortColumns: SortColumn[] = [{column: 'attributes.approximateNumberOfMessages', sortDirection: -1}];
+
+    // Prefix
+    prefixSet: boolean = false;
+    prefix: string = '';
 
     constructor(private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog,
                 private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService,
@@ -128,6 +142,18 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadQueues();
     }
 
+    setPrefix() {
+        this.prefixSet = true;
+        this.pageIndex = 0;
+        this.loadQueues();
+    }
+
+    unsetPrefix() {
+        this.prefix = '';
+        this.prefixSet = false;
+        this.loadQueues();
+    }
+
     handlePageEvent(e: PageEvent) {
         this.pageEvent = e;
         this.length = e.length;
@@ -152,13 +178,9 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadQueues();
     }
 
-    lastUpdateTime() {
-        return new Date().toLocaleTimeString('DE-de');
-    }
-
     loadQueues() {
         this.queueData = [];
-        this.awsmockHttpService.listQueueCounters(this.pageSize, this.pageIndex, this.sortColumns)
+        this.awsmockHttpService.listQueueCounters(this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date();
                 this.nextToken = data.NextToken;

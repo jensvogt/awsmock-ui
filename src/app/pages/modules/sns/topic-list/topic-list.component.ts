@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
 import {
@@ -20,7 +20,6 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
 import {interval, Subscription} from "rxjs";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {TopicItem} from "../model/topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
@@ -30,7 +29,12 @@ import {SnsService} from "../../../../services/sns-service.component";
 import {NavigationService} from "../../../../services/navigation.service";
 import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
 import {MatListItem, MatNavList} from "@angular/material/list";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
+import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @Component({
     selector: 'app-home',
@@ -63,10 +67,17 @@ import {DatePipe} from "@angular/common";
         RouterLink,
         MatNavList,
         MatListItem,
-        DatePipe
+        DatePipe,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatSuffix,
+        NgIf,
+        ReactiveFormsModule,
+        FormsModule
     ],
     styleUrls: ['./topic-list.component.scss'],
-    providers: [SnsService]
+    providers: [SnsService, AwsMockHttpService]
 })
 export class TopicListComponent implements OnInit, OnDestroy {
 
@@ -75,7 +86,7 @@ export class TopicListComponent implements OnInit, OnDestroy {
     // Table
     topicData: TopicItem[] = [];
     topicDataSource = new MatTableDataSource(this.topicData);
-    columns: any[] = ['topicName', 'actions'];
+    columns: any[] = ['topicName', 'availableMessages', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -89,19 +100,17 @@ export class TopicListComponent implements OnInit, OnDestroy {
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    nextToken: string | undefined = '';
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
-    // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
+    // Prefix
+    prefixSet: boolean = false;
+    prefix: string = '';
+
+    // Sorting, default available
+    sortColumns: SortColumn[] = [{column: 'name', sortDirection: -1}];
 
     constructor(private router: Router, private dialog: MatDialog, private snsService: SnsService,
-                private navigation: NavigationService) {
-    }
-
-    // @ts-ignore
-    @ViewChild(MatSort) set matSort(sort: MatSort) {
-        this.topicDataSource.sort = sort;
+                private navigation: NavigationService, private awsmockService: AwsMockHttpService) {
     }
 
     ngOnInit(): void {
@@ -117,11 +126,19 @@ export class TopicListComponent implements OnInit, OnDestroy {
         this.navigation.back();
     }
 
-    lastUpdateTime() {
-        return new Date().toLocaleTimeString('DE-de');
+    refresh() {
+        this.loadTopics();
     }
 
-    refresh() {
+    setPrefix() {
+        this.prefixSet = true;
+        this.pageIndex = 0;
+        this.loadTopics();
+    }
+
+    unsetPrefix() {
+        this.prefix = '';
+        this.prefixSet = false;
         this.loadTopics();
     }
 
@@ -134,31 +151,36 @@ export class TopicListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-            this._liveAnnouncer.announce('Sorting cleared');
+        this.sortColumns = [];
+        let column = 'topicName';
+        if (sortState.active === 'topicName') {
+            column = 'attributes.approximateNumberOfMessagesNotVisible'
         }
+        if (sortState.direction === 'asc') {
+            this.sortColumns.push({column: column, sortDirection: 1});
+        } else {
+            this.sortColumns.push({column: column, sortDirection: -1});
+        }
+        this.loadTopics();
     }
 
     loadTopics() {
         this.topicData = [];
-        this.snsService.listTopics(this.pageIndex, this.pageSize)
-            .then((data: any) => {
+        this.awsmockService.listTopicCounters(this.prefix, this.pageIndex, this.pageSize, this.sortColumns)
+            .subscribe((data: any) => {
                 this.lastUpdate = new Date();
-                this.nextToken = data.NextToken;
-                this.length = data.NextToken;
-                data.Topics.forEach((q: any) => {
+                this.length = data.Total;
+                data.TopicCounters.forEach((t: any) => {
                     this.topicData.push({
-                        topicArn: q.TopicArn,
-                        topicName: q.TopicArn.substring(q.TopicArn.lastIndexOf(':') + 1)
+                        topicUrl: t.topicUrl,
+                        topicArn: t.topicArn,
+                        topicName: t.topicName,
+                        availableMessages: t.availableMessages,
+                        created: t.created,
+                        modified: t.modified
                     });
+                    this.topicDataSource.data = this.topicData;
                 });
-                this.topicDataSource.data = this.topicData;
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.snsService.cleanup();
             });
     }
 

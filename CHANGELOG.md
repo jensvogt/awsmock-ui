@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.16](https://github.com/jensvogt/awsmock-ui/compare/v1.2.15...v1.2.16) (2024-10-20)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** add s3 charts ([33e574e](https://github.com/jensvogt/awsmock-ui/commit/33e574e90a272b102a6a79fb4134460b5ff8ca7c))
+* **1-create-first-release:** add s3 charts ([de359e9](https://github.com/jensvogt/awsmock-ui/commit/de359e9cc72b47ed282e6f6913346ff52e1b229f))
+* **1-create-first-release:** some minor style changes ([8d2b323](https://github.com/jensvogt/awsmock-ui/commit/8d2b323f2dc0f751ac105fb2aae69adb113a4ccc))
+
 ## [1.2.15](https://github.com/jensvogt/awsmock-ui/compare/v1.2.14...v1.2.15) (2024-10-13)
 
 

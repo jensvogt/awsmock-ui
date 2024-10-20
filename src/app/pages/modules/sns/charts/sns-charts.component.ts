@@ -12,13 +12,14 @@ import {interval, Subscription} from "rxjs";
 import {AwsMockMonitoringService} from "../../../../services/monitoring.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SqsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
-import {SqsMessageWaitTimeChartComponent} from "./message-wait-time/message-wait-time-chart.component";
+import {SqsServiceTimeChartComponent} from "../../sqs/charts/service-time/service-time-chart.component";
+import {SnsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
+import {SnsMessageCountChartComponent} from "./message-count-time/message-count-chart.component";
 import {NavigationService} from "../../../../services/navigation.service";
 
 @Component({
-    selector: 'sqs-charts-component',
-    templateUrl: './sqs-charts.component.html',
+    selector: 'sns-charts-component',
+    templateUrl: './sns-charts.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -43,16 +44,13 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatSelectionList,
         MatNavList,
         MatTooltip,
-        SqsServiceTimeChartComponent,
-        SqsServiceTimeChartComponent,
-        SqsServiceTimeChartComponent,
-        SqsMessageWaitTimeChartComponent,
-        SqsServiceTimeChartComponent,
+        SnsServiceTimeChartComponent,
+        SnsMessageCountChartComponent,
     ],
     providers: [AwsMockMonitoringService],
-    styleUrls: ['./sqs-charts.component.scss']
+    styleUrls: ['./sns-charts.component.scss']
 })
-export class SqsChartsComponent implements OnInit, OnDestroy {
+export class SnsChartsComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
     // Auto-update
@@ -79,6 +77,5 @@ export class SqsChartsComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-
     }
 }

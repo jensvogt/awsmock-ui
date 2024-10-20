@@ -12,13 +12,12 @@ import {interval, Subscription} from "rxjs";
 import {AwsMockMonitoringService} from "../../../../services/monitoring.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SqsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
-import {SqsMessageWaitTimeChartComponent} from "./message-wait-time/message-wait-time-chart.component";
 import {NavigationService} from "../../../../services/navigation.service";
+import {S3ServiceTimeChartComponent} from "./service-time/s3-service-time-chart.component";
 
 @Component({
-    selector: 'sqs-charts-component',
-    templateUrl: './sqs-charts.component.html',
+    selector: 's3-chart-component',
+    templateUrl: './s3-charts.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -43,26 +42,22 @@ import {NavigationService} from "../../../../services/navigation.service";
         MatSelectionList,
         MatNavList,
         MatTooltip,
-        SqsServiceTimeChartComponent,
-        SqsServiceTimeChartComponent,
-        SqsServiceTimeChartComponent,
-        SqsMessageWaitTimeChartComponent,
-        SqsServiceTimeChartComponent,
+        S3ServiceTimeChartComponent,
     ],
     providers: [AwsMockMonitoringService],
-    styleUrls: ['./sqs-charts.component.scss']
+    styleUrls: ['./s3-charts.component.scss']
 })
-export class SqsChartsComponent implements OnInit, OnDestroy {
+export class S3ChartsComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
     // Auto-update
     updateSubscription: Subscription | undefined;
-    @ViewChild(SqsServiceTimeChartComponent) serviceTimeChart: SqsServiceTimeChartComponent | undefined;
+    @ViewChild(S3ServiceTimeChartComponent) s3ServiceTimeChart: S3ServiceTimeChartComponent | undefined;
 
     constructor(private snackBar: MatSnackBar, private navigation: NavigationService) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-            this.serviceTimeChart?.loadServiceTimeChart();
+            this.s3ServiceTimeChart?.loadS3ServiceTimeChart();
         });
     }
 
@@ -79,6 +74,5 @@ export class SqsChartsComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-
     }
 }

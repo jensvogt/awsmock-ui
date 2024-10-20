@@ -17,13 +17,14 @@ export class S3Service {
     client = new S3Client({
         region: environment.awsmockRegion,
         endpoint: environment.gatewayEndpoint,
+        forcePathStyle: true,
         credentials: {
             accessKeyId: 'none',
             secretAccessKey: 'none',
         },
         requestHandler: {
             requestTimeout: 3_000,
-            httpsAgent: {maxSockets: 25},
+            httpsAgent: {maxSockets: 25, keepAlive: false},
         },
     });
 

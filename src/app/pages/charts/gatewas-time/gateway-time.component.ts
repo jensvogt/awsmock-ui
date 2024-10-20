@@ -17,6 +17,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {AwsMockMonitoringService} from "../../../services/monitoring.service";
 import {FormsModule} from "@angular/forms";
 import {ChartService, TimeRange} from "../../../services/chart-service.component";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -45,7 +46,8 @@ export type ChartOptions = {
         MatSelect,
         MatSelectionList,
         MatOption,
-        FormsModule
+        FormsModule,
+        NgIf
     ],
     providers: [AwsMockMonitoringService],
     styleUrls: ['./gateway-time.component.scss']
@@ -87,7 +89,8 @@ export class GatewayTimeComponent implements OnInit {
                             min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "HTTP Response Time [ms]"}, labels: {
                                 formatter: function (val) {
                                     return val.toFixed(0)
-                                }
+                                },
+                                offsetX: 10
                             }
                         }
                     };

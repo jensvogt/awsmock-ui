@@ -1,4 +1,4 @@
-<mat-card class="mat-elevation-z3">
+<mat-card class="mat-elevation-z4">
     <mat-card-header>
         <div class="container">
             <div class="flex-container-left">
@@ -9,7 +9,7 @@
             <div class="flex-container-right">
                 <div class="flex-item">
                     <mat-card-actions>
-                        <mat-select (selectionChange)="loadMemoryChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
+                        <mat-select (selectionChange)="loadMessageCountChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
                             @for (range of ranges; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }
@@ -20,18 +20,16 @@
         </div>
     </mat-card-header>
     <mat-card-content>
-        <div>
-            <apx-chart *ngIf="memChartOptions"
-                       [chart]="memChartOptions.chart"
-                       [dataLabels]="memChartOptions.dataLabels"
-                       [grid]="memChartOptions.grid"
-                       [series]="memChartOptions.series"
-                       [stroke]="memChartOptions.stroke"
-                       [title]="memChartOptions.title"
-                       [tooltip]="memChartOptions.tooltip"
-                       [xaxis]="memChartOptions.xaxis"
-                       [yaxis]="memChartOptions.yaxis"
-            ></apx-chart>
-        </div>
+        <apx-chart
+                [chart]="messageCountChartOptions?.chart"
+                [dataLabels]="messageCountChartOptions?.dataLabels"
+                [grid]="messageCountChartOptions?.grid"
+                [series]="messageCountChartOptions?.series"
+                [stroke]="messageCountChartOptions?.stroke"
+                [title]="messageCountChartOptions?.title"
+                [tooltip]="messageCountChartOptions?.tooltip"
+                [xaxis]="messageCountChartOptions?.xaxis"
+                [yaxis]="messageCountChartOptions?.yaxis"
+        ></apx-chart>
     </mat-card-content>
 </mat-card>

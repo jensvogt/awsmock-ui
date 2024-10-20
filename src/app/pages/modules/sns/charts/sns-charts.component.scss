@@ -28,8 +28,11 @@ body {
   justify-content: space-between;
 }
 
-.fill-remaining-space {
-  flex: 1 1 auto;
+.flex-container-left {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
 }
 
 .flex-container-right {
@@ -42,6 +45,10 @@ body {
 .flex-item {
   margin: 5px;
   height: 100%;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
 }
 
 .card-header {

@@ -50,6 +50,11 @@ export class ModuleService {
         return this.http.post(this.url, body, {headers: headers}).pipe(catchError(this.handleError));
     }
 
+    public getConfig() {
+        let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'get-config');
+        return this.http.get(this.url, {headers: headers}).pipe(catchError(this.handleError));
+    }
+
     private handleError(error: HttpErrorResponse) {
         if (error.status === 0) {
             // A client-side or network error occurred. Handle it accordingly.

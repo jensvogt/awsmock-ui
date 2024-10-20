@@ -70,9 +70,17 @@ export class AwsMockHttpService {
     /**
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
-    public listQueueCounters(pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+    public listQueueCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueCounters');
-        return this.http.post(this.url, {pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     */
+    public listTopicCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.SnsConfig.snsHttpOptions.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListTopicCounters');
+        return this.http.post(this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**

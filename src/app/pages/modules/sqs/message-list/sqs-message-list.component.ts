@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, RouterLink} from "@angular/router";
@@ -25,13 +25,13 @@ import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {MatTooltip} from "@angular/material/tooltip";
 import {interval, Subscription} from "rxjs";
 import {SqsMessageItem} from "../model/sqs-message-item";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {EditMessageComponentDialog} from "./edit-message/edit-message.component";
 import {NavigationService} from "../../../../services/navigation.service";
 import {DatePipe} from "@angular/common";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {MatListItem, MatNavList} from "@angular/material/list";
 
 @Component({
     selector: 'sqs-message-list',
@@ -60,7 +60,9 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
         RouterLink,
         MatNoDataRow,
         MatHeaderCellDef,
-        DatePipe
+        DatePipe,
+        MatNavList,
+        MatListItem
     ],
     styleUrls: ['./sqs-message-list.component.scss'],
     providers: [AwsMockHttpService]
@@ -90,14 +92,13 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     queueArn: string = '';
     queueUrl: string = '';
     queueName: string = '';
-    // Sorting
-    sortColumns: SortColumn[] = [];
-    private sub: any;
-    // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute,
-                private navigation: NavigationService, private dialog: MatDialog, private awsmockHttpService: AwsMockHttpService) {
+    // Sorting, default create descending
+    sortColumns: SortColumn[] = [{column: 'created', sortDirection: 1}];
+    private sub: any;
+
+    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog,
+                private navigation: NavigationService, private awsmockHttpService: AwsMockHttpService) {
     }
 
     // @ts-ignore

@@ -13,6 +13,8 @@ import {UserPoolListComponent} from "./pages/modules/cognito/user-pool-list/user
 import {UserListComponent} from "./pages/modules/cognito/user-list/user-list.component";
 import {QueueDetailComponent} from "./pages/modules/sqs/queue-detail/queue-detail.component";
 import {SqsChartsComponent} from "./pages/modules/sqs/charts/sqs-charts.component";
+import {SnsChartsComponent} from "./pages/modules/sns/charts/sns-charts.component";
+import {S3ChartsComponent} from "./pages/modules/s3/charts/s3-charts.component";
 
 export const routes: Routes = [
     {
@@ -58,6 +60,10 @@ export const routes: Routes = [
         path: 'sns-message-list/:topicArn',
         component: SnsMessageListComponent,
     },
+    {
+        path: 'sns-charts',
+        component: SnsChartsComponent,
+    },
     //=========================================================================
     // S3
     //=========================================================================
@@ -73,6 +79,13 @@ export const routes: Routes = [
         path: 's3-bucket-detail/:bucketName',
         component: BucketDetailComponent,
     },
+    {
+        path: 's3-charts',
+        component: S3ChartsComponent,
+    },
+    //=========================================================================
+    // Cognito
+    //=========================================================================
     {
         path: 'cognito-user-pool-list',
         component: UserPoolListComponent,

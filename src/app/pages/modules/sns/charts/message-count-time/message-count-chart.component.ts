@@ -14,10 +14,9 @@ import {
     ChartComponent
 } from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
+import {AwsMockMonitoringService} from "../../../../../services/monitoring.service";
+import {ChartService, TimeRange} from "../../../../../services/chart-service.component";
 import {FormsModule} from "@angular/forms";
-import {ChartService, TimeRange} from "../../../services/chart-service.component";
-import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -32,8 +31,8 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'threads-chart-component',
-    templateUrl: './threads-chart.component.html',
+    selector: 'sns-message-count-chart-component',
+    templateUrl: './message-count-chart.component.html',
     standalone: true,
     imports: [
         ChartComponent,
@@ -47,18 +46,17 @@ export type ChartOptions = {
         MatSelect,
         MatOption,
         FormsModule,
-        NgIf,
     ],
     providers: [AwsMockMonitoringService],
-    styleUrls: ['./threads-chart.component.scss']
+    styleUrls: ['./message-count-chart.component.scss']
 })
-export class ThreadsChartComponent implements OnInit {
+export class SnsMessageCountChartComponent implements OnInit {
 
-    public threadsChartOptions: Partial<ChartOptions> | undefined;
+    public messageCountChartOptions: Partial<ChartOptions> | undefined;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("threadsChart") threadsChart: ChartComponent | undefined;
+    @ViewChild("messageCountChart") messageCountChart: ChartComponent | undefined;
 
     constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
     }
@@ -66,26 +64,26 @@ export class ThreadsChartComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadThreadChart();
+        this.loadMessageCountChart();
     }
 
-    loadThreadChart() {
+    loadMessageCountChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('total_threads', start, end, 5)
+        this.monitoringService.getCounters('sns_message_counter', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    this.threadsChartOptions = {
-                        series: [{name: "Threads", data: data.counters}],
-                        chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
+                    this.messageCountChartOptions = {
+                        series: [{name: "Service Time", data: data.counters}],
+                        chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "Threads", align: "center"},
+                        title: {text: "SNS Message Count", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Message Count"}, labels: {offsetX: 10}}
                     };
                 }
             });

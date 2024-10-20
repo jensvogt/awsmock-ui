@@ -17,6 +17,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {AwsMockMonitoringService} from "../../../services/monitoring.service";
 import {FormsModule} from "@angular/forms";
 import {ChartService, TimeRange} from "../../../services/chart-service.component";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -46,6 +47,7 @@ export type ChartOptions = {
         MatSelect,
         MatOption,
         FormsModule,
+        NgIf,
     ],
     providers: [AwsMockMonitoringService],
     styleUrls: ['./cpu-chart.component.scss']
@@ -83,7 +85,7 @@ export class CpuChartComponent implements OnInit {
                         title: {text: "CPU", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}}
+                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
                     };
                 }
             });

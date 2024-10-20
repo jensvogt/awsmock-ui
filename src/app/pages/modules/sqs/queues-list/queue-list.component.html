@@ -15,6 +15,18 @@
     </mat-card-header>
     <mat-card-content>
         <mat-card appearance="outlined" style="margin: -10px;">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input [(ngModel)]="prefix" matInput name="search" placeholder="Search" type="text">
+                    <button (click)="setPrefix()" *ngIf="!prefixSet" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </button>
+                    <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-card-actions>
             <div class="table-container">
                 <table (matSortChange)="sortChange($event)" [dataSource]="queueDataDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
                     <ng-container matColumnDef="queueName">

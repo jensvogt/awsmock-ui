@@ -14,7 +14,7 @@ export class SnsService {
         },
         requestHandler: {
             requestTimeout: 3_000,
-            httpsAgent: {maxSockets: 25},
+            httpsAgent: {maxSockets: 25, keepAlive: false},
         },
     });
 

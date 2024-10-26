@@ -1,6 +1,6 @@
 import {NgModule} from "@angular/core";
 import {AppComponent} from "./app.component";
-import {BrowserModule} from "@angular/platform-browser";
+import {bootstrapApplication, BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatToolbar, MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenav, MatSidenavContainer, MatSidenavContent, MatSidenavModule} from "@angular/material/sidenav";
@@ -13,7 +13,12 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {provideRouter, RouterModule, RouterOutlet, withComponentInputBinding} from "@angular/router";
 import {NgIf} from "@angular/common";
 import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
-import {TranslateService} from '@ngx-translate/core';
+import {StoreDevtoolsModule} from "@ngrx/store-devtools";
+import {environment} from "../environments/environment";
+import {appEffects, appStore} from "./app.store";
+import {provideEffects} from "@ngrx/effects";
+import {provideStore} from "@ngrx/store";
+import {AwsMockHttpService} from "./services/awsmock-http.service";
 
 @NgModule({
     declarations: [],
@@ -41,13 +46,17 @@ import {TranslateService} from '@ngx-translate/core';
         RouterOutlet,
         NgIf,
         AppComponent,
-
+        !environment.production ? StoreDevtoolsModule.instrument() : []
     ],
 })
 export class AppModule {
-    constructor(private translate: TranslateService) {
-        translate.addLangs(['de']);
-        translate.setDefaultLang('de');
-        translate.use('de');
-    }
 }
+
+bootstrapApplication(AppModule, {
+    // register the store providers here
+    providers: [
+        provideStore(appStore),
+        provideEffects(appEffects),
+        AwsMockHttpService
+    ]
+});

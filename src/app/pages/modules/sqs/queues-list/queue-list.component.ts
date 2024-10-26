@@ -1,90 +1,40 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {interval, Subscription} from "rxjs";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {MatTableDataSource} from "@angular/material/table";
+import {async, interval, Observable, Subscription} from "rxjs";
+import {PageEvent} from "@angular/material/paginator";
 import {QueueItem} from "../model/queue-item";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
+import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
-import {MatTooltip} from "@angular/material/tooltip";
-import {BreadcrumbComponent} from "../../../../shared/breadcrump/breadcrump.component";
 import {SqsService} from "../../../../services/sqs-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
-import {Router, RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 import {NavigationService} from "../../../../services/navigation.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {MatListItem, MatNavList} from "@angular/material/list";
-import {DatePipe, NgIf} from "@angular/common";
-import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {EffectsModule} from "@ngrx/effects";
+import {Store, StoreModule} from "@ngrx/store";
+import {sqsQueueListActions} from './state/queue-list.actions';
+import {selectIsLoading, selectPageSize} from "./state/queue-list.selectors";
 
 @Component({
     selector: 'sqs-queue-list',
     templateUrl: './queue-list.component.html',
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardSubtitle,
-        MatTable,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatColumnDef,
-        MatIcon,
-        MatHeaderCell,
-        MatCell,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatSortHeader,
-        MatRowDef,
-        MatNoDataRow,
-        MatIconButton,
-        MatRow,
-        MatPaginator,
-        MatSort,
-        MatTooltip,
-        BreadcrumbComponent,
-        RouterLink,
-        MatListItem,
-        MatNavList,
-        DatePipe,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        MatSuffix,
-        NgIf,
-        ReactiveFormsModule,
-        FormsModule
-    ],
     styleUrls: ['./queue-list.component.scss'],
-    providers: [SqsService, AwsMockHttpService]
+    providers: [SqsService, AwsMockHttpService, StoreModule, EffectsModule]
 })
 export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
+
+    // Last update
     lastUpdate: Date = new Date();
 
     // Table
-    queueData: Array<QueueItem> = [];
+    queueData: QueueItem[] = [];
+    readonly queuesCounters$: Observable<QueueItem[]> | undefined
+    readonly isLoading$: Observable<boolean>;
+    readonly pageSize$: Observable<number>;
+
     queueDataDataSource = new MatTableDataSource(this.queueData);
     columns: any[] = ['queueName', 'messagesAvailable', 'messagesInFlight', 'messagesDelayed', 'actions'];
 
@@ -92,15 +42,14 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     updateSubscription: Subscription | undefined;
 
     // Paging
-    length = 0;
-    pageSize = 10;
-    pageIndex = 0;
+    length: number = 0;
+    //pageSize: number = 10;
+    pageIndex: number = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    nextToken: string = '';
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
     // Sorting, default available
@@ -109,20 +58,46 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     // Prefix
     prefixSet: boolean = false;
     prefix: string = '';
+    protected readonly async = async;
 
     constructor(private router: Router, private snackBar: MatSnackBar, private dialog: MatDialog,
-                private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService,
-                private navigation: NavigationService) {
-    }
+                private sqsService: SqsService, private navigation: NavigationService, private readonly store: Store) {
+        this.isLoading$ = this.store.select(selectIsLoading)
+        this.pageSize$ = this.store.select(selectPageSize)
+        this.store.dispatch(sqsQueueListActions.initialize());
 
-    // @ts-ignore
-    @ViewChild(MatSort) set matSort(sort: MatSort) {
-        this.queueDataDataSource.sort = sort;
+        let ps = 0;
+        this.pageSize$.subscribe((data) => ps = data);
+        this.store.dispatch(sqsQueueListActions.loadQueues({
+            prefix: this.prefix,
+            pageSize: ps,
+            pageIndex: this.pageIndex,
+            sortColumns: this.sortColumns
+        }));
+
+        this.queuesCounters$?.subscribe((data: any) => data.forEach((q: any) => {
+            console.log("Counter:", q);
+            this.queueData.push({
+                messagesAvailable: q.available,
+                messagesInFlight: q.invisible,
+                messagesDelayed: q.delayed,
+                queueUrl: q.queueUrl,
+                queueArn: q.queueArn,
+                queueName: q.queueName
+            });
+        }));
     }
 
     ngOnInit(): void {
-        this.loadQueues();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadQueues());
+        let ps = 0;
+        this.pageSize$.subscribe((data) => ps = data);
+        this.updateSubscription = interval(60000).subscribe(() =>
+            this.store.dispatch(sqsQueueListActions.loadQueues({
+                prefix: this.prefix,
+                pageSize: ps,
+                pageIndex: this.pageIndex,
+                sortColumns: this.sortColumns
+            })));
     }
 
     ngOnDestroy(): void {
@@ -139,46 +114,48 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     refresh() {
-        this.loadQueues();
+        let ps = 0;
+        this.pageSize$.subscribe((data) => ps = data);
+        this.store.dispatch(sqsQueueListActions.loadQueues({prefix: this.prefix, pageSize: ps, pageIndex: this.pageIndex, sortColumns: this.sortColumns}));
+
+        /*        this.store.select(appState => appState[queueListFeatureKey].queues).subscribe((data: any) => {
+                    this.lastUpdate = new Date();
+                    this.length = data.Total;
+                    data.QueueCounters.forEach((q: any) => {
+                        this.queueData.push({
+                            messagesAvailable: q.available,
+                            messagesInFlight: q.invisible,
+                            messagesDelayed: q.delayed,
+                            queueUrl: q.queueUrl,
+                            queueArn: q.queueArn,
+                            queueName: q.queueName
+                        });
+                    });
+                    this.queueDataDataSource.data = this.queueData;
+                });*/
     }
 
     setPrefix() {
         this.prefixSet = true;
         this.pageIndex = 0;
-        this.loadQueues();
+        // this.loadQueues();
     }
 
     unsetPrefix() {
         this.prefix = '';
         this.prefixSet = false;
-        this.loadQueues();
+        //this.loadQueues();
     }
 
     handlePageEvent(e: PageEvent) {
         this.pageEvent = e;
         this.length = e.length;
-        this.pageSize = e.pageSize;
+        // this.pageSize = e.pageSize;
         this.pageIndex = e.pageIndex;
-        this.loadQueues();
+        // this.loadQueues();
     }
 
-    sortChange(sortState: Sort) {
-        this.sortColumns = [];
-        let column = 'attributes.approximateNumberOfMessages';
-        if (sortState.active === 'messagesInFlight') {
-            column = 'attributes.approximateNumberOfMessagesNotVisible'
-        } else if (sortState.active === 'messagesDelayed') {
-            column = 'attributes.approximateNumberOfMessagesDelayed';
-        }
-        if (sortState.direction === 'asc') {
-            this.sortColumns.push({column: column, sortDirection: 1});
-        } else {
-            this.sortColumns.push({column: column, sortDirection: -1});
-        }
-        this.loadQueues();
-    }
-
-    loadQueues() {
+    /*loadQueues() {
         this.queueData = [];
         this.awsmockHttpService.listQueueCounters(this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
@@ -197,6 +174,22 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
                 this.queueDataDataSource.data = this.queueData;
             });
+    }*/
+
+    sortChange(sortState: Sort) {
+        this.sortColumns = [];
+        let column = 'attributes.approximateNumberOfMessages';
+        if (sortState.active === 'messagesInFlight') {
+            column = 'attributes.approximateNumberOfMessagesNotVisible'
+        } else if (sortState.active === 'messagesDelayed') {
+            column = 'attributes.approximateNumberOfMessagesDelayed';
+        }
+        if (sortState.direction === 'asc') {
+            this.sortColumns.push({column: column, sortDirection: 1});
+        } else {
+            this.sortColumns.push({column: column, sortDirection: -1});
+        }
+        //this.loadQueues();
     }
 
     addQueue() {
@@ -209,7 +202,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dialog.open(QueueAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 this.saveQueue(result)
-                this.loadQueues();
+                //this.loadQueues();
             }
         });
     }
@@ -221,7 +214,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     purgeQueue(name: string) {
         this.sqsService.purgeQueue(name)
             .then(() => {
-                this.loadQueues();
+                //this.loadQueues();
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
@@ -232,7 +225,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     saveQueue(name: string) {
         this.sqsService.saveQueue(name)
             .then(() => {
-                this.loadQueues();
+                //this.loadQueues();
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
@@ -255,7 +248,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 this.sqsService.sendMessage(queueUrl, result);
-                this.loadQueues();
+                //this.loadQueues();
             }
         });
     }
@@ -263,7 +256,7 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
     deleteQueue(queueUrl: string) {
         this.sqsService.deleteQueue(queueUrl)
             .then(() => {
-                this.loadQueues();
+                //this.loadQueues();
             })
             .catch((error: any) => console.error(error))
             .finally(() => {

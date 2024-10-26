@@ -1,30 +1,30 @@
 import {Routes} from '@angular/router';
-import {NotFoundComponent} from "./pages/not-found/not-found.component";
-import {HomeComponent} from "./pages/home/home.component";
-import {QueueListComponent} from "./pages/modules/sqs/queues-list/queue-list.component";
-import {SqsMessageListComponent} from "./pages/modules/sqs/message-list/sqs-message-list.component";
-import {TopicListComponent} from "./pages/modules/sns/topic-list/topic-list.component";
-import {TopicDetailComponent} from "./pages/modules/sns/topic-detail/topic-detail.component";
-import {BucketListComponent} from "./pages/modules/s3/bucket-list/bucket-list.component";
-import {ObjectListComponent} from "./pages/modules/s3/object-list/object-list.component";
-import {SnsMessageListComponent} from "./pages/modules/sns/message-list/sns-message-list.component";
-import {BucketDetailComponent} from "./pages/modules/s3/bucket-detail/bucket-detail.component";
-import {UserPoolListComponent} from "./pages/modules/cognito/user-pool-list/user-pool-list.component";
-import {UserListComponent} from "./pages/modules/cognito/user-list/user-list.component";
-import {QueueDetailComponent} from "./pages/modules/sqs/queue-detail/queue-detail.component";
-import {SqsChartsComponent} from "./pages/modules/sqs/charts/sqs-charts.component";
-import {SnsChartsComponent} from "./pages/modules/sns/charts/sns-charts.component";
-import {S3ChartsComponent} from "./pages/modules/s3/charts/s3-charts.component";
+import {NotFoundComponent} from "./modules/not-found/not-found.component";
+import {DashboardComponent} from "./modules/dashboard/dashboard.component";
+import {QueueListComponent} from "./modules/sqs/queues-list/queue-list.component";
+import {SqsMessageListComponent} from "./modules/sqs/message-list/sqs-message-list.component";
+import {TopicListComponent} from "./modules/sns/topic-list/topic-list.component";
+import {TopicDetailComponent} from "./modules/sns/topic-detail/topic-detail.component";
+import {BucketListComponent} from "./modules/s3/bucket-list/bucket-list.component";
+import {ObjectListComponent} from "./modules/s3/object-list/object-list.component";
+import {SnsMessageListComponent} from "./modules/sns/message-list/sns-message-list.component";
+import {BucketDetailComponent} from "./modules/s3/bucket-detail/bucket-detail.component";
+import {UserPoolListComponent} from "./modules/cognito/user-pool-list/user-pool-list.component";
+import {UserListComponent} from "./modules/cognito/user-list/user-list.component";
+import {QueueDetailComponent} from "./modules/sqs/queue-detail/queue-detail.component";
+import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
+import {SnsChartsComponent} from "./modules/sns/charts/sns-charts.component";
+import {S3ChartsComponent} from "./modules/s3/charts/s3-charts.component";
 
 export const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: '/home',
+        redirectTo: '/dashboard',
     },
     {
-        path: 'home',
-        component: HomeComponent,
+        path: 'dashboard',
+        component: DashboardComponent,
     },
     //=========================================================================
     // SQS

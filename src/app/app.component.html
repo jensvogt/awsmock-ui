@@ -1,9 +1,9 @@
 <mat-toolbar class="mat-elevation-z8 mat-toolbar">
     <div style="display: flex;flex-direction: row;align-content: center;justify-content: flex-start;align-items: center;">
-        <button (click)="sidenav.toggle()" *ngIf="sidenav.mode === 'push'" mat-icon-button style="color: white">
+        <!--button (click)="sidenav.toggle()" *ngIf="sidenav.mode === 'push'" mat-icon-button style="color: white">
             <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
             <mat-icon *ngIf="sidenav.opened">close</mat-icon>
-        </button>
+        </button-->
         AWS Mock UI
     </div>
     <div style="display: flex; flex-direction: row; align-content: center; justify-content: right; align-items: end;width: 100%;">
@@ -19,7 +19,7 @@
     </div>
 </mat-toolbar>
 
-<mat-sidenav-container>
+<!--mat-sidenav-container>
     <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8" mode="push" style="margin-right: 10px">
 
         <div style="align-items: flex-start; display: flex; justify-content: flex-start; align-content: flex-start; flex-direction: column;">
@@ -66,4 +66,11 @@
     <mat-sidenav-content>
         <router-outlet></router-outlet>
     </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container-->
+
+
+<div class="main-content container h-100">
+    <div class="main-content__router-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

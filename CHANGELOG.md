@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.17](https://github.com/jensvogt/awsmock-ui/compare/v1.2.16...v1.2.17) (2024-10-27)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** add redux pattern first try ([25cad37](https://github.com/jensvogt/awsmock-ui/commit/25cad379ec448990a067d0cba95be2d70dc836d5))
+* **1-create-first-release:** add redux pattern first try ([13b644b](https://github.com/jensvogt/awsmock-ui/commit/13b644bddbca225a491582249f9802a2ab2ea8ef))
+* **1-create-first-release:** add s3 charts ([621cebc](https://github.com/jensvogt/awsmock-ui/commit/621cebccf575c146cb8a6e961179c069ae8a1270))
+
 ## [1.2.16](https://github.com/jensvogt/awsmock-ui/compare/v1.2.15...v1.2.16) (2024-10-20)
 
 

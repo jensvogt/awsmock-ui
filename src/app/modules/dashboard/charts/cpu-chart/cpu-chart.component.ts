@@ -11,9 +11,12 @@ import {
     ApexYAxis,
     ChartComponent
 } from "ng-apexcharts";
-import {MonitoringService} from "../../../services/monitoring.service";
-import {ChartService, TimeRange} from "../../../services/chart-service.component";
-import {DashboardModule} from "../../dashboard/dashboard.module";
+import {MonitoringService} from "../../../../services/monitoring.service";
+import {ChartService, TimeRange} from "../../../../services/chart-service.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -30,8 +33,19 @@ export type ChartOptions = {
 @Component({
     selector: 'cpu-chart-component',
     templateUrl: './cpu-chart.component.html',
-    providers: [MonitoringService, DashboardModule],
-    styleUrls: ['./cpu-chart.component.scss']
+    styleUrls: ['./cpu-chart.component.scss'],
+    imports: [
+        MatCard,
+        MatCardHeader,
+        MatCardActions,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatCardContent,
+        ChartComponent,
+        NgIf
+    ],
+    standalone: true
 })
 export class CpuChartComponent implements OnInit {
 

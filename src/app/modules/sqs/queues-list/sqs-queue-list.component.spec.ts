@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {QueueListComponent} from './queue-list.component';
+import {SqsQueueListComponent} from './sqs-queue-list.component';
 
 describe('HomeComponent', () => {
-    let component: QueueListComponent;
-    let fixture: ComponentFixture<QueueListComponent>;
+    let component: SqsQueueListComponent;
+    let fixture: ComponentFixture<SqsQueueListComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [QueueListComponent]
+            declarations: [SqsQueueListComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(QueueListComponent);
+        fixture = TestBed.createComponent(SqsQueueListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

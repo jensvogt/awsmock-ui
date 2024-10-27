@@ -11,9 +11,12 @@ import {
     ApexYAxis,
     ChartComponent
 } from "ng-apexcharts";
-import {MonitoringService} from "../../../services/monitoring.service";
-import {ChartService, TimeRange} from "../../../services/chart-service.component";
-import {DashboardModule} from "../../dashboard/dashboard.module";
+import {MonitoringService} from "../../../../services/monitoring.service";
+import {ChartService, TimeRange} from "../../../../services/chart-service.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -30,8 +33,19 @@ export type ChartOptions = {
 @Component({
     selector: 'threads-chart-component',
     templateUrl: './threads-chart.component.html',
-    providers: [MonitoringService, DashboardModule],
-    styleUrls: ['./threads-chart.component.scss']
+    styleUrls: ['./threads-chart.component.scss'],
+    imports: [
+        MatCardHeader,
+        MatCard,
+        MatCardActions,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatCardContent,
+        ChartComponent,
+        NgIf
+    ],
+    standalone: true
 })
 export class ThreadsChartComponent implements OnInit {
 

@@ -16,18 +16,19 @@ import {MatInputModule} from "@angular/material/input";
 import {DashboardComponent} from "./dashboard.component";
 import {dashboardFeatureKey, dashboardReducer} from "./state/dashboard.reducer";
 import {DashboardEffects} from "./state/dashboard.effects";
-import {MemoryChartComponent} from "../charts/memory-chart/memory-chart.component";
-import {CpuChartComponent} from "../charts/cpu-chart/cpu-chart.component";
-import {GatewayTimeComponent} from "../charts/gateway-time/gateway-time.component";
-import {ThreadsChartComponent} from "../charts/thread-chart/threads-chart.component";
+import {CpuChartComponent} from "./charts/cpu-chart/cpu-chart.component";
 import {MatSelectModule} from "@angular/material/select";
 import {ChartComponent} from "ng-apexcharts";
+import {MatOptionModule} from "@angular/material/core";
+import {DashboardRoutingModule} from "./dashboard-routing.module";
 import {MonitoringService} from "../../services/monitoring.service";
 import {ModuleService} from "../../services/module.service";
-import {MatOptionModule} from "@angular/material/core";
+import {MemoryChartComponent} from "./charts/memory-chart/memory-chart.component";
+import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component";
+import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
 
 @NgModule({
-    declarations: [DashboardComponent, ThreadsChartComponent, GatewayTimeComponent, MemoryChartComponent, CpuChartComponent],
+    declarations: [DashboardComponent],
     imports: [
         MatCardModule,
         MatTableModule,
@@ -48,10 +49,15 @@ import {MatOptionModule} from "@angular/material/core";
         FormsModule,
         AsyncPipe,
         ChartComponent,
+        DashboardRoutingModule,
+        CpuChartComponent,
+        MemoryChartComponent,
+        GatewayTimeComponent,
+        ThreadsChartComponent,
         StoreModule.forFeature(dashboardFeatureKey, dashboardReducer),
-        EffectsModule.forFeature([DashboardEffects])
+        EffectsModule.forFeature([DashboardEffects]),
     ],
-    exports: [DashboardComponent, ThreadsChartComponent, GatewayTimeComponent, MemoryChartComponent, CpuChartComponent],
+    exports: [DashboardComponent],
     providers: [MonitoringService, ModuleService],
 })
 export class DashboardModule {

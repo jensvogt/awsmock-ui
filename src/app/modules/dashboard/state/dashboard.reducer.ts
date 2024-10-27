@@ -2,10 +2,6 @@ import {createReducer} from "@ngrx/store";
 
 export const dashboardFeatureKey = 'dashboard';
 
-export interface DashboardAppState {
-    [dashboardFeatureKey]: DashboardState;
-}
-
 export interface DashboardState {
     loading: boolean;
     error: unknown;

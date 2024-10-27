@@ -24,7 +24,7 @@ export class SqsService {
             secretAccessKey: 'test',
         },
         requestHandler: {
-            requestTimeout: 3_000,
+            requestTimeout: 30_000,
             httpsAgent: {maxSockets: 25},
         },
     });

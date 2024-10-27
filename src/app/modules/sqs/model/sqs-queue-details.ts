@@ -1,4 +1,4 @@
-export interface QueueDetails {
+export interface SqsQueueDetails {
     region: string;
     queueName: string;
     queueUrl: string;

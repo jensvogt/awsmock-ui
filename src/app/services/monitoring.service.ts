@@ -5,7 +5,7 @@ import {MonitoringConfig} from "./awsmock-http-config";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable()
-export class AwsMockMonitoringService {
+export class MonitoringService {
 
     monitoringConfig = new MonitoringConfig;
     url: string = environment.gatewayEndpoint + '/';

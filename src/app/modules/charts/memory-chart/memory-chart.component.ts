@@ -11,7 +11,7 @@ import {
     ApexYAxis,
     ChartComponent
 } from "ng-apexcharts";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
+import {MonitoringService} from "../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../services/chart-service.component";
 import {DashboardModule} from "../../dashboard/dashboard.module";
 
@@ -30,7 +30,7 @@ export type ChartOptions = {
 @Component({
     selector: 'memory-chart-component',
     templateUrl: './memory-chart.component.html',
-    providers: [AwsMockMonitoringService, DashboardModule],
+    providers: [MonitoringService, DashboardModule],
     styleUrls: ['./memory-chart.component.scss']
 })
 export class MemoryChartComponent implements OnInit {
@@ -41,7 +41,7 @@ export class MemoryChartComponent implements OnInit {
     selectedTimeRange: string = '';
     @ViewChild("memoryChart") memoryChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
+    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
 
     ngOnInit(): void {

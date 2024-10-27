@@ -9,7 +9,7 @@ import {RouterLink} from "@angular/router";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
+import {MonitoringService} from "../../../services/monitoring.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NavigationService} from "../../../services/navigation.service";
@@ -44,7 +44,7 @@ import {S3ServiceTimeChartComponent} from "./service-time/s3-service-time-chart.
         MatTooltip,
         S3ServiceTimeChartComponent,
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [MonitoringService],
     styleUrls: ['./s3-charts.component.scss']
 })
 export class S3ChartsComponent implements OnInit, OnDestroy {

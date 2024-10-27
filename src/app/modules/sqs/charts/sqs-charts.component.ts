@@ -9,7 +9,7 @@ import {RouterLink} from "@angular/router";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
+import {MonitoringService} from "../../../services/monitoring.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
@@ -49,7 +49,7 @@ import {NavigationService} from "../../../services/navigation.service";
         SqsMessageWaitTimeChartComponent,
         SqsServiceTimeChartComponent,
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [MonitoringService],
     styleUrls: ['./sqs-charts.component.scss']
 })
 export class SqsChartsComponent implements OnInit, OnDestroy {

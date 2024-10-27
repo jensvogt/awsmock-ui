@@ -1,26 +1,27 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {interval, Subscription} from "rxjs";
-import {AwsMockMonitoringService} from "../../services/monitoring.service";
+import {interval, Observable, Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ExportInfrastructureComponentDialog} from "../infrastructure/export/export-infrastructure.component";
 import {ModuleService} from "../../services/module.service";
 import {CpuChartComponent} from "../charts/cpu-chart/cpu-chart.component";
 import {MemoryChartComponent} from "../charts/memory-chart/memory-chart.component";
-import {GatewayTimeComponent} from "../charts/gatewas-time/gateway-time.component";
+import {GatewayTimeComponent} from "../charts/gateway-time/gateway-time.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ThreadsChartComponent} from "../charts/thread-chart/threads-chart.component";
 import {ImportInfrastructureComponentDialog} from "../infrastructure/import/import-infrastructure.component";
 import {ModuleSelectionComponentDialog} from "../infrastructure/selection/module-selection.component";
-import {AppModule} from "../../app.module";
+import {dashboardActions} from "./state/dashboard.actions";
+import {Store} from "@ngrx/store";
 
 @Component({
     selector: 'dashboard-component',
     templateUrl: './dashboard.component.html',
-    providers: [AwsMockMonitoringService, ModuleService, AppModule],
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-    lastUpdate: string = '';
+    lastUpdate: Date = new Date();
+
+    loadCpuChart$: Observable<any> | undefined;
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -28,10 +29,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     @ViewChild(MemoryChartComponent) memoryChart: MemoryChartComponent | undefined;
     @ViewChild(GatewayTimeComponent) gatewayTimeChart: GatewayTimeComponent | undefined;
     @ViewChild(ThreadsChartComponent) threadsChart: ThreadsChartComponent | undefined;
+    private data: any;
 
-    constructor(private snackBar: MatSnackBar, private moduleService: ModuleService, private dialog: MatDialog) {
+    constructor(private snackBar: MatSnackBar, private moduleService: ModuleService, private dialog: MatDialog, private readonly store: Store) {
         this.updateSubscription = interval(60000).subscribe(() => {
-            this.lastUpdate = new Date().toLocaleTimeString('DE-de');
+            this.lastUpdate = new Date();
             this.cpuChart?.loadCpuChart();
             this.memoryChart?.loadMemoryChart();
             this.gatewayTimeChart?.loadHttpTimeChart();
@@ -40,7 +42,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.lastUpdate = new Date().toLocaleTimeString('DE-de');
+        this.lastUpdate = new Date();
+        this.store.dispatch(dashboardActions.loadCpuChart({
+            name: 'total_cpu',
+            start: new Date(),
+            end: new Date(),
+            step: 5
+        }));
+        this.loadCpuChart$?.subscribe((data: any) => this.data = data);
     }
 
     ngOnDestroy(): void {

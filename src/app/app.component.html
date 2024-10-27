@@ -18,59 +18,10 @@
         </button>
     </div>
 </mat-toolbar>
-
-<!--mat-sidenav-container>
-    <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8" mode="push" style="margin-right: 10px">
-
-        <div style="align-items: flex-start; display: flex; justify-content: flex-start; align-content: flex-start; flex-direction: column;">
-
-            <button class="menu-button" mat-button routerLink="/sqs-queue-list" style="color: white">
-                <mat-icon svgIcon="icon_sqs"></mat-icon>
-                <span>SQS</span>
-            </button>
-            <button class="menu-button" mat-button routerLink="/sns-topic-list" style="color: white">
-                <mat-icon svgIcon="icon_sns"></mat-icon>
-                <span>SNS</span>
-            </button>
-            <button class="menu-button" mat-button routerLink="/s3-bucket-list" style="color: white">
-                <mat-icon svgIcon="icon_s3"></mat-icon>
-                <span>S3</span>
-            </button>
-        </div>
-
-        <mat-divider style="color: white"></mat-divider>
-        <div style="align-items: flex-start; display: flex; justify-content: flex-start; align-content: flex-start; flex-direction: column;">
-
-            <button class="menu-button" mat-button routerLink="/home" style="color: white">
-                <mat-icon>home</mat-icon>
-                <span>Home</span>
-            </button>
-            <button class="menu-button" mat-button routerLink="/profile" style="color: white">
-                <mat-icon>person</mat-icon>
-                <span>Profile</span>
-            </button>
-            <button class="menu-button" mat-button routerLink="/about" style="color: white">
-                <mat-icon>info</mat-icon>
-                <span>About</span>
-            </button>
-        </div>
-        <mat-divider></mat-divider>
-        <div style="align-items: flex-start; display: flex; justify-content: flex-start; align-content: flex-start; flex-direction: column;">
-
-            <button class="menu-button" mat-button routerLink="/help" style="color: white">
-                <mat-icon>help</mat-icon>
-                <span>Help</span>
-            </button>
-        </div>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
-</mat-sidenav-container-->
-
-
 <div class="main-content container h-100">
-    <div class="main-content__router-content">
-        <router-outlet></router-outlet>
+    <div class="main-content container h-100">
+        <div class="main-content__router-content">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>

@@ -1,8 +1,4 @@
-// Hinzufügen:
-import {createReducer, on} from "@ngrx/store";
-import {sqsQueueListActions} from './dashboard.actions';
-import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {QueueItem} from "../../sqs/model/queue-item";
+import {createReducer} from "@ngrx/store";
 
 export const dashboardFeatureKey = 'dashboard';
 
@@ -11,23 +7,25 @@ export interface DashboardAppState {
 }
 
 export interface DashboardState {
+    loading: boolean;
     error: unknown;
 }
 
 export const initialState: DashboardState = {
+    loading: false,
     error: {}
 };
 
 export const dashboardReducer = createReducer(
     initialState,
 
-    on(sqsQueueListActions.loadQueues, (state: DashboardState, {}) =>
+    /*on(dashboardFeatureKey.loadQueues, (state: DashboardState, {}) =>
         ({
             ...state,
-            loading: true,
+            error: '',
         })),
 
-    on(sqsQueueListActions.loadQueuesSuccess, (state: DashboardState, {queues}) => ({...state, queues, loading: false})),
+    on(dashboardFeatureKey.loadQueuesSuccess, (state: DashboardState, {}) => ({...state, queues, loading: false})),
 
-    on(sqsQueueListActions.loadQueuesFailure, (state: DashboardState, {error}) => ({...state, error, loading: false})),
+    on(dashboardFeatureKey.loadQueuesFailure, (state: DashboardState, {error}) => ({...state, error, loading: false})),*/
 );

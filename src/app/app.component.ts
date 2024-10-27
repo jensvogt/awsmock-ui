@@ -1,6 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatIconRegistry} from "@angular/material/icon";
-import {MatSidenav} from "@angular/material/sidenav";
 import {Router} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -12,8 +11,7 @@ import {ConfigComponentDialog} from "./modules/dashboard/settings/config.compone
     styleUrl: './app.component.scss',
 })
 export class AppComponent {
-    @ViewChild(MatSidenav)
-    sidenav!: MatSidenav;
+
     title = 'awsmock-ui';
     customIcons: Array<[string, string]> = [
         ["icon_sqs", "sqs.svg"],
@@ -30,7 +28,6 @@ export class AppComponent {
 
     navigateMenu(module: string) {
         this.router.navigate(['/' + module]);
-        this.sidenav.close();
     }
 
     home() {
@@ -50,3 +47,4 @@ export class AppComponent {
     logOut() {
     }
 }
+

@@ -1,6 +1,6 @@
-import {Routes} from '@angular/router';
+import {NgModule, Type} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from "./modules/not-found/not-found.component";
-import {DashboardComponent} from "./modules/dashboard/dashboard.component";
 import {QueueListComponent} from "./modules/sqs/queues-list/queue-list.component";
 import {SqsMessageListComponent} from "./modules/sqs/message-list/sqs-message-list.component";
 import {TopicListComponent} from "./modules/sns/topic-list/topic-list.component";
@@ -15,6 +15,7 @@ import {QueueDetailComponent} from "./modules/sqs/queue-detail/queue-detail.comp
 import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 import {SnsChartsComponent} from "./modules/sns/charts/sns-charts.component";
 import {S3ChartsComponent} from "./modules/s3/charts/s3-charts.component";
+import {DashboardModule} from "./modules/dashboard/dashboard.module";
 
 export const routes: Routes = [
     {
@@ -24,7 +25,9 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard',
-        component: DashboardComponent,
+        loadChildren: (): Promise<Type<DashboardModule>> =>
+            import('./modules/dashboard/dashboard.module').then(
+                (modules => modules.DashboardModule))
     },
     //=========================================================================
     // SQS
@@ -99,3 +102,10 @@ export const routes: Routes = [
         component: NotFoundComponent,
     }
 ];
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
+})
+export class AppRoutingModule {
+}

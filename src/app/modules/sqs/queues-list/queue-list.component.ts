@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import { MatTableDataSource} from "@angular/material/table";
+import {MatTableDataSource} from "@angular/material/table";
 import {async, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {QueueItem} from "../model/queue-item";
@@ -33,9 +33,9 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Table
     queueData: QueueItem[] = [];
-    queuesCounters$: Observable<QueueItem[]> | undefined
-    isLoading$: Observable<boolean> |undefined;
-    pageSize$: Observable<number> |undefined;
+    queuesCounters$: Observable<QueueItem[]> | undefined;
+    isLoading$: Observable<boolean> | undefined;
+    pageSize$: Observable<number> | undefined;
 
     queueDataDataSource = new MatTableDataSource(this.queueData);
     columns: any[] = ['queueName', 'messagesAvailable', 'messagesInFlight', 'messagesDelayed', 'actions'];
@@ -91,15 +91,15 @@ export class QueueListComponent implements OnInit, OnDestroy, AfterViewInit {
                 queueName: q.queueName
             });
         }));
-/*        let ps = 0;
-        this.pageSize$.subscribe((data) => ps = data);
-        this.updateSubscription = interval(60000).subscribe(() =>
-            this.store.dispatch(sqsQueueListActions.loadQueues({
-                prefix: this.prefix,
-                pageSize: ps,
-                pageIndex: this.pageIndex,
-                sortColumns: this.sortColumns
-            })));*/
+        /*        let ps = 0;
+                this.pageSize$.subscribe((data) => ps = data);
+                this.updateSubscription = interval(60000).subscribe(() =>
+                    this.store.dispatch(sqsQueueListActions.loadQueues({
+                        prefix: this.prefix,
+                        pageSize: ps,
+                        pageIndex: this.pageIndex,
+                        sortColumns: this.sortColumns
+                    })));*/
     }
 
     ngOnDestroy(): void {

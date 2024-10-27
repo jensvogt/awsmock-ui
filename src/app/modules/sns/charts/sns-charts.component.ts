@@ -9,7 +9,7 @@ import {RouterLink} from "@angular/router";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
+import {MonitoringService} from "../../../services/monitoring.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsServiceTimeChartComponent} from "../../sqs/charts/service-time/service-time-chart.component";
@@ -47,7 +47,7 @@ import {NavigationService} from "../../../services/navigation.service";
         SnsServiceTimeChartComponent,
         SnsMessageCountChartComponent,
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [MonitoringService],
     styleUrls: ['./sns-charts.component.scss']
 })
 export class SnsChartsComponent implements OnInit, OnDestroy {

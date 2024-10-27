@@ -11,9 +11,12 @@ import {
     ApexYAxis,
     ChartComponent
 } from "ng-apexcharts";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
-import {ChartService, TimeRange} from "../../../services/chart-service.component";
-import {DashboardModule} from "../../dashboard/dashboard.module";
+import {MonitoringService} from "../../../../services/monitoring.service";
+import {ChartService, TimeRange} from "../../../../services/chart-service.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {NgIf} from "@angular/common";
+import {FormsModule} from "@angular/forms";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -30,8 +33,19 @@ export type ChartOptions = {
 @Component({
     selector: 'memory-chart-component',
     templateUrl: './memory-chart.component.html',
-    providers: [AwsMockMonitoringService, DashboardModule],
-    styleUrls: ['./memory-chart.component.scss']
+    styleUrls: ['./memory-chart.component.scss'],
+    imports: [
+        MatCardActions,
+        MatSelect,
+        MatCardHeader,
+        MatCard,
+        MatCardContent,
+        ChartComponent,
+        NgIf,
+        FormsModule,
+        MatOption
+    ],
+    standalone: true
 })
 export class MemoryChartComponent implements OnInit {
 
@@ -41,7 +55,7 @@ export class MemoryChartComponent implements OnInit {
     selectedTimeRange: string = '';
     @ViewChild("memoryChart") memoryChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
+    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
 
     ngOnInit(): void {

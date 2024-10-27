@@ -11,9 +11,12 @@ import {
     ApexYAxis,
     ChartComponent
 } from "ng-apexcharts";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
-import {ChartService, TimeRange} from "../../../services/chart-service.component";
-import {DashboardModule} from "../../dashboard/dashboard.module";
+import {MonitoringService} from "../../../../services/monitoring.service";
+import {ChartService, TimeRange} from "../../../../services/chart-service.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -28,45 +31,56 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'cpu-chart-component',
-    templateUrl: './cpu-chart.component.html',
-    providers: [AwsMockMonitoringService, DashboardModule],
-    styleUrls: ['./cpu-chart.component.scss']
+    selector: 'threads-chart-component',
+    templateUrl: './threads-chart.component.html',
+    styleUrls: ['./threads-chart.component.scss'],
+    imports: [
+        MatCardHeader,
+        MatCard,
+        MatCardActions,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatCardContent,
+        ChartComponent,
+        NgIf
+    ],
+    standalone: true
 })
-export class CpuChartComponent implements OnInit {
+export class ThreadsChartComponent implements OnInit {
 
-    public cpuChartOptions: Partial<ChartOptions> | undefined;
+    public threadsChartOptions: Partial<ChartOptions> | undefined;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("cpuChart") cpuChart: ChartComponent | undefined;
+    @ViewChild("threadsChart") threadsChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
+    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
 
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadCpuChart();
+        this.loadThreadChart();
     }
 
-    loadCpuChart() {
+    loadThreadChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('total_cpu', start, end, 5)
+        this.monitoringService.getCounters('total_threads', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    this.cpuChartOptions = {
-                        series: [{name: "CPU Usage", data: data.counters}],
+                    this.threadsChartOptions = {
+                        series: [{name: "Threads", data: data.counters}],
                         chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "CPU", align: "center"},
+                        title: {text: "Threads", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
                     };
                 }
             });

@@ -39,7 +39,6 @@ import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {DatePipe} from "@angular/common";
-import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
     selector: 'bucket-detail-component',
@@ -91,7 +90,6 @@ import {TranslateModule} from "@ngx-translate/core";
         MatListItemLine,
         MatListItemTitle,
         DatePipe,
-        TranslateModule
     ],
     styleUrls: ['./bucket-detail.component.scss'],
     providers: [SnsService, AwsMockHttpService]

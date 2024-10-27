@@ -1,30 +1,32 @@
 import {Injectable} from '@angular/core';
-import {Actions} from '@ngrx/effects';
-
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {dashboardActions} from "./dashboard.actions";
+import {catchError, mergeMap, of} from "rxjs";
+import {map} from "rxjs/operators";
+import {MonitoringService} from "../../../services/monitoring.service";
 
 @Injectable()
 export class DashboardEffects {
 
     sortColumns: SortColumn[] = [];
 
-/*    loadQueues$ = createEffect(() => this.actions$.pipe(
-        ofType(sqsQueueListActions.loadQueues),
+    loadCpuChart$ = createEffect(() => this.actions$.pipe(
+        ofType(dashboardActions.loadCpuChart),
         mergeMap(() =>
-            this.awsmockHttpService.listQueueCounters(
-                sqsQueueListActions.loadQueues.arguments.prefix,
-                sqsQueueListActions.loadQueues.arguments.pageSize,
-                sqsQueueListActions.loadQueues.arguments.pageIndex,
-                sqsQueueListActions.loadQueues.arguments.sortColumns)
-                .pipe(map((queues: any) => sqsQueueListActions.loadQueuesSuccess({queues})),
+            this.monitoringService.getCounters(
+                dashboardActions.loadCpuChart.arguments.name,
+                dashboardActions.loadCpuChart.arguments.start,
+                dashboardActions.loadCpuChart.arguments.end,
+                dashboardActions.loadCpuChart.arguments.step)
+                .pipe(map((counters: any) => dashboardActions.loadCpuChartSuccess(counters)),
                     catchError((error) =>
-                        of(sqsQueueListActions.loadQueuesFailure({error: error.message}))
+                        of(dashboardActions.loadCpuChartFailure({error: error.message}))
                     )
                 )
         ),
-    ));*/
+    ));
 
-    constructor(private actions$: Actions, private awsmockHttpService: AwsMockHttpService) {
+    constructor(private actions$: Actions, private monitoringService: MonitoringService) {
     }
 }

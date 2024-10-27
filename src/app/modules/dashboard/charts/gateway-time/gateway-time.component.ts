@@ -11,9 +11,12 @@ import {
     ApexYAxis,
     ChartComponent
 } from "ng-apexcharts";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
-import {ChartService, TimeRange} from "../../../services/chart-service.component";
-import {DashboardModule} from "../../dashboard/dashboard.module";
+import {MonitoringService} from "../../../../services/monitoring.service";
+import {ChartService, TimeRange} from "../../../../services/chart-service.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -30,8 +33,19 @@ export type ChartOptions = {
 @Component({
     selector: 'gateway-time-chart-component',
     templateUrl: './gateway-time.component.html',
-    providers: [AwsMockMonitoringService, DashboardModule],
-    styleUrls: ['./gateway-time.component.scss']
+    styleUrls: ['./gateway-time.component.scss'],
+    imports: [
+        MatCardHeader,
+        MatCard,
+        MatCardActions,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatCardContent,
+        ChartComponent,
+        NgIf
+    ],
+    standalone: true
 })
 export class GatewayTimeComponent implements OnInit {
 
@@ -41,7 +55,7 @@ export class GatewayTimeComponent implements OnInit {
     selectedTimeRange: string = '';
     @ViewChild("httpTimerChart") httpTimerChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
+    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
 
     ngOnInit(): void {

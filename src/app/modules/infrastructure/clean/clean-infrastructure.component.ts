@@ -9,7 +9,7 @@ import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
 import {MatFormField, MatLabel, MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AwsMockMonitoringService} from "../../../services/monitoring.service";
+import {MonitoringService} from "../../../services/monitoring.service";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
@@ -75,7 +75,7 @@ const AllModules = {
         MatCheckbox,
         FormsModule, ReactiveFormsModule, MatCheckboxModule, JsonPipe, SlicePipe
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [MonitoringService],
     styleUrls: ['./clean-infrastructure.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

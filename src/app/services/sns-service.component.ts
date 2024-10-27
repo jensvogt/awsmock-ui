@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {CreateTopicCommand, DeleteTopicCommand, ListTopicsCommand, SNSClient, SubscribeCommand} from "@aws-sdk/client-sns";
 import {environment} from "../../environments/environment";
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class SnsService {
 
     client = new SNSClient({

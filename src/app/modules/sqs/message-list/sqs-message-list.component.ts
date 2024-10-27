@@ -1,71 +1,23 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {SqsService} from "../../../services/sqs-service.component";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {MatTooltip} from "@angular/material/tooltip";
+import {MatTableDataSource} from "@angular/material/table";
+import {PageEvent} from "@angular/material/paginator";
+import {MatSort, Sort} from "@angular/material/sort";
+import {Location} from "@angular/common";
 import {interval, Subscription} from "rxjs";
 import {SqsMessageItem} from "../model/sqs-message-item";
 import {AwsMockHttpService} from "../../../services/awsmock-http.service";
 import {EditMessageComponentDialog} from "./edit-message/edit-message.component";
-import {NavigationService} from "../../../services/navigation.service";
-import {DatePipe} from "@angular/common";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {MatListItem, MatNavList} from "@angular/material/list";
 
 @Component({
     selector: 'sqs-message-list',
     templateUrl: './sqs-message-list.component.html',
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardActions,
-        MatCardContent,
-        MatCardHeader,
-        MatCell,
-        MatCellDef,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatIcon,
-        MatIconButton,
-        MatPaginator,
-        MatRow,
-        MatRowDef,
-        MatSort,
-        MatSortHeader,
-        MatTable,
-        MatTooltip,
-        RouterLink,
-        MatNoDataRow,
-        MatHeaderCellDef,
-        DatePipe,
-        MatNavList,
-        MatListItem
-    ],
     styleUrls: ['./sqs-message-list.component.scss'],
-    providers: [AwsMockHttpService]
 })
 export class SqsMessageListComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
@@ -98,7 +50,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog,
-                private navigation: NavigationService, private awsmockHttpService: AwsMockHttpService) {
+                private location: Location, private awsmockHttpService: AwsMockHttpService) {
     }
 
     // @ts-ignore
@@ -128,7 +80,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {

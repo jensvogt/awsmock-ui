@@ -14,7 +14,7 @@ import {
     ChartComponent
 } from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {AwsMockMonitoringService} from "../../../../services/monitoring.service";
+import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {FormsModule} from "@angular/forms";
 
@@ -47,7 +47,7 @@ export type ChartOptions = {
         MatOption,
         FormsModule,
     ],
-    providers: [AwsMockMonitoringService],
+    providers: [MonitoringService],
     styleUrls: ['./s3-service-time-chart.component.scss']
 })
 export class S3ServiceTimeChartComponent implements OnInit {
@@ -58,7 +58,7 @@ export class S3ServiceTimeChartComponent implements OnInit {
     selectedTimeRange: string = '';
     @ViewChild("s3ServiceTimeChart") s3ServiceTimeChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: AwsMockMonitoringService, private chartService: ChartService) {
+    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
 
     ngOnInit(): void {

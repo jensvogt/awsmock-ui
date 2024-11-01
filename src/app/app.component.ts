@@ -39,6 +39,11 @@ export class AppComponent {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
+        dialogConfig.width = "25%"
+        dialogConfig.minWidth = '200px'
+        dialogConfig.maxWidth = '60vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
 
         this.dialog.open(ConfigComponentDialog, dialogConfig).afterClosed().subscribe(result => {
         });

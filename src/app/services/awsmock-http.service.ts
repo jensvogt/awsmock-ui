@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from "../../environments/environment";
 import {SortColumn} from "../shared/sorting/sorting.component";
-import {ManagerConfig, S3Config, SnsConfig, SqsConfig} from "./awsmock-http-config";
+import {S3Config, SnsConfig, SqsConfig} from "./awsmock-http-config";
 
 @Injectable()
 export class AwsMockHttpService {
@@ -11,7 +11,6 @@ export class AwsMockHttpService {
     S3Config = new S3Config;
     SqsConfig = new SqsConfig;
     SnsConfig = new SnsConfig;
-    ModuleConfig = new ManagerConfig;
     url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
@@ -57,6 +56,15 @@ export class AwsMockHttpService {
     public saveBucket(bucket: any) {
         let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'SaveBucket');
         return this.http.post(this.url, bucket, {headers: headers});
+    }
+
+    public deleteObjects(bucketName: string) {
+        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'DeleteObjects');
+        const body = {
+            region: environment.awsmockRegion,
+            bucketName: bucketName
+        }
+        return this.http.post(this.url, body, {headers: headers});
     }
 
     /**

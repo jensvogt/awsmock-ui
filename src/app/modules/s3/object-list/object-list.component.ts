@@ -191,7 +191,7 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.snackBar.open('Object deleted, bucket: ' + this.bucketName + ' key: ' + key, 'Done', {duration: 5000});
                 this.loadObjects();
             })
-            .catch((error: any) => console.error(error))
+            .catch((error: any) => console.error(error.$response))
             .finally(() => {
                 this.s3Service.cleanup();
             });

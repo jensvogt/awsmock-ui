@@ -8,6 +8,8 @@ import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
 import {ModuleService} from "../../../services/module.service";
+import packageJson from "../../../../../package.json";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 
 @Component({
     selector: 'config-dialog',
@@ -30,7 +32,9 @@ import {ModuleService} from "../../../services/module.service";
         MatList,
         MatListItem,
         MatListItemLine,
-        MatListItemTitle
+        MatListItemTitle,
+        MatGridList,
+        MatGridTile
     ],
     providers: [ModuleService],
     styleUrls: ['./config.component.scss']
@@ -38,6 +42,7 @@ import {ModuleService} from "../../../services/module.service";
 export class ConfigComponentDialog implements OnInit {
 
     configuration: any = {}
+    uiVersion: string = packageJson.version;
 
     constructor(private dialogRef: MatDialogRef<ConfigComponentDialog>, private moduleService: ModuleService) {
     }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from "@angular/core";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
@@ -70,7 +70,7 @@ const AllModules = {
     styleUrls: ['./module-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModuleSelectionComponentDialog implements OnInit, OnDestroy {
+export class ModuleSelectionComponentDialog implements OnInit {
 
     title: string | undefined = "";
 
@@ -93,6 +93,8 @@ export class ModuleSelectionComponentDialog implements OnInit, OnDestroy {
         } else if (this.mode === 'clean') {
             this.onlyObjects = true;
             this.onlyObjectsVisible = true;
+        } else if (this.mode === 'erase') {
+            this.onlyObjectsVisible = false;
         }
         this.setAll();
     }
@@ -105,9 +107,6 @@ export class ModuleSelectionComponentDialog implements OnInit, OnDestroy {
               this.setAll();
               this.cdr.detectChanges();
           })*/
-    }
-
-    ngOnDestroy(): void {
     }
 
     setAll() {

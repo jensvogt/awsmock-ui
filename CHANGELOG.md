@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.18](https://github.com/jensvogt/awsmock-ui/compare/v1.2.17...v1.2.18) (2024-11-01)
+
+
+### Bug Fixes
+
+* **1-create-first-release:** add redux pattern first try ([eaf64ef](https://github.com/jensvogt/awsmock-ui/commit/eaf64ef8129c5526415b221130f91965b2f5e49e))
+
 ## [1.2.17](https://github.com/jensvogt/awsmock-ui/compare/v1.2.16...v1.2.17) (2024-10-27)
 
 

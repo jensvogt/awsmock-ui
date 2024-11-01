@@ -9,6 +9,7 @@ import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {SnsMessageItem} from "../../model/sns-message-item";
+import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
 
 @Component({
     selector: 'sns-edit-message-dialog',
@@ -30,7 +31,8 @@ import {SnsMessageItem} from "../../model/sns-message-item";
         ReactiveFormsModule,
         CdkDrag,
         CdkDragHandle,
-        CdkTextareaAutosize
+        CdkTextareaAutosize,
+        MatSlideToggle
     ],
     styleUrls: ['./edit-message.component.scss']
 })
@@ -40,12 +42,17 @@ export class EditSNSMessageComponentDialog implements OnInit {
     rawMessage: any | undefined = '';
     messageId: string | undefined = '';
     message: SnsMessageItem | undefined;
+    prettyPrint: boolean = true;
 
     constructor(private dialogRef: MatDialogRef<EditSNSMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.message = data.message;
         this.rawMessage = this.message?.message;
         this.messageId = this.message?.messageId;
-        this.body = JSON.stringify(data, null, 4);
+        if (this.prettyPrint) {
+            this.body = JSON.stringify(JSON.parse(data.message.message), null, 2);
+        } else {
+            this.body = data.message.message;
+        }
     }
 
     ngOnInit() {
@@ -53,6 +60,16 @@ export class EditSNSMessageComponentDialog implements OnInit {
 
     sendMessage() {
         this.dialogRef.close(true);
+    }
+
+    changePrettyPrint(event: MatSlideToggleChange) {
+        if (this.message?.message !== undefined) {
+            if (event.checked) {
+                this.body = JSON.stringify(JSON.parse(this.message?.message), null, 2);
+            } else {
+                this.body = this.message?.message;
+            }
+        }
     }
 
     close() {

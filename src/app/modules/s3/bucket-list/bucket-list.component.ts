@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {
     MatCell,
@@ -79,7 +79,7 @@ import {MatListItem, MatNavList} from "@angular/material/list";
     styleUrls: ['./bucket-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
 })
-export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BucketListComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
     // Table
@@ -122,11 +122,6 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.updateSubscription?.unsubscribe();
     }
 
-    ngAfterViewInit() {
-        // @ts-ignore
-        //this.bucketData.sort = this.sort;
-    }
-
     back() {
         this.navigation.back();
     }
@@ -145,7 +140,7 @@ export class BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.prefixSet = false;
         this.loadBuckets();
     }
-    
+
     handlePageEvent(e: PageEvent) {
         this.pageEvent = e;
         this.length = e.length;

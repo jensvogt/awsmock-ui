@@ -50,6 +50,11 @@ export class ModuleService {
         return this.http.post(this.url, body, {headers: headers}).pipe(catchError(this.handleError));
     }
 
+    public eraseInfrastructure(body: any) {
+        let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'erase-infrastructure');
+        return this.http.post(this.url, body, {headers: headers}).pipe(catchError(this.handleError));
+    }
+
     public getConfig() {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'get-config');
         return this.http.get(this.url, {headers: headers}).pipe(catchError(this.handleError));

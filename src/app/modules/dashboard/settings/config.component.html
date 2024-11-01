@@ -1,34 +1,62 @@
 <h2 mat-dialog-title>Configuration</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px">
     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-        <mat-list>
-            <mat-list-item style="height:60px">
-                <span class="mat-list-span-title" matListItemTitle>Version: </span>
-                <span class="mat-list-span-value" matListItemLine>{{ configuration.version }}</span>
-            </mat-list-item>
-            <mat-list-item>
-                <span class="mat-list-span-title" matListItemTitle>Region: </span>
-                <span class="mat-list-span-value" matListItemLine>{{ configuration.region }}</span>
-            </mat-list-item>
-            <mat-list-item>
-                <span class="mat-list-span-title" matListItemTitle>Endpoint: </span>
-                <span class="mat-list-span-value" matListItemLine>{{ configuration.endpoint }}</span>
-            </mat-list-item>
-            <mat-list-item>
-                <span class="mat-list-span-title" matListItemTitle>Pid: </span>
-                <span class="mat-list-span-value" matListItemLine>{{ configuration.pid }}</span>
-            </mat-list-item>
-            <mat-list-item>
-                <span class="mat-list-span-title" matListItemTitle>Data directory: </span>
-                <span class="mat-list-span-value" matListItemLine>{{ configuration.dataDir }}</span>
-            </mat-list-item>
-            <mat-list-item>
-                <span class="mat-list-span-title" matListItemTitle>Database: </span>
-                <span class="mat-list-span-value" matListItemLine>{{ configuration.databaseActive }}</span>
-            </mat-list-item>
-        </mat-list>
+        <mat-grid-list cols="2" rowHeight="340px" style="width:100%">
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <mat-list>
+                    <mat-list-item>
+                        <span class="mat-list-span-title" matListItemTitle>Server Version: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.version }}</span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span class="mat-list-span-title" matListItemTitle>Region: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.region }}</span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span class="mat-list-span-title" matListItemTitle>Endpoint: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.endpoint }}</span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span class="mat-list-span-title" matListItemTitle>Data directory: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.dataDir }}</span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span class="mat-list-span-title" matListItemTitle>Database: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.databaseActive }}</span>
+                    </mat-list-item>
+                </mat-list>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+                <mat-list>
+                    <mat-list-item>
+                        <span class="mat-list-span-title" matListItemTitle>UI Version: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ uiVersion }}</span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span class="mat-list-span-title" matListItemTitle>Pid: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.pid }}</span>
+                    </mat-list-item>
+                    <mat-list-item style="height:60px">
+                        <span class="mat-list-span-title" matListItemTitle>User: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.user }}</span>
+                    </mat-list-item>
+                    <mat-list-item style="height:60px">
+                        <span class="mat-list-span-title" matListItemTitle>AccessId: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.accessId }}</span>
+                    </mat-list-item>
+                    <mat-list-item style="height:60px">
+                        <span class="mat-list-span-title" matListItemTitle>ClientId: </span>
+                        <span class="mat-list-span-value" matListItemLine>{{ configuration.clientId }}</span>
+                    </mat-list-item>
+                </mat-list>
+            </mat-grid-tile>
+        </mat-grid-list>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>
+<!--
+std::string accessKeyId = "none";
+std::string secretAccessKey = "none";
+-->

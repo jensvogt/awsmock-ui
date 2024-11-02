@@ -1,12 +1,8 @@
 import {NgModule} from '@angular/core';
 import {AsyncPipe, DatePipe, NgIf} from '@angular/common';
-
-import {SqsQueueListComponent} from "./queues-list/sqs-queue-list.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
-import {sqsQueueListFeatureKey, sqsQueueListReducer} from "./queues-list/state/sqs-queue-list.reducer";
-import {SqsQueueListEffects} from "./queues-list/state/sqs-queue-list.effects";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
 import {
     MatCell,
@@ -30,17 +26,18 @@ import {RouterLink} from "@angular/router";
 import {MatList, MatListItem, MatNavList} from "@angular/material/list";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {SqsService} from "./service/sqs-service.component";
-import {SQSRoutingModule} from "./sqs-routing.module";
-import {SqsQueueDetailComponent} from "./queue-detail/sqs-queue-detail.component";
+import {SnsRoutingModule} from "./sns-routing.module";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
-import {SqsMessageListComponent} from "./message-list/sqs-message-list.component";
-import {SqsQueueDetailEffects} from "./queue-detail/state/sqs-queue-detail.effects";
-import {sqsQueueDetailReducer, sqsQueueDetailsFeatureKey} from "./queue-detail/state/sqs-queue-detail.reducer";
+import {snsTopicListFeatureKey, snsTopicListReducer} from "./topic-list/state/sns-topic-list.reducer";
+import {SnsTopicListEffects} from "./topic-list/state/sns-topic-list.effects";
+import {SnsMessageListComponent} from "./message-list/sns-message-list.component";
+import {SnsTopicListComponent} from "./topic-list/topic-list.component";
+import {SnsTopicDetailComponent} from "./topic-detail/topic-detail.component";
+import {SnsService} from "./service/sns-service.component";
 
 @NgModule({
-    declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
+    declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -83,13 +80,13 @@ import {sqsQueueDetailReducer, sqsQueueDetailsFeatureKey} from "./queue-detail/s
         ReactiveFormsModule,
         FormsModule,
         AsyncPipe,
-        SQSRoutingModule,
-        StoreModule.forFeature(sqsQueueListFeatureKey, sqsQueueListReducer),
-        StoreModule.forFeature(sqsQueueDetailsFeatureKey, sqsQueueDetailReducer),
-        EffectsModule.forFeature([SqsQueueListEffects, SqsQueueDetailEffects]),
+        SnsRoutingModule,
+        StoreModule.forFeature(snsTopicListFeatureKey, snsTopicListReducer),
+        //StoreModule.forFeature(sqsQueueDetailsFeatureKey, sqsQueueDetailReducer),
+        EffectsModule.forFeature([SnsTopicListEffects]),
     ],
-    exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
-    providers: [SqsService],
+    exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent],
+    providers: [SnsService],
 })
-export class SQSModule {
+export class SnsModule {
 }

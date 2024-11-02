@@ -1,91 +1,35 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import {MatIcon} from "@angular/material/icon";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {MatIconButton} from "@angular/material/button";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {MatTooltip} from "@angular/material/tooltip";
-import {interval, Subscription} from "rxjs";
+import {PageEvent} from "@angular/material/paginator";
+import {Location} from "@angular/common";
+import {Sort} from "@angular/material/sort";
+import {filter, interval, Observable, Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {TopicItem} from "../model/topic-item";
+import {ListTopicCountersResponse} from "../model/sns-topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
-import {Router, RouterLink} from "@angular/router";
-import {BreadcrumbComponent} from "../../../shared/breadcrump/breadcrump.component";
-import {SnsService} from "../../../services/sns-service.component";
-import {NavigationService} from "../../../services/navigation.service";
+import {Router} from "@angular/router";
+import {SnsService} from "../service/sns-service.component";
 import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
-import {MatListItem, MatNavList} from "@angular/material/list";
-import {DatePipe, NgIf} from "@angular/common";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
-import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ActionsSubject, State, Store} from "@ngrx/store";
+import {snsTopicListActions} from "./state/sns-topic-list.actions";
+import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
+import {SNSTopicListState} from "./state/sns-topic-list.reducer";
 
 @Component({
     selector: 'app-home',
     templateUrl: './topic-list.component.html',
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardActions,
-        MatCardContent,
-        MatCardHeader,
-        MatCardSubtitle,
-        MatCell,
-        MatCellDef,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatIcon,
-        MatIconButton,
-        MatPaginator,
-        MatRow,
-        MatRowDef,
-        MatSort,
-        MatSortHeader,
-        MatTable,
-        MatTooltip,
-        MatNoDataRow,
-        MatHeaderCellDef,
-        BreadcrumbComponent,
-        RouterLink,
-        MatNavList,
-        MatListItem,
-        DatePipe,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        MatSuffix,
-        NgIf,
-        ReactiveFormsModule,
-        FormsModule
-    ],
     styleUrls: ['./topic-list.component.scss'],
-    providers: [SnsService, AwsMockHttpService]
+    providers: [SnsService]
 })
-export class TopicListComponent implements OnInit, OnDestroy {
+export class SnsTopicListComponent implements OnInit, OnDestroy {
 
-    lastUpdate: Date | undefined;
+    // Last update
+    lastUpdate: Date = new Date();
 
     // Table
-    topicData: TopicItem[] = [];
-    topicDataSource = new MatTableDataSource(this.topicData);
+    pageSize$: Observable<number> = this.store.select(selectPageSize);
+    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    listTopicCountersResponse$: Observable<ListTopicCountersResponse> = this.store.select(selectTopicCounters);
     columns: any[] = ['topicName', 'availableMessages', 'created', 'modified', 'actions'];
 
     // Auto-update
@@ -109,8 +53,20 @@ export class TopicListComponent implements OnInit, OnDestroy {
     // Sorting, default available
     sortColumns: SortColumn[] = [{column: 'name', sortDirection: -1}];
 
-    constructor(private router: Router, private dialog: MatDialog, private snsService: SnsService,
-                private navigation: NavigationService, private awsmockService: AwsMockHttpService) {
+    constructor(private router: Router, private dialog: MatDialog, private snsService: SnsService, private location: Location, private state: State<SNSTopicListState>,
+                private store: Store, private actionsSubj$: ActionsSubject) {
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === snsTopicListActions.addTopicSuccess.type ||
+                action.type === snsTopicListActions.purgeTopicSuccess.type ||
+                action.type === snsTopicListActions.deleteTopicSuccess.type
+            )
+        ).subscribe(() => {
+                this.lastUpdate = new Date();
+                this.loadTopics();
+            }
+        );
+
     }
 
     ngOnInit(): void {
@@ -123,22 +79,25 @@ export class TopicListComponent implements OnInit, OnDestroy {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {
         this.loadTopics();
     }
 
+
     setPrefix() {
         this.prefixSet = true;
-        this.pageIndex = 0;
+        this.state.value['sns-topic-list'].pageIndex = 0;
+        this.state.value['sns-topic-list'].prefix = this.prefix;
         this.loadTopics();
     }
 
     unsetPrefix() {
         this.prefix = '';
         this.prefixSet = false;
+        this.state.value['sns-topic-list'].prefix = '';
         this.loadTopics();
     }
 
@@ -151,37 +110,28 @@ export class TopicListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        this.sortColumns = [];
+        this.state.value['sns-topic-list'].sortColumns = [];
+        let direction: number;
         let column = 'topicName';
-        if (sortState.active === 'topicName') {
-            column = 'attributes.approximateNumberOfMessagesNotVisible'
+        if (sortState.active === 'availableMessages') {
+            column = 'attributes.availableMessages'
         }
         if (sortState.direction === 'asc') {
-            this.sortColumns.push({column: column, sortDirection: 1});
+            direction = 1;
         } else {
-            this.sortColumns.push({column: column, sortDirection: -1});
+            direction = -1;
         }
+        this.state.value['sns-topic-list'].sortColumns = [{column: column, sortDirection: direction}];
         this.loadTopics();
     }
 
     loadTopics() {
-        this.topicData = [];
-        this.awsmockService.listTopicCounters(this.prefix, this.pageIndex, this.pageSize, this.sortColumns)
-            .subscribe((data: any) => {
-                this.lastUpdate = new Date();
-                this.length = data.Total;
-                data.TopicCounters.forEach((t: any) => {
-                    this.topicData.push({
-                        topicUrl: t.topicUrl,
-                        topicArn: t.topicArn,
-                        topicName: t.topicName,
-                        availableMessages: t.availableMessages,
-                        created: t.created,
-                        modified: t.modified
-                    });
-                    this.topicDataSource.data = this.topicData;
-                });
-            });
+        this.store.dispatch(snsTopicListActions.loadTopics({
+            prefix: this.state.value['sns-topic-list'].prefix,
+            pageSize: this.state.value['sns-topic-list'].pageSize,
+            pageIndex: this.state.value['sns-topic-list'].pageIndex,
+            sortColumns: this.state.value['sns-topic-list'].sortColumns
+        }));
     }
 
     addTopic() {
@@ -193,21 +143,9 @@ export class TopicListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(TopicAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.saveTopic(result)
-                this.loadTopics();
+                this.store.dispatch(snsTopicListActions.addTopic({name: result}));
             }
         });
-    }
-
-    saveTopic(name: string) {
-        this.snsService.saveTopic(name)
-            .then(() => {
-                this.loadTopics();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.snsService.cleanup();
-            });
     }
 
     publishMessage(topicArn: string) {
@@ -230,7 +168,7 @@ export class TopicListComponent implements OnInit, OnDestroy {
     }
 
     deleteTopic(topicArn: string) {
-        this.snsService.saveTopic(topicArn)
+        this.snsService.deleteTopic(topicArn)
             .then(() => {
                 this.loadTopics();
             })
@@ -241,7 +179,7 @@ export class TopicListComponent implements OnInit, OnDestroy {
     }
 
     listMessages(topicArn: string) {
-        this.router.navigate(['/sns-message-list', encodeURI(topicArn)]);
+        this.router.navigate(['./messages', encodeURI(topicArn)]);
     }
 
 }

@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {SqsService} from "../../../services/sqs-service.component";
+import {SqsService} from "../service/sqs-service.component";
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
@@ -107,7 +107,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     loadMessages() {
         this.messageData = [];
-        this.awsmockHttpService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex, this.sortColumns)
+        this.sqsService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date().toLocaleTimeString('DE-de');
                 this.length = data.Total;

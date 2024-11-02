@@ -1,11 +1,4 @@
-import {
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle
-} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
@@ -14,8 +7,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
-import {SqsService} from "../../../../services/sqs-service.component";
-import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
+import {SqsService} from "../../../sqs/service/sqs-service.component";
 
 export const Protocols: string[] = [
     'http',
@@ -50,7 +42,7 @@ export const Protocols: string[] = [
         NgIf
     ],
     styleUrls: ['./subscription-add.component.scss'],
-    providers: [SqsService, AwsMockHttpService]
+    providers: [SqsService]
 })
 export class SubscriptionAddComponentDialog implements OnInit {
 
@@ -63,7 +55,7 @@ export class SubscriptionAddComponentDialog implements OnInit {
     queueArnData: Array<string> = [];
     protected readonly Protocols = Protocols;
 
-    constructor(private sqsService: SqsService, private awsmockHttpService: AwsMockHttpService, private fb: FormBuilder, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private sqsService: SqsService, private fb: FormBuilder, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicName;
     }
@@ -85,7 +77,7 @@ export class SubscriptionAddComponentDialog implements OnInit {
     }
 
     loadQueueArns() {
-        this.awsmockHttpService.listQueueArns()
+        this.sqsService.listQueueArns()
             .subscribe((data: any) => {
                 this.queueArnData = data.QueueArns;
             });

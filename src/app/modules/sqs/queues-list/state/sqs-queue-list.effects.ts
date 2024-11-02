@@ -6,7 +6,7 @@ import {catchError, map} from 'rxjs/operators';
 import {sqsQueueListActions} from './sqs-queue-list.actions';
 import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {SqsService} from "../../../../services/sqs-service.component";
+import {SqsService} from "../../service/sqs-service.component";
 
 @Injectable()
 export class SqsQueueListEffects {
@@ -16,7 +16,7 @@ export class SqsQueueListEffects {
     loadQueues$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueListActions.loadQueues),
         mergeMap(action =>
-            this.awsmockHttpService.listQueueCounters(
+            this.sqsService.listQueueCounters(
                 action.prefix,
                 action.pageSize,
                 action.pageIndex,

@@ -5,8 +5,7 @@ import {ListQueueCountersResponse} from "../model/sqs-queue-item";
 import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
-import {SqsService} from "../../../services/sqs-service.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {SqsService} from "../service/sqs-service.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
@@ -44,9 +43,8 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     prefixSet: boolean = false;
     prefix: string = '';
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService,
-                private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
-        //this.store.dispatch(sqsQueueListActions.initialize());
+    constructor(private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService, private location: Location, private store: Store,
+                private actionsSubj$: ActionsSubject) {
         this.actionsSubj$.pipe(
             filter((action) =>
                 action.type === sqsQueueListActions.addQueueSuccess.type ||

@@ -1,105 +1,32 @@
-import {MatDialog, MatDialogClose, MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource,
-    MatTextColumn
-} from "@angular/material/table";
-import {MatInput} from "@angular/material/input";
+import {MatTableDataSource,} from "@angular/material/table";
 import {ActivatedRoute, Router} from "@angular/router";
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatIcon} from "@angular/material/icon";
-import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
-import {MatTab, MatTabGroup} from "@angular/material/tabs";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {MatTooltip} from "@angular/material/tooltip";
+import {Location} from "@angular/common";
+import {Sort} from "@angular/material/sort";
 import {ListSubscriptionsByTopicCommand, SNSClient, UnsubscribeCommand} from "@aws-sdk/client-sns";
-import {SubscriptionItem} from "../model/subscription-item";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {BreadcrumbComponent} from "../../../shared/breadcrump/breadcrump.component";
+import {SnsSubscriptionItem} from "../model/sns-subscription-item";
+import {PageEvent} from "@angular/material/paginator";
 import {environment} from "../../../../environments/environment";
 import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-add.component";
-import {SnsService} from "../../../services/sns-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {NavigationService} from "../../../services/navigation.service";
-import {MatGridList, MatGridTile} from "@angular/material/grid-list";
-import {DatePipe} from "@angular/common";
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
-import {TopicDetails} from "../model/topic-details";
+import {SnsTopicDetails} from "../model/sns-topic-details";
+import {SnsService} from "../service/sns-service.component";
 
 @Component({
     selector: 'add-connection-dialog',
     templateUrl: './topic-detail.component.html',
-    standalone: true,
-    imports: [
-        MatButton,
-        MatDialogClose,
-        MatFormField,
-        MatSelect,
-        MatOption,
-        MatLabel,
-        FormsModule,
-        MatTextColumn,
-        MatInput,
-        ReactiveFormsModule,
-        MatCard,
-        MatCardActions,
-        MatCardContent,
-        MatCardHeader,
-        MatCardTitle,
-        MatIcon,
-        MatList,
-        MatListItem,
-        MatTab,
-        MatTabGroup,
-        MatCell,
-        MatCellDef,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatIconButton,
-        MatRow,
-        MatRowDef,
-        MatSort,
-        MatSortHeader,
-        MatTable,
-        MatTooltip,
-        MatNoDataRow,
-        MatHeaderCellDef,
-        MatPaginator,
-        BreadcrumbComponent,
-        MatGridList,
-        MatGridTile,
-        MatListItemLine,
-        MatListItemTitle,
-        DatePipe
-    ],
     styleUrls: ['./topic-detail.component.scss'],
-    providers: [SnsService, AwsMockHttpService]
+    providers: [SnsService]
 })
-export class TopicDetailComponent implements OnInit, OnDestroy {
+export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
     topicArn: string = '';
-    topicDetails = {} as TopicDetails;
+    topicDetails = {} as SnsTopicDetails;
 
     // Subscription Table
-    subscriptionData: Array<SubscriptionItem> = [];
+    subscriptionData: Array<SnsSubscriptionItem> = [];
     subscriptionDataSource = new MatTableDataSource(this.subscriptionData);
     columns: any[] = ['id', 'endpoint', 'protocol', 'owner', 'actions'];
     subscriptionPageSize = 10;
@@ -123,7 +50,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private snsService: SnsService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog,
-                private navigation: NavigationService, private awsmockService: AwsMockHttpService) {
+                private location: Location) {
     }
 
     ngOnInit() {
@@ -140,7 +67,7 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {
@@ -152,13 +79,13 @@ export class TopicDetailComponent implements OnInit, OnDestroy {
     // Details
     // ===================================================================================================================
     loadTopicDetails() {
-        this.awsmockService.getTopicDetails(this.topicArn).subscribe((data) => {
+        /*this.awsmockService.getTopicDetails(this.topicArn).subscribe((data) => {
             if (data) {
                 // @ts-ignore
                 this.topicDetails = data;
                 console.log(this.topicDetails);
             }
-        });
+        });*/
     }
 
     save() {

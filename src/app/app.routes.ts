@@ -1,10 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from "./modules/not-found/not-found.component";
-import {SqsMessageListComponent} from "./modules/sqs/message-list/sqs-message-list.component";
-import {TopicListComponent} from "./modules/sns/topic-list/topic-list.component";
-import {TopicDetailComponent} from "./modules/sns/topic-detail/topic-detail.component";
-import {SnsMessageListComponent} from "./modules/sns/message-list/sns-message-list.component";
 import {UserPoolListComponent} from "./modules/cognito/user-pool-list/user-pool-list.component";
 import {UserListComponent} from "./modules/cognito/user-list/user-list.component";
 import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
@@ -33,10 +29,6 @@ export const routes: Routes = [
                 loadChildren: () => import('./modules/sqs/sqs.module').then(module => module.SQSModule),
             },
             {
-                path: 'sqs-message-list/:queueArn',
-                component: SqsMessageListComponent,
-            },
-            {
                 path: 'sqs-charts',
                 component: SqsChartsComponent,
             },
@@ -45,15 +37,7 @@ export const routes: Routes = [
             //=========================================================================
             {
                 path: 'sns-topic-list',
-                component: TopicListComponent,
-            },
-            {
-                path: 'sns-topic-detail/:topicArn',
-                component: TopicDetailComponent,
-            },
-            {
-                path: 'sns-message-list/:topicArn',
-                component: SnsMessageListComponent,
+                loadChildren: () => import('./modules/sns/sns.module').then(module => module.SnsModule),
             },
             {
                 path: 'sns-charts',

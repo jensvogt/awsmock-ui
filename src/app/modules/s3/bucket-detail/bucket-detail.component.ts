@@ -1,103 +1,27 @@
-import {MatDialogActions, MatDialogClose} from "@angular/material/dialog";
 import {Component, inject, OnDestroy, OnInit} from "@angular/core";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource,
-    MatTextColumn
-} from "@angular/material/table";
-import {MatInput} from "@angular/material/input";
-import {ActivatedRoute, RouterLink} from "@angular/router";
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatIcon} from "@angular/material/icon";
-import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
-import {MatTab, MatTabGroup} from "@angular/material/tabs";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {MatTooltip} from "@angular/material/tooltip";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {BreadcrumbComponent} from "../../../shared/breadcrump/breadcrump.component";
+import {MatTableDataSource,} from "@angular/material/table";
+import {ActivatedRoute} from "@angular/router";
+import {Sort} from "@angular/material/sort";
+import {PageEvent} from "@angular/material/paginator";
 import {SnsService} from "../../../services/sns-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NavigationService} from "../../../services/navigation.service";
-import {BucketItem, LambdaConfiguration} from "../model/bucket-item";
+import {LambdaConfiguration, S3BucketItem} from "../model/s3-bucket-item";
 import {AwsMockHttpService} from "../../../services/awsmock-http.service";
-import {MatLine} from "@angular/material/core";
-import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
-import {DatePipe} from "@angular/common";
+import {S3Service} from "../service/s3-service.component";
 
 @Component({
     selector: 'bucket-detail-component',
     templateUrl: './bucket-detail.component.html',
-    standalone: true,
-    imports: [
-        MatButton,
-        MatDialogClose,
-        MatFormField,
-        MatSelect,
-        MatOption,
-        MatLabel,
-        FormsModule,
-        MatTextColumn,
-        MatInput,
-        ReactiveFormsModule,
-        MatCard,
-        MatCardActions,
-        MatCardContent,
-        MatCardHeader,
-        MatCardTitle,
-        MatIcon,
-        MatList,
-        MatListItem,
-        RouterLink,
-        MatDialogActions,
-        MatTab,
-        MatTabGroup,
-        MatCell,
-        MatCellDef,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatIconButton,
-        MatRow,
-        MatRowDef,
-        MatSort,
-        MatSortHeader,
-        MatTable,
-        MatTooltip,
-        MatNoDataRow,
-        MatHeaderCellDef,
-        MatPaginator,
-        BreadcrumbComponent,
-        MatLine,
-        MatGridList,
-        MatGridTile,
-        MatListItemLine,
-        MatListItemTitle,
-        DatePipe,
-    ],
     styleUrls: ['./bucket-detail.component.scss'],
     providers: [SnsService, AwsMockHttpService]
 })
-export class BucketDetailComponent implements OnInit, OnDestroy {
+export class S3BucketDetailComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
-    bucketItem = {} as BucketItem;
+    bucketItem = {} as S3BucketItem;
     bucketName: string = '';
 
     // Subscription Table
@@ -116,8 +40,7 @@ export class BucketDetailComponent implements OnInit, OnDestroy {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private navigation: NavigationService, private route: ActivatedRoute,
-                private awsmockService: AwsMockHttpService) {
+    constructor(private snackBar: MatSnackBar, private navigation: NavigationService, private route: ActivatedRoute, private s3Service: S3Service) {
     }
 
     ngOnInit() {
@@ -147,7 +70,7 @@ export class BucketDetailComponent implements OnInit, OnDestroy {
     // Details
     // ===================================================================================================================
     loadBucket() {
-        this.awsmockService.getBucket(this.bucketName)
+        this.s3Service.getBucket(this.bucketName)
             .subscribe((data: any) => {
                 this.lastUpdate = this.lastUpdateTime();
                 if (data) {

@@ -1,118 +1,80 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {interval, Subscription} from "rxjs";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
+import {filter, interval, Observable, Subscription} from "rxjs";
+import {PageEvent} from "@angular/material/paginator";
+import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {MatTooltip} from "@angular/material/tooltip";
-import {BreadcrumbComponent} from "../../../shared/breadcrump/breadcrump.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AwsMockHttpService} from "../../../services/awsmock-http.service";
-import {S3Service} from "../../../services/s3-service.component";
-import {ObjectItem} from "../model/object-item";
-import {ActivatedRoute, RouterLink} from "@angular/router";
-import {ObjectUploadComponent} from "../object-upload/object-upload.component";
-import {NavigationService} from "../../../services/navigation.service";
+import {S3Service} from "../service/s3-service.component";
+import {ActivatedRoute} from "@angular/router";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {FormsModule} from "@angular/forms";
-import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {NgIf} from "@angular/common";
+import {ActionsSubject, State, Store} from "@ngrx/store";
+import {S3BucketListState} from "../bucket-list/state/s3-bucket-list.reducer";
+import {Location} from "@angular/common";
+import {s3ObjectListActions} from "./state/s3-object-list.actions";
+import {selectPageIndex, selectPageSize} from "../bucket-list/state/s3-bucket-list.selectors";
+import {S3ObjectCounterResponse} from "../model/s3-object-item";
+import {selectObjectCounters} from "./state/s3-object-list.selectors";
+import {ObjectUploadComponent} from "../object-upload/object-upload.component";
 
 @Component({
     selector: 's3-object-list',
     templateUrl: './object-list.component.html',
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardSubtitle,
-        MatTable,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatColumnDef,
-        MatIcon,
-        MatHeaderCell,
-        MatCell,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatSortHeader,
-        MatRowDef,
-        MatNoDataRow,
-        MatIconButton,
-        MatRow,
-        MatPaginator,
-        MatSort,
-        MatTooltip,
-        BreadcrumbComponent,
-        RouterLink,
-        FormsModule,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        MatSuffix,
-        NgIf
-    ],
     styleUrls: ['./object-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
 })
-export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
-    lastUpdate: string = '';
+export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
+
+    // Last update time
+    lastUpdate: Date = new Date();
 
     // Table
     bucketName: string = '';
+    pageSize$: Observable<number> = this.store.select(selectPageSize);
+    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    s3ObjectCountersResponse$: Observable<S3ObjectCounterResponse> = this.store.select(selectObjectCounters);
+
+    // Prefix
     prefix: string = '';
     prefixSet: boolean = false;
-    objectData: Array<ObjectItem> = [];
-    objectDataDataSource = new MatTableDataSource(this.objectData);
-    columns: any[] = ['key', 'size', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
 
     // Paging
-    length = 0;
-    pageSize = 10;
-    pageIndex = 0;
+    columns: any[] = ['key', 'size', 'actions'];
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    nextToken: string = '';
-    pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
+
     // Sorting
     sortColumns: SortColumn[] = [];
     private sub: any;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute,
-                private navigation: NavigationService, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private state: State<S3BucketListState>, private store: Store,
+                private actionsSubj$: ActionsSubject, private location: Location, private s3Service: S3Service) {
+
+        // Subscribe to action events, reload table when the action got successful executed
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === s3ObjectListActions.deleteObjectSuccess.type
+            )
+        ).subscribe(() => {
+                this.lastUpdate = new Date();
+                this.loadObjects();
+            }
+        );
     }
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
-            this.bucketName = params['bucketName'];
+            this.bucketName = decodeURI(params['bucketName']);
+            this.state.value.bucketName = decodeURI(params['bucketName']);
         });
-        this.loadObjects();
         this.updateSubscription = interval(60000).subscribe(() => this.loadObjects());
+        this.loadObjects();
     }
 
     ngOnDestroy(): void {
@@ -136,7 +98,7 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {
@@ -144,11 +106,15 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pageEvent = e;
-        this.length = e.length;
-        this.pageSize = e.pageSize;
-        this.pageIndex = e.pageIndex;
-        this.loadObjects();
+        this.state.value['s3-object-list'].pageSize = e.pageSize;
+        this.state.value['s3-object-list'].pageIndex = e.pageIndex;
+        this.store.dispatch(s3ObjectListActions.loadObjects({
+            bucketName: this.bucketName,
+            prefix: this.state.value['s3-object-list'].prefix,
+            pageSize: this.state.value['s3-object-list'].pageSize,
+            pageIndex: this.state.value['s3-object-list'].pageIndex,
+            sortColumns: this.state.value['s3-object-list'].sortColumns
+        }));
     }
 
     sortChange(sortState: Sort) {
@@ -161,40 +127,21 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadObjects();
     }
 
-    lastUpdateTime() {
-        return new Date().toLocaleTimeString('DE-de');
-    }
-
     loadObjects() {
-        this.objectData = [];
-        this.awsmockHttpService.listObjectsCounters(this.bucketName, this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
-            .subscribe((data: any) => {
-                this.lastUpdate = this.lastUpdateTime();
-                this.nextToken = data.NextContinuationToken;
-                if (data.objectCounters) {
-                    this.length = data.total;
-                    data.objectCounters.forEach((b: any) => {
-                        this.objectData.push({
-                            bucket: this.bucketName,
-                            key: b.keys,
-                            size: b.size,
-                        });
-                    });
-                }
-                this.objectDataDataSource.data = this.objectData;
-            });
+        this.store.dispatch(s3ObjectListActions.loadObjects({
+            bucketName: this.bucketName,
+            prefix: this.state.value['s3-object-list'].prefix,
+            pageSize: this.state.value['s3-object-list'].pageSize,
+            pageIndex: this.state.value['s3-object-list'].pageIndex,
+            sortColumns: this.state.value['s3-object-list'].sortColumns
+        }));
     }
 
     deleteObject(key: string) {
-        this.s3Service.deleteObject(this.bucketName, key)
-            .then(() => {
-                this.snackBar.open('Object deleted, bucket: ' + this.bucketName + ' key: ' + key, 'Done', {duration: 5000});
-                this.loadObjects();
-            })
-            .catch((error: any) => console.error(error.$response))
-            .finally(() => {
-                this.s3Service.cleanup();
-            });
+        this.store.dispatch(s3ObjectListActions.deleteObject({
+            bucketName: this.bucketName,
+            key: key,
+        }));
     }
 
     uploadObject() {
@@ -205,54 +152,18 @@ export class ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {bucketName: this.bucketName}
 
-        this.dialog.open(ObjectUploadComponent, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(ObjectUploadComponent, dialogConfig).afterClosed().subscribe((result: any) => {
             if (result) {
-                this.loadObjects();
-                this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result, 'Done', {duration: 5000});
+                this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result.key, 'Done', {duration: 5000});
+                this.doUpload(result.content, result.key);
             }
         });
     }
 
-    //
-    // addBucket() {
-    //
-    //     const dialogConfig = new MatDialogConfig();
-    //
-    //     dialogConfig.disableClose = true;
-    //     dialogConfig.autoFocus = true;
-    //
-    //     this.dialog.open(BucketAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-    //         if (result) {
-    //             this.createBucket(result)
-    //             this.loadBuckets();
-    //         }
-    //     });
-    // }
-    //
-    // createBucket(bucketName: string) {
-    //     this.s3Service.createBucket(bucketName)
-    //         .then(() => {
-    //             this.loadBuckets();
-    //         })
-    //         .catch((error: any) => console.error(error))
-    //         .finally(() => {
-    //             this.s3Service.cleanup();
-    //         });
-    // }
-    //
-    // listObjects(bucketName: string) {
-    //
-    // }
-    //
-    //
-    // deleteBucket(bucketName: string) {
-    //     this.s3Service.deleteBucket(bucketName)
-    //         .then(() => {
-    //             this.loadBuckets();
-    //         })
-    //         .catch((error: any) => console.error(error))
-    //         .finally(() => {
-    //             this.s3Service.cleanup();
-    //         });
-    // }
+    // Method to handle file upload
+    doUpload(content: Blob, key: string): void {
+        this.s3Service.putObjects(this.bucketName, key, content).then(() =>
+            this.loadObjects()
+        );
+    }
 }

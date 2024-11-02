@@ -8,10 +8,10 @@ export interface LambdaConfiguration {
     events: NotificationEvents[],
 }
 
-export interface BucketItem {
+export interface S3BucketItem {
     id: string | undefined;
     region: string | undefined;
-    name: string | undefined;
+    bucketName: string | undefined;
     keys: number | undefined;
     size: number | undefined;
     arn: string | undefined;
@@ -20,4 +20,9 @@ export interface BucketItem {
     created: Date;
     modified: Date;
     lambdaConfigurations: LambdaConfiguration[] | undefined;
+}
+
+export interface S3BucketCountersResponse {
+    total: number;
+    bucketCounters: S3BucketItem[];
 }

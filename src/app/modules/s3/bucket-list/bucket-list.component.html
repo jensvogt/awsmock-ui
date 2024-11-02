@@ -29,61 +29,63 @@
             </mat-card-actions>
             <mat-card-content>
                 <div class="table-container">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="bucketDataDataSource" class="mat-elevation-z8" mat-table matSort>
-                        <ng-container matColumnDef="name">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
-                            <td *matCellDef="let element" mat-cell>
-                                <mat-nav-list>
-                                    <a mat-list-item routerLink="/s3-bucket-detail/{{ element.name }}"> {{ element.name }}</a>
-                                </mat-nav-list>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="objects">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Objects" sortActionDescription="Sort by objects">Objects</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.keys }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="size">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by size">Size</th>
-                            <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
-                            <td *matCellDef="let row" mat-cell>
-                                <button (click)="listObjects(row.name)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
-                                    <mat-icon>list</mat-icon>
-                                </button>
-                                <button (click)="deleteObjects(row.name)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete all objects in the bucket">
-                                    <mat-icon>folder_delete</mat-icon>
-                                </button>
-                                <button (click)="deleteBucket(row.name)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </td>
-                        </ng-container>
-                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
-                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
-                        <tr *matNoDataRow class="mat-row">
-                            <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
-                                No data matching the filter.
-                            </td>
-                        </tr>
-                    </table>
+                    <div *ngIf="s3BucketCountersResponse$ | async as bucketCounters" class="row">
+                        <table (matSortChange)="sortChange($event)" [dataSource]="bucketCounters.bucketCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    <mat-nav-list>
+                                        <a mat-list-item routerLink="./objects/{{ element.bucketName }}"> {{ element.bucketName }}</a>
+                                    </mat-nav-list>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="objects" matSort>
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Objects" sortActionDescription="Sort by objects">Objects</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.keys }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="size">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by size">Size</th>
+                                <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button aria-label="List" mat-icon-button matTooltip="Lists all objects" routerLink="/s3-bucket-detail/">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button (click)="purgeBucket(row.bucketName)" aria-label="PurgeBucket" mat-icon-button
+                                            matTooltip="Delete all objects in the bucket">
+                                        <mat-icon>folder_delete</mat-icon>
+                                    </button>
+                                    <button (click)="deleteBucket(row.bucketName)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
                 <mat-paginator (page)="handlePageEvent($event)"
                                [disabled]="disabled"
                                [hidePageSize]="hidePageSize"
-                               [length]="length"
-                               [pageIndex]="pageIndex"
+                               [length]="(s3BucketCountersResponse$ | async)?.total"
+                               [pageIndex]="(pageIndex$ | async)"
                                [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-                               [pageSize]="pageSize"
+                               [pageSize]="(pageSize$ | async)"
                                [showFirstLastButtons]="showFirstLastButtons"
                                aria-label="Select page" style="width:99%; margin-left:15px">
                 </mat-paginator>
-
             </mat-card-content>
         </mat-card>
         <div class="footer">
-            Last update: {{ lastUpdate }}
+            Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
         </div>
     </mat-card-content>
 </mat-card>

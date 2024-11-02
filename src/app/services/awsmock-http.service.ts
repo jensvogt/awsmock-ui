@@ -16,56 +16,6 @@ export class AwsMockHttpService {
     constructor(private http: HttpClient) {
     }
 
-    /**
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     */
-    public listBucketCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'ListBucketCounters');
-        const body = {
-            region: environment.awsmockRegion,
-            prefix: prefix,
-            maxResults: pageSize,
-            skip: pageSize * pageIndex,
-            sortColumns: sortColumns
-        }
-        return this.http.post(this.url, body, {headers: headers});
-    }
-
-    public listObjectsCounters(bucket: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'ListObjectCounters');
-        const body = {
-            region: environment.awsmockRegion,
-            bucket: bucket,
-            prefix: prefix,
-            maxResults: pageSize,
-            skip: pageSize * pageIndex,
-            sortColumns: sortColumns
-        }
-        return this.http.post(this.url, body, {headers: headers});
-    }
-
-    public getBucket(bucketName: string) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'GetBucket');
-        const body = {
-            region: environment.awsmockRegion,
-            bucketName: bucketName
-        }
-        return this.http.post(this.url, body, {headers: headers});
-    }
-
-    public saveBucket(bucket: any) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'SaveBucket');
-        return this.http.post(this.url, bucket, {headers: headers});
-    }
-
-    public deleteObjects(bucketName: string) {
-        let headers = this.S3Config.s3HttpOptions.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'DeleteObjects');
-        const body = {
-            region: environment.awsmockRegion,
-            bucketName: bucketName
-        }
-        return this.http.post(this.url, body, {headers: headers});
-    }
 
     /**
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.

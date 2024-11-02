@@ -19,72 +19,66 @@
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="queueDetails$ | async as queueDetails" class="row">
+            <div *ngIf="(queueDetails$ | async) as queueDetails">
                 <mat-grid-list cols="6">
                     <mat-grid-tile [colspan]="3" [rowspan]="1">
-                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                            <mat-list>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Name: </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.queueName }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>ARN: </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.queueArn }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>URL: </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.queueUrl }}</span>
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
+                        <mat-list>
+                            <mat-list-item>
+                                <span matListItemTitle>Name: </span>
+                                <span matListItemLine>{{ queueDetails.queueName }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span matListItemTitle>ARN: </span>
+                                <span matListItemLine>{{ queueDetails.queueArn }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span matListItemTitle>URL: </span>
+                                <span matListItemLine>{{ queueDetails.queueUrl }}</span>
+                            </mat-list-item>
+                        </mat-list>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <mat-list>
+                            <mat-list-item>
+                                <span matListItemTitle>Visibility Timeout (s): </span>
+                                <span matListItemLine>{{ queueDetails.visibilityTimeout }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span matListItemTitle>Delay (s): </span>
+                                <span matListItemLine>{{ queueDetails.delay }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span matListItemTitle>Max Message Size (kB): </span>
+                                <span matListItemLine>{{ queueDetails.maxMessageSize / 1024 }}</span>
+                            </mat-list-item>
+                        </mat-list>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <mat-list>
+                            <mat-list-item>
+                                <span matListItemTitle>Retention Period (s): </span>
+                                <span matListItemLine>{{ queueDetails.retentionPeriod }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span matListItemTitle>Message Count: </span>
+                                <span matListItemLine>{{ queueDetails.messageCount }}</span>
+                            </mat-list-item>
+                            <mat-list-item>
+                                <span matListItemTitle>Total Size (kB): </span>
+                                <span matListItemLine>{{ (queueDetails.size / 1024).toFixed(0) }}</span>
+                            </mat-list-item>
+                        </mat-list>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1" [rowspan]="1">
                         <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                             <mat-list>
                                 <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Visibility Timeout (s): </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.visibilityTimeout }}</span>
+                                    <span matListItemTitle>Created: </span>
+                                    <span matListItemLine>{{ queueDetails.created | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
                                 </mat-list-item>
                                 <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Delay (s): </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.delay }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Max Message Size (kB): </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.maxMessageSize / 1024 }}</span>
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                            <mat-list>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Retention Period (s): </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.retentionPeriod }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Message Count: </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.messageCount }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Total Size (kB): </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ (queueDetails.size / 1024).toFixed(0) }}</span>
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                            <mat-list>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Created: </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.created | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span class="mat-list-span-title" matListItemTitle>Modified: </span>
-                                    <span class="mat-list-span-value" matListItemLine>{{ queueDetails.modified|date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+                                    <span matListItemTitle>Modified: </span>
+                                    <span matListItemLine>{{ queueDetails.modified|date: 'yyyy-MM-dd HH:mm:ss' }}</span>
                                 </mat-list-item>
                                 <mat-list-item>
                                 </mat-list-item>
@@ -102,24 +96,22 @@
         <mat-card-content>
             <mat-tab-group>
                 <mat-tab label="Attributes">
-                    <mat-grid-list cols="1" rowHeight="220px">
+                    <mat-grid-list cols="1">
                         <mat-grid-tile [colspan]="1" [rowspan]="1">
-                            <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                                <mat-list>
-                                    <mat-list-item>
-                                        <span class="mat-list-span-title" matListItemTitle>Available: </span>
-                                        <span class="mat-list-span-value" matListItemLine>{{ (queueDetails$ | async)?.available }}</span>
-                                    </mat-list-item>
-                                    <mat-list-item>
-                                        <span class="mat-list-span-title" matListItemTitle>Invisible: </span>
-                                        <span class="mat-list-span-value" matListItemLine>{{ (queueDetails$ | async)?.invisible }}</span>
-                                    </mat-list-item>
-                                    <mat-list-item>
-                                        <span class="mat-list-span-title" matListItemTitle>Delayed: </span>
-                                        <span class="mat-list-span-value" matListItemLine>{{ (queueDetails$ | async)?.delayed }}</span>
-                                    </mat-list-item>
-                                </mat-list>
-                            </div>
+                            <mat-list>
+                                <mat-list-item>
+                                    <span matListItemTitle>Available: </span>
+                                    <span matListItemLine>{{ (queueDetails$ | async)?.available }}</span>
+                                </mat-list-item>
+                                <mat-list-item>
+                                    <span matListItemTitle>Invisible: </span>
+                                    <span matListItemLine>{{ (queueDetails$ | async)?.invisible }}</span>
+                                </mat-list-item>
+                                <mat-list-item>
+                                    <span matListItemTitle>Delayed: </span>
+                                    <span matListItemLine>{{ (queueDetails$ | async)?.delayed }}</span>
+                                </mat-list-item>
+                            </mat-list>
                         </mat-grid-tile>
                     </mat-grid-list>
                 </mat-tab>

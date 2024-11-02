@@ -4,14 +4,17 @@ import {MatTableDataSource,} from "@angular/material/table";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {Sort} from "@angular/material/sort";
-import {ListSubscriptionsByTopicCommand, SNSClient, UnsubscribeCommand} from "@aws-sdk/client-sns";
 import {SnsSubscriptionItem} from "../model/sns-subscription-item";
 import {PageEvent} from "@angular/material/paginator";
-import {environment} from "../../../../environments/environment";
 import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-add.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnsTopicDetails} from "../model/sns-topic-details";
 import {SnsService} from "../service/sns-service.component";
+import {Store} from "@ngrx/store";
+import {snsTopicListActions} from "../topic-list/state/sns-topic-list.actions";
+import {snsTopicDetailsActions} from "./state/sns-topic-detail.actions";
+import {Observable} from "rxjs";
+import {selectDetails, selectError} from "./state/sns-topic-detail.selectors";
 
 @Component({
     selector: 'add-connection-dialog',
@@ -20,10 +23,13 @@ import {SnsService} from "../service/sns-service.component";
     providers: [SnsService]
 })
 export class SnsTopicDetailComponent implements OnInit, OnDestroy {
+
+    // Last update
     lastUpdate: Date = new Date();
 
     topicArn: string = '';
-    topicDetails = {} as SnsTopicDetails;
+    topicDetails$: Observable<SnsTopicDetails> = this.store.select(selectDetails);
+    topicDetailsError$: Observable<string> = this.store.select(selectError);
 
     // Subscription Table
     subscriptionData: Array<SnsSubscriptionItem> = [];
@@ -34,31 +40,25 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     subscriptionLength = 0;
     subscriptionPageSizeOptions = [5, 10, 20, 50, 100];
 
-    // Aws client
-    client = new SNSClient({
-        region: environment.awsmockRegion,
-        endpoint: environment.gatewayEndpoint,
-        credentials: {
-            accessKeyId: 'test',
-            secretAccessKey: 'test',
-        },
-        requestHandler: {
-            requestTimeout: 3_000,
-            httpsAgent: {maxSockets: 25},
-        },
-    });
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private snsService: SnsService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog,
-                private location: Location) {
+                private location: Location, private store: Store) {
+        this.store.dispatch(snsTopicListActions.initialize());
     }
 
     ngOnInit() {
-
         this.sub = this.route.params.subscribe(params => {
-            this.topicArn = params['topicArn']; // (+) converts string 'id' to a number
-            this.loadTopicDetails();
-            this.loadSubscriptions();
+            this.topicArn = params['topicArn'];
+            this.store.dispatch(snsTopicDetailsActions.loadDetails({topicArn: this.topicArn}));
+        });
+        this.topicDetailsError$.subscribe((msg: string) => {
+            if (msg && msg.length) {
+                this.snackBar.open("ErrorMessage: " + msg.toString())
+            }
+        });
+        this.topicDetails$.subscribe((msg: any) => {
+            console.log("TopicDetails", msg, this.topicArn);
         });
     }
 
@@ -79,20 +79,14 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     // Details
     // ===================================================================================================================
     loadTopicDetails() {
-        /*this.awsmockService.getTopicDetails(this.topicArn).subscribe((data) => {
-            if (data) {
-                // @ts-ignore
-                this.topicDetails = data;
-                console.log(this.topicDetails);
-            }
-        });*/
+        this.store.dispatch(snsTopicDetailsActions.loadDetails({topicArn: this.topicArn}));
     }
 
     save() {
     }
 
     close() {
-        this.router.navigate(['/sns-topic-list']);
+        this.location.back();
     }
 
     // ===================================================================================================================
@@ -108,7 +102,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             TopicArn: this.topicArn,
             NextToken: (this.subscriptionPageIndex * this.subscriptionPageSize).toString(),
         };
-        this.client.send(new ListSubscriptionsByTopicCommand(input))
+        /*this.client.send(new ListSubscriptionsByTopicCommand(input))
             .then((data: any) => {
                 this.subscriptionLength = data.NextToken;
                 this.lastUpdate = new Date();
@@ -126,7 +120,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             .catch((error: any) => console.error(error))
             .finally(() => {
                 this.client.destroy();
-            });
+            });*/
     }
 
     subscriptionSortChange(sortState: Sort) {
@@ -141,12 +135,12 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         const input = {
             SubscriptionArn: subscriptionArn,
         };
-        this.client.send(new UnsubscribeCommand(input))
-            .then(() => this.loadSubscriptions())
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.client.destroy();
-            });
+        /* this.client.send(new UnsubscribeCommand(input))
+             .then(() => this.loadSubscriptions())
+             .catch((error: any) => console.error(error))
+             .finally(() => {
+                 this.client.destroy();
+             });*/
     }
 
     editSubscription(topicArn: string) {
@@ -157,7 +151,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicDetails.topicName};
+        //dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicDetails$?.topicName};
 
         this.dialog.open(SubscriptionAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
@@ -174,7 +168,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             })
             .catch((error: any) => console.error(error))
             .finally(() => {
-                this.client.destroy();
+                //this.client.destroy();
             });
     }
 }

@@ -104,6 +104,7 @@ export class SnsService {
     }
 
     public getTopicDetails(topicArn: string) {
+        console.log("Service: ", topicArn);
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'GetTopicDetails');
         return this.http.post(this.url, {topicArn: topicArn}, {headers: headers});
     }

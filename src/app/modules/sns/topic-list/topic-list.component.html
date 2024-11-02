@@ -66,8 +66,8 @@
                                 <button (click)="publishMessage(row.topicArn)" aria-label="Send" mat-icon-button matTooltip="Send a message">
                                     <mat-icon>send</mat-icon>
                                 </button>
-                                <button (click)="listMessages(row.topicArn)" aria-label="MessageList" mat-icon-button matTooltip="Lists all messages">
-                                    <mat-icon>list</mat-icon>
+                                <button aria-label="Details" mat-icon-button matTooltip="Edit topic" routerLink="./details/{{ row.topicArn }}">
+                                    <mat-icon>edit</mat-icon>
                                 </button>
                                 <button (click)="deleteTopic(row.topicArn)" aria-label="Delete" mat-icon-button matTooltip="Delete the topic">
                                     <mat-icon>delete</mat-icon>

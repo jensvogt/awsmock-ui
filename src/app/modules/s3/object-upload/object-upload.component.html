@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Upload Object</h2>
+<!--h2 mat-dialog-title>Upload Object</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
     <mat-form-field style="width: 100%">
         <mat-label>Key</mat-label>
@@ -16,4 +16,28 @@
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
     <button (click)="doUpload()" cdkFocusInitial mat-button>Upload</button>
+</mat-dialog-actions-->
+
+<h2 mat-dialog-title>Upload File</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
+    <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
+        <input #fileInput (change)="onFileChange($event)" accept="application/json" hidden type="file"/>
+        <div (click)="fileInput.click()" class="file-dropper">
+            <mat-icon>upload</mat-icon>
+            <p>Upload file</p>
+        </div>
+    </div>
+    <mat-form-field style="width: 100%">
+        <mat-label>File</mat-label>
+        <input [(ngModel)]="fileName" matInput readonly value="">
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Key</mat-label>
+        <input [(ngModel)]="key" matInput value="">
+    </mat-form-field>
+    <mat-progress-bar mode="determinate" value="{{progress}}"></mat-progress-bar>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="doUpload()" cdkFocusInitial disabled="{{uploadDisabled}}" mat-button>Upload</button>
 </mat-dialog-actions>

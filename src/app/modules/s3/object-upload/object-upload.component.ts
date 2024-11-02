@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, signal, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {
     MatCell,
@@ -24,6 +24,8 @@ import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {byteConversion} from "../../../shared/byte-utils.component";
+import {MatProgressBar} from "@angular/material/progress-bar";
 
 @Component({
     selector: 's3-object-upload',
@@ -61,22 +63,86 @@ import {MatSnackBar} from "@angular/material/snack-bar";
         MatDialogTitle,
         MatFormField,
         MatInput,
-        MatLabel
+        MatLabel,
+        MatProgressBar
     ],
     styleUrls: ['./object-upload.component.scss']
 })
 export class ObjectUploadComponent {
 
-    @ViewChild('fileInput') fileInput: ElementRef | undefined;
-    bucketName: string = '';
     key: string = '';
-    file: File | undefined;
-    fileName: string | undefined = '';
+    bucketName: string = '';
+    file: File = {} as File;
+    fileName: string = '';
+    uploadDisabled: boolean = true;
+    progress: number = 0;
+    fileSize = signal(0);
+    @ViewChild('fileInput') fileInput: ElementRef | undefined;
+    selectedFile: File | null = null;
+    uploadSuccess: boolean = false;
+    uploadError: boolean = false;
+    protected readonly byteConversion = byteConversion;
 
     constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<ObjectUploadComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.bucketName = data.bucketName;
     }
 
+    // Method to handle file upload
+    // Handler for file input change
+    onFileChange(event: any): void {
+        this.file = event.target.files[0];
+        this.fileName = this.file.name;
+        this.key = this.file.name;
+        this.uploadDisabled = !(this.file && this.key && this.fileName)
+    }
+
+    // Handler for file drop
+    onFileDrop(event: DragEvent): void {
+        event.preventDefault();
+        if (event.dataTransfer) {
+            this.file = event.dataTransfer.files[0];
+            this.fileName = this.file.name;
+        }
+        this.uploadDisabled = !(this.file && this.key && this.fileName)
+    }
+
+    // Prevent default dragover behavior
+    onDragOver(event: DragEvent): void {
+        event.preventDefault();
+    }
+
+    // Method to handle file upload
+    uploadFile(file: File | null): void {
+        if (file) {
+            this.selectedFile = file;
+            this.fileSize.set(Math.round(file.size / 1024)); // Set file size in KB
+
+            if (file.size > 200 * 1024 * 1024) {
+                this.snackBar.open("File size is " + (file.size / 1024 / 1024).toFixed(0) + "MB. Max size is 256MB, use the AWS CLI instead.", "Error", {duration: 5000});
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.dialogRef.close({content: new Blob([reader.result as ArrayBuffer]), key: this.key});
+            };
+            reader.addEventListener("progress", this.handleProgress);
+            reader.readAsText(file);
+
+            this.uploadSuccess = true;
+            this.uploadError = false;
+        }
+    }
+
+    doUpload() {
+        this.uploadFile(this.file);
+    }
+
+    handleProgress(event: ProgressEvent) {
+        console.log("Event: ", event);
+        this.progress = (event.loaded / event.total) * 100;
+    }
+
+    /*
     upload(event: any) {
         if (this.key.length === 0) {
             this.snackBar.open("Key cannot be empty");
@@ -94,6 +160,6 @@ export class ObjectUploadComponent {
             };
             reader.readAsArrayBuffer(this.file);
         }
-    }
+    }*/
 }
 

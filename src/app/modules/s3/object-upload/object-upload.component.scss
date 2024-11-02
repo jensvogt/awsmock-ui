@@ -1,25 +1,3 @@
-.queue-table {
-  width: 100%;
-  height: 100%;
-}
-
-:host {
-  position: relative;
-  width: 100%;
-  height: 30%;
-  margin-top: 0;
-  padding-bottom: 33%;
-}
-
-.head-buttons {
-  display: flex;
-  flex-direction: row;
-  align-items: end;
-  box-sizing: border-box;
-  min-height: 52px;
-  padding: 8px;
-  justify-content: flex-end;
-}
 
 .footer-buttons {
   display: flex;
@@ -37,4 +15,30 @@
   width: 50%;
   font-size: x-small;
   color: black;
+}
+
+.file-upload-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 2px dashed #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.file-upload-wrapper.success {
+  border-color: green;
+}
+
+.file-upload-wrapper.error {
+  border-color: red;
+}
+
+.file-dropper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

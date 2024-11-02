@@ -16,6 +16,7 @@ import {selectPageIndex, selectPageSize} from "../bucket-list/state/s3-bucket-li
 import {S3ObjectCounterResponse} from "../model/s3-object-item";
 import {selectObjectCounters} from "./state/s3-object-list.selectors";
 import {ObjectUploadComponent} from "../object-upload/object-upload.component";
+import {byteConversion} from "../../../shared/byte-utils.component";
 
 @Component({
     selector: 's3-object-list',
@@ -51,6 +52,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Sorting
     sortColumns: SortColumn[] = [];
+    protected readonly byteConversion = byteConversion;
     private sub: any;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private state: State<S3BucketListState>, private store: Store,
@@ -151,6 +153,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {bucketName: this.bucketName}
+        dialogConfig.height = "430px"
 
         this.dialog.open(ObjectUploadComponent, dialogConfig).afterClosed().subscribe((result: any) => {
             if (result) {

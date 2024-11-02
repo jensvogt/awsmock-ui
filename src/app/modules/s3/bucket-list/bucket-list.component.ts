@@ -1,90 +1,36 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {interval, Subscription} from "rxjs";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {BucketItem} from "../model/bucket-item";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {filter, interval, Observable, Subscription} from "rxjs";
+import {PageEvent} from "@angular/material/paginator";
+import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {MatTooltip} from "@angular/material/tooltip";
-import {BreadcrumbComponent} from "../../../shared/breadcrump/breadcrump.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AwsMockHttpService} from "../../../services/awsmock-http.service";
-import {S3Service} from "../../../services/s3-service.component";
+import {S3Service} from "../service/s3-service.component";
 import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
-import {Router, RouterLink} from "@angular/router";
-import {NavigationService} from "../../../services/navigation.service";
-import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
-import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {NgIf} from "@angular/common";
+import {Router} from "@angular/router";
 import {byteConversion} from "../../../shared/byte-utils.component";
-import {MatListItem, MatNavList} from "@angular/material/list";
+import {S3BucketCountersResponse} from "../model/s3-bucket-item";
+import {selectBucketCounters, selectPageIndex, selectPageSize} from "./state/s3-bucket-list.selectors";
+import {ActionsSubject, State, Store} from "@ngrx/store";
+import {Location} from "@angular/common";
+import {S3BucketListState} from "./state/s3-bucket-list.reducer";
+import {s3BucketListActions} from "./state/s3-bucket-list.actions";
 
 @Component({
     selector: 's3-bucket-list',
     templateUrl: './bucket-list.component.html',
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardSubtitle,
-        MatTable,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatColumnDef,
-        MatIcon,
-        MatHeaderCell,
-        MatCell,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatSortHeader,
-        MatRowDef,
-        MatNoDataRow,
-        MatIconButton,
-        MatRow,
-        MatPaginator,
-        MatSort,
-        MatTooltip,
-        BreadcrumbComponent,
-        RouterLink,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        FormsModule,
-        MatButton,
-        MatSuffix,
-        NgIf,
-        MatListItem,
-        MatNavList
-    ],
     styleUrls: ['./bucket-list.component.scss'],
     providers: [S3Service, AwsMockHttpService]
 })
-export class BucketListComponent implements OnInit, OnDestroy {
-    lastUpdate: string = '';
+export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
+
+    // Last update
+    lastUpdate: Date = new Date();
 
     // Table
-    bucketData: Array<BucketItem> = [];
-    bucketDataDataSource = new MatTableDataSource(this.bucketData);
+    pageSize$: Observable<number> = this.store.select(selectPageSize);
+    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    s3BucketCountersResponse$: Observable<S3BucketCountersResponse> = this.store.select(selectBucketCounters);
     columns: any[] = ['name', 'objects', 'size', 'actions'];
 
     // Auto-update
@@ -96,21 +42,30 @@ export class BucketListComponent implements OnInit, OnDestroy {
 
     // Paging
     length = 0;
-    pageSize = 10;
-    pageIndex = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
-    // Sorting
-    sortColumns: SortColumn[] = [];
+    // Byte conversion
     protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private router: Router,
-                private navigation: NavigationService, private s3Service: S3Service, private awsmockHttpService: AwsMockHttpService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private router: Router, private state: State<S3BucketListState>, private store: Store,
+                private actionsSubj$: ActionsSubject, private location: Location) {
+
+        // Subscribe to action events, reload table when the action got successful executed
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === s3BucketListActions.addBucketSuccess.type ||
+                action.type === s3BucketListActions.purgeBucketSuccess.type ||
+                action.type === s3BucketListActions.deleteBucketSuccess.type
+            )
+        ).subscribe(() => {
+                this.lastUpdate = new Date();
+                this.loadBuckets();
+            }
+        );
     }
 
     ngOnInit(): void {
@@ -118,12 +73,17 @@ export class BucketListComponent implements OnInit, OnDestroy {
         this.updateSubscription = interval(60000).subscribe(() => this.loadBuckets());
     }
 
+    ngAfterViewInit() {
+        // @ts-ignore
+        this.dataSource.sort = this.sort;
+    }
+
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {
@@ -142,51 +102,41 @@ export class BucketListComponent implements OnInit, OnDestroy {
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pageEvent = e;
-        this.length = e.length;
-        this.pageSize = e.pageSize;
-        this.pageIndex = e.pageIndex;
-        this.loadBuckets();
+        this.state.value['s3-bucket-list'].pageSize = e.pageSize;
+        this.state.value['s3-bucket-list'].pageIndex = e.pageIndex;
+        this.store.dispatch(s3BucketListActions.loadBuckets({
+            prefix: this.state.value['s3-bucket-list'].prefix,
+            pageSize: this.state.value['s3-bucket-list'].pageSize,
+            pageIndex: this.state.value['s3-bucket-list'].pageIndex,
+            sortColumns: this.state.value['s3-bucket-list'].sortColumns
+        }));
     }
 
     sortChange(sortState: Sort) {
-        this.sortColumns = [];
-        if (sortState.direction === 'asc') {
-            this.sortColumns.push({column: sortState.active, sortDirection: 1});
-        } else {
-            this.sortColumns.push({column: sortState.active, sortDirection: -1});
+        this.state.value['s3-bucket-list'].sortColumns = [];
+        let direction = 1;
+        let column = 'keys';
+        if (sortState.active === 'size') {
+            column = 'size'
+        } else if (sortState.active === 'name') {
+            column = 'name';
         }
+        if (sortState.direction === 'asc') {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+        this.state.value['s3-bucket-list'].sortColumns = [{column: column, sortDirection: direction}];
         this.loadBuckets();
     }
 
-    lastUpdateTime() {
-        return new Date().toLocaleTimeString('DE-de');
-    }
-
     loadBuckets() {
-        this.bucketData = [];
-        this.awsmockHttpService.listBucketCounters(this.prefix, this.pageSize, this.pageIndex, this.sortColumns)
-            .subscribe((data: any) => {
-                this.lastUpdate = this.lastUpdateTime();
-                this.length = data.total;
-                if (data.bucketCounters) {
-                    data.bucketCounters.forEach((b: any) => {
-                        this.bucketData.push({
-                            versionStatus: undefined,
-                            id: undefined,
-                            owner: b.owner,
-                            arn: undefined, region: undefined,
-                            name: b.bucketName,
-                            keys: b.keys,
-                            size: b.size,
-                            created: new Date(),
-                            modified: new Date(),
-                            lambdaConfigurations: undefined
-                        });
-                    });
-                }
-                this.bucketDataDataSource.data = this.bucketData;
-            });
+        this.store.dispatch(s3BucketListActions.loadBuckets({
+            prefix: this.state.value['s3-bucket-list'].prefix,
+            pageSize: this.state.value['s3-bucket-list'].pageSize,
+            pageIndex: this.state.value['s3-bucket-list'].pageIndex,
+            sortColumns: this.state.value['s3-bucket-list'].sortColumns
+        }));
     }
 
     addBucket() {
@@ -198,46 +148,20 @@ export class BucketListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(BucketAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.createBucket(result)
-                this.loadBuckets();
+                this.store.dispatch(s3BucketListActions.addBucket({bucketName: result}));
             }
         });
-    }
-
-    createBucket(bucketName: string) {
-        this.s3Service.createBucket(bucketName)
-            .then(() => {
-                this.loadBuckets();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.s3Service.cleanup();
-            });
     }
 
     listObjects(bucketName: string) {
         this.router.navigate(['/s3-object-list', bucketName]);
     }
 
-    deleteObjects(bucketName: string) {
-        this.s3Service.deleteObjects(bucketName)
-            .then(() => {
-                this.loadBuckets();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.s3Service.cleanup();
-            });
+    purgeBucket(bucketName: string) {
+        this.store.dispatch(s3BucketListActions.purgeBucket({bucketName: bucketName}));
     }
 
     deleteBucket(bucketName: string) {
-        this.s3Service.deleteBucket(bucketName)
-            .then(() => {
-                this.loadBuckets();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.s3Service.cleanup();
-            });
+        this.store.dispatch(s3BucketListActions.deleteBucket({bucketName: bucketName}));
     }
 }

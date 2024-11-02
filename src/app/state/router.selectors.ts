@@ -1,7 +1,7 @@
 import {createFeatureSelector, createSelector, MemoizedSelector} from '@ngrx/store';
 import {getRouterSelectors, RouterReducerState, SerializedRouterStateSnapshot} from '@ngrx/router-store';
-import {DefaultProjectorFn} from '@ngrx/store/src/selector';
-import {RouterStateSelectors} from '@ngrx/router-store/src/models';
+import {DefaultProjectorFn} from "@ngrx/store/src/selector";
+import {RouterStateSelectors} from "@ngrx/router-store/src/models";
 import {ActivatedRouteSnapshot, Params} from '@angular/router';
 import {SelectorType} from '../../../../libri/Libri.ONE/PIM/frontend/src/app/state/model';
 import {utcTimestampRegex} from '../../../../libri/Libri.ONE/PIM/frontend/src/app/_core/date/date-utils';
@@ -20,7 +20,7 @@ export const {
     selectRouteData, // select the current route data
     selectUrl // select the current url
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-RouterStateSelectors<Record<string, any>> = getRouterSelectors();
+    RouterStateSelectors<Record<string, any>> = getRouterSelectors();
 
 export const selectFeatureRoute: MemoizedSelector<object, string | undefined, DefaultProjectorFn<string | undefined>> = createSelector(
     selectRouter,

@@ -46,16 +46,16 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService,
                 private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
-        this.store.dispatch(sqsQueueListActions.initialize());
+        //this.store.dispatch(sqsQueueListActions.initialize());
         this.actionsSubj$.pipe(
             filter((action) =>
-                action.type === sqsQueueListActions.addQueueSuccess.name ||
-                action.type === sqsQueueListActions.purgeQueueSuccess.name ||
-                action.type === sqsQueueListActions.deleteQueueSuccess.name
+                action.type === sqsQueueListActions.addQueueSuccess.type ||
+                action.type === sqsQueueListActions.purgeQueueSuccess.type ||
+                action.type === sqsQueueListActions.deleteQueueSuccess.type
             )
         ).subscribe(() => {
                 this.lastUpdate = new Date();
-                console.log("Subscribe");
+                this.loadQueues();
             }
         );
     }
@@ -127,7 +127,6 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
             pageIndex: this.state.value['sqs-queue-list'].pageIndex,
             sortColumns: this.state.value['sqs-queue-list'].sortColumns
         }));
-        this.lastUpdate = new Date();
     }
 
     addQueue() {

@@ -14,6 +14,11 @@ export const selectIsLoading: SelectorType<boolean> = createSelector(
     (state: S3BucketListState) => state.loading
 );
 
+export const selectTotal: SelectorType<number> = createSelector(
+    selectBucketListFeature,
+    (state: S3BucketListState) => state.total
+);
+
 export const selectBucketName: SelectorType<string> = createSelector(
     selectBucketListFeature,
     (state: S3BucketListState) => state?.bucketName

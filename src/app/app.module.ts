@@ -15,6 +15,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {provideHttpClient} from "@angular/common/http";
 import {MatIconButton} from "@angular/material/button";
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly: environment.production};
 
@@ -40,6 +41,7 @@ const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly:
         DashboardModule,
         MatIconModule,
         MatIconButton,
+        BrowserAnimationsModule,
         StoreModule.forRoot(reducers, {}),
         EffectsModule.forRoot(RootEffect),
         !environment.production ? StoreDevtoolsModule.instrument() : [],

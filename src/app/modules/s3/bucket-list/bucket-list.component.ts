@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {filter, interval, Observable, Subscription} from "rxjs";
-import {PageEvent} from "@angular/material/paginator";
-import {Sort} from "@angular/material/sort";
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {debounceTime, distinctUntilChanged, filter, interval, merge, Observable, Subject, Subscription, tap} from "rxjs";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatSort, Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AwsMockHttpService} from "../../../services/awsmock-http.service";
@@ -9,12 +9,13 @@ import {S3Service} from "../service/s3-service.component";
 import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
 import {Router} from "@angular/router";
 import {byteConversion} from "../../../shared/byte-utils.component";
-import {S3BucketCountersResponse} from "../model/s3-bucket-item";
-import {selectBucketCounters, selectPageIndex, selectPageSize} from "./state/s3-bucket-list.selectors";
-import {ActionsSubject, State, Store} from "@ngrx/store";
+import {S3BucketCountersResponse, S3BucketItem} from "../model/s3-bucket-item";
+import {selectBucketCounters, selectIsLoading, selectPageIndex, selectPageSize, selectTotal} from "./state/s3-bucket-list.selectors";
+import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {S3BucketListState} from "./state/s3-bucket-list.reducer";
 import {s3BucketListActions} from "./state/s3-bucket-list.actions";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
     selector: 's3-bucket-list',
@@ -28,28 +29,39 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     lastUpdate: Date = new Date();
 
     // Table
+    loading: boolean = false;
+    noData: S3BucketItem[] = [<S3BucketItem>{}];
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     s3BucketCountersResponse$: Observable<S3BucketCountersResponse> = this.store.select(selectBucketCounters);
-    columns: any[] = ['name', 'objects', 'size', 'actions'];
+    columns: any[] = ['name', 'keys', 'size', 'actions'];
+    dataSource: MatTableDataSource<S3BucketItem> = new MatTableDataSource();
+    defaultSort: Sort = {active: "keys", direction: "desc"};
+    filterSubject = new Subject<string>();
 
     // Auto-update
-    updateSubscription: Subscription | undefined;
+    updateSubscription: Subscription = new Subscription();
+    tableSubscription: Subscription = new Subscription();
 
     // Prefix
     prefixSet: boolean = false;
     prefix: string = '';
 
     // Paging
-    length = 0;
+    total = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
 
+    // Sorting/paging
+    @ViewChild(MatSort, {static: false}) sort: MatSort | undefined;
+
     // Byte conversion
     protected readonly byteConversion = byteConversion;
+    @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator | undefined;
+    private filter: string = "";
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private router: Router, private state: State<S3BucketListState>, private store: Store,
                 private actionsSubj$: ActionsSubject, private location: Location) {
@@ -63,19 +75,60 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
             )
         ).subscribe(() => {
                 this.lastUpdate = new Date();
-                this.loadBuckets();
+                //   this.loadBuckets();
             }
         );
     }
 
     ngOnInit(): void {
-        this.loadBuckets();
+        this.store
+            .pipe(select(selectBucketCounters))
+            .subscribe((buckets) => this.initializeData(buckets.bucketCounters));
+        this.store
+            .pipe(select(selectTotal))
+            .subscribe((total) => (this.total = total));
+        this.tableSubscription.add(
+            this.store.pipe(select(selectIsLoading)).subscribe((loading) => {
+                if (loading) {
+                    this.dataSource = new MatTableDataSource(this.noData);
+                }
+                this.loading = loading;
+            })
+        );
+        // this.loadBuckets();
         this.updateSubscription = interval(60000).subscribe(() => this.loadBuckets());
     }
 
     ngAfterViewInit() {
-        // @ts-ignore
-        this.dataSource.sort = this.sort;
+        this.loadBuckets();
+        let filter$ = this.filterSubject.pipe(
+            debounceTime(150),
+            distinctUntilChanged(),
+            tap((value: string) => {
+                if (this.paginator) {
+                    this.paginator.pageIndex = 0;
+                }
+                this.filter = value;
+            })
+        );
+
+        if (this.sort) {
+            let sort$ = this.sort.sortChange.pipe(
+                tap(() => {
+                    if (this.paginator) {
+                        this.paginator.pageIndex = 0
+                    }
+                })
+            );
+
+            if (this.paginator) {
+                this.tableSubscription.add(
+                    merge(filter$, sort$, this.paginator.page)
+                        .pipe(tap(() => this.loadBuckets()))
+                        .subscribe()
+                );
+            }
+        }
     }
 
     ngOnDestroy(): void {
@@ -153,15 +206,17 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    listObjects(bucketName: string) {
-        this.router.navigate(['/s3-object-list', bucketName]);
-    }
-
     purgeBucket(bucketName: string) {
         this.store.dispatch(s3BucketListActions.purgeBucket({bucketName: bucketName}));
     }
 
     deleteBucket(bucketName: string) {
         this.store.dispatch(s3BucketListActions.deleteBucket({bucketName: bucketName}));
+    }
+
+    private initializeData(buckets: S3BucketItem[]): void {
+        this.dataSource = new MatTableDataSource(
+            buckets.length ? buckets : this.noData
+        );
     }
 }

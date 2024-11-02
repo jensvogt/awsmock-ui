@@ -14,6 +14,7 @@ export interface S3BucketListState {
     pageIndex: number;
     loading: boolean;
     sortColumns: SortColumn[];
+    total: number;
     error: unknown;
 }
 
@@ -25,6 +26,7 @@ export const initialState: S3BucketListState = {
     pageIndex: 0,
     loading: false,
     sortColumns: [{column: 'keys', sortDirection: -1}],
+    total: 0,
     error: {}
 };
 

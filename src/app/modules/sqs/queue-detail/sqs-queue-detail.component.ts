@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
 import {SqsQueueDetails} from "../model/sqs-queue-details";
 import {Location} from "@angular/common";
 import {Store} from "@ngrx/store";
@@ -13,7 +12,6 @@ import {selectDetails, selectError} from "./state/sqs-queue-detail.selectors";
     selector: 'sqs-queue-detail-component',
     templateUrl: './sqs-queue-detail.component.html',
     styleUrls: ['./sqs-queue-detail.component.scss'],
-    providers: [AwsMockHttpService]
 })
 export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
@@ -56,41 +54,10 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
         this.location.back();
     }
 
-    // ===================================================================================================================
-    // Details
-    // ===================================================================================================================
-
-    // loadQueueDetails() {
-    //     this.awsmockService.getQueueDetails(this.queueArn).subscribe((data: any) => {
-    //         if (data) {
-    //             this.queueDetails = data;
-    //         }
-    //     });
-    // }
-
     save() {
     }
 
     close() {
         this.location.back();
     }
-
-    // ===================================================================================================================
-    // Attributes
-    // ===================================================================================================================
-    /*    getQueueAttributes(queueUrl: string) {
-            this.sqsService.getQueueAttributes(queueUrl)
-                .then((data: any) => {
-                    this.lastUpdate = new Date();
-                    this.messagedAvailable = data.Attributes.ApproximateNumberOfMessages;
-                    this.messagedInFlight = data.Attributes.ApproximateNumberOfMessagesNotVisible;
-                    this.messagedDelayed = data.Attributes.ApproximateNumberOfMessagesDelayed;
-                    this.queueDelay = data.Attributes.DelaySeconds;
-                    this.visibilityTimeout = data.Attributes.VisibilityTimeout;
-                })
-                .catch((error: any) => console.error(error))
-                .finally(() => {
-                    this.sqsService.cleanup();
-                });
-        }*/
 }

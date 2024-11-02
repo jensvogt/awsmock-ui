@@ -18,7 +18,7 @@ import {
     MatTable
 } from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
-import {MatSort, MatSortHeader} from "@angular/material/sort";
+import {MatSortHeader, MatSortModule} from "@angular/material/sort";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -63,7 +63,7 @@ import {s3ObjectListFeatureKey, s3ObjectListReducer} from "./object-list/state/s
         MatIconButton,
         MatRow,
         MatPaginator,
-        MatSort,
+        MatSortModule,
         MatTooltip,
         RouterLink,
         MatListItem,

@@ -1,71 +1,23 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
-import {MatTooltip} from "@angular/material/tooltip";
+import {MatTableDataSource} from "@angular/material/table";
+import {PageEvent} from "@angular/material/paginator";
+import {Sort} from "@angular/material/sort";
+import {Location} from "@angular/common";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
 import {interval, Subscription} from "rxjs";
-import {NavigationService} from "../../../services/navigation.service";
 import {SnsMessageItem} from "../model/sns-message-item";
 import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
-import {MatListItem, MatNavList} from "@angular/material/list";
 import {EditSNSMessageComponentDialog} from "./edit-message/edit-message.component";
 import {SqsMessageItem} from "../../sqs/model/sqs-message-item";
-import {DatePipe} from "@angular/common";
+import {SnsService} from "../service/sns-service.component";
 
 @Component({
     selector: 'app-home',
     templateUrl: './sns-message-list.component.html',
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardActions,
-        MatCardContent,
-        MatCardHeader,
-        MatCell,
-        MatCellDef,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatIcon,
-        MatIconButton,
-        MatPaginator,
-        MatRow,
-        MatRowDef,
-        MatSort,
-        MatSortHeader,
-        MatTable,
-        MatTooltip,
-        MatNoDataRow,
-        MatHeaderCellDef,
-        MatListItem,
-        MatNavList,
-        RouterLink,
-        DatePipe
-    ],
     styleUrls: ['./sns-message-list.component.scss'],
-    providers: [AwsMockHttpService]
+    providers: [SnsService]
 })
 export class SnsMessageListComponent implements OnInit {
     lastUpdate: string = '';
@@ -96,8 +48,7 @@ export class SnsMessageListComponent implements OnInit {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private route: ActivatedRoute,
-                private navigation: NavigationService, private dialog: MatDialog, private awsmockHttpService: AwsMockHttpService) {
+    constructor(private route: ActivatedRoute, private location: Location, private dialog: MatDialog, private snsService: SnsService) {
     }
 
     ngOnInit(): void {
@@ -110,7 +61,7 @@ export class SnsMessageListComponent implements OnInit {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {
@@ -135,7 +86,7 @@ export class SnsMessageListComponent implements OnInit {
 
     loadMessages() {
         this.messageData = [];
-        this.awsmockHttpService.listSnsMessages(this.topicArn, this.pageSize, this.pageIndex)
+        this.snsService.listSnsMessages(this.topicArn, this.pageSize, this.pageIndex)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date().toLocaleTimeString('DE-de');
                 this.length = data.total;
@@ -170,7 +121,7 @@ export class SnsMessageListComponent implements OnInit {
     }
 
     deleteMessage(messageId: string) {
-        this.awsmockHttpService.deleteSnsMessages(messageId)
+        this.snsService.deleteSnsMessages(messageId)
             .subscribe((data: any) => {
                 this.loadMessages();
             });
@@ -188,7 +139,7 @@ export class SnsMessageListComponent implements OnInit {
 
         this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                //this.snsService.publishMessage(this.topicArn, result);
+                this.snsService.publishMessage(this.topicArn, result);
                 this.loadMessages();
             }
         });

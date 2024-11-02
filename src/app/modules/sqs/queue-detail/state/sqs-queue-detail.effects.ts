@@ -4,8 +4,8 @@ import {mergeMap, of} from 'rxjs';
 
 import {catchError, map} from 'rxjs/operators';
 import {sqsQueueDetailsActions} from './sqs-queue-detail.actions';
-import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {SqsService} from "../../service/sqs-service.component";
 
 @Injectable()
 export class SqsQueueDetailEffects {
@@ -15,7 +15,7 @@ export class SqsQueueDetailEffects {
     loadQueuesDetails$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueDetailsActions.loadDetails),
         mergeMap(action =>
-            this.awsmockService.getQueueDetails(action.queueArn)
+            this.sqsService.getQueueDetails(action.queueArn)
                 .pipe(map((details: any) =>
                         sqsQueueDetailsActions.loadDetailsSuccess({queueDetails: details})),
                     catchError((error) =>
@@ -25,6 +25,6 @@ export class SqsQueueDetailEffects {
         ),
     ));
 
-    constructor(private actions$: Actions, private awsmockService: AwsMockHttpService) {
+    constructor(private actions$: Actions, private sqsService: SqsService) {
     }
 }

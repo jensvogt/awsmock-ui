@@ -2,14 +2,13 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {SqsService} from "../../../services/sqs-service.component";
+import {SqsService} from "../service/sqs-service.component";
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {interval, Subscription} from "rxjs";
 import {SqsMessageItem} from "../model/sqs-message-item";
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
 import {EditMessageComponentDialog} from "./edit-message/edit-message.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
@@ -49,8 +48,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     sortColumns: SortColumn[] = [{column: 'created', sortDirection: 1}];
     private sub: any;
 
-    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog,
-                private location: Location, private awsmockHttpService: AwsMockHttpService) {
+    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private location: Location) {
     }
 
     // @ts-ignore
@@ -107,7 +105,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     loadMessages() {
         this.messageData = [];
-        this.awsmockHttpService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex, this.sortColumns)
+        this.sqsService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date().toLocaleTimeString('DE-de');
                 this.length = data.Total;

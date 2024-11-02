@@ -16,6 +16,7 @@ import {
 } from "@angular/material/table";
 import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
+import {DatePipe, Location, NgIf} from "@angular/common";
 import {interval, Subscription} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
@@ -24,12 +25,10 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {BreadcrumbComponent} from "../../../shared/breadcrump/breadcrump.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, RouterLink} from "@angular/router";
-import {NavigationService} from "../../../services/navigation.service";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {DatePipe, NgIf} from "@angular/common";
 import {AwsMockCognitoService} from "../../../services/cognito.service";
 import {UserItem} from "../model/user-item";
 import {UserAddComponentDialog} from "../user-add/user-add.component";
@@ -104,8 +103,8 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     sortColumns: SortColumn[] = [];
     private sub: any;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute,
-                private navigation: NavigationService, private cognitoService: AwsMockCognitoService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private location: Location,
+                private cognitoService: AwsMockCognitoService) {
     }
 
     ngOnInit(): void {
@@ -137,7 +136,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {

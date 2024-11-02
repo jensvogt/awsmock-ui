@@ -12,10 +12,12 @@ const routes: Routes = [
     },
     {
         path: 'details/:queueArn',
+        title: 'SQSQueueDetails',
         component: SqsQueueDetailComponent
     },
     {
         path: 'messages/:queueArn',
+        title: 'SQSQueueMessages',
         component: SqsMessageListComponent
     }
 ];

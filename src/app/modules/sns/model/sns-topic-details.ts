@@ -1,4 +1,4 @@
-export interface TopicDetails {
+export interface SnsTopicDetails {
     region: string;
     topicArn: string;
     topicName: string;

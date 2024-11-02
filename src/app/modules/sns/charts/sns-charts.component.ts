@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
-import {NgForOf, NgIf} from "@angular/common";
+import {Location, NgForOf, NgIf} from "@angular/common";
 import {MatList, MatListItem, MatListOption, MatNavList, MatSelectionList} from "@angular/material/list";
 import {MatIcon} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
@@ -11,11 +11,9 @@ import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
 import {MonitoringService} from "../../../services/monitoring.service";
 import {MatTooltip} from "@angular/material/tooltip";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsServiceTimeChartComponent} from "../../sqs/charts/service-time/service-time-chart.component";
 import {SnsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
 import {SnsMessageCountChartComponent} from "./message-count-time/message-count-chart.component";
-import {NavigationService} from "../../../services/navigation.service";
 
 @Component({
     selector: 'sns-charts-component',
@@ -51,13 +49,15 @@ import {NavigationService} from "../../../services/navigation.service";
     styleUrls: ['./sns-charts.component.scss']
 })
 export class SnsChartsComponent implements OnInit, OnDestroy {
+
+    // Last update
     lastUpdate: string = '';
 
     // Auto-update
     updateSubscription: Subscription | undefined;
     @ViewChild(SqsServiceTimeChartComponent) serviceTimeChart: SqsServiceTimeChartComponent | undefined;
 
-    constructor(private snackBar: MatSnackBar, private navigation: NavigationService) {
+    constructor(private location: Location) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
             this.serviceTimeChart?.loadServiceTimeChart();
@@ -73,7 +73,7 @@ export class SnsChartsComponent implements OnInit, OnDestroy {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {

@@ -1,9 +1,9 @@
 import {Component, inject, OnDestroy, OnInit} from "@angular/core";
+import {Location} from "@angular/common";
 import {MatTableDataSource,} from "@angular/material/table";
 import {ActivatedRoute} from "@angular/router";
 import {Sort} from "@angular/material/sort";
 import {PageEvent} from "@angular/material/paginator";
-import {NavigationService} from "../../../services/navigation.service";
 import {LambdaConfiguration, S3BucketItem} from "../model/s3-bucket-item";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
@@ -37,7 +37,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private navigation: NavigationService, private route: ActivatedRoute, private s3Service: S3Service) {
+    constructor(private location: Location, private route: ActivatedRoute, private s3Service: S3Service) {
     }
 
     ngOnInit() {
@@ -52,7 +52,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     }
 
     back() {
-        this.navigation.back();
+        this.location.back();
     }
 
     refresh() {
@@ -113,6 +113,6 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     // ===================================================================================================================
 
     save() {
-        this.navigation.back();
+        this.location.back();
     }
 }

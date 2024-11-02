@@ -4,7 +4,6 @@ import {mergeMap, of} from 'rxjs';
 
 import {catchError, map} from 'rxjs/operators';
 import {sqsQueueListActions} from './sqs-queue-list.actions';
-import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {SqsService} from "../../service/sqs-service.component";
 
@@ -50,6 +49,6 @@ export class SqsQueueListEffects {
                 .then(() => sqsQueueListActions.addQueueSuccess()))
     ));
 
-    constructor(private actions$: Actions, private awsmockHttpService: AwsMockHttpService, private sqsService: SqsService) {
+    constructor(private actions$: Actions, private sqsService: SqsService) {
     }
 }

@@ -33,7 +33,6 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     //
     protected readonly byteConversion = byteConversion;
     private sub: any;
-
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 

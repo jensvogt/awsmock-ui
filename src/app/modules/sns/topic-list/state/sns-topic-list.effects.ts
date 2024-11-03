@@ -35,17 +35,32 @@ export class SnsTopicListEffects {
                 .then(() => snsTopicListActions.addTopicSuccess()))
     ));
 
-    /*    purgeTopic$ = createEffect(() => this.actions$.pipe(
-            ofType(snsTopicListActions.purgeTopic),
-            mergeMap(action =>
-                this.snsService.purgeTopic(action.topicUrl)
-                    .then(() => snsTopicListActions.addTopicSuccess()))
-        ));*/
+    publishMessage$ = createEffect(() => this.actions$.pipe(
+        ofType(snsTopicListActions.publishMessage),
+        mergeMap(action =>
+            this.snsService.publishMessage(action.topicArn, action.message)
+                .then(() => snsTopicListActions.publishMessageSuccess())
+                .catch((error: any) => snsTopicListActions.publishMessageFailure({error: error}))
+                .finally(() => this.snsService.cleanup)
+        )
+    ));
+
+    purgeTopic$ = createEffect(() => this.actions$.pipe(
+        ofType(snsTopicListActions.purgeTopic),
+        mergeMap(action =>
+            this.snsService.purgeTopic(action.topicArn)
+                .pipe(map(() => snsTopicListActions.purgeTopicSuccess()),
+                    catchError((error) =>
+                        of(snsTopicListActions.purgeTopicFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
 
     deleteTopic$ = createEffect(() => this.actions$.pipe(
         ofType(snsTopicListActions.deleteTopic),
         mergeMap(action =>
-            this.snsService.deleteTopic(action.topicUrl)
+            this.snsService.deleteTopic(action.topicArn)
                 .then(() => snsTopicListActions.addTopicSuccess()))
     ));
 

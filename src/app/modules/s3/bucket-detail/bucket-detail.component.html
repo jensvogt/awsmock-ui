@@ -19,29 +19,29 @@
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <mat-grid-list cols="2" rowHeight="320px">
+            <mat-grid-list cols="2" rowHeight="420px">
                 <mat-grid-tile [colspan]="1" [rowspan]="1">
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
-                            <mat-list-item style="height:60px">
-                                <span class="mat-list-span-title" matListItemTitle>Region: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.region }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Region: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.region }}</p>
                             </mat-list-item>
-                            <mat-list-item>
-                                <span class="mat-list-span-title" matListItemTitle>Bucket name: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.bucketName }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Bucket name: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.bucketName }}</p>
                             </mat-list-item>
-                            <mat-list-item>
-                                <span class="mat-list-span-title" matListItemTitle>ARN: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.arn }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>ARN: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.arn }}</p>
                             </mat-list-item>
-                            <mat-list-item>
-                                <span class="mat-list-span-title" matListItemTitle>Owner: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.owner }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Owner: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.owner }}</p>
                             </mat-list-item>
-                            <mat-list-item>
-                                <span class="mat-list-span-title" matListItemTitle>Version Status: </span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.versionStatus }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Version Status: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.versionStatus }}</p>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -49,21 +49,21 @@
                 <mat-grid-tile [colspan]="1" [rowspan]="1">
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
-                            <mat-list-item style="height:60px">
-                                <span class="mat-list-span-title" matListItemTitle>Number of objects:</span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.keys }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Number of objects:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.keys }}</p>
                             </mat-list-item>
-                            <mat-list-item style="height:60px">
-                                <span class="mat-list-span-title" matListItemTitle>Size:</span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.size }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Size:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ byteConversion(bucketItem.size) }}</p>
                             </mat-list-item>
-                            <mat-list-item style="height:60px">
-                                <span class="mat-list-span-title" matListItemTitle>Created:</span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.created | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Created:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.created | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
                             </mat-list-item>
-                            <mat-list-item style="height:60px">
-                                <span class="mat-list-span-title" matListItemTitle>Modified:</span>
-                                <span class="mat-list-span-value" matListItemLine>{{ bucketItem.modified | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Modified:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.modified | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:60px">
                             </mat-list-item>

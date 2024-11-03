@@ -16,57 +16,59 @@
     <mat-card-content>
         <mat-card appearance="outlined" style="margin: -10px">
             <div class="table-container">
-                <table (matSortChange)="sortChange($event)" [dataSource]="messageDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
-                    <ng-container matColumnDef="messageId">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
-                        <td *matCellDef="let element" mat-cell>
-                            <mat-nav-list>
-                                <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
-                            </mat-nav-list>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="region">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Region" sortActionDescription="Sort by region">Region</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.region }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="created">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by created">Created</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.created|date:'dd-MM-yyyy HH:mm:ss' }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="modified">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.modified|date:'dd-MM-yyyy HH:mm:ss' }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="actions">
-                        <th *matHeaderCellDef mat-header-cell style="width:100px">Actions</th>
-                        <td *matCellDef="let row" mat-cell>
-                            <button (click)="deleteMessage(row.messageId)" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                        </td>
-                    </ng-container>
-                    <tr *matHeaderRowDef="columns" mat-header-row></tr>
-                    <tr *matRowDef="let row; columns: columns;" mat-row></tr>
-                    <tr *matNoDataRow class="mat-row">
-                        <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
-                            No data matching the filter.
-                        </td>
-                    </tr>
-                </table>
+                <!--div *ngIf="listMessageCountersResponse$ | async as messageCounters" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.messageCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
+                        <ng-container matColumnDef="messageId">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
+                            <td *matCellDef="let element" mat-cell>
+                                <mat-nav-list>
+                                    <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
+                                </mat-nav-list>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="region">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Region" sortActionDescription="Sort by region">Region</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.region }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="created">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by created">Created</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.created|date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="modified">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.modified|date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:100px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="deleteMessage(row.messageId)" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                </div-->
             </div>
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
-                           [length]="length"
-                           [pageIndex]="pageIndex"
+                           [length]="(listMessageCountersResponse$ | async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-                           [pageSize]="pageSize"
+                           [pageSize]="(pageSize$ | async)"
                            [showFirstLastButtons]="showFirstLastButtons"
                            aria-label="Select page" style="width:99%; margin-left:15px">
             </mat-paginator>
         </mat-card>
         <div class="footer">
-            Last update: {{ lastUpdate }}
+            Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
         </div>
     </mat-card-content>
 </mat-card>

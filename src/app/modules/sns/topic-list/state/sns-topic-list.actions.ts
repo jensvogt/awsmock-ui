@@ -15,13 +15,18 @@ export const snsTopicListActions = {
     addTopicSuccess: createAction('[sns-topic-list] Add Topic Success'),
     addTopicFailure: createAction('[sns-topic-list] Add Topic Error', props<{ error: string }>()),
 
-    // Delete topic
-    deleteTopic: createAction('[sns-topic-list] Delete Topic', props<{ topicUrl: string }>()),
-    deleteTopicSuccess: createAction('[sns-topic-list] Delete Topic Success'),
-    deleteTopicFailure: createAction('[sns-topic-list] Delete Topic Error', props<{ error: string }>()),
+    // Publish message
+    publishMessage: createAction('[sns-topic-list] Publish message', props<{ topicArn: string, message: string }>()),
+    publishMessageSuccess: createAction('[sns-topic-list] Publish message success'),
+    publishMessageFailure: createAction('[sns-topic-list] Publish message error', props<{ error: string }>()),
 
     // Purge topic
-    purgeTopic: createAction('[sns-topic-list] Delete Topic', props<{ topicUrl: string }>()),
-    purgeTopicSuccess: createAction('[sns-topic-list] Delete Topic Success'),
-    purgeTopicFailure: createAction('[sns-topic-list] Delete Topic Error', props<{ error: string }>())
+    purgeTopic: createAction('[sns-topic-list] Purge Topic', props<{ topicArn: string }>()),
+    purgeTopicSuccess: createAction('[sns-topic-list] Purge Topic Success'),
+    purgeTopicFailure: createAction('[sns-topic-list] Purge Topic Error', props<{ error: string }>()),
+
+    // Delete topic
+    deleteTopic: createAction('[sns-topic-list] Delete Topic', props<{ topicArn: string }>()),
+    deleteTopicSuccess: createAction('[sns-topic-list] Delete Topic Success'),
+    deleteTopicFailure: createAction('[sns-topic-list] Delete Topic Error', props<{ error: string }>()),
 }

@@ -38,3 +38,8 @@ export const selectTopicCounters: SelectorType<ListTopicCountersResponse> = crea
     selectQueueListFeature,
     (state: SNSTopicListState) => state?.listTopicResponse
 );
+
+export const selectTopicError: SelectorType<any> = createSelector(
+    selectQueueListFeature,
+    (state: SNSTopicListState) => state?.error
+);

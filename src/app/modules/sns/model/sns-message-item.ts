@@ -7,3 +7,8 @@ export interface SnsMessageItem {
     created: Date | undefined;
     modified: Date | undefined;
 }
+
+export interface SnsMessageCountersResponse {
+    total: number;
+    messageCounters: SnsMessageItem[];
+}

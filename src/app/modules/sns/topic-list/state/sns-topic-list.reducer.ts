@@ -1,4 +1,3 @@
-// Hinzufügen:
 import {ListTopicCountersResponse} from "../../model/sns-topic-item";
 import {createReducer, on} from "@ngrx/store";
 import {snsTopicListActions} from './sns-topic-list.actions';
@@ -46,6 +45,11 @@ export const snsTopicListReducer = createReducer(
     on(snsTopicListActions.purgeTopic, (state: SNSTopicListState) => ({...state, loading: true})),
     on(snsTopicListActions.purgeTopicSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
     on(snsTopicListActions.purgeTopicFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
+
+    // Publish message
+    on(snsTopicListActions.publishMessage, (state: SNSTopicListState) => ({...state, loading: true})),
+    on(snsTopicListActions.publishMessageSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
+    on(snsTopicListActions.publishMessageFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
 
     // Delete topic
     on(snsTopicListActions.deleteTopic, (state: SNSTopicListState) => ({...state, loading: true})),

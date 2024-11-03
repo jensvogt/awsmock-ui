@@ -1,63 +1,77 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {interval, Subscription} from "rxjs";
-import {SnsMessageItem} from "../model/sns-message-item";
-import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
+import {filter, Observable, Subscription} from "rxjs";
+import {SnsMessageCountersResponse, SnsMessageItem} from "../model/sns-message-item";
+import {PublishMessageComponentDialog} from "./publish-message/publish-message.component";
 import {EditSNSMessageComponentDialog} from "./edit-message/edit-message.component";
-import {SqsMessageItem} from "../../sqs/model/sqs-message-item";
 import {SnsService} from "../service/sns-service.component";
+import {ActionsSubject, State, Store} from "@ngrx/store";
+import {SNSMessageListState} from "./state/sns-message-list.reducer";
+import {snsMessageListActions} from "./state/sns-message-list.actions";
+import {selectMessageCounters, selectPageIndex, selectPageSize} from "./state/sns-message-list.selectors";
 
 @Component({
-    selector: 'app-home',
+    selector: 'sns-message-list',
     templateUrl: './sns-message-list.component.html',
     styleUrls: ['./sns-message-list.component.scss'],
     providers: [SnsService]
 })
-export class SnsMessageListComponent implements OnInit {
-    lastUpdate: string = '';
+export class SnsMessageListComponent implements OnInit, OnDestroy {
+
+    // Last update
+    lastUpdate: Date = new Date();
 
     // Table
-    messageData: Array<SnsMessageItem> = [];
-    messageDataSource = new MatTableDataSource(this.messageData);
+    pageSize$: Observable<number> = this.store.select(selectPageSize);
+    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    listMessageCountersResponse$: Observable<SnsMessageCountersResponse> = this.store.select(selectMessageCounters);
     columns: any[] = ['messageId', 'region', 'created', 'modified', 'actions'];
 
     // Paging
-    length = 0;
-    pageSize = 10;
-    pageIndex = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
-    // Auto-update
-    updateSubscription: Subscription | undefined;
-
+    // Router parameter
     topicArn: string = '';
     topicName: string = '';
-    private sub: any;
 
-    // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
+    // Auto-update
+    private updateSubscription: Subscription | undefined;
+    private routerSubscription: Subscription | undefined;
 
-    constructor(private route: ActivatedRoute, private location: Location, private dialog: MatDialog, private snsService: SnsService) {
+    constructor(private route: ActivatedRoute, private location: Location, private dialog: MatDialog, private store: Store, private state: State<SNSMessageListState>,
+                private actionsSubj$: ActionsSubject) {
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === snsMessageListActions.publishMessageSuccess.type ||
+                action.type === snsMessageListActions.deleteMessageSuccess.type
+            )
+        ).subscribe(() => {
+                this.lastUpdate = new Date();
+                //this.loadMessages();
+            }
+        );
     }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
+        this.routerSubscription = this.route.params.subscribe(params => {
             this.topicArn = decodeURI(params['topicArn']); // (+) converts string 'id' to a number
+            this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':'));
         });
-        this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
-        this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':'));
+        //this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
         this.loadMessages();
+    }
+
+    ngOnDestroy(): void {
+        this.routerSubscription?.unsubscribe();
+        this.updateSubscription?.unsubscribe();
     }
 
     back() {
@@ -65,47 +79,41 @@ export class SnsMessageListComponent implements OnInit {
     }
 
     refresh() {
-        this.loadMessages();
+        // this.loadMessages();
     }
 
     sortChange(sortState: Sort) {
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-            this._liveAnnouncer.announce('Sorting cleared');
+        this.state.value['sns-message-list'].sortColumns = [];
+        let direction: number;
+        let column = 'messageId';
+        if (sortState.active === 'availableMessages') {
+            column = 'attributes.availableMessages'
         }
+        if (sortState.direction === 'asc') {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+        this.state.value['sns-message-list'].sortColumns = [{column: column, sortDirection: direction}];
+//        this.loadMessages();
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pageEvent = e;
-        this.length = e.length;
-        this.pageSize = e.pageSize;
-        this.pageIndex = e.pageIndex;
-        this.loadMessages();
+        this.state.value['sns-message-list'].pageSize = e.pageSize;
+        this.state.value['sns-message-list'].pageIndex = e.pageIndex;
+//        this.loadMessages();
     }
 
     loadMessages() {
-        this.messageData = [];
-        this.snsService.listSnsMessages(this.topicArn, this.pageSize, this.pageIndex)
-            .subscribe((data: any) => {
-                this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-                this.length = data.total;
-                data.messages.forEach((m: any) => {
-                    this.messageData.push({
-                        id: m.id,
-                        region: m.region,
-                        topicArn: m.topicArn,
-                        messageId: m.messageId,
-                        message: m.message,
-                        created: m.created,
-                        modified: m.modified,
-                    });
-                });
-                this.messageDataSource.data = this.messageData;
-            });
+        this.store.dispatch(snsMessageListActions.loadMessages({
+            topicArn: this.topicArn,
+            pageSize: this.state.value['sns-message-list'].pageSize,
+            pageIndex: this.state.value['sns-message-list'].pageIndex,
+            sortColumns: this.state.value['sns-message-list'].sortColumns
+        }));
     }
 
-    editMessage(message: SqsMessageItem) {
+    editMessage(message: SnsMessageItem) {
 
         const dialogConfig = new MatDialogConfig();
 
@@ -121,10 +129,7 @@ export class SnsMessageListComponent implements OnInit {
     }
 
     deleteMessage(messageId: string) {
-        this.snsService.deleteSnsMessages(messageId)
-            .subscribe((data: any) => {
-                this.loadMessages();
-            });
+        this.store.dispatch(snsMessageListActions.deleteMessage({messageId: messageId}));
     }
 
     publishMessage() {
@@ -139,8 +144,7 @@ export class SnsMessageListComponent implements OnInit {
 
         this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.snsService.publishMessage(this.topicArn, result);
-                this.loadMessages();
+                this.store.dispatch(snsMessageListActions.publishMessage({topicArn: this.topicArn, message: result}));
             }
         });
     }

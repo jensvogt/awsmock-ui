@@ -1,4 +1,3 @@
-// Hinzufügen:
 import {ListQueueCountersResponse} from "../../model/sqs-queue-item";
 import {createReducer, on} from "@ngrx/store";
 import {sqsQueueListActions} from './sqs-queue-list.actions';

@@ -69,6 +69,9 @@
                                 <button aria-label="Details" mat-icon-button matTooltip="Edit topic" routerLink="./details/{{ row.topicArn }}">
                                     <mat-icon>edit</mat-icon>
                                 </button>
+                                <button (click)="purgeTopic(row.topicArn)" aria-label="Purge" mat-icon-button matTooltip="Purge the topic">
+                                    <mat-icon>clear_all</mat-icon>
+                                </button>
                                 <button (click)="deleteTopic(row.topicArn)" aria-label="Delete" mat-icon-button matTooltip="Delete the topic">
                                     <mat-icon>delete</mat-icon>
                                 </button>

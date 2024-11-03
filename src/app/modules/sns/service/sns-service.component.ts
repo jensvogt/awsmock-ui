@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {CreateTopicCommand, DeleteTopicCommand, ListTopicsCommand, SNSClient, SubscribeCommand} from "@aws-sdk/client-sns";
+import {CreateTopicCommand, DeleteTopicCommand, ListTopicsCommand, PublishCommand, SNSClient, SubscribeCommand} from "@aws-sdk/client-sns";
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
@@ -10,13 +10,14 @@ export class SnsService {
     client = new SNSClient({
         region: environment.awsmockRegion,
         endpoint: environment.gatewayEndpoint,
+        maxAttempts: 1,
         credentials: {
             accessKeyId: 'test',
             secretAccessKey: 'test',
         },
         requestHandler: {
-            requestTimeout: 3_000,
-            httpsAgent: {maxSockets: 25, keepAlive: false},
+            requestTimeout: 3000,
+            httpsAgent: {maxSockets: 25, keepAlive: true},
         },
     });
 
@@ -63,12 +64,12 @@ export class SnsService {
         return this.client.send(new SubscribeCommand(input));
     }
 
-    publishMessage(topicArn: string, body: string) {
-        /*        const input = {
-                    TopicArn: topicArn,
-                    ReturnSubscriptionArn: true
-                };
-                return this.client.send(new SubscribeCommand(input));*/
+    publishMessage(topicArn: string, message: string) {
+        const input = {
+            TopicArn: topicArn,
+            Message: message
+        };
+        return this.client.send(new PublishCommand(input));
     }
 
     cleanup() {
@@ -76,7 +77,15 @@ export class SnsService {
     }
 
     /**
+     * @brief Purges a topic, this will delete all the messages in the SNS topic.
+     *
+     * @par
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param prefix topic name prefix
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
      */
     public listTopicCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListTopicCounters');
@@ -84,15 +93,34 @@ export class SnsService {
     }
 
     /**
+     * @brief Purges a topic, this will delete all the messages in the SNS topic.
+     *
+     * @par
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param topicArn topic ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
      */
-    public listSnsMessages(topicArn: string, pageSize: number, pageIndex: number) {
+    public listMessageCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListMessages');
         return this.http.post(this.url, {
-            topicArn: topicArn,
-            pageSize: pageSize,
-            pageIndex: pageIndex
+            topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns
         }, {headers: headers});
+    }
+
+    /**
+     * @brief Purges a topic, this will delete all the messages in the SNS topic.
+     *
+     * @par
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param topicArn AWS topic ARN
+     */
+    public purgeTopic(topicArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'PurgeTopic');
+        return this.http.post(this.url, {topicArn: topicArn}, {headers: headers});
     }
 
     /**

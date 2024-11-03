@@ -124,15 +124,28 @@ export class SnsService {
     }
 
     /**
+     * @brief Purges a topic, this will delete all the messages in the SNS topic.
+     *
+     * @par
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param topicArn SNS topic ARN
+     * @param messageId SNS message ID
      */
-    public deleteSnsMessages(messageId: string) {
+    public deleteMessage(topicArn: string, messageId: string) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'DeleteMessage');
-        return this.http.post(this.url, {messageId: messageId}, {headers: headers});
+        return this.http.post(this.url, {topicArn: topicArn, messageId: messageId}, {headers: headers});
     }
 
+    /**
+     * @brief Returns the topic details
+     *
+     * @par
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param topicArn AWS topic ARN
+     */
     public getTopicDetails(topicArn: string) {
-        console.log("Service: ", topicArn);
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'GetTopicDetails');
         return this.http.post(this.url, {topicArn: topicArn}, {headers: headers});
     }

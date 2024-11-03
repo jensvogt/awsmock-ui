@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            <h4>SNS Messages: {{ topicArn }}</h4>
+            <h4>SNS Messages: {{ topicName }}</h4>
         </span>
         <button (click)="publishMessage()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
@@ -17,7 +17,7 @@
         <mat-card appearance="outlined" style="margin: -10px">
             <div class="table-container">
                 <div *ngIf="listMessageCountersResponse$ | async as messageCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.messageCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
+                    <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.messages" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="messageId">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
                             <td *matCellDef="let element" mat-cell>

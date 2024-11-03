@@ -13,5 +13,5 @@ export interface SnsMessageItem {
 
 export interface SnsMessageCountersResponse {
     total: number;
-    messageCounters: SnsMessageItem[];
+    messages: SnsMessageItem[];
 }

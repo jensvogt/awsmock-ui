@@ -32,12 +32,8 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
         });
         this.queueDetailsError$.subscribe((msg: string) => {
             if (msg.length) {
-                console.log("Message", msg);
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
-        });
-        this.queueDetails$.subscribe((msg: any) => {
-            console.log("Message", msg);
         });
     }
 

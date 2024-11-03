@@ -4,10 +4,9 @@ import {Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {filter, Observable, Subscription} from "rxjs";
+import {filter, interval, Observable, Subscription} from "rxjs";
 import {SnsMessageCountersResponse, SnsMessageItem} from "../model/sns-message-item";
 import {PublishMessageComponentDialog} from "./publish-message/publish-message.component";
-import {EditSNSMessageComponentDialog} from "./edit-message/edit-message.component";
 import {SnsService} from "../service/sns-service.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
 import {SNSMessageListState} from "./state/sns-message-list.reducer";
@@ -55,17 +54,17 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
             )
         ).subscribe(() => {
                 this.lastUpdate = new Date();
-                //this.loadMessages();
+                this.loadMessages();
             }
         );
     }
 
     ngOnInit(): void {
         this.routerSubscription = this.route.params.subscribe(params => {
-            this.topicArn = decodeURI(params['topicArn']); // (+) converts string 'id' to a number
-            this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':'));
+            this.topicArn = decodeURI(params['topicArn']);
+            this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':') + 1);
         });
-        //this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
+        this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
         this.loadMessages();
     }
 
@@ -79,7 +78,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-        // this.loadMessages();
+        this.loadMessages();
     }
 
     sortChange(sortState: Sort) {
@@ -95,13 +94,13 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
             direction = -1;
         }
         this.state.value['sns-message-list'].sortColumns = [{column: column, sortDirection: direction}];
-//        this.loadMessages();
+        this.loadMessages();
     }
 
     handlePageEvent(e: PageEvent) {
         this.state.value['sns-message-list'].pageSize = e.pageSize;
         this.state.value['sns-message-list'].pageIndex = e.pageIndex;
-//        this.loadMessages();
+        this.loadMessages();
     }
 
     loadMessages() {
@@ -121,15 +120,16 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {message: message};
         dialogConfig.maxWidth = '100vw';
-        dialogConfig.maxHeight = '80vh';
+        dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "90%"
 
-        this.dialog.open(EditSNSMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
+        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
         });
     }
 
     deleteMessage(messageId: string) {
-        this.store.dispatch(snsMessageListActions.deleteMessage({messageId: messageId}));
+        this.store.dispatch(snsMessageListActions.deleteMessage({topicArn: this.topicArn, messageId: messageId}));
     }
 
     publishMessage() {
@@ -141,6 +141,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "90%"
 
         this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

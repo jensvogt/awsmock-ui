@@ -84,7 +84,6 @@ export class SubscriptionAddComponentDialog implements OnInit {
     }
 
     save() {
-        console.log("Formdata: ", this.topicArn, this.endpoint, this.protocol);
         this.dialogRef.close({topicArn: this.topicArn, endpoint: this.endpoint, protocol: this.protocol});
     }
 

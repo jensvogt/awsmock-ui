@@ -140,7 +140,6 @@ export class ObjectUploadComponent {
     }
 
     handleProgress(event: ProgressEvent) {
-        console.log("Event: ", event);
         this.progress = (event.loaded / event.total) * 100;
     }
 

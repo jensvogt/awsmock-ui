@@ -7,8 +7,8 @@ export const snsMessageListActions = {
 
     // Load topic
     loadMessages: createAction('[sns-message-list] Load messages', props<{ topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
-    loadMessagesSuccess: createAction('[sns-message-list] Load messages', props<{ messages: SnsMessageCountersResponse }>()),
-    loadMessagesFailure: createAction('[sns-message-list] Load messages', props<{ error: string }>()),
+    loadMessagesSuccess: createAction('[sns-message-list] Load messages success', props<{ messages: SnsMessageCountersResponse }>()),
+    loadMessagesFailure: createAction('[sns-message-list] Load messages failure', props<{ error: string }>()),
 
     // Publish message
     publishMessage: createAction('[sns-message-list] Publish message', props<{ topicArn: string, message: string }>()),
@@ -16,7 +16,7 @@ export const snsMessageListActions = {
     publishMessageFailure: createAction('[sns-message-list] Publish message error', props<{ error: string }>()),
 
     // Delete topic
-    deleteMessage: createAction('[sns-message-list] Delete message', props<{ messageId: string }>()),
+    deleteMessage: createAction('[sns-message-list] Delete message', props<{ topicArn: string, messageId: string }>()),
     deleteMessageSuccess: createAction('[sns-message-list] Delete message success'),
     deleteMessageFailure: createAction('[sns-message-list] Delete message error', props<{ error: string }>()),
 }

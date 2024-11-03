@@ -25,26 +25,27 @@ export class SnsMessageListEffects {
         ),
     ));
 
-    /*    addTopic$ = createEffect(() => this.actions$.pipe(
-            ofType(snsMessageListActions.addTopic),
-            mergeMap(action =>
-                this.snsService.addTopic(action.name)
-                    .then(() => snsMessageListActions.addTopicSuccess()))
-        ));*/
-
-    /*    purgeTopic$ = createEffect(() => this.actions$.pipe(
-            ofType(snsMessageListActions.purgeTopic),
-            mergeMap(action =>
-                this.snsService.purgeTopic(action.topicUrl)
-                    .then(() => snsMessageListActions.addTopicSuccess()))
-        ));*/
-
-    /*deleteTopic$ = createEffect(() => this.actions$.pipe(
-        ofType(snsMessageListActions.deleteTopic),
+    publishMessage$ = createEffect(() => this.actions$.pipe(
+        ofType(snsMessageListActions.publishMessage),
         mergeMap(action =>
-            this.snsService.deleteTopic(action.topicUrl)
-                .then(() => snsMessageListActions.addTopicSuccess()))
-    ));*/
+            this.snsService.publishMessage(action.topicArn, action.message)
+                .then(() => snsMessageListActions.publishMessageSuccess())
+                .catch((error: any) => snsMessageListActions.publishMessageFailure({error: error}))
+                .finally(() => this.snsService.cleanup)
+        )
+    ));
+
+    deleteMessage$ = createEffect(() => this.actions$.pipe(
+        ofType(snsMessageListActions.deleteMessage),
+        mergeMap(action =>
+            this.snsService.deleteMessage(action.topicArn, action.messageId)
+                .pipe(map(() => snsMessageListActions.deleteMessageSuccess()),
+                    catchError((error) =>
+                        of(snsMessageListActions.deleteMessageFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
 
     constructor(private actions$: Actions, private snsService: SnsService) {
     }

@@ -58,7 +58,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
-            this.queueArn = decodeURI(params['queueArn']); // (+) converts string 'id' to a number
+            this.queueArn = decodeURI(params['queueArn']);
         });
         this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
         this.queueName = this.queueArn.substring(this.queueArn.lastIndexOf(':') + 1);

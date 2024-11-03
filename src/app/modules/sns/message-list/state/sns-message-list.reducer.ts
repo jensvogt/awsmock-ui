@@ -7,8 +7,6 @@ export const snsMessageListFeatureKey = 'sns-message-list';
 
 export interface SNSMessageListState {
     snsMessageCountersResponse: SnsMessageCountersResponse;
-    topicArn: string;
-    prefix: string;
     pageSize: number;
     pageIndex: number;
     loading: boolean;
@@ -17,9 +15,7 @@ export interface SNSMessageListState {
 }
 
 export const initialState: SNSMessageListState = {
-    snsMessageCountersResponse: {total: 0, messageCounters: []},
-    topicArn: '',
-    prefix: '',
+    snsMessageCountersResponse: {total: 0, messages: []},
     pageSize: 10,
     pageIndex: 0,
     loading: false,
@@ -35,11 +31,7 @@ export const snsMessageListReducer = createReducer(
 
     // Message list
     on(snsMessageListActions.loadMessages, (state: SNSMessageListState) => ({...state, loading: true})),
-    on(snsMessageListActions.loadMessagesSuccess, (state: SNSMessageListState, {messages}) => ({
-        ...state,
-        snsMessageCountersResponse: messages,
-        loading: false
-    })),
+    on(snsMessageListActions.loadMessagesSuccess, (state: SNSMessageListState, {messages}) => ({...state, snsMessageCountersResponse: messages, loading: false})),
     on(snsMessageListActions.loadMessagesFailure, (state: SNSMessageListState, {error}) => ({...state, error: error, loading: false})),
 
     // Publish message

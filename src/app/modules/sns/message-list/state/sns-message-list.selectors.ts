@@ -19,6 +19,11 @@ export const selectPrefix: SelectorType<string> = createSelector(
     (state: SNSMessageListState) => state?.prefix
 );
 
+export const selectTopicArn: SelectorType<string> = createSelector(
+    selectMessageListFeature,
+    (state: SNSMessageListState) => state?.topicArn
+);
+
 export const selectPageSize: SelectorType<number> = createSelector(
     selectMessageListFeature,
     (state: SNSMessageListState) => state?.pageSize

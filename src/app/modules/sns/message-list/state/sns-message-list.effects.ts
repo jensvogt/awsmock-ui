@@ -9,7 +9,7 @@ import {SnsService} from "../../service/sns-service.component";
 @Injectable()
 export class SnsMessageListEffects {
 
-    loadTopics$ = createEffect(() => this.actions$.pipe(
+    loadMessages$ = createEffect(() => this.actions$.pipe(
         ofType(snsMessageListActions.loadMessages),
         mergeMap(action =>
             this.snsService.listMessageCounters(

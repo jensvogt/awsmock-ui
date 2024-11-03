@@ -16,7 +16,7 @@
     <mat-card-content>
         <mat-card appearance="outlined" style="margin: -10px">
             <div class="table-container">
-                <!--div *ngIf="listMessageCountersResponse$ | async as messageCounters" class="row">
+                <div *ngIf="listMessageCountersResponse$ | async as messageCounters" class="row">
                     <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.messageCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="messageId">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
@@ -54,7 +54,7 @@
                             </td>
                         </tr>
                     </table>
-                </div-->
+                </div>
             </div>
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"

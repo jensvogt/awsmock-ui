@@ -26,6 +26,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
     // Table
+    topicArn: string = '';
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     listMessageCountersResponse$: Observable<SnsMessageCountersResponse> = this.store.select(selectMessageCounters);
@@ -39,7 +40,6 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     disabled = false;
 
     // Router parameter
-    topicArn: string = '';
     topicName: string = '';
 
     // Auto-update

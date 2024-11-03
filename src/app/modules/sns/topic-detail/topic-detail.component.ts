@@ -57,9 +57,6 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
-        this.topicDetails$.subscribe((msg: any) => {
-            console.log("TopicDetails", msg, this.topicArn);
-        });
     }
 
     ngOnDestroy() {

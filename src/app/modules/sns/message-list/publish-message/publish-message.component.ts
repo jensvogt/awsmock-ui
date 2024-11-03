@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Component, Inject} from "@angular/core";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -33,20 +33,15 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
     ],
     styleUrls: ['./publish-message.component.scss']
 })
-export class PublishMessageComponentDialog implements OnInit {
+export class PublishMessageComponentDialog {
 
-    // @ts-ignore
-    form: FormGroup;
     topicArn: string = '';
     topicName: string = '';
     message: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<PublishMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private dialogRef: MatDialogRef<PublishMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicArn.substring(this.topicArn.lastIndexOf(':') + 1);
-    }
-
-    ngOnInit() {
     }
 
     sendMessage() {

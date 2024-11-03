@@ -33,7 +33,6 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     //
     protected readonly byteConversion = byteConversion;
     private sub: any;
-
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
@@ -42,7 +41,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            this.bucketName = params['bucketName']; // (+) converts string 'id' to a number
+            this.bucketName = params['bucketName'];
         });
         this.loadBucket();
     }

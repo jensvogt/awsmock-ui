@@ -52,7 +52,7 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button aria-label="List" mat-icon-button matTooltip="Lists all objects" routerLink="/s3-bucket-detail/">
+                                <button aria-label="List" mat-icon-button matTooltip="Lists all objects" routerLink="./details/{{row.bucketName}}">
                                     <mat-icon>edit</mat-icon>
                                 </button>
                                 <button (click)="purgeBucket(row.bucketName)" aria-label="PurgeBucket" mat-icon-button

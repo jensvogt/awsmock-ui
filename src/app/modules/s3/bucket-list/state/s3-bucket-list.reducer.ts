@@ -1,4 +1,3 @@
-// Hinzufügen:
 import {createReducer, on} from "@ngrx/store";
 import {s3BucketListActions} from './s3-bucket-list.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";

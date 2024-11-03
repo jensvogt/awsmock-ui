@@ -6,14 +6,15 @@ import {filter, interval, Observable, Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ListTopicCountersResponse} from "../model/sns-topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
-import {Router} from "@angular/router";
 import {SnsService} from "../service/sns-service.component";
-import {PublishMessageComponentDialog} from "../publish-message/publish-message.component";
+import {PublishMessageComponentDialog} from "../message-list/publish-message/publish-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
 import {snsTopicListActions} from "./state/sns-topic-list.actions";
 import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
 import {SNSTopicListState} from "./state/sns-topic-list.reducer";
+import {selectError} from "../topic-detail/state/sns-topic-detail.selectors";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-home',
@@ -29,6 +30,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     // Table
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    error$: Observable<string> = this.store.select(selectError);
     listTopicCountersResponse$: Observable<ListTopicCountersResponse> = this.store.select(selectTopicCounters);
     columns: any[] = ['topicName', 'availableMessages', 'created', 'modified', 'actions'];
 
@@ -36,15 +38,11 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     updateSubscription: Subscription | undefined;
 
     // Paging
-    length: number | undefined = 0;
-    pageSize = 10;
-    pageIndex = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
     // Prefix
     prefixSet: boolean = false;
@@ -53,11 +51,12 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     // Sorting, default available
     sortColumns: SortColumn[] = [{column: 'name', sortDirection: -1}];
 
-    constructor(private router: Router, private dialog: MatDialog, private snsService: SnsService, private location: Location, private state: State<SNSTopicListState>,
-                private store: Store, private actionsSubj$: ActionsSubject) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<SNSTopicListState>, private store: Store,
+                private actionsSubj$: ActionsSubject) {
         this.actionsSubj$.pipe(
             filter((action) =>
                 action.type === snsTopicListActions.addTopicSuccess.type ||
+                action.type === snsTopicListActions.publishMessageSuccess.type ||
                 action.type === snsTopicListActions.purgeTopicSuccess.type ||
                 action.type === snsTopicListActions.deleteTopicSuccess.type
             )
@@ -66,7 +65,6 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
                 this.loadTopics();
             }
         );
-
     }
 
     ngOnInit(): void {
@@ -86,7 +84,6 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
         this.loadTopics();
     }
 
-
     setPrefix() {
         this.prefixSet = true;
         this.state.value['sns-topic-list'].pageIndex = 0;
@@ -102,11 +99,14 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pageEvent = e;
-        this.length = e.length;
-        this.pageSize = e.pageSize;
-        this.pageIndex = e.pageIndex;
-        this.loadTopics();
+        this.state.value['sns-topic-list'].pageSize = e.pageSize;
+        this.state.value['sns-topic-list'].pageIndex = e.pageIndex;
+        this.store.dispatch(snsTopicListActions.loadTopics({
+            prefix: this.state.value['sns-topic-list'].prefix,
+            pageSize: this.state.value['sns-topic-list'].pageSize,
+            pageIndex: this.state.value['sns-topic-list'].pageIndex,
+            sortColumns: this.state.value['sns-topic-list'].sortColumns
+        }));
     }
 
     sortChange(sortState: Sort) {
@@ -161,25 +161,16 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.snsService.publishMessage(topicArn, result);
-                this.loadTopics();
+                this.store.dispatch(snsTopicListActions.publishMessage({topicArn: topicArn, message: result}));
             }
         });
     }
 
+    purgeTopic(topicArn: string) {
+        this.store.dispatch(snsTopicListActions.purgeTopic({topicArn: topicArn}));
+    }
+
     deleteTopic(topicArn: string) {
-        this.snsService.deleteTopic(topicArn)
-            .then(() => {
-                this.loadTopics();
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.snsService.cleanup();
-            });
+        this.store.dispatch(snsTopicListActions.deleteTopic({topicArn: topicArn}));
     }
-
-    listMessages(topicArn: string) {
-        this.router.navigate(['./messages', encodeURI(topicArn)]);
-    }
-
 }

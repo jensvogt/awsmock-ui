@@ -4,13 +4,10 @@ import {mergeMap, of} from 'rxjs';
 
 import {catchError, map} from 'rxjs/operators';
 import {snsTopicDetailsActions} from './sns-topic-detail.actions';
-import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {SnsService} from "../../service/sns-service.component";
 
 @Injectable()
 export class SnsTopicDetailEffects {
-
-    sortColumns: SortColumn[] = [];
 
     loadTopicDetails$ = createEffect(() => this.actions$.pipe(
         ofType(snsTopicDetailsActions.loadDetails),

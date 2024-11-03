@@ -37,6 +37,8 @@ import {SnsTopicDetailComponent} from "./topic-detail/topic-detail.component";
 import {SnsService} from "./service/sns-service.component";
 import {snsTopicDetailReducer, snsTopicDetailsFeatureKey} from "./topic-detail/state/sqs-queue-detail.reducer";
 import {SnsTopicDetailEffects} from "./topic-detail/state/sns-topic-detail.effects";
+import {snsMessageListFeatureKey, snsMessageListReducer} from "./message-list/state/sns-message-list.reducer";
+import {SnsMessageListEffects} from "./message-list/state/sns-message-list.effects";
 
 @NgModule({
     declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent],
@@ -85,7 +87,8 @@ import {SnsTopicDetailEffects} from "./topic-detail/state/sns-topic-detail.effec
         SnsRoutingModule,
         StoreModule.forFeature(snsTopicListFeatureKey, snsTopicListReducer),
         StoreModule.forFeature(snsTopicDetailsFeatureKey, snsTopicDetailReducer),
-        EffectsModule.forFeature([SnsTopicListEffects, SnsTopicDetailEffects]),
+        StoreModule.forFeature(snsMessageListFeatureKey, snsMessageListReducer),
+        EffectsModule.forFeature([SnsTopicListEffects, SnsTopicDetailEffects, SnsMessageListEffects]),
     ],
     exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent],
     providers: [SnsService],

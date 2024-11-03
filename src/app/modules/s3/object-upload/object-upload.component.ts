@@ -77,6 +77,7 @@ export class ObjectUploadComponent {
     uploadDisabled: boolean = true;
     progress: number = 0;
     fileSize = signal(0);
+    maxSize: number = 256 * 1024 * 1024;
     @ViewChild('fileInput') fileInput: ElementRef | undefined;
     selectedFile: File | null = null;
     uploadSuccess: boolean = false;
@@ -117,8 +118,9 @@ export class ObjectUploadComponent {
             this.selectedFile = file;
             this.fileSize.set(Math.round(file.size / 1024)); // Set file size in KB
 
-            if (file.size > 200 * 1024 * 1024) {
-                this.snackBar.open("File size is " + (file.size / 1024 / 1024).toFixed(0) + "MB. Max size is 256MB, use the AWS CLI instead.", "Error", {duration: 5000});
+            if (file.size > this.maxSize) {
+                const fileSizeInMegaBytes = (file.size / 1024 / 1024).toFixed(0);
+                this.snackBar.open("File size is " + fileSizeInMegaBytes + "MB. Max size is 256MB, use the AWS CLI instead.", "Error", {duration: 5000});
                 return;
             }
             const reader = new FileReader();
@@ -138,7 +140,6 @@ export class ObjectUploadComponent {
     }
 
     handleProgress(event: ProgressEvent) {
-        console.log("Event: ", event);
         this.progress = (event.loaded / event.total) * 100;
     }
 

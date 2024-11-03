@@ -17,7 +17,7 @@ const routes: Routes = [
     },
     {
         path: 'messages/:topicArn',
-        title: 'SNSTopicMessages',
+        title: 'SNSMessages',
         component: SnsMessageListComponent
     }
 ];

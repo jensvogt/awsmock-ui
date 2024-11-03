@@ -53,7 +53,6 @@ export class ConfigComponentDialog implements OnInit {
 
     getConfig() {
         this.moduleService.getConfig().subscribe((data: any) => {
-            console.log(data);
             this.configuration = data;
         })
     }

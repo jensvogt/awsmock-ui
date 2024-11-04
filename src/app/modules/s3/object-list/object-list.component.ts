@@ -17,6 +17,7 @@ import {S3ObjectCounterResponse} from "../model/s3-object-item";
 import {selectObjectCounters} from "./state/s3-object-list.selectors";
 import {ObjectUploadComponent} from "../object-upload/object-upload.component";
 import {byteConversion} from "../../../shared/byte-utils.component";
+import {S3ObjectDownloadComponent} from "./download/s3-object-download.component";
 
 @Component({
     selector: 's3-object-list',
@@ -53,7 +54,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     // Sorting
     sortColumns: SortColumn[] = [];
     protected readonly byteConversion = byteConversion;
-    private sub: any;
+    protected routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private state: State<S3BucketListState>, private store: Store,
                 private actionsSubj$: ActionsSubject, private location: Location, private s3Service: S3Service) {
@@ -64,14 +65,12 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
                 action.type === s3ObjectListActions.deleteObjectSuccess.type
             )
         ).subscribe(() => {
-                this.lastUpdate = new Date();
-                this.loadObjects();
-            }
-        );
+            this.loadObjects();
+        });
     }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
+        this.routerSubscription = this.route.params.subscribe(params => {
             this.bucketName = decodeURI(params['bucketName']);
             this.state.value.bucketName = decodeURI(params['bucketName']);
         });
@@ -130,6 +129,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     loadObjects() {
+        this.lastUpdate = new Date();
         this.store.dispatch(s3ObjectListActions.loadObjects({
             bucketName: this.bucketName,
             prefix: this.state.value['s3-object-list'].prefix,
@@ -137,6 +137,22 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
             pageIndex: this.state.value['s3-object-list'].pageIndex,
             sortColumns: this.state.value['s3-object-list'].sortColumns
         }));
+    }
+
+    downloadObject(bucketName: string, key: string) {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {bucketName: bucketName, key: key}
+        dialogConfig.height = "430px"
+
+        this.dialog.open(S3ObjectDownloadComponent, dialogConfig).afterClosed().subscribe((result: any) => {
+            if (result) {
+                this.snackBar.open('Object downloaded, bucket: ' + this.bucketName + ' key: ' + result.key, 'Done', {duration: 5000});
+                this.doUpload(result.content, result.key);
+            }
+        });
     }
 
     deleteObject(key: string) {

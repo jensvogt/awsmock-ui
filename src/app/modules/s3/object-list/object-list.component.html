@@ -41,9 +41,9 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <!--button (click)="listObjects(row.bucketName)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
-                                    <mat-icon>list</mat-icon>
-                                </button-->
+                                <button (click)="downloadObject(row.bucketName, row.key)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                    <mat-icon>download</mat-icon>
+                                </button>
                                 <button (click)="deleteObject(row.key)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete object">
                                     <mat-icon>delete</mat-icon>
                                 </button>

@@ -19,7 +19,9 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
     styleUrls: ['./sqs-message-list.component.scss'],
 })
 export class SqsMessageListComponent implements OnInit, OnDestroy {
-    lastUpdate: string = '';
+
+    // Last update
+    lastUpdate: Date = new Date();
 
     // Table
     messageData: Array<SqsMessageItem> = [];
@@ -107,7 +109,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         this.messageData = [];
         this.sqsService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex, this.sortColumns)
             .subscribe((data: any) => {
-                this.lastUpdate = new Date().toLocaleTimeString('DE-de');
+                this.lastUpdate = new Date();
                 this.length = data.Total;
                 data.Messages.forEach((m: any) => {
                     this.messageData.push({

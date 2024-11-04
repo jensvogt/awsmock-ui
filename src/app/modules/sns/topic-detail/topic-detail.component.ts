@@ -1,20 +1,19 @@
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {MatTableDataSource,} from "@angular/material/table";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
 import {Sort} from "@angular/material/sort";
-import {SnsSubscriptionItem} from "../model/sns-subscription-item";
+import {SnsSubscriptionCountersResponse} from "../model/sns-subscription-item";
 import {PageEvent} from "@angular/material/paginator";
 import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-add.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnsTopicDetails} from "../model/sns-topic-details";
 import {SnsService} from "../service/sns-service.component";
-import {Store} from "@ngrx/store";
-import {snsTopicListActions} from "../topic-list/state/sns-topic-list.actions";
+import {State, Store} from "@ngrx/store";
 import {snsTopicDetailsActions} from "./state/sns-topic-detail.actions";
 import {Observable} from "rxjs";
-import {selectDetails, selectError} from "./state/sns-topic-detail.selectors";
+import {selectDetails, selectError, selectSubscriptionPageIndex, selectSubscriptionPageSize, selectSubscriptions} from "./state/sns-topic-detail.selectors";
+import {SnsTopicDetailsState} from "./state/sns-topic-detail.reducer";
 
 @Component({
     selector: 'add-connection-dialog',
@@ -32,25 +31,23 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     topicDetailsError$: Observable<string> = this.store.select(selectError);
 
     // Subscription Table
-    subscriptionData: Array<SnsSubscriptionItem> = [];
-    subscriptionDataSource = new MatTableDataSource(this.subscriptionData);
-    columns: any[] = ['id', 'endpoint', 'protocol', 'owner', 'actions'];
-    subscriptionPageSize = 10;
-    subscriptionPageIndex = 0;
-    subscriptionLength = 0;
+    topicSubscriptions$: Observable<SnsSubscriptionCountersResponse> = this.store.select(selectSubscriptions);
+    subscriptionPageSize$: Observable<number> = this.store.select(selectSubscriptionPageSize);
+    subscriptionPageIndex$: Observable<number> = this.store.select(selectSubscriptionPageIndex);
+    subscriptionColumns: any[] = ['id', 'endpoint', 'protocol', 'owner', 'actions'];
     subscriptionPageSizeOptions = [5, 10, 20, 50, 100];
 
     private sub: any;
 
-    constructor(private snackBar: MatSnackBar, private snsService: SnsService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog,
-                private location: Location, private store: Store) {
-        this.store.dispatch(snsTopicListActions.initialize());
+    constructor(private snackBar: MatSnackBar, private snsService: SnsService, private route: ActivatedRoute, private dialog: MatDialog,
+                private location: Location, private store: Store, private state: State<SnsTopicDetailsState>) {
     }
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.topicArn = params['topicArn'];
-            this.store.dispatch(snsTopicDetailsActions.loadDetails({topicArn: this.topicArn}));
+            this.loadTopicDetails();
+            this.loadSubscriptions();
         });
         this.topicDetailsError$.subscribe((msg: string) => {
             if (msg && msg.length) {
@@ -90,37 +87,26 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     // Subscriptions
     // ===================================================================================================================
     handleSubscriptionPageEvent(e: PageEvent) {
-
+        this.state.value['sns-topic-details'].subscriptionPageSize = e.pageSize;
+        this.state.value['sns-topic-details'].subscriptionPageIndex = e.pageIndex;
+        this.loadSubscriptions();
     }
 
     loadSubscriptions() {
-        this.subscriptionData = [];
-        const input = {
-            TopicArn: this.topicArn,
-            NextToken: (this.subscriptionPageIndex * this.subscriptionPageSize).toString(),
-        };
-        /*this.client.send(new ListSubscriptionsByTopicCommand(input))
-            .then((data: any) => {
-                this.subscriptionLength = data.NextToken;
-                this.lastUpdate = new Date();
-                data.Subscriptions.forEach((q: any) => {
-                    this.subscriptionData.push({
-                        id: q.SubscriptionArn.substring(q.SubscriptionArn.lastIndexOf(':') + 1),
-                        endpoint: q.Endpoint,
-                        owner: q.Owner,
-                        protocol: q.Protocol,
-                        subscriptionArn: q.SubscriptionArn
-                    });
-                });
-                this.subscriptionDataSource.data = this.subscriptionData;
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.client.destroy();
-            });*/
+        this.store.dispatch(snsTopicDetailsActions.loadSubscriptions({
+            topicArn: this.topicArn,
+            pageSize: this.state.value['sns-topic-details'].subscriptionPageSize,
+            pageIndex: this.state.value['sns-topic-details'].subscriptionPageIndex,
+            sortColumns: this.state.value['sns-topic-details'].sortColumns
+        }));
     }
 
     subscriptionSortChange(sortState: Sort) {
+        this.state.value['sns-topic-details'].sortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['sns-topic-details'].sortColumns = [{column: column, sortDirection: direction}];
+        this.loadSubscriptions();
     }
 
     refreshSubscriptions() {
@@ -128,10 +114,10 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     }
 
     unsubscribe(subscriptionArn: string) {
-        this.subscriptionData = [];
+        /*this.subscriptionData = [];
         const input = {
             SubscriptionArn: subscriptionArn,
-        };
+        };*/
         /* this.client.send(new UnsubscribeCommand(input))
              .then(() => this.loadSubscriptions())
              .catch((error: any) => console.error(error))

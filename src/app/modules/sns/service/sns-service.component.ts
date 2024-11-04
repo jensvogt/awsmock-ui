@@ -150,4 +150,22 @@ export class SnsService {
         return this.http.post(this.url, {topicArn: topicArn}, {headers: headers});
     }
 
+    /**
+     * @brief Gets a list of subscriptions for a topic
+     *
+     * @par
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param topicArn topic ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listSubscriptionsCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListSubscriptionCounters');
+        return this.http.post(this.url, {
+            topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns
+        }, {headers: headers});
+    }
+
 }

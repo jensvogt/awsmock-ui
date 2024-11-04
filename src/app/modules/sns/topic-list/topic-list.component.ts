@@ -13,7 +13,6 @@ import {ActionsSubject, State, Store} from "@ngrx/store";
 import {snsTopicListActions} from "./state/sns-topic-list.actions";
 import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
 import {SNSTopicListState} from "./state/sns-topic-list.reducer";
-import {selectError} from "../topic-detail/state/sns-topic-detail.selectors";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -30,7 +29,6 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     // Table
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
-    error$: Observable<string> = this.store.select(selectError);
     listTopicCountersResponse$: Observable<ListTopicCountersResponse> = this.store.select(selectTopicCounters);
     columns: any[] = ['topicName', 'availableMessages', 'created', 'modified', 'actions'];
 
@@ -101,12 +99,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     handlePageEvent(e: PageEvent) {
         this.state.value['sns-topic-list'].pageSize = e.pageSize;
         this.state.value['sns-topic-list'].pageIndex = e.pageIndex;
-        this.store.dispatch(snsTopicListActions.loadTopics({
-            prefix: this.state.value['sns-topic-list'].prefix,
-            pageSize: this.state.value['sns-topic-list'].pageSize,
-            pageIndex: this.state.value['sns-topic-list'].pageIndex,
-            sortColumns: this.state.value['sns-topic-list'].sortColumns
-        }));
+        this.loadTopics();
     }
 
     sortChange(sortState: Sort) {

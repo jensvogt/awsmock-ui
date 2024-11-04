@@ -22,6 +22,19 @@ export class SnsTopicDetailEffects {
         ),
     ));
 
+    loadTopicSubscriptions$ = createEffect(() => this.actions$.pipe(
+        ofType(snsTopicDetailsActions.loadSubscriptions),
+        mergeMap(action =>
+            this.snsService.listSubscriptionsCounters(action.topicArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((subscriptions: any) =>
+                        snsTopicDetailsActions.loadSubscriptionsSuccess({subscriptions: subscriptions})),
+                    catchError((error) =>
+                        of(snsTopicDetailsActions.loadSubscriptionsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     constructor(private actions$: Actions, private snsService: SnsService) {
     }
 }

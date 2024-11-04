@@ -35,7 +35,7 @@ import {SnsMessageListComponent} from "./message-list/sns-message-list.component
 import {SnsTopicListComponent} from "./topic-list/topic-list.component";
 import {SnsTopicDetailComponent} from "./topic-detail/topic-detail.component";
 import {SnsService} from "./service/sns-service.component";
-import {snsTopicDetailReducer, snsTopicDetailsFeatureKey} from "./topic-detail/state/sqs-queue-detail.reducer";
+import {snsTopicDetailReducer, snsTopicDetailsFeatureKey} from "./topic-detail/state/sns-topic-detail.reducer";
 import {SnsTopicDetailEffects} from "./topic-detail/state/sns-topic-detail.effects";
 import {snsMessageListFeatureKey, snsMessageListReducer} from "./message-list/state/sns-message-list.reducer";
 import {SnsMessageListEffects} from "./message-list/state/sns-message-list.effects";

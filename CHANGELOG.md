@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.3.0](https://github.com/jensvogt/awsmock-ui/compare/v1.2.18...v1.3.0) (2024-11-04)
+
+
+### Features
+
+* **66-s3-object-list-download-button:** s3 object download button ([7e5d146](https://github.com/jensvogt/awsmock-ui/commit/7e5d146697bc39bc49e1e6df306f015769dd80da))
+
+
+### Bug Fixes
+
+* **1-create-first-release:** add redux pattern for S3 module. ([098df78](https://github.com/jensvogt/awsmock-ui/commit/098df7877b21a8e5ba4ee1efe29d31db175da468))
+* **1-create-first-release:** fix file upload ([5453a81](https://github.com/jensvogt/awsmock-ui/commit/5453a81828daa483e66c90138bc7633fedeaeb53))
+* **1-create-first-release:** fix file upload ([5413b31](https://github.com/jensvogt/awsmock-ui/commit/5413b31fce89310b483b68820eb14915efeaee5e))
+* **1-create-first-release:** fix file upload ([7e26e73](https://github.com/jensvogt/awsmock-ui/commit/7e26e73befbf14fc1911475fa6862059e42c54b3))
+* **1-create-first-release:** fix sorting ([ca1bae3](https://github.com/jensvogt/awsmock-ui/commit/ca1bae3e1a07414e9cf9a50c9ff90de0e9ab9333))
+* **1-create-first-release:** fix sorting ([0f25a38](https://github.com/jensvogt/awsmock-ui/commit/0f25a385678b95030a897daba2fee46800d1070a))
+* **1-create-first-release:** fix sorting ([2b1d145](https://github.com/jensvogt/awsmock-ui/commit/2b1d1455601c222f1ed72d1e29f0cadb448b1698))
+* **1-create-first-release:** fix sorting ([41f0911](https://github.com/jensvogt/awsmock-ui/commit/41f0911a4fe31f625b8ac468fa329fcc1ba8fdb1))
+* **1-create-first-release:** fix sorting ([dca049e](https://github.com/jensvogt/awsmock-ui/commit/dca049ed233a6734dd4894674b75f146714ff2b2))
+* **1-create-first-release:** sns message list redux pattern ([19a388d](https://github.com/jensvogt/awsmock-ui/commit/19a388d46036bada4adca1850cee80bf26cf10ab))
+* **1-create-first-release:** sns message list redux pattern ([dfc0902](https://github.com/jensvogt/awsmock-ui/commit/dfc09028a0eceb62155092618638c8f02e7cea55))
+
 ## [1.2.18](https://github.com/jensvogt/awsmock-ui/compare/v1.2.17...v1.2.18) (2024-11-01)
 
 

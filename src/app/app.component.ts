@@ -1,9 +1,8 @@
 import {Component} from '@angular/core';
-import {MatIconRegistry} from "@angular/material/icon";
 import {Router} from "@angular/router";
-import {DomSanitizer} from "@angular/platform-browser";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ConfigComponentDialog} from "./modules/dashboard/settings/config.component";
+import {FormGroup} from "@angular/forms";
 
 @Component({
     selector: 'app-root',
@@ -12,22 +11,15 @@ import {ConfigComponentDialog} from "./modules/dashboard/settings/config.compone
 })
 export class AppComponent {
 
-    title = 'awsmock-ui';
-    customIcons: Array<[string, string]> = [
-        ["icon_sqs", "sqs.svg"],
-        ["icon_sns", "sns.svg"],
-        ["icon_s3", "s3.svg"]
-    ];
+    docForm: FormGroup = {} as FormGroup;
+    service: string = '';
 
-    constructor(private router: Router, matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer, private dialog: MatDialog) {
-        this.customIcons.forEach(([iconName, iconPath]) => {
-            matIconRegistry.addSvgIcon(iconName, domSanitizer.bypassSecurityTrustResourceUrl(iconPath));
-        });
-
+    constructor(private router: Router, private dialog: MatDialog) {
     }
 
-    navigateMenu(module: string) {
-        this.router.navigate(['/' + module]);
+    navigateMenu() {
+        console.log("Form submit: " + this.service)
+        this.router.navigate(['/' + this.service.toLowerCase()]);
     }
 
     home() {

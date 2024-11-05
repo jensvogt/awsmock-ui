@@ -13,9 +13,12 @@ import {reducers} from "./state/root.reducer";
 import {RootEffect} from "./state/root.effect";
 import {MatIconModule} from "@angular/material/icon";
 import {provideHttpClient} from "@angular/common/http";
-import {MatIconButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly: environment.production};
 
@@ -46,7 +49,14 @@ const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly:
         EffectsModule.forRoot(RootEffect),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
         StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}),
-        StoreRouterConnectingModule.forRoot()
+        StoreRouterConnectingModule.forRoot(),
+        MatLabel,
+        MatInput,
+        MatFormField,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButton,
+        MatSuffix
     ],
     bootstrap: [AppComponent]
 })

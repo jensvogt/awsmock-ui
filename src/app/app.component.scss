@@ -1,29 +1,10 @@
+@use '@angular/material' as mat;
+
 mat-toolbar {
   background: #004a9f;
   color: white;
 }
 
-mat-sidenav {
-  margin: 16px;
-  width: 200px;
-  border-right: none;
-  background: #002b5c;
-  color: white;
-  border-radius: 10px;
-  padding: 16px;
-  text-align: center;
-}
-
-.center-flex {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-mat-mdc-list-item-unscoped-content mdc-list-item__primary-text {
-  display: flex;
-  flex-direction: row;
-  align-content: center;
-  justify-content: flex-start;
-  align-items: center;
+.input-parent {
+  @include mat.form-field-density(-6);
 }

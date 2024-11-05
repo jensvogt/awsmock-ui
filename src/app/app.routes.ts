@@ -32,6 +32,10 @@ export const routes: Routes = [
                 path: 'sqs-charts',
                 component: SqsChartsComponent,
             },
+            {
+                path: 'sqs',
+                loadChildren: () => import('./modules/sqs/sqs.module').then(module => module.SQSModule),
+            },
             //=========================================================================
             // SNS
             //=========================================================================
@@ -43,6 +47,10 @@ export const routes: Routes = [
                 path: 'sns-charts',
                 component: SnsChartsComponent,
             },
+            {
+                path: 'sns',
+                loadChildren: () => import('./modules/sns/sns.module').then(module => module.SnsModule),
+            },
             //=========================================================================
             // S3
             //=========================================================================
@@ -53,6 +61,10 @@ export const routes: Routes = [
             {
                 path: 's3-charts',
                 component: S3ChartsComponent,
+            },
+            {
+                path: 's3',
+                loadChildren: () => import('./modules/s3/s3.module').then(module => module.S3Module),
             },
             //=========================================================================
             // Cognito

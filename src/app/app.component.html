@@ -1,10 +1,10 @@
 <mat-toolbar class="mat-elevation-z8 mat-toolbar">
     <div style="display: flex;flex-direction: row;align-content: center;justify-content: flex-start;align-items: center;">
-        <!--button (click)="sidenav.toggle()" *ngIf="sidenav.mode === 'push'" mat-icon-button style="color: white">
-            <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
-            <mat-icon *ngIf="sidenav.opened">close</mat-icon>
-        </button-->
         AWS Mock UI
+        <mat-form-field class="input-parent" style="margin-left:40px; margin-right: 10px; font-size: 12px;" subscriptSizing="dynamic">
+            <mat-label>Prefix</mat-label>
+            <input (keyup.enter)="navigateMenu()" [(ngModel)]="service" matInput name="search" placeholder="Service" type="text">
+        </mat-form-field>
     </div>
     <div style="display: flex; flex-direction: row; align-content: center; justify-content: right; align-items: end;width: 100%;">
         <button (click)="home()" class="menu-button" mat-icon-button style="color: white">

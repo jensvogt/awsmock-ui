@@ -32,7 +32,17 @@
                     <table (matSortChange)="sortChange($event)" [dataSource]="objectCounters.objectCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="key" matTooltip="Object key">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object key" sortActionDescription="Sort by key">Name</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                            <td *matCellDef="let element" mat-cell>
+                                <mat-nav-list>
+                                    <a (click)="viewObject(element)" mat-list-item> {{ element.key }}</a>
+                                </mat-nav-list>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="contentType" matTooltip="Object content type">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object content type" sortActionDescription="Sort by contentType">
+                                Content-Type
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.contentType }}</td>
                         </ng-container>
                         <ng-container matColumnDef="size" matTooltip="Object size in bytes">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object size" sortActionDescription="Sort by key">Size</th>

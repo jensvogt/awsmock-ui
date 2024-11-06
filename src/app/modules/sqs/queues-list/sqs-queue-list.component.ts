@@ -9,7 +9,7 @@ import {SqsService} from "../service/sqs-service.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
-import {selectPageIndex, selectPageSize, selectQueueCounters} from "./state/sqs-queue-list.selectors";
+import {selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from "./state/sqs-queue-list.selectors";
 import {sqsQueueListActions} from "./state/sqs-queue-list.actions";
 import {SQSQueueListState} from "./state/sqs-queue-list.reducer";
 
@@ -23,9 +23,10 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     // Last update
     lastUpdate: Date = new Date();
 
-    // Table
+    // Observables
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    prefix$: Observable<string> = this.store.select(selectPrefix);
     listQueueCountersResponse$: Observable<ListQueueCountersResponse> = this.store.select(selectQueueCounters);
     columns: any[] = ['queueName', 'messagesAvailable', 'messagesInFlight', 'messagesDelayed', 'actions'];
 
@@ -40,8 +41,8 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     disabled = false;
 
     // Prefix
+    prefixValue: string = this.state.value['sqs-queue-list'].prefix;
     prefixSet: boolean = false;
-    prefix: string = '';
 
     constructor(private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService, private location: Location, private store: Store,
                 private actionsSubj$: ActionsSubject) {
@@ -52,10 +53,16 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
                 action.type === sqsQueueListActions.deleteQueueSuccess.type
             )
         ).subscribe(() => {
-                this.lastUpdate = new Date();
                 this.loadQueues();
             }
         );
+        this.prefix$.subscribe((data: string) => {
+            this.prefixSet = false;
+            if (data && data.length) {
+                this.prefixValue = data;
+                this.prefixSet = true;
+            }
+        })
     }
 
     ngOnInit(): void {
@@ -78,12 +85,12 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     setPrefix() {
         this.prefixSet = true;
         this.state.value['sqs-queue-list'].pageIndex = 0;
-        this.state.value['sqs-queue-list'].prefix = this.prefix;
+        this.state.value['sqs-queue-list'].prefix = this.prefixValue;
         this.loadQueues();
     }
 
     unsetPrefix() {
-        this.prefix = '';
+        this.prefixValue = '';
         this.prefixSet = false;
         this.state.value['sqs-queue-list'].prefix = '';
         this.loadQueues();
@@ -119,6 +126,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     }
 
     loadQueues() {
+        this.lastUpdate = new Date();
         this.store.dispatch(sqsQueueListActions.loadQueues({
             prefix: this.state.value['sqs-queue-list'].prefix,
             pageSize: this.state.value['sqs-queue-list'].pageSize,

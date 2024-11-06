@@ -13,7 +13,7 @@ import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-togg
 
 @Component({
     selector: 'sns-edit-message-dialog',
-    templateUrl: './edit-message.component.html',
+    templateUrl: './sns-view-message.component.html',
     standalone: true,
     imports: [
         MatDialogContent,
@@ -34,9 +34,9 @@ import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-togg
         CdkTextareaAutosize,
         MatSlideToggle
     ],
-    styleUrls: ['./edit-message.component.scss']
+    styleUrls: ['./sns-view-message.component.scss']
 })
-export class EditSNSMessageComponentDialog implements OnInit {
+export class SnsViewMessageDialog implements OnInit {
 
     body: string | undefined = '';
     rawMessage: any | undefined = '';
@@ -44,7 +44,7 @@ export class EditSNSMessageComponentDialog implements OnInit {
     message: SnsMessageItem | undefined;
     prettyPrint: boolean = true;
 
-    constructor(private dialogRef: MatDialogRef<EditSNSMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private dialogRef: MatDialogRef<SnsViewMessageDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.message = data.message;
         this.rawMessage = this.message?.message;
         this.messageId = this.message?.messageId;

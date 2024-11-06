@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ObjectListComponent} from './object-list.component';
+import {S3ObjectListComponent} from './object-list.component';
 
 describe('HomeComponent', () => {
-    let component: ObjectListComponent;
-    let fixture: ComponentFixture<ObjectListComponent>;
+    let component: S3ObjectListComponent;
+    let fixture: ComponentFixture<S3ObjectListComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ObjectListComponent]
+            declarations: [S3ObjectListComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ObjectListComponent);
+        fixture = TestBed.createComponent(S3ObjectListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

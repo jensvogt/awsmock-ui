@@ -18,9 +18,9 @@ import {ImportInfrastructureComponentDialog} from "../infrastructure/import/impo
     styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-    lastUpdate: Date = new Date();
 
-    //loadCpuChart$: Observable<any> | undefined;
+    // Last update
+    lastUpdate: Date = new Date();
 
     // Auto-update
     updateSubscription: Subscription | undefined;

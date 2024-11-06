@@ -1,7 +1,9 @@
 export interface S3ObjectItem {
-    bucket: string | undefined;
+    oid: string | undefined,
+    bucketName: string | undefined;
     key: string | undefined;
     size: number | undefined;
+    contentType: string | undefined;
 }
 
 export interface S3ObjectCounterResponse {

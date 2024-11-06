@@ -9,7 +9,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {interval, Subscription} from "rxjs";
 import {SqsMessageItem} from "../model/sqs-message-item";
-import {EditMessageComponentDialog} from "./edit-message/edit-message.component";
+import {EditMessageComponentDialog} from "./view-message/edit-message.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 

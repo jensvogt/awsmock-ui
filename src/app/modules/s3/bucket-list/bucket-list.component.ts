@@ -10,7 +10,7 @@ import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
 import {Router} from "@angular/router";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3BucketCountersResponse, S3BucketItem} from "../model/s3-bucket-item";
-import {selectBucketCounters, selectIsLoading, selectPageIndex, selectPageSize, selectTotal} from "./state/s3-bucket-list.selectors";
+import {selectBucketCounters, selectIsLoading, selectPageIndex, selectPageSize, selectPrefix, selectTotal} from "./state/s3-bucket-list.selectors";
 import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {S3BucketListState} from "./state/s3-bucket-list.reducer";
@@ -32,6 +32,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     loading: boolean = false;
     noData: S3BucketItem[] = [<S3BucketItem>{}];
     pageSize$: Observable<number> = this.store.select(selectPageSize);
+    prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     s3BucketCountersResponse$: Observable<S3BucketCountersResponse> = this.store.select(selectBucketCounters);
     columns: any[] = ['name', 'keys', 'size', 'actions'];
@@ -45,7 +46,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Prefix
     prefixSet: boolean = false;
-    prefix: string = '';
+    prefixValue: string = '';
 
     // Paging
     total = 0;
@@ -75,9 +76,16 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
             )
         ).subscribe(() => {
                 this.lastUpdate = new Date();
-                //   this.loadBuckets();
+                this.loadBuckets();
             }
         );
+        this.prefix$.subscribe((data: string) => {
+            this.prefixSet = false;
+            if (data && data.length) {
+                this.prefixValue = data;
+                this.prefixSet = true;
+            }
+        })
     }
 
     ngOnInit(): void {
@@ -145,12 +153,14 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setPrefix() {
         this.prefixSet = true;
+        this.state.value['s3-bucket-list'].prefix = this.prefixValue;
         this.loadBuckets();
     }
 
     unsetPrefix() {
-        this.prefix = '';
+        this.prefixValue = '';
         this.prefixSet = false;
+        this.state.value['s3-bucket-list'].prefix = '';
         this.loadBuckets();
     }
 

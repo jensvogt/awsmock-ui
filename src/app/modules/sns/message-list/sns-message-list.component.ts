@@ -12,6 +12,7 @@ import {ActionsSubject, State, Store} from "@ngrx/store";
 import {SNSMessageListState} from "./state/sns-message-list.reducer";
 import {snsMessageListActions} from "./state/sns-message-list.actions";
 import {selectMessageCounters, selectPageIndex, selectPageSize} from "./state/sns-message-list.selectors";
+import {SnsViewMessageDialog} from "./view-message/sns-view-message.component";
 
 @Component({
     selector: 'sns-message-list',
@@ -124,7 +125,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "90%"
 
-        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
+        this.dialog.open(SnsViewMessageDialog, dialogConfig).afterClosed().subscribe(() => {
         });
     }
 

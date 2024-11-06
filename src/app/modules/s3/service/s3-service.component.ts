@@ -1,6 +1,15 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
-import {CreateBucketCommand, DeleteBucketCommand, DeleteObjectCommand, ListBucketsCommand, ListObjectsV2Command, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
+import {
+    CreateBucketCommand,
+    DeleteBucketCommand,
+    DeleteObjectCommand,
+    GetObjectCommand,
+    ListBucketsCommand,
+    ListObjectsV2Command,
+    PutObjectCommand,
+    S3Client
+} from "@aws-sdk/client-s3";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
@@ -63,6 +72,14 @@ export class S3Service {
             Body: content,
         };
         return this.client.send(new PutObjectCommand(command));
+    }
+
+    async getObject(bucketName: string, key: string) {
+        const command = {
+            Bucket: bucketName,
+            Key: key
+        };
+        return this.client.send(new GetObjectCommand(command));
     }
 
     deleteObject(bucketName: string, key: string) {

@@ -13,11 +13,12 @@ import {S3BucketListState} from "../bucket-list/state/s3-bucket-list.reducer";
 import {Location} from "@angular/common";
 import {s3ObjectListActions} from "./state/s3-object-list.actions";
 import {selectPageIndex, selectPageSize} from "../bucket-list/state/s3-bucket-list.selectors";
-import {S3ObjectCounterResponse} from "../model/s3-object-item";
+import {S3ObjectCounterResponse, S3ObjectItem} from "../model/s3-object-item";
 import {selectObjectCounters} from "./state/s3-object-list.selectors";
 import {ObjectUploadComponent} from "../object-upload/object-upload.component";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3ObjectDownloadComponent} from "./download/s3-object-download.component";
+import {S3ObjectViewDialog} from "./view/object-view.component";
 
 @Component({
     selector: 's3-object-list',
@@ -44,7 +45,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     updateSubscription: Subscription | undefined;
 
     // Paging
-    columns: any[] = ['key', 'size', 'actions'];
+    columns: any[] = ['key', 'contentType', 'size', 'actions'];
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
@@ -66,6 +67,9 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
             )
         ).subscribe(() => {
             this.loadObjects();
+        });
+        this.s3ObjectCountersResponse$.subscribe((data: any) => {
+            console.log(data);
         });
     }
 
@@ -179,10 +183,42 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    viewObject(object: S3ObjectItem) {
+
+        if (object !== undefined) {
+            if (object.size !== undefined && object.size > 1024 * 1024) {
+                this.snackBar.open("Object to big, maxSize: 1MB", "Error", {duration: 5000});
+                return;
+            }
+            if (object.contentType !== undefined && !this.hasAllowedContentType(object.contentType)) {
+                this.snackBar.open("Invalid content type: " + object.contentType, "Error", {duration: 5000});
+                return;
+            }
+
+            const dialogConfig = new MatDialogConfig();
+
+            dialogConfig.disableClose = true;
+            dialogConfig.autoFocus = true;
+            dialogConfig.maxWidth = '100vw';
+            dialogConfig.maxHeight = '100vh';
+            dialogConfig.panelClass = 'full-screen-modal';
+            dialogConfig.width = "80%"
+            dialogConfig.minWidth = '280px'
+            dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType};
+
+            this.dialog.open(S3ObjectViewDialog, dialogConfig).afterClosed().subscribe((result: any) => {
+            });
+        }
+    }
+
     // Method to handle file upload
     doUpload(content: Blob, key: string): void {
         this.s3Service.putObjects(this.bucketName, key, content).then(() =>
             this.loadObjects()
         );
+    }
+
+    hasAllowedContentType(contentType: string) {
+        return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html" || contentType.startsWith("text/plain");
     }
 }

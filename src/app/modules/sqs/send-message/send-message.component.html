@@ -7,5 +7,6 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="loadFromFile()" mat-button>Load File</button>
     <button (click)="sendMessage()" cdkFocusInitial mat-button>Send</button>
 </mat-dialog-actions>

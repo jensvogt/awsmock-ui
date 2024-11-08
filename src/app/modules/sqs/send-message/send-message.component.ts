@@ -1,4 +1,4 @@
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
@@ -8,6 +8,7 @@ import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {FileImportComponent} from "../../infrastructure/import/file-import/file-import.component";
 
 @Component({
     selector: 'queue-send-message-dialog',
@@ -39,7 +40,8 @@ export class SendMessageComponentDialog implements OnInit {
     queueName: string = '';
     message: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
+                private fileDialog: MatDialog) {
         this.queueUrl = data.queueUrl;
         this.queueName = data.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
     }
@@ -49,6 +51,19 @@ export class SendMessageComponentDialog implements OnInit {
 
     sendMessage() {
         this.dialogRef.close(this.message);
+    }
+
+    loadFromFile() {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+
+        this.fileDialog.open(FileImportComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.message = result;
+            }
+        });
     }
 
     close() {

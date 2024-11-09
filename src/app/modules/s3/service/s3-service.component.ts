@@ -1,15 +1,6 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
-import {
-    CreateBucketCommand,
-    DeleteBucketCommand,
-    DeleteObjectCommand,
-    GetObjectCommand,
-    ListBucketsCommand,
-    ListObjectsV2Command,
-    PutObjectCommand,
-    S3Client
-} from "@aws-sdk/client-s3";
+import {CreateBucketCommand, DeleteBucketCommand, DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
@@ -40,14 +31,6 @@ export class S3Service {
     url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
-    }
-
-    listBuckets(pageIndex: number, pageSize: number): any {
-        const input = {
-            MaxBuckets: pageSize,
-            ContinuationToken: pageIndex.toString(),
-        };
-        return this.client.send(new ListBucketsCommand(input));
     }
 
     createBucket(bucketName: string) {

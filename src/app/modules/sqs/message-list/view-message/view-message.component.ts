@@ -14,7 +14,7 @@ import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-togg
 
 @Component({
     selector: 'sqs-edit-message-dialog',
-    templateUrl: './edit-message.component.html',
+    templateUrl: './view-message.component.html',
     standalone: true,
     imports: [
         MatDialogContent,
@@ -36,16 +36,16 @@ import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-togg
         JsonPipe,
         MatSlideToggle
     ],
-    styleUrls: ['./edit-message.component.scss']
+    styleUrls: ['./view-message.component.scss']
 })
-export class EditMessageComponentDialog implements OnInit {
+export class ViewMessageComponentDialog implements OnInit {
 
     body: string = '';
     messageId: string | undefined = '';
     message: SqsMessageItem;
     prettyPrint: boolean = true;
 
-    constructor(private dialogRef: MatDialogRef<EditMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private dialogRef: MatDialogRef<ViewMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.message = data.message;
         if (this.prettyPrint) {
             this.body = JSON.stringify(JSON.parse(data.message.body), null, 2);

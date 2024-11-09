@@ -18,7 +18,9 @@
             <div class="table-container">
                 <table (matSortChange)="sortChange($event)" [dataSource]="messageDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
                     <ng-container matColumnDef="messageId">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
+                        <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Message ID"
+                            sortActionDescription="Sort by id">Message ID
+                        </th>
                         <td *matCellDef="let element" mat-cell>
                             <mat-nav-list>
                                 <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
@@ -26,21 +28,28 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="region">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Region" sortActionDescription="Sort by region">Region</th>
+                        <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Region"
+                            sortActionDescription="Sort by region">Region
+                        </th>
                         <td *matCellDef="let element" mat-cell> {{ element.region }}</td>
                     </ng-container>
                     <ng-container matColumnDef="created">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by created">Created</th>
+                        <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Created"
+                            sortActionDescription="Sort by created">Created
+                        </th>
                         <td *matCellDef="let element" mat-cell> {{ element.created|date:'dd-MM-yyyy HH:mm:ss' }}</td>
                     </ng-container>
                     <ng-container matColumnDef="modified">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
+                        <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Modified"
+                            sortActionDescription="Sort by modified">Modified
+                        </th>
                         <td *matCellDef="let element" mat-cell> {{ element.modified|date:'dd-MM-yyyy HH:mm:ss' }}</td>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                         <td *matCellDef="let row" mat-cell>
-                            <button (click)="deleteMessage(row.receiptHandle)" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
+                            <button (click)="deleteMessage(row.receiptHandle)" [matTooltipPositionAtOrigin]="'left'" aria-label="Delete" mat-icon-button
+                                    matTooltip="Delete the message">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </td>

@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ConfigComponentDialog} from "./modules/dashboard/settings/config.component";
-import {FormGroup} from "@angular/forms";
 
 @Component({
     selector: 'app-root',
@@ -11,14 +10,12 @@ import {FormGroup} from "@angular/forms";
 })
 export class AppComponent {
 
-    docForm: FormGroup = {} as FormGroup;
     service: string = '';
 
     constructor(private router: Router, private dialog: MatDialog) {
     }
 
     navigateMenu() {
-        console.log("Form submit: " + this.service)
         this.router.navigate(['/' + this.service.toLowerCase()]);
     }
 

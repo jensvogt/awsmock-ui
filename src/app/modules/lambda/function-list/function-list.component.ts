@@ -86,9 +86,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     ngOnInit(): void {
-        this.lambdaFunctionCountersResponse$.subscribe((data: any) => {
-            console.log(data);
-        })
         this.store
             .pipe(select(selectFunctionCounters))
             .subscribe((functionCounters) => this.initializeData(functionCounters.functionCounters));
@@ -201,28 +198,9 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         }));
     }
 
-    /*
-        addBucket() {
-
-            const dialogConfig = new MatDialogConfig();
-
-            dialogConfig.disableClose = true;
-            dialogConfig.autoFocus = true;
-
-            this.dialog.open(BucketAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-                if (result) {
-                    this.store.dispatch(lambdaFunctionListActions.addBucket({bucketName: result}));
-                }
-            });
-        }
-
-        purgeBucket(bucketName: string) {
-            this.store.dispatch(lambdaFunctionListActions.purgeBucket({bucketName: bucketName}));
-        }
-
-        deleteBucket(bucketName: string) {
-            this.store.dispatch(lambdaFunctionListActions.deleteBucket({bucketName: bucketName}));
-        }*/
+    deleteFunction(functionName: string) {
+        this.store.dispatch(lambdaFunctionListActions.deleteFunction({functionName: functionName}));
+    }
 
     private initializeData(functions: LambdaFunctionItem[]): void {
         this.dataSource = new MatTableDataSource(

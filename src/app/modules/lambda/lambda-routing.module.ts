@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LambdaFunctionListComponent} from "./function-list/function-list.component";
+import {LambdaFunctionDetailsComponent} from "./function-details/function-detail.component";
 
 const routes: Routes = [
     {
@@ -8,18 +9,11 @@ const routes: Routes = [
         title: 'LambdaFunctionList',
         component: LambdaFunctionListComponent
     },
-    // {
-    //     path: 'details/:functionName',
-    //     component: S3BucketDetailComponent
-    // },
-    // {
-    //     path: 'objects/:bucketName',
-    //     component: S3ObjectListComponent
-    // },
-    // {
-    //     path: 'objects/details/:id',
-    //     component: S3ObjectViewDialog
-    // }
+    {
+        path: 'details/:functionName',
+        title: 'LambdaFunctionDetails',
+        component: LambdaFunctionDetailsComponent
+    }
 ];
 
 @NgModule({

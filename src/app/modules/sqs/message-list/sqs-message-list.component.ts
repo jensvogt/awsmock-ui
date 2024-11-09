@@ -9,7 +9,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {interval, Subscription} from "rxjs";
 import {SqsMessageItem} from "../model/sqs-message-item";
-import {EditMessageComponentDialog} from "./view-message/edit-message.component";
+import {ViewMessageComponentDialog} from "./view-message/view-message.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 
@@ -135,10 +135,11 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {message: message};
         dialogConfig.maxWidth = '100vw';
-        dialogConfig.maxHeight = '80vh';
+        dialogConfig.maxHeight = '90vh';
         dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "70%"
 
-        this.dialog.open(EditMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
+        this.dialog.open(ViewMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
         });
     }
 
@@ -151,6 +152,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.data = {queueUrl: this.queueUrl};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
+        dialogConfig.width = "90%"
         dialogConfig.panelClass = 'full-screen-modal';
 
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {

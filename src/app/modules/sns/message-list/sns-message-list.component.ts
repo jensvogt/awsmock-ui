@@ -123,7 +123,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
-        dialogConfig.width = "90%"
+        dialogConfig.width = "70%"
 
         this.dialog.open(SnsViewMessageDialog, dialogConfig).afterClosed().subscribe(() => {
         });

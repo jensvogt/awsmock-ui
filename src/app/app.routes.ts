@@ -77,6 +77,13 @@ export const routes: Routes = [
                 path: 'cognito-user-list/:userPoolId',
                 component: UserListComponent,
             },
+            //=========================================================================
+            // Lambda functions
+            //=========================================================================
+            {
+                path: 'lambda-function-list',
+                loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
+            },
             {
                 path: '**',
                 component: NotFoundComponent,

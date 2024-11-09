@@ -26,6 +26,7 @@ import {ModuleService} from "../../services/module.service";
 import {MemoryChartComponent} from "./charts/memory-chart/memory-chart.component";
 import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component";
 import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 
 @NgModule({
     declarations: [DashboardComponent],
@@ -56,6 +57,8 @@ import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.compone
         ThreadsChartComponent,
         StoreModule.forFeature(dashboardFeatureKey, dashboardReducer),
         EffectsModule.forFeature([DashboardEffects]),
+        MatGridList,
+        MatGridTile,
     ],
     exports: [DashboardComponent],
     providers: [MonitoringService, ModuleService],

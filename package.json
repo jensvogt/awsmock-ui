@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.0",
+    "@aws-sdk/client-lambda": "^3.688.0",
     "@aws-sdk/client-s3": "^3.658.1",
     "@aws-sdk/client-sns": "^3.658.1",
     "@aws-sdk/client-sqs": "^3.658.1",

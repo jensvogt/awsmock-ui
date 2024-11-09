@@ -33,9 +33,12 @@ import {LambdaRoutingModule} from "./lambda-routing.module";
 import {lambdaFunctionListFeatureKey, lambdaFunctionListReducer} from "./function-list/state/lambda-function-list.reducer";
 import {LambdaFunctionListEffects} from "./function-list/state/lambda-function-list.effects";
 import {LambdaService} from "./service/lambda-service.component";
+import {lambdaFunctionDetailsFeatureKey, lambdaFunctionDetailsReducer} from "./function-details/state/lambda-function-details.reducer";
+import {LambdaFunctionDetailsComponent} from "./function-details/function-detail.component";
+import {LambdaFunctionDetailsEffects} from "./function-details/state/lambda-function-details.effects";
 
 @NgModule({
-    declarations: [LambdaFunctionListComponent],
+    declarations: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -80,9 +83,10 @@ import {LambdaService} from "./service/lambda-service.component";
         AsyncPipe,
         LambdaRoutingModule,
         StoreModule.forFeature(lambdaFunctionListFeatureKey, lambdaFunctionListReducer),
-        EffectsModule.forFeature([LambdaFunctionListEffects]),
+        StoreModule.forFeature(lambdaFunctionDetailsFeatureKey, lambdaFunctionDetailsReducer),
+        EffectsModule.forFeature([LambdaFunctionListEffects, LambdaFunctionDetailsEffects]),
     ],
-    exports: [LambdaFunctionListComponent],
+    exports: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
     providers: [LambdaService],
 })
 export class LambdaModule {

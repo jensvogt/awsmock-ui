@@ -5,3 +5,8 @@ export interface UserPoolItem {
     created: Date | undefined;
     modified: Date | undefined;
 }
+
+export interface UserPoolCountersResponse {
+    total: number | undefined;
+    userPools: UserPoolItem[];
+}

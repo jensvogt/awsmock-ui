@@ -11,7 +11,7 @@ import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {lambdaFunctionListActions} from "./state/lambda-function-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
-import {LambdaFunctionCountersResponse, LambdaFunctionItem} from "../model/function-item";
+import {LambdaFunctionItem} from "../model/function-item";
 import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
 
@@ -32,7 +32,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
-    lambdaFunctionCountersResponse$: Observable<LambdaFunctionCountersResponse> = this.store.select(selectFunctionCounters);
     columns: any[] = ['name', 'runtime', 'invocations', 'averageRuntime', 'actions'];
     dataSource: MatTableDataSource<LambdaFunctionItem> = new MatTableDataSource();
     defaultSort: Sort = {active: "name", direction: "asc"};
@@ -69,13 +68,13 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         this.actionsSubj$.pipe(
             filter((action) =>
                 action.type === lambdaFunctionListActions.addFunctionSuccess.type ||
+                action.type === lambdaFunctionListActions.resetCountersSuccess.type ||
                 action.type === lambdaFunctionListActions.deleteFunctionSuccess.type
             )
         ).subscribe(() => {
-                this.lastUpdate = new Date();
-                this.loadFunctions();
-            }
-        );
+            console.log("Action Subscription");
+            this.loadFunctions();
+        });
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {
@@ -136,6 +135,8 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     ngOnDestroy(): void {
+        this.actionsSubj$?.unsubscribe();
+        this.tableSubscription.unsubscribe();
         this.updateSubscription?.unsubscribe();
     }
 
@@ -163,12 +164,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     handlePageEvent(e: PageEvent) {
         this.state.value['lambda-function-list'].pageSize = e.pageSize;
         this.state.value['lambda-function-list'].pageIndex = e.pageIndex;
-        this.store.dispatch(lambdaFunctionListActions.loadFunctions({
-            prefix: this.state.value['lambda-function-list'].prefix,
-            pageSize: this.state.value['lambda-function-list'].pageSize,
-            pageIndex: this.state.value['lambda-function-list'].pageIndex,
-            sortColumns: this.state.value['lambda-function-list'].sortColumns
-        }));
+        this.loadFunctions();
     }
 
     sortChange(sortState: Sort) {
@@ -202,9 +198,15 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         this.store.dispatch(lambdaFunctionListActions.deleteFunction({functionName: functionName}));
     }
 
+    resetCounters(functionName: string) {
+        this.store.dispatch(lambdaFunctionListActions.resetCounters({functionName: functionName}));
+    }
+
     private initializeData(functions: LambdaFunctionItem[]): void {
-        this.dataSource = new MatTableDataSource(
-            functions.length ? functions : this.noData
-        );
+        this.total = 0;
+        if (functions.length && functions.length > 0) {
+            this.dataSource = new MatTableDataSource(functions);
+            this.total = this.dataSource.data.length;
+        }
     }
 }

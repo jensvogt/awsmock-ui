@@ -73,6 +73,23 @@ export class LambdaService {
     }
 
     /**
+     * @brief Reset the function counters
+     *
+     * @par
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param name function name
+     */
+    public resetCounters(name: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ResetFunctionCounters');
+        const body = {
+            region: environment.awsmockRegion,
+            functionName: name
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Get a single function counter
      *
      * @par

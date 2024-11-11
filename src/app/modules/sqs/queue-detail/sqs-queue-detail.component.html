@@ -20,54 +20,60 @@
         </mat-card-header>
         <mat-card-content>
             <div *ngIf="(queueDetails$ | async) as queueDetails">
-                <mat-grid-list cols="6">
-                    <mat-grid-tile [colspan]="3" [rowspan]="1">
-                        <mat-list>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>Name: </p>
-                                <p matListItemLine>{{ queueDetails.queueName }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>ARN: </p>
-                                <p matListItemLine>{{ queueDetails.queueArn }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>URL: </p>
-                                <p matListItemLine>{{ queueDetails.queueUrl }}</p>
-                            </mat-list-item>
-                        </mat-list>
+                <mat-grid-list cols="5" rowHeight="300px">
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>Name: </p>
+                                    <p matListItemLine>{{ queueDetails.queueName }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>ARN: </p>
+                                    <p matListItemLine>{{ queueDetails.queueArn }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>URL: </p>
+                                    <p matListItemLine>{{ queueDetails.queueUrl }}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <mat-list>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>Visibility Timeout (s): </p>
-                                <p matListItemLine>{{ queueDetails.visibilityTimeout }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>Delay (s): </p>
-                                <p matListItemLine>{{ queueDetails.delay }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>Max Message Size (kB): </p>
-                                <p matListItemLine>{{ queueDetails.maxMessageSize / 1024 }}</p>
-                            </mat-list-item>
-                        </mat-list>
+                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>Visibility Timeout (s): </p>
+                                    <p matListItemLine>{{ queueDetails.visibilityTimeout }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>Delay (s): </p>
+                                    <p matListItemLine>{{ queueDetails.delay }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>Max Message Size (kB): </p>
+                                    <p matListItemLine>{{ queueDetails.maxMessageSize / 1024 }}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <mat-list>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>Retention Period (s): </p>
-                                <p matListItemLine>{{ queueDetails.retentionPeriod }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>Message Count: </p>
-                                <p matListItemLine>{{ queueDetails.messageCount }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p matListItemTitle>Total Size (kB): </p>
-                                <p matListItemLine>{{ (queueDetails.size / 1024).toFixed(0) }}</p>
-                            </mat-list-item>
-                        </mat-list>
+                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>Retention Period (s): </p>
+                                    <p matListItemLine>{{ queueDetails.retentionPeriod }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>Message Count: </p>
+                                    <p matListItemLine>{{ queueDetails.messageCount }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p matListItemTitle>Total Size (kB): </p>
+                                    <p matListItemLine>{{ (queueDetails.size / 1024).toFixed(0) }}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
                     </mat-grid-tile>
                     <mat-grid-tile [colspan]="1" [rowspan]="1">
                         <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">

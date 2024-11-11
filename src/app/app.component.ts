@@ -17,6 +17,7 @@ export class AppComponent {
 
     navigateMenu() {
         this.router.navigate(['/' + this.service.toLowerCase()]);
+        this.service = '';
     }
 
     home() {

@@ -6,7 +6,7 @@ import {CognitoConfig} from "./awsmock-http-config";
 import {SortColumn} from "../shared/sorting/sorting.component";
 
 @Injectable()
-export class AwsMockCognitoService {
+export class CognitoService {
 
     cognitoConfig = new CognitoConfig;
     url: string = environment.gatewayEndpoint + '/';

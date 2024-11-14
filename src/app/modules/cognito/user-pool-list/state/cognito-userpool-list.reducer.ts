@@ -6,7 +6,7 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
 export const cognitoUserPoolListFeatureKey = 'cognito-userpool-list';
 
 export interface CognitoUserPoolListState {
-    listQueueResponse: UserPoolCountersResponse;
+    listUserPoolResponse: UserPoolCountersResponse;
     prefix: string;
     pageSize: number;
     pageIndex: number;
@@ -16,7 +16,7 @@ export interface CognitoUserPoolListState {
 }
 
 export const initialState: CognitoUserPoolListState = {
-    listQueueResponse: {total: 0, userPools: []},
+    listUserPoolResponse: {total: 0, userPools: []},
     prefix: '',
     pageSize: 10,
     pageIndex: 0,
@@ -33,7 +33,11 @@ export const cognitoUserPoolListReducer = createReducer(
 
     // Queue list
     on(cognitoUserpoolListActions.loadUserPools, (state: CognitoUserPoolListState) => ({...state, loading: true})),
-    on(cognitoUserpoolListActions.loadUserPoolsSuccess, (state: CognitoUserPoolListState, {queues}) => ({...state, listQueueResponse: queues, loading: false})),
+    on(cognitoUserpoolListActions.loadUserPoolsSuccess, (state: CognitoUserPoolListState, {userPools}) => ({
+        ...state,
+        listUserPoolResponse: userPools,
+        loading: false
+    })),
     on(cognitoUserpoolListActions.loadUserPoolsFailure, (state: CognitoUserPoolListState, {error}) => ({...state, error: error, loading: false})),
 
     // Add queue

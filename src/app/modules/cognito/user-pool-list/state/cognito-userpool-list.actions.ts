@@ -7,7 +7,7 @@ export const cognitoUserpoolListActions = {
 
     // Load user pool
     loadUserPools: createAction('[cognito-userpool-list] Load userpools', props<{ prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
-    loadUserPoolsSuccess: createAction('[cognito-userpool-list] Load userpools success', props<{ queues: UserPoolCountersResponse }>()),
+    loadUserPoolsSuccess: createAction('[cognito-userpool-list] Load userpools success', props<{ userPools: UserPoolCountersResponse }>()),
     loadUserPoolsFailure: createAction('[cognito-userpool-list] Load userpools error', props<{ error: string }>()),
 
     // Add user pool

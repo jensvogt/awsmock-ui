@@ -1,11 +1,11 @@
 import {createReducer, on} from "@ngrx/store";
-import {cognitoUserListActions} from './cognito-user-list.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {UserCountersResponse} from "../../model/user-item";
+import {cognitoUserActions} from "./cognito-user-list.actions";
 
 export const cognitoUserListFeatureKey = 'cognito-user-list';
 
-export interface CognitoUserListState {
+export interface CognitoUseState {
     listUsersResponse: UserCountersResponse;
     prefix: string;
     pageSize: number;
@@ -15,7 +15,7 @@ export interface CognitoUserListState {
     error: unknown;
 }
 
-export const initialState: CognitoUserListState = {
+export const initialState: CognitoUseState = {
     listUsersResponse: {total: 0, users: []},
     prefix: '',
     pageSize: 10,
@@ -29,20 +29,20 @@ export const cognitoUserListReducer = createReducer(
     initialState,
 
     // Initialize
-    on(cognitoUserListActions.initialize, (state: CognitoUserListState): CognitoUserListState => ({...state, pageIndex: 0, pageSize: 10, loading: true})),
+    on(cognitoUserActions.initialize, (state: CognitoUseState): CognitoUseState => ({...state, pageIndex: 0, pageSize: 10, loading: true})),
 
-    // Queue list
-    on(cognitoUserListActions.loadUsers, (state: CognitoUserListState) => ({...state, loading: true})),
-    on(cognitoUserListActions.loadUsersSuccess, (state: CognitoUserListState, {queues}) => ({...state, listQueueResponse: queues, loading: false})),
-    on(cognitoUserListActions.loadUsersFailure, (state: CognitoUserListState, {error}) => ({...state, error: error, loading: false})),
+    // User list
+    on(cognitoUserActions.loadUsers, (state: CognitoUseState) => ({...state, loading: true})),
+    on(cognitoUserActions.loadUsersSuccess, (state: CognitoUseState, {users}) => ({...state, listQueueResponse: users, loading: false})),
+    on(cognitoUserActions.loadUsersFailure, (state: CognitoUseState, {error}) => ({...state, error: error, loading: false})),
 
-    // Add queue
-    on(cognitoUserListActions.addUser, (state: CognitoUserListState) => ({...state, loading: true})),
-    on(cognitoUserListActions.addUserSuccess, (state: CognitoUserListState) => ({...state, loading: false})),
-    on(cognitoUserListActions.addUserFailure, (state: CognitoUserListState, {error}) => ({...state, error: error, loading: false})),
+    // Add user
+    on(cognitoUserActions.addUser, (state: CognitoUseState) => ({...state, loading: true})),
+    on(cognitoUserActions.addUserSuccess, (state: CognitoUseState) => ({...state, loading: false})),
+    on(cognitoUserActions.addUserFailure, (state: CognitoUseState, {error}) => ({...state, error: error, loading: false})),
 
-    // Delete queue
-    on(cognitoUserListActions.deleteUser, (state: CognitoUserListState) => ({...state, loading: true})),
-    on(cognitoUserListActions.deleteUserSuccess, (state: CognitoUserListState) => ({...state, loading: false})),
-    on(cognitoUserListActions.deleteUserFailure, (state: CognitoUserListState, {error}) => ({...state, error: error, loading: false})),
+    // Delete user
+    on(cognitoUserActions.deleteUser, (state: CognitoUseState) => ({...state, loading: true})),
+    on(cognitoUserActions.deleteUserSuccess, (state: CognitoUseState) => ({...state, loading: false})),
+    on(cognitoUserActions.deleteUserFailure, (state: CognitoUseState, {error}) => ({...state, error: error, loading: false})),
 );

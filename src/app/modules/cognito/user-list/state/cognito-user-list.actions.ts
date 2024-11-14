@@ -2,18 +2,23 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {createAction, props} from "@ngrx/store";
 import {UserPoolCountersResponse} from "../../model/user-pool-item";
 
-export const cognitoUserListActions = {
+export const cognitoUserActions = {
     initialize: createAction('[cognito-user-list] initialize'),
 
-    // Load user pool
+    // Load users
     loadUsers: createAction('[cognito-user-list] Load users', props<{ prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
-    loadUsersSuccess: createAction('[cognito-user-list] Load users success', props<{ queues: UserPoolCountersResponse }>()),
+    loadUsersSuccess: createAction('[cognito-user-list] Load users success', props<{ users: UserPoolCountersResponse }>()),
     loadUsersFailure: createAction('[cognito-user-list] Load users error', props<{ error: string }>()),
 
-    // Add user pool
-    addUser: createAction('[cognito-user-list] Add user', props<{ userPoolName: string }>()),
+    // Add user
+    addUser: createAction('[cognito-user-list] Add user', props<{ userPoolName: string, userName: string }>()),
     addUserSuccess: createAction('[cognito-user-list] Add user success'),
     addUserFailure: createAction('[cognito-user-list] Add user error', props<{ error: string }>()),
+
+    // Confirm user
+    confirmUser: createAction('[cognito-user-list] Confirm user', props<{ userPooId: string, userName: string }>()),
+    confirmSuccess: createAction('[cognito-user-list] Confirm user success'),
+    confirmFailure: createAction('[cognito-user-list] Confirm user error', props<{ error: string }>()),
 
     // Delete user pool
     deleteUser: createAction('[cognito-user-list] Delete user', props<{ userPoolName: string }>()),

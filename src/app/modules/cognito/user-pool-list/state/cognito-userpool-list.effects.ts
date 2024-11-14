@@ -9,7 +9,7 @@ import {CognitoService} from "../../service/cognito.service";
 @Injectable()
 export class CognitoUserPoolListEffects {
 
-    loadQueues$ = createEffect(() => this.actions$.pipe(
+    loadUSerPools$ = createEffect(() => this.actions$.pipe(
         ofType(cognitoUserpoolListActions.loadUserPools),
         mergeMap(action =>
             this.cognitoService.listUserPoolCounters(
@@ -17,7 +17,7 @@ export class CognitoUserPoolListEffects {
                 action.pageSize,
                 action.pageIndex,
                 action.sortColumns)
-                .pipe(map((queues: any) => cognitoUserpoolListActions.loadUserPoolsSuccess({queues})),
+                .pipe(map((userPools: any) => cognitoUserpoolListActions.loadUserPoolsSuccess({userPools})),
                     catchError((error) =>
                         of(cognitoUserpoolListActions.loadUserPoolsFailure({error: error.message}))
                     )
@@ -25,11 +25,11 @@ export class CognitoUserPoolListEffects {
         ),
     ));
 
-    addQueue$ = createEffect(() => this.actions$.pipe(
+    addUserPool$ = createEffect(() => this.actions$.pipe(
         ofType(cognitoUserpoolListActions.deleteUserPool),
         mergeMap(action =>
             this.cognitoService.deleteUserPool(action.userPoolName)
-                .pipe(map((queues: any) => cognitoUserpoolListActions.addUserPoolSuccess()),
+                .pipe(map(() => cognitoUserpoolListActions.addUserPoolSuccess()),
                     catchError((error) =>
                         of(cognitoUserpoolListActions.addUserPoolFailure({error: error.message}))
                     )
@@ -37,11 +37,11 @@ export class CognitoUserPoolListEffects {
         )));
 
 
-    deleteQueue$ = createEffect(() => this.actions$.pipe(
+    deleteUserPool$ = createEffect(() => this.actions$.pipe(
         ofType(cognitoUserpoolListActions.deleteUserPool),
         mergeMap(action =>
             this.cognitoService.deleteUserPool(action.userPoolName)
-                .pipe(map((queues: any) => cognitoUserpoolListActions.deleteUserPoolSuccess()),
+                .pipe(map(() => cognitoUserpoolListActions.deleteUserPoolSuccess()),
                     catchError((error) =>
                         of(cognitoUserpoolListActions.deleteUserPoolFailure({error: error.message}))
                     )

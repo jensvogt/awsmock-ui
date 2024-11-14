@@ -34,7 +34,7 @@ export const selectSortColumns: SelectorType<SortColumn[]> = createSelector(
     (state: CognitoUserPoolListState) => state?.sortColumns
 );
 
-export const selectQueueCounters: SelectorType<UserPoolCountersResponse> = createSelector(
+export const selectUserPoolCounters: SelectorType<UserPoolCountersResponse> = createSelector(
     selectUserPoolListFeature,
-    (state: CognitoUserPoolListState) => state?.listQueueResponse
+    (state: CognitoUserPoolListState) => state?.listUserPoolResponse
 );

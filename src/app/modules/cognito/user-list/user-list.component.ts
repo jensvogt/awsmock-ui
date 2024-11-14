@@ -8,18 +8,21 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AwsMockCognitoService} from "../../../services/cognito.service";
+import {CognitoService} from "../service/cognito.service";
 import {UserItem} from "../model/user-item";
 import {UserAddComponentDialog} from "../user-add/user-add.component";
+import {State, Store} from "@ngrx/store";
+import {CognitoUserPoolListState} from "../user-pool-list/state/cognito-userpool-list.reducer";
+import {cognitoUserActions} from "./state/cognito-user-list.actions";
 
 @Component({
     selector: 'cognito-user-list',
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.scss'],
-    providers: [AwsMockCognitoService]
+    providers: [CognitoService]
 })
 export class CognitoUserListComponent implements OnInit, OnDestroy {
-    lastUpdate: string = '';
+    lastUpdate: Date = new Date();
 
     // Table
     userPoolId: string = '';
@@ -48,8 +51,8 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
     sortColumns: SortColumn[] = [];
     private sub: any;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private location: Location,
-                private cognitoService: AwsMockCognitoService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private location: Location, private store: Store,
+                private state: State<CognitoUserPoolListState>, private cognitoService: CognitoService) {
     }
 
     ngOnInit(): void {
@@ -101,29 +104,14 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
         this.loadUsers();
     }
 
-    lastUpdateTime() {
-        return new Date().toLocaleTimeString('DE-de');
-    }
-
     loadUsers() {
-        this.userData = [];
-        this.cognitoService.listUsers(this.userPoolId, this.pageSize, this.pageIndex, this.sortColumns)
-            .subscribe((data: any) => {
-                this.lastUpdate = this.lastUpdateTime();
-                if (data.Users) {
-                    this.length = data.Total;
-                    data.Users.forEach((b: any) => {
-                        this.userData.push({
-                            id: b.oid,
-                            userName: b.Username,
-                            userPoolId: this.userPoolId,
-                            enabled: b.Enabled,
-                            status: b.UserStatus
-                        });
-                    });
-                }
-                this.userDataSource.data = this.userData;
-            });
+        this.lastUpdate = new Date();
+        this.store.dispatch(cognitoUserActions.loadUsers({
+            prefix: this.state.value['cognito-user-list'].prefix,
+            pageSize: this.state.value['cognito-user-list'].pageSize,
+            pageIndex: this.state.value['cognito-user-list'].pageIndex,
+            sortColumns: this.state.value['cognito-user-list'].sortColumns
+        }));
     }
 
     addUser() {
@@ -145,6 +133,14 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
                 this.snackBar.open('User created, name: ' + userName, 'Done', {duration: 5000});
                 this.loadUsers();
             });
+    }
+
+    confirmUser(userPoolId: string, userName: string) {
+        this.lastUpdate = new Date();
+        this.store.dispatch(cognitoUserActions.confirmUser({
+            userPooId: userPoolId,
+            userName: userName
+        }));
     }
 
     deleteUser(userName: string) {

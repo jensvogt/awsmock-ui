@@ -34,6 +34,8 @@ import {CognitoService} from "./service/cognito.service";
 import {cognitoUserPoolListFeatureKey, cognitoUserPoolListReducer} from "./user-pool-list/state/cognito-userpool-list.reducer";
 import {CognitoUserPoolListEffects} from "./user-pool-list/state/cognito-userpool-list.effects";
 import {CognitoUserListComponent} from "./user-list/user-list.component";
+import {cognitoUserListFeatureKey, cognitoUserListReducer} from "./user-list/state/cognito-user-list.reducer";
+import {CognitoUserListEffects} from "./user-list/state/cognito-user-list.effects";
 
 @NgModule({
     declarations: [CognitoUserPoolListComponent, CognitoUserListComponent],
@@ -81,9 +83,8 @@ import {CognitoUserListComponent} from "./user-list/user-list.component";
         AsyncPipe,
         CognitoRoutingModule,
         StoreModule.forFeature(cognitoUserPoolListFeatureKey, cognitoUserPoolListReducer),
-        //StoreModule.forFeature(sqsQueueDetailsFeatureKey, sqsQueueDetailReducer),
-        EffectsModule.forFeature([CognitoUserPoolListEffects]),
-        CognitoUserListComponent,
+        StoreModule.forFeature(cognitoUserListFeatureKey, cognitoUserListReducer),
+        EffectsModule.forFeature([CognitoUserPoolListEffects, CognitoUserListEffects]),
     ],
     exports: [CognitoUserPoolListComponent, CognitoUserListComponent],
     providers: [CognitoService],

@@ -42,11 +42,11 @@
                         <td *matCellDef="let element" mat-cell> {{ element.enabled }}</td>
                     </ng-container>
                     <ng-container matColumnDef="actions">
-                        <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
+                        <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                         <td *matCellDef="let row" mat-cell>
-                            <!--button (click)="listUsers(row.userPoolId)" aria-label="List" mat-icon-button matTooltip="Lists all users of the user pool">
-                                <mat-icon>group</mat-icon>
-                            </button-->
+                            <button (click)="confirmUser(row.userPoolId, row.userName)" aria-label="List" mat-icon-button matTooltip="Confirm the user">
+                                <mat-icon>check_circle</mat-icon>
+                            </button>
                             <button (click)="deleteUser(row.userName)" aria-label="DeleteUser" mat-icon-button matTooltip="Delete user">
                                 <mat-icon>delete</mat-icon>
                             </button>
@@ -74,6 +74,6 @@
         </mat-card>
     </mat-card-content>
     <div class="footer">
-        Last update: {{ lastUpdate }}
+        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
     </div>
 </mat-card>

@@ -16,7 +16,7 @@ const routes: Routes = [
     // },
     {
         path: 'users/:userPoolId',
-        title: 'SQSQueueMessages',
+        title: 'UserList',
         component: CognitoUserListComponent
     }
 ];

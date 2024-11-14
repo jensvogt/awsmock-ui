@@ -24,11 +24,23 @@ export class LambdaFunctionListEffects {
         )
     ));
 
+    resetCounters$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionListActions.resetCounters),
+        mergeMap(action =>
+            this.lambdaService.resetCounters(action.functionName)
+                .pipe(map(() => lambdaFunctionListActions.resetCountersSuccess()),
+                    catchError((error) =>
+                        of(lambdaFunctionListActions.resetCountersFailure({error: error.message}))
+                    )
+                )
+        )));
+
     deleteFunction$ = createEffect(() => this.actions$.pipe(
         ofType(lambdaFunctionListActions.deleteFunction),
         mergeMap(action =>
             this.lambdaService.deleteFunction(action.functionName)
-                .then(() => lambdaFunctionListActions.deleteFunctionSuccess()))
+                .then(() => lambdaFunctionListActions.deleteFunctionSuccess())
+                .catch((reason: any) => lambdaFunctionListActions.deleteFunctionFailure(reason)))
     ));
 
     constructor(private actions$: Actions, private lambdaService: LambdaService) {

@@ -1,114 +1,82 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {DatePipe, Location, NgIf} from "@angular/common";
-import {interval, Subscription} from "rxjs";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Location} from "@angular/common";
+import {filter, interval, Observable, Subscription} from "rxjs";
+import {PageEvent} from "@angular/material/paginator";
+import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {MatTooltip} from "@angular/material/tooltip";
-import {BreadcrumbComponent} from "../../../shared/breadcrump/breadcrump.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {FormsModule} from "@angular/forms";
-import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {AwsMockCognitoService} from "../../../services/cognito.service";
-import {UserItem} from "../model/user-item";
+import {CognitoService} from "../service/cognito.service";
 import {UserAddComponentDialog} from "../user-add/user-add.component";
+import {ActionsSubject, State, Store} from "@ngrx/store";
+import {cognitoUserActions} from "./state/cognito-user-list.actions";
+import {selectPageIndex, selectPageSize, selectPrefix} from "../user-pool-list/state/cognito-userpool-list.selectors";
+import {CognitoUserListState} from "./state/cognito-user-list.reducer";
+import {UserCountersResponse} from "../model/user-item";
+import {selectUsersCounters} from "./state/cognito-user-list.selectors";
 
 @Component({
     selector: 'cognito-user-list',
     templateUrl: './user-list.component.html',
-    standalone: true,
-    imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardSubtitle,
-        MatTable,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatColumnDef,
-        MatIcon,
-        MatHeaderCell,
-        MatCell,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatSortHeader,
-        MatRowDef,
-        MatNoDataRow,
-        MatIconButton,
-        MatRow,
-        MatPaginator,
-        MatSort,
-        MatTooltip,
-        BreadcrumbComponent,
-        RouterLink,
-        FormsModule,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        MatSuffix,
-        NgIf,
-        DatePipe
-    ],
     styleUrls: ['./user-list.component.scss'],
-    providers: [AwsMockCognitoService]
+    providers: [CognitoService]
 })
-export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
-    lastUpdate: string = '';
+export class CognitoUserListComponent implements OnInit, OnDestroy {
+
+    // Last update
+    lastUpdate: Date = new Date();
 
     // Table
     userPoolId: string = '';
-    prefix: string = '';
-    prefixSet: boolean = false;
-    userData: Array<UserItem> = [];
-    userDataSource = new MatTableDataSource(this.userData);
+    pageSize$: Observable<number> = this.store.select(selectPageSize);
+    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    prefix$: Observable<string> = this.store.select(selectPrefix);
+    listUserCountersResponse$: Observable<UserCountersResponse> = this.store.select(selectUsersCounters);
     columns: any[] = ['userName', 'status', 'enabled', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
 
     // Paging
-    length = 0;
-    pageSize = 10;
-    pageIndex = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    nextToken: string = '';
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
+
+    // Prefix
+    prefixValue: string = this.state.value['cognito-user-list'].prefix;
+    prefixSet: boolean = false;
 
     // Sorting
     sortColumns: SortColumn[] = [];
-    private sub: any;
+    private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private location: Location,
-                private cognitoService: AwsMockCognitoService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private location: Location, private store: Store,
+                private state: State<CognitoUserListState>, private cognitoService: CognitoService, private actionsSubj$: ActionsSubject) {
+        this.prefix$.subscribe((data: string) => {
+            this.prefixSet = false;
+            if (data && data.length) {
+                this.prefixValue = data;
+                this.prefixSet = true;
+            }
+        });
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === cognitoUserActions.addUserSuccess.type ||
+                action.type === cognitoUserActions.confirmUserSuccess.type ||
+                action.type === cognitoUserActions.deleteUserSuccess.type
+            )
+        ).subscribe(() => {
+                this.loadUsers();
+            }
+        );
     }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
+        this.routerSubscription = this.route.params.subscribe(params => {
             this.userPoolId = params['userPoolId'];
         });
         this.loadUsers();
@@ -117,21 +85,20 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
-    }
-
-    ngAfterViewInit() {
-        // @ts-ignore
-        //this.objectData.sort = this.sort;
+        this.routerSubscription?.unsubscribe();
     }
 
     setPrefix() {
         this.prefixSet = true;
+        this.state.value['cognito-user-list'].pageIndex = 0;
+        this.state.value['cognito-user-list'].prefix = this.prefixValue;
         this.loadUsers();
     }
 
     unsetPrefix() {
-        this.prefix = '';
+        this.prefixValue = '';
         this.prefixSet = false;
+        this.state.value['cognito-user-list'].prefix = '';
         this.loadUsers();
     }
 
@@ -144,10 +111,8 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pageEvent = e;
-        this.length = e.length;
-        this.pageSize = e.pageSize;
-        this.pageIndex = e.pageIndex;
+        this.state.value['cognito-user-list'].pageSize = e.pageSize;
+        this.state.value['cognito-user-list'].pageIndex = e.pageIndex;
         this.loadUsers();
     }
 
@@ -161,29 +126,14 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadUsers();
     }
 
-    lastUpdateTime() {
-        return new Date().toLocaleTimeString('DE-de');
-    }
-
     loadUsers() {
-        this.userData = [];
-        this.cognitoService.listUsers(this.userPoolId, this.pageSize, this.pageIndex, this.sortColumns)
-            .subscribe((data: any) => {
-                this.lastUpdate = this.lastUpdateTime();
-                if (data.Users) {
-                    this.length = data.Total;
-                    data.Users.forEach((b: any) => {
-                        this.userData.push({
-                            id: b.oid,
-                            userName: b.Username,
-                            userPoolId: this.userPoolId,
-                            enabled: b.Enabled,
-                            status: b.UserStatus
-                        });
-                    });
-                }
-                this.userDataSource.data = this.userData;
-            });
+        this.lastUpdate = new Date();
+        this.store.dispatch(cognitoUserActions.loadUsers({
+            prefix: this.state.value['cognito-user-list'].prefix,
+            pageSize: this.state.value['cognito-user-list'].pageSize,
+            pageIndex: this.state.value['cognito-user-list'].pageIndex,
+            sortColumns: this.state.value['cognito-user-list'].sortColumns
+        }));
     }
 
     addUser() {
@@ -205,6 +155,14 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.snackBar.open('User created, name: ' + userName, 'Done', {duration: 5000});
                 this.loadUsers();
             });
+    }
+
+    confirmUser(userPoolId: string, userName: string) {
+        this.lastUpdate = new Date();
+        this.store.dispatch(cognitoUserActions.confirmUser({
+            userPooId: userPoolId,
+            userName: userName
+        }));
     }
 
     deleteUser(userName: string) {

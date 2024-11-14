@@ -15,8 +15,13 @@ export const lambdaFunctionListActions = {
     addFunctionSuccess: createAction('[lambda-function-list] Add functions success'),
     addFunctionFailure: createAction('[lambda-function-list] Add functions Error', props<{ error: string }>()),
 
+    // ResetCounters
+    resetCounters: createAction('[lambda-function-list] Reset counters', props<{ functionName: string }>()),
+    resetCountersSuccess: createAction('[lambda-function-list] Reset counters success'),
+    resetCountersFailure: createAction('[lambda-function-list] Reset counters error', props<{ error: string }>()),
+
     // Delete function
-    deleteFunction: createAction('[lambda-function-list] Delete functions', props<{ functionName: string }>()),
-    deleteFunctionSuccess: createAction('[lambda-function-list] Delete functions success'),
-    deleteFunctionFailure: createAction('[lambda-function-list] Delete functions error', props<{ error: string }>()),
+    deleteFunction: createAction('[lambda-function-list] Delete function', props<{ functionName: string }>()),
+    deleteFunctionSuccess: createAction('[lambda-function-list] Delete function success'),
+    deleteFunctionFailure: createAction('[lambda-function-list] Delete function error', props<{ error: string }>()),
 }

@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from "./modules/not-found/not-found.component";
-import {UserPoolListComponent} from "./modules/cognito/user-pool-list/user-pool-list.component";
-import {UserListComponent} from "./modules/cognito/user-list/user-list.component";
 import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 import {SnsChartsComponent} from "./modules/sns/charts/sns-charts.component";
 import {S3ChartsComponent} from "./modules/s3/charts/s3-charts.component";
@@ -71,17 +69,21 @@ export const routes: Routes = [
             //=========================================================================
             {
                 path: 'cognito-user-pool-list',
-                component: UserPoolListComponent,
+                loadChildren: () => import('./modules/cognito/cognito.module').then(module => module.CognitoModule),
             },
             {
-                path: 'cognito-user-list/:userPoolId',
-                component: UserListComponent,
+                path: 'cognito',
+                loadChildren: () => import('./modules/cognito/cognito.module').then(module => module.CognitoModule),
             },
             //=========================================================================
             // Lambda functions
             //=========================================================================
             {
                 path: 'lambda-function-list',
+                loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
+            },
+            {
+                path: 'lambda',
                 loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
             },
             {

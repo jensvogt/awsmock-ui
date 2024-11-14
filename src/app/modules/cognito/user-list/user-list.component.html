@@ -18,7 +18,7 @@
             <mat-card-actions class="head-buttons">
                 <mat-form-field style="width:100%">
                     <mat-label>Prefix</mat-label>
-                    <input [(ngModel)]="prefix" matInput name="search" placeholder="Search" type="text">
+                    <input [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
                     <button (click)="setPrefix()" *ngIf="!prefixSet" mat-icon-button matSuffix style="float: right">
                         <mat-icon matSuffix>search</mat-icon>
                     </button>
@@ -28,52 +28,54 @@
                 </mat-form-field>
             </mat-card-actions>
             <div class="table-container">
-                <table (matSortChange)="sortChange($event)" [dataSource]="userDataSource" class="mat-elevation-z8 queue-table" mat-table matSort>
-                    <ng-container matColumnDef="userName" matTooltip="User name">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User name" sortActionDescription="Sort by userName">Name</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.userName }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="status" matTooltip="status">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User status" sortActionDescription="Sort by created">Status</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.status }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="enabled" matTooltip="enabled">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User enabled" sortActionDescription="Sort by enabled">Enabled</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.enabled }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="actions">
-                        <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
-                        <td *matCellDef="let row" mat-cell>
-                            <!--button (click)="listUsers(row.userPoolId)" aria-label="List" mat-icon-button matTooltip="Lists all users of the user pool">
-                                <mat-icon>group</mat-icon>
-                            </button-->
-                            <button (click)="deleteUser(row.userName)" aria-label="DeleteUser" mat-icon-button matTooltip="Delete user">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                        </td>
-                    </ng-container>
-                    <tr *matHeaderRowDef="columns" mat-header-row></tr>
-                    <tr *matRowDef="let row; columns: columns;" mat-row></tr>
-                    <tr *matNoDataRow class="mat-row">
-                        <td [attr.colspan]="columns.length" class="mat-cell">
-                            No data matching the filter.
-                        </td>
-                    </tr>
-                </table>
+                <div *ngIf="listUserCountersResponse$ | async as userCounters" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="userCounters.users" class="mat-elevation-z8 queue-table" mat-table matSort>
+                        <ng-container matColumnDef="userName" matTooltip="User name">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User name" sortActionDescription="Sort by userName">Name</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.userName }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="status" matTooltip="status">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User status" sortActionDescription="Sort by created">Status</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.status }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="enabled" matTooltip="enabled">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User enabled" sortActionDescription="Sort by enabled">Enabled</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.enabled }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="confirmUser(row.userPoolId, row.userName)" aria-label="List" mat-icon-button matTooltip="Confirm the user">
+                                    <mat-icon>check_circle</mat-icon>
+                                </button>
+                                <button (click)="deleteUser(row.userName)" aria-label="DeleteUser" mat-icon-button matTooltip="Delete user">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="columns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
-                           [length]="length"
-                           [pageIndex]="pageIndex"
+                           [length]="(listUserCountersResponse$|async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-                           [pageSize]="pageSize"
+                           [pageSize]="(pageSize$ | async)"
                            [showFirstLastButtons]="showFirstLastButtons"
                            aria-label="Select page" style="width:99%; margin-left:15px">
             </mat-paginator>
         </mat-card>
     </mat-card-content>
     <div class="footer">
-        Last update: {{ lastUpdate }}
+        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
     </div>
 </mat-card>

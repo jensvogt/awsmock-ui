@@ -62,7 +62,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
-        })
+        });
     }
 
     ngOnInit(): void {
@@ -99,12 +99,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     handlePageEvent(e: PageEvent) {
         this.state.value['sqs-queue-list'].pageSize = e.pageSize;
         this.state.value['sqs-queue-list'].pageIndex = e.pageIndex;
-        this.store.dispatch(sqsQueueListActions.loadQueues({
-            prefix: this.state.value['sqs-queue-list'].prefix,
-            pageSize: this.state.value['sqs-queue-list'].pageSize,
-            pageIndex: this.state.value['sqs-queue-list'].pageIndex,
-            sortColumns: this.state.value['sqs-queue-list'].sortColumns
-        }));
+        this.loadQueues();
     }
 
     sortChange(sortState: Sort) {

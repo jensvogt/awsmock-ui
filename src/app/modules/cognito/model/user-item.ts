@@ -5,3 +5,8 @@ export interface UserItem {
     enabled: boolean | undefined;
     status: string | undefined;
 }
+
+export interface UserCountersResponse {
+    total: number | undefined;
+    users: UserItem[];
+}

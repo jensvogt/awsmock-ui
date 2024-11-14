@@ -52,9 +52,6 @@ export class CognitoUserPoolListComponent implements OnInit, OnDestroy {
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<CognitoUserPoolListState>,
                 private store: Store) {
-        this.listUserPoolCountersResponse$.subscribe((data: any) => {
-            console.log("Data: ", data)
-        });
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {

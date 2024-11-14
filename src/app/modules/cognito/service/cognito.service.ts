@@ -33,7 +33,7 @@ export class CognitoService {
     }
 
     public listUserCounters(userPoolId: string, maxResults: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "ListUsers");
+        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "ListUserCounters");
         const body = {
             Region: environment.awsmockRegion,
             UserPoolId: userPoolId,

@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
 import {Location} from "@angular/common";
-import {interval, Subscription} from "rxjs";
+import {filter, interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -9,11 +8,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {CognitoService} from "../service/cognito.service";
-import {UserItem} from "../model/user-item";
 import {UserAddComponentDialog} from "../user-add/user-add.component";
-import {State, Store} from "@ngrx/store";
-import {CognitoUserPoolListState} from "../user-pool-list/state/cognito-userpool-list.reducer";
+import {ActionsSubject, State, Store} from "@ngrx/store";
 import {cognitoUserActions} from "./state/cognito-user-list.actions";
+import {selectPageIndex, selectPageSize, selectPrefix} from "../user-pool-list/state/cognito-userpool-list.selectors";
+import {CognitoUserListState} from "./state/cognito-user-list.reducer";
+import {UserCountersResponse} from "../model/user-item";
+import {selectUsersCounters} from "./state/cognito-user-list.selectors";
 
 @Component({
     selector: 'cognito-user-list',
@@ -22,41 +23,60 @@ import {cognitoUserActions} from "./state/cognito-user-list.actions";
     providers: [CognitoService]
 })
 export class CognitoUserListComponent implements OnInit, OnDestroy {
+
+    // Last update
     lastUpdate: Date = new Date();
 
     // Table
     userPoolId: string = '';
-    prefix: string = '';
-    prefixSet: boolean = false;
-    userData: Array<UserItem> = [];
-    userDataSource = new MatTableDataSource(this.userData);
+    pageSize$: Observable<number> = this.store.select(selectPageSize);
+    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    prefix$: Observable<string> = this.store.select(selectPrefix);
+    listUserCountersResponse$: Observable<UserCountersResponse> = this.store.select(selectUsersCounters);
     columns: any[] = ['userName', 'status', 'enabled', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
 
     // Paging
-    length = 0;
-    pageSize = 10;
-    pageIndex = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    nextToken: string = '';
     pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
+
+    // Prefix
+    prefixValue: string = this.state.value['cognito-user-list'].prefix;
+    prefixSet: boolean = false;
 
     // Sorting
     sortColumns: SortColumn[] = [];
-    private sub: any;
+    private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private location: Location, private store: Store,
-                private state: State<CognitoUserPoolListState>, private cognitoService: CognitoService) {
+                private state: State<CognitoUserListState>, private cognitoService: CognitoService, private actionsSubj$: ActionsSubject) {
+        this.prefix$.subscribe((data: string) => {
+            this.prefixSet = false;
+            if (data && data.length) {
+                this.prefixValue = data;
+                this.prefixSet = true;
+            }
+        });
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === cognitoUserActions.addUserSuccess.type ||
+                action.type === cognitoUserActions.confirmUserSuccess.type ||
+                action.type === cognitoUserActions.deleteUserSuccess.type
+            )
+        ).subscribe(() => {
+                this.loadUsers();
+            }
+        );
     }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
+        this.routerSubscription = this.route.params.subscribe(params => {
             this.userPoolId = params['userPoolId'];
         });
         this.loadUsers();
@@ -65,16 +85,20 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+        this.routerSubscription?.unsubscribe();
     }
 
     setPrefix() {
         this.prefixSet = true;
+        this.state.value['cognito-user-list'].pageIndex = 0;
+        this.state.value['cognito-user-list'].prefix = this.prefixValue;
         this.loadUsers();
     }
 
     unsetPrefix() {
-        this.prefix = '';
+        this.prefixValue = '';
         this.prefixSet = false;
+        this.state.value['cognito-user-list'].prefix = '';
         this.loadUsers();
     }
 
@@ -87,10 +111,8 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pageEvent = e;
-        this.length = e.length;
-        this.pageSize = e.pageSize;
-        this.pageIndex = e.pageIndex;
+        this.state.value['cognito-user-list'].pageSize = e.pageSize;
+        this.state.value['cognito-user-list'].pageIndex = e.pageIndex;
         this.loadUsers();
     }
 

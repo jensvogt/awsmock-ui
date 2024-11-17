@@ -1,17 +1,21 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {SqsService} from "../service/sqs-service.component";
-import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
-import {MatSort, Sort} from "@angular/material/sort";
+import {Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
-import {interval, Subscription} from "rxjs";
-import {SqsMessageItem} from "../model/sqs-message-item";
+import {filter, interval, Observable, Subscription} from "rxjs";
+import {ListMessageCountersResponse, SqsMessageItem} from "../model/sqs-message-item";
 import {ViewMessageComponentDialog} from "./view-message/view-message.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {ActionsSubject, State, Store} from "@ngrx/store";
+import {selectPageIndex, selectPageSize, selectPrefix} from "../queues-list/state/sqs-queue-list.selectors";
+import {selectMessageCounters} from "./state/sqs-message-list.selectors";
+import {sqsMessageListActions} from "./state/sqs-message-list.actions";
+import {SQSMessageListState} from "./state/sqs-message-list.reducer";
 
 @Component({
     selector: 'sqs-message-list',
@@ -24,14 +28,13 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
     // Table
-    messageData: Array<SqsMessageItem> = [];
-    messageDataSource = new MatTableDataSource(this.messageData);
-    columns: any[] = ['messageId', 'region', 'created', 'modified', 'actions'];
+    pageSize$: Observable<number> = this.store.select(selectPageSize);
+    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    prefix$: Observable<string> = this.store.select(selectPrefix);
+    listMessageCountersResponse$: Observable<ListMessageCountersResponse> = this.store.select(selectMessageCounters);
+    columns: any[] = ['messageId', 'created', 'modified', 'actions'];
 
     // Paging
-    length = 0;
-    pageSize = 10;
-    pageIndex = 0;
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
@@ -46,23 +49,47 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     queueUrl: string = '';
     queueName: string = '';
 
+    // Prefix
+    prefixValue: string = '';
+    prefixSet: boolean = false;
+
     // Sorting, default create descending
     sortColumns: SortColumn[] = [{column: 'created', sortDirection: 1}];
-    private sub: any;
+    private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private location: Location) {
-    }
+    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private state: State<SQSMessageListState>,
+                private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === sqsMessageListActions.addMessageSuccess.type
+            )
+        ).subscribe(() => {
+                this.loadMessages();
+            }
+        );
+        this.actionsSubj$.pipe(
+            filter((action) =>
+                action.type === sqsMessageListActions.deleteMessageSuccess.type
+            )
+        ).subscribe(() => {
+                this.snackBar.open('Message send, queueArn: ' + this.queueArn, 'Done', {duration: 5000});
+                this.loadMessages();
+            }
+        );
 
-    // @ts-ignore
-    @ViewChild(MatSort) set matSort(sort: MatSort) {
-        this.messageDataSource.sort = sort;
+        this.prefix$.subscribe((data: string) => {
+            this.prefixSet = false;
+            if (data && data.length) {
+                this.prefixValue = data;
+                this.prefixSet = true;
+            }
+        });
     }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
+        this.routerSubscription = this.route.params.subscribe(params => {
             this.queueArn = decodeURI(params['queueArn']);
         });
-        this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
         this.queueName = this.queueArn.substring(this.queueArn.lastIndexOf(':') + 1);
         this.sqsService.getQueueUrl(this.queueName)
             .then((data: any) => {
@@ -73,9 +100,11 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
                 this.sqsService.cleanup();
             });
         this.loadMessages();
+        this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
     }
 
     ngOnDestroy(): void {
+        this.routerSubscription?.unsubscribe();
         this.updateSubscription?.unsubscribe();
     }
 
@@ -87,6 +116,20 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         this.loadMessages();
     }
 
+    setPrefix() {
+        this.prefixSet = true;
+        this.state.value['sqs-message-list'].pageIndex = 0;
+        this.state.value['sqs-message-list'].prefix = this.prefixValue;
+        this.loadMessages();
+    }
+
+    unsetPrefix() {
+        this.prefixValue = '';
+        this.prefixSet = false;
+        this.state.value['sqs-message-list'].prefix = '';
+        this.loadMessages();
+    }
+
     sortChange(sortState: Sort) {
         this.sortColumns = [];
         if (sortState.direction === 'asc') {
@@ -94,37 +137,24 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         } else {
             this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
+        this.state.value['sqs-message-list'].sortColumns = this.sortColumns;
         this.loadMessages();
     }
 
     handlePageEvent(e: PageEvent) {
         this.pageEvent = e;
-        this.length = e.length;
-        this.pageSize = e.pageSize;
-        this.pageIndex = e.pageIndex;
         this.loadMessages();
     }
 
     loadMessages() {
-        this.messageData = [];
-        this.sqsService.listSqsMessages(this.queueArn, this.pageSize, this.pageIndex, this.sortColumns)
-            .subscribe((data: any) => {
-                this.lastUpdate = new Date();
-                this.length = data.Total;
-                data.Messages.forEach((m: any) => {
-                    this.messageData.push({
-                        id: m.id,
-                        messageId: m.messageId,
-                        body: m.body,
-                        md5Sum: m.md5Sum,
-                        receiptHandle: m.receiptHandle,
-                        region: m.region,
-                        created: m.created,
-                        modified: m.modified,
-                    });
-                });
-                this.messageDataSource.data = this.messageData;
-            });
+        this.lastUpdate = new Date();
+        this.store.dispatch(sqsMessageListActions.loadMessages({
+            queueArn: this.queueArn,
+            prefix: this.state.value['sqs-message-list'].prefix,
+            pageSize: this.state.value['sqs-message-list'].pageSize,
+            pageIndex: this.state.value['sqs-message-list'].pageIndex,
+            sortColumns: this.state.value['sqs-message-list'].sortColumns
+        }));
     }
 
     editMessage(message: SqsMessageItem) {
@@ -166,16 +196,10 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     }
 
     deleteMessage(receiptHandle: string) {
-        this.sqsService.deleteMessageAws(this.queueUrl, receiptHandle)
-            .subscribe(() => {
-                console.log("Deleted");
-                this.loadMessages();
-                this.snackBar.open('Message deleted, receiptHandle:' + receiptHandle, 'Dismiss', {duration: 5000});
-            })
-            .add(() => {
-                console.log("Deleted");
-                this.loadMessages();
-                this.snackBar.open('Message deleted, receiptHandle:' + receiptHandle, 'Dismiss', {duration: 5000});
-            })
+        this.lastUpdate = new Date();
+        this.store.dispatch(sqsMessageListActions.deleteMessage({
+            queueUrl: this.queueUrl,
+            receiptHandle: receiptHandle
+        }));
     }
 }

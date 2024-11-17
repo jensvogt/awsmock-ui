@@ -178,12 +178,31 @@ export class SqsService {
     }
 
     /**
-     * @brief List queue details
+     * @brief List all queues
      *
      * @par
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param queueArn SQS queue ARN
+     * @param prefix SQS message prefix
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listMessageCounters(queueArn: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListMessageCounters');
+        return this.http.post(this.url, {queueArn: queueArn, prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+
+    /**
+     * @brief Delete message
+     *
+     * @par
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param queueUrl SQS queue URL
+     * @param receiptHandle SQS receipt handle
      */
     public deleteMessageAws(queueUrl: string, receiptHandle: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteMessage');

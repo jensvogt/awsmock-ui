@@ -38,6 +38,8 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {SqsMessageListComponent} from "./message-list/sqs-message-list.component";
 import {SqsQueueDetailEffects} from "./queue-detail/state/sqs-queue-detail.effects";
 import {sqsQueueDetailReducer, sqsQueueDetailsFeatureKey} from "./queue-detail/state/sqs-queue-detail.reducer";
+import {sqsMessageListFeatureKey, sqsMessageListReducer} from "./message-list/state/sqs-message-list.reducer";
+import {SqsMessageListEffects} from "./message-list/state/sqs-message-list.effects";
 
 @NgModule({
     declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
@@ -86,7 +88,8 @@ import {sqsQueueDetailReducer, sqsQueueDetailsFeatureKey} from "./queue-detail/s
         SQSRoutingModule,
         StoreModule.forFeature(sqsQueueListFeatureKey, sqsQueueListReducer),
         StoreModule.forFeature(sqsQueueDetailsFeatureKey, sqsQueueDetailReducer),
-        EffectsModule.forFeature([SqsQueueListEffects, SqsQueueDetailEffects]),
+        StoreModule.forFeature(sqsMessageListFeatureKey, sqsMessageListReducer),
+        EffectsModule.forFeature([SqsQueueListEffects, SqsQueueDetailEffects, SqsMessageListEffects]),
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

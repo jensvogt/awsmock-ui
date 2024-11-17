@@ -3,6 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {
     CreateQueueCommand,
     DeleteMessageCommand,
+    DeleteMessageCommandOutput,
     DeleteQueueCommand,
     GetQueueAttributesCommand,
     GetQueueUrlCommand,
@@ -103,7 +104,7 @@ export class SqsService {
         return this.client.send(new SendMessageCommand(input));
     }
 
-    deleteMessage(queueUrl: string, receiptHandle: string) {
+    deleteMessage(queueUrl: string, receiptHandle: string): Promise<DeleteMessageCommandOutput> {
         const input = {
             QueueUrl: queueUrl,
             ReceiptHandle: receiptHandle,
@@ -176,4 +177,16 @@ export class SqsService {
         return this.http.post(this.url, {QueueArn: queueArn}, {headers: headers});
     }
 
+    /**
+     * @brief List queue details
+     *
+     * @par
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param queueArn SQS queue ARN
+     */
+    public deleteMessageAws(queueUrl: string, receiptHandle: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteMessage');
+        return this.http.post(this.url, {QueueUrl: queueUrl, ReceiptHandle: receiptHandle}, {headers: headers});
+    }
 }

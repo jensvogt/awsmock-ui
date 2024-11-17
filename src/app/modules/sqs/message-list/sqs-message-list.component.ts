@@ -166,15 +166,16 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     }
 
     deleteMessage(receiptHandle: string) {
-        this.sqsService.deleteMessage(this.queueUrl, receiptHandle)
-            .then(() => {
+        this.sqsService.deleteMessageAws(this.queueUrl, receiptHandle)
+            .subscribe(() => {
+                console.log("Deleted");
                 this.loadMessages();
                 this.snackBar.open('Message deleted, receiptHandle:' + receiptHandle, 'Dismiss', {duration: 5000});
             })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.sqsService.cleanup();
-            });
-
+            .add(() => {
+                console.log("Deleted");
+                this.loadMessages();
+                this.snackBar.open('Message deleted, receiptHandle:' + receiptHandle, 'Dismiss', {duration: 5000});
+            })
     }
 }

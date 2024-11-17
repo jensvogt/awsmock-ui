@@ -38,7 +38,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     s3ObjectCountersResponse$: Observable<S3ObjectCounterResponse> = this.store.select(selectObjectCounters);
 
     // Prefix
-    prefix: string = '';
+    prefixValue: string = '';
     prefixSet: boolean = false;
 
     // Auto-update
@@ -68,9 +68,6 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         ).subscribe(() => {
             this.loadObjects();
         });
-        this.s3ObjectCountersResponse$.subscribe((data: any) => {
-            console.log(data);
-        });
     }
 
     ngOnInit(): void {
@@ -93,12 +90,14 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setPrefix() {
         this.prefixSet = true;
+        this.state.value['s3-object-list'].prefix = this.prefixValue;
         this.loadObjects();
     }
 
     unsetPrefix() {
-        this.prefix = '';
+        this.prefixValue = '';
         this.prefixSet = false;
+        this.state.value['s3-object-list'].prefix = '';
         this.loadObjects();
     }
 
@@ -129,6 +128,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
+        this.state.value['s3-object-list'].sortColumns = this.sortColumns;
         this.loadObjects();
     }
 

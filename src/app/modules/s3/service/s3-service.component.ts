@@ -125,8 +125,8 @@ export class S3Service {
             region: environment.awsmockRegion,
             bucket: bucket,
             prefix: prefix,
-            maxResults: pageSize,
-            skip: pageSize * pageIndex,
+            pageSize: pageSize,
+            pageIndex: pageIndex,
             sortColumns: sortColumns
         }
         return this.http.post(this.url, body, {headers: headers});

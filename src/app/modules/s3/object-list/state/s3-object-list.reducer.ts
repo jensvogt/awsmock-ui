@@ -21,7 +21,7 @@ export const initialState: S3ObjectListState = {
     pageSize: 10,
     pageIndex: 0,
     loading: false,
-    sortColumns: [{column: 'keys', sortDirection: -1}],
+    sortColumns: [{column: 'key', sortDirection: -1}],
     error: {}
 };
 

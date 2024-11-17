@@ -39,7 +39,7 @@
                             <td *matCellDef="let element" mat-cell> {{ element.modified|date:'dd-MM-yyyy HH:mm:ss' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:100px">Actions</th>
+                            <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
                                 <button (click)="deleteMessage(row.messageId)" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
                                     <mat-icon>delete</mat-icon>

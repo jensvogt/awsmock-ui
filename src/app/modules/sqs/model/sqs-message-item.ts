@@ -8,3 +8,8 @@ export interface SqsMessageItem {
     created: Date | undefined;
     modified: Date | undefined;
 }
+
+export interface ListMessageCountersResponse {
+    Total: number;
+    Messages: SqsMessageItem[];
+}

@@ -25,7 +25,7 @@ export const lambdaFunctionDetailsReducer = createReducer(
         loading: true
     })),
 
-    // Bucket list
+    // Function list
     on(lambdaFunctionDetailsActions.loadFunction, (state: LambdaFunctionDetailsState) => ({...state, loading: true})),
     on(lambdaFunctionDetailsActions.loadFunctionSuccess, (state: LambdaFunctionDetailsState, {functionItem}) => ({
         ...state,

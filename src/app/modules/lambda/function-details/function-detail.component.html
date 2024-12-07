@@ -107,7 +107,7 @@
         </mat-card-header>
         <mat-card-content>
             <mat-tab-group>
-                <mat-tab label="Tags">
+                <mat-tab label="Environment">
                     <mat-card-actions class="head-buttons">
                         <!--button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>
@@ -116,35 +116,35 @@
                             <mat-icon>refresh</mat-icon>
                         </button-->
                     </mat-card-actions>
-                    <!--table (matSortChange)="lambdaNotificationSortChange($event)" [dataSource]="lambdaNotificationDataSource" class="mat-elevation-z8" mat-table
-                           matSort>
-                        <ng-container matColumnDef="id">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by ID">ID</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.id }}</td>
+                    <table (matSortChange)="environmentSortChanged($event)" [dataSource]="environmentDataSource" class="mat-elevation-z8" mat-table matSort>
+                        <ng-container matColumnDef="name">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable name" sortActionDescription="Sort by name">Name</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
                         </ng-container>
-                        <ng-container matColumnDef="lambdaArn">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ARN" sortActionDescription="Sort by arn">ARN</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.lambdaArn }}</td>
+                        <ng-container matColumnDef="value">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable value" sortActionDescription="Sort by value">Value
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                <!--button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
                                     <mat-icon>edit</mat-icon>
                                 </button>
                                 <button (click)="deleteLambdaNotification(row.lambdaArn)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
                                     <mat-icon>delete</mat-icon>
-                                </button>
+                                </button-->
                             </td>
                         </ng-container>
-                        <tr *matHeaderRowDef="lambdaNotificationColumns" mat-header-row></tr>
-                        <tr *matRowDef="let row; columns: lambdaNotificationColumns;" mat-row></tr>
+                        <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: environmentColumns;" mat-row></tr>
                         <tr *matNoDataRow class="mat-row">
-                            <td [attr.colspan]="lambdaNotificationColumns.length" class="mat-cell">
+                            <td [attr.colspan]="environmentColumns.length" class="mat-cell">
                                 No data matching the filter.
                             </td>
                         </tr>
-                    </table-->
+                    </table>
                     <!--mat-paginator (page)="handleLambdaNotificationPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
@@ -156,10 +156,39 @@
                                    aria-label="Select page">
                     </mat-paginator-->
                 </mat-tab>
-                <!--mat-tab label="Queue Notifications">
-                    Queue Notifications
+                <mat-tab label="Tags">
+                    <table (matSortChange)="tagsSortChanged($event)" [dataSource]="tagsDataSource" class="mat-elevation-z8" mat-table matSort>
+                        <ng-container matColumnDef="name">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag name" sortActionDescription="Sort by name">Name</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="value">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by value">Value
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <!--button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="deleteLambdaNotification(row.lambdaArn)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
+                                    <mat-icon>delete</mat-icon>
+                                </button-->
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: environmentColumns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="environmentColumns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+
                 </mat-tab>
-                <mat-tab label="Topic Notifications">
+                <!--mat-tab label="Topic Notifications">
                     Topic Notifications
                 </mat-tab-->
             </mat-tab-group>

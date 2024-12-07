@@ -2,19 +2,20 @@ import {Component, inject, OnDestroy, OnInit} from "@angular/core";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import {Sort} from "@angular/material/sort";
-import {PageEvent} from "@angular/material/paginator";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {LambdaService} from "../service/lambda-service.component";
-import {LambdaFunctionItem} from "../model/function-item";
+import {Environment, LambdaFunctionItem, Tag} from "../model/function-item";
 import {State, Store} from "@ngrx/store";
 import {LambdaFunctionDetailsState} from "./state/lambda-function-details.reducer";
 import {lambdaFunctionDetailsActions} from "./state/lambda-function-details.actions";
 import {Observable} from "rxjs";
 import {selectFunctionItem} from "./state/lambda-function-details.selectors";
 import {byteConversion} from "../../../shared/byte-utils.component";
+import {MatTableDataSource} from "@angular/material/table";
+
 
 @Component({
-    selector: 'bucket-detail-component',
+    selector: 'lambda-function-detail-component',
     templateUrl: './function-detail.component.html',
     styleUrls: ['./function-detail.component.scss'],
     providers: [LambdaService]
@@ -27,9 +28,16 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     functionItem = {} as LambdaFunctionItem;
     functionName: string = '';
     functionItem$: Observable<LambdaFunctionItem> = this.store.select(selectFunctionItem);
+
+    // Environment
+    environmentColumns: string[] = ['name', 'value'];
+    environmentDataSource = new MatTableDataSource<Environment>;
+    tagsDataSource = new MatTableDataSource<Tag>;
+
+    // Sorting
+    sortedEnvData: Environment[] = [];
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
-    // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
     constructor(private location: Location, private route: ActivatedRoute, private state: State<LambdaFunctionDetailsState>, private store: Store) {
@@ -40,8 +48,10 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionName = params['functionName'];
         });
         this.functionItem$?.subscribe((data: LambdaFunctionItem) => {
-            this.functionItem = data;
             this.lastUpdate = new Date();
+            this.functionItem = data;
+            this.environmentDataSource = this.convertEnvironment(data);
+            this.tagsDataSource = this.convertTags(data);
             console.log(data);
         });
         this.loadFunction();
@@ -55,38 +65,48 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         this.location.back();
     }
 
-    // ===================================================================================================================
-    // Details
-
     refresh() {
         this.loadFunction();
     }
 
-    // ===================================================================================================================
-    // Lambda Notifications
-
-    // ===================================================================================================================
     loadFunction() {
         this.store.dispatch(lambdaFunctionDetailsActions.loadFunction({
             name: this.functionName
         }));
     }
 
-    // ===================================================================================================================
-    lambdaNotificationSortChange(sortState: Sort) {
-        if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-            this._liveAnnouncer.announce('Sorting cleared');
-        }
-        this.loadFunction();
-    }
-
-    handleLambdaNotificationPageEvent(e: PageEvent) {
-
-    }
-
     save() {
         this.location.back();
+    }
+
+    environmentSortChanged(sortState: Sort) {
+//        console.log("Sort:", sortState);
+//        this.environmentDataSource = new MatTableDataSource(this.sortEnvData(sortState));
+    }
+
+    tagsSortChanged(sortState: Sort) {
+        if (sortState.direction) {
+            //this.environmentDataSource = new MatTableDataSource(this.sortEnvData(this.functionItem.environment, 'name', 'asc'));
+        } else {
+            //this.environmentDataSource = new MatTableDataSource(this.sortEnvData(this.functionItem.environment, 'name', 'desc'));
+        }
+    }
+
+    private convertEnvironment(data: any): MatTableDataSource<Environment> {
+        let i = 0;
+        let env: Environment[] = [];
+        for (let t in data.environment) {
+            env[i++] = {key: t, value: data.environment[t]};
+        }
+        return new MatTableDataSource(env);
+    }
+
+    private convertTags(data: any): MatTableDataSource<Tag> {
+        let i = 0;
+        let tags: Tag[] = [];
+        for (let t in data.tags) {
+            tags[i++] = {key: t, value: data.tags[t]};
+        }
+        return new MatTableDataSource(tags)
     }
 }

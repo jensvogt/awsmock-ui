@@ -5,15 +5,15 @@ import {LambdaFunctionItem} from "../../model/function-item";
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
 
-const selectBucketListFeature: SelectorFeatureType<LambdaFunctionDetailsState> =
+const selectFunctionListFeature: SelectorFeatureType<LambdaFunctionDetailsState> =
     createFeatureSelector<LambdaFunctionDetailsState>(lambdaFunctionDetailsFeatureKey);
 
 export const selectIsLoading: SelectorType<boolean> = createSelector(
-    selectBucketListFeature,
+    selectFunctionListFeature,
     (state: LambdaFunctionDetailsState) => state.loading
 );
 
 export const selectFunctionItem: SelectorType<LambdaFunctionItem> = createSelector(
-    selectBucketListFeature,
+    selectFunctionListFeature,
     (state: LambdaFunctionDetailsState) => state?.functionItem
 );

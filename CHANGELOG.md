@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0](https://github.com/jensvogt/awsmock-ui/compare/v1.3.0...v1.4.0) (2024-12-07)
+
+
+### Features
+
+* **66-s3-object-list-download-button:** add cognito module ([fcf9a98](https://github.com/jensvogt/awsmock-ui/commit/fcf9a98f8f171aa72fd7438b33ed15ee6a37c296))
+* **66-s3-object-list-download-button:** add cognito user list ([bd020d5](https://github.com/jensvogt/awsmock-ui/commit/bd020d5e9c3d549532e263cb2aa42250b59807a1))
+* **66-s3-object-list-download-button:** add cognito user list ([5ce6439](https://github.com/jensvogt/awsmock-ui/commit/5ce64397822a88ace59df36d2d7e812488f1a6ff))
+* **66-s3-object-list-download-button:** add s3 view object dialog, sns view message dialog ([1926155](https://github.com/jensvogt/awsmock-ui/commit/1926155f0f726a317c5424c3c4ce46195a6baad8))
+* **66-s3-object-list-download-button:** add sqs message file load dialog ([5c35f16](https://github.com/jensvogt/awsmock-ui/commit/5c35f168e4f62b997fd82d2694757ec822729baa))
+* **66-s3-object-list-download-button:** add sqs message file load dialog ([59783e3](https://github.com/jensvogt/awsmock-ui/commit/59783e31c07e53092c412a6a60b72aab6eb087d4))
+* **66-s3-object-list-download-button:** add sqs message file load dialog ([e83d19b](https://github.com/jensvogt/awsmock-ui/commit/e83d19bcdb48c26f94a299f927aeac4a1e7a9363))
+* **66-s3-object-list-download-button:** fix S3 object list paging ([5eb1eb6](https://github.com/jensvogt/awsmock-ui/commit/5eb1eb6d21f0d30ce9369b5baf49e407ea0dd9db))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([1081cec](https://github.com/jensvogt/awsmock-ui/commit/1081cec0f8c6d1fd75161b5118b1289c217d915b))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([bd5ba20](https://github.com/jensvogt/awsmock-ui/commit/bd5ba2033854c6357f4369cf129dc918f1f0e6f8))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([730445d](https://github.com/jensvogt/awsmock-ui/commit/730445d45ddd5ee3fb6b186e67f18f70016ef900))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([6a85e48](https://github.com/jensvogt/awsmock-ui/commit/6a85e48011ca44b70daf511508e8c80f3ed24b23))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([363dfe1](https://github.com/jensvogt/awsmock-ui/commit/363dfe1f3cb0e65d14cf13b8e10fa36ab93cf2c7))
+
 ## [1.3.0](https://github.com/jensvogt/awsmock-ui/compare/v1.2.18...v1.3.0) (2024-11-04)
 
 

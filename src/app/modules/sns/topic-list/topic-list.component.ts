@@ -14,6 +14,7 @@ import {snsTopicListActions} from "./state/sns-topic-list.actions";
 import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
 import {SNSTopicListState} from "./state/sns-topic-list.reducer";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {byteConversion} from "../../../shared/byte-utils.component";
 
 @Component({
     selector: 'app-home',
@@ -30,7 +31,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     listTopicCountersResponse$: Observable<ListTopicCountersResponse> = this.store.select(selectTopicCounters);
-    columns: any[] = ['topicName', 'availableMessages', 'created', 'modified', 'actions'];
+    columns: any[] = ['topicName', 'availableMessages', 'size', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -48,6 +49,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
 
     // Sorting, default available
     sortColumns: SortColumn[] = [{column: 'name', sortDirection: -1}];
+    protected readonly byteConversion = byteConversion;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<SNSTopicListState>, private store: Store,
                 private actionsSubj$: ActionsSubject) {

@@ -46,6 +46,14 @@
                                 {{ element.availableMessages }}
                             </td>
                         </ng-container>
+                        <ng-container matColumnDef="size">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="SIze of all messages in bytes" sortActionDescription="Sort by size">
+                                Size
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ byteConversion(element.size) }}
+                            </td>
+                        </ng-container>
                         <ng-container matColumnDef="created">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic creation timestamp" sortActionDescription="Sort by created">
                                 Created

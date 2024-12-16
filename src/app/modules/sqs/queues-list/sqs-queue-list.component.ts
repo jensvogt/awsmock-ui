@@ -12,6 +12,7 @@ import {Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from "./state/sqs-queue-list.selectors";
 import {sqsQueueListActions} from "./state/sqs-queue-list.actions";
 import {SQSQueueListState} from "./state/sqs-queue-list.reducer";
+import {byteConversion} from "../../../shared/byte-utils.component";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -28,7 +29,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listQueueCountersResponse$: Observable<ListQueueCountersResponse> = this.store.select(selectQueueCounters);
-    columns: any[] = ['queueName', 'messagesAvailable', 'messagesInFlight', 'messagesDelayed', 'actions'];
+    columns: any[] = ['queueName', 'messagesAvailable', 'messagesInFlight', 'messagesDelayed', 'size', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -43,6 +44,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     // Prefix
     prefixValue: string = this.state.value['sqs-queue-list'].prefix;
     prefixSet: boolean = false;
+    protected readonly byteConversion = byteConversion;
 
     constructor(private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService, private location: Location, private store: Store,
                 private actionsSubj$: ActionsSubject) {
@@ -104,7 +106,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
     sortChange(sortState: Sort) {
         this.state.value['sqs-queue-list'].sortColumns = [];
-        let direction = 1;
+        let direction;
         let column = 'attributes.approximateNumberOfMessages';
         if (sortState.active === 'messagesInFlight') {
             column = 'attributes.approximateNumberOfMessagesNotVisible'

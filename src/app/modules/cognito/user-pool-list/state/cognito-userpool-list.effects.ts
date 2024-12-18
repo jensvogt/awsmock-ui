@@ -9,7 +9,7 @@ import {CognitoService} from "../../service/cognito.service";
 @Injectable()
 export class CognitoUserPoolListEffects {
 
-    loadUSerPools$ = createEffect(() => this.actions$.pipe(
+    loadUserPools$ = createEffect(() => this.actions$.pipe(
         ofType(cognitoUserpoolListActions.loadUserPools),
         mergeMap(action =>
             this.cognitoService.listUserPoolCounters(

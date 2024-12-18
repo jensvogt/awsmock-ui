@@ -10,7 +10,7 @@ import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
 import {Router} from "@angular/router";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3BucketCountersResponse, S3BucketItem} from "../model/s3-bucket-item";
-import {selectBucketCounters, selectIsLoading, selectPageIndex, selectPageSize, selectPrefix, selectTotal} from "./state/s3-bucket-list.selectors";
+import {selectBucketCounters, selectIsLoading, selectPageIndex, selectPageSize, selectPrefix} from "./state/s3-bucket-list.selectors";
 import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {S3BucketListState} from "./state/s3-bucket-list.reducer";
@@ -35,7 +35,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     s3BucketCountersResponse$: Observable<S3BucketCountersResponse> = this.store.select(selectBucketCounters);
-    columns: any[] = ['name', 'keys', 'size', 'actions'];
+    columns: any[] = ['name', 'keys', 'size', 'created', 'modified', 'actions'];
     dataSource: MatTableDataSource<S3BucketItem> = new MatTableDataSource();
     defaultSort: Sort = {active: "keys", direction: "desc"};
     filterSubject = new Subject<string>();
@@ -91,10 +91,10 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
         this.store
             .pipe(select(selectBucketCounters))
-            .subscribe((buckets) => this.initializeData(buckets.bucketCounters));
-        this.store
-            .pipe(select(selectTotal))
-            .subscribe((total) => (this.total = total));
+            .subscribe((buckets) => {
+                this.initializeData(buckets.bucketCounters);
+                this.total = buckets.total;
+            });
         this.tableSubscription.add(
             this.store.pipe(select(selectIsLoading)).subscribe((loading) => {
                 if (loading) {
@@ -177,7 +177,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     sortChange(sortState: Sort) {
         this.state.value['s3-bucket-list'].sortColumns = [];
-        let direction = 1;
+        let direction;
         let column = 'keys';
         if (sortState.active === 'size') {
             column = 'size'

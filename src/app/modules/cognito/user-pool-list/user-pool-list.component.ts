@@ -30,7 +30,7 @@ export class CognitoUserPoolListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listUserPoolCountersResponse$: Observable<UserPoolCountersResponse> = this.store.select(selectUserPoolCounters);
-    columns: any[] = ['id', 'created', 'actions'];
+    columns: any[] = ['id', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;

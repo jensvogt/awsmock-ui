@@ -52,12 +52,25 @@
                     <mat-card-title>Monitoring</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <mat-nav-list>
-                        <a href="/sqs-charts" mat-list-item>Simple Queueing Service</a>
-                        <a href="/sns-charts" mat-list-item>Simple Notification Service</a>
-                        <a href="/s3-charts" mat-list-item>S3 Storage Service</a>
-                        <a href="/cognito-charts" mat-list-item>Cognito Service</a>
-                    </mat-nav-list>
+                    <mat-grid-list cols="2" rowHeight="200px">
+                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+                            <div style="margin-left: -10px; width: 100%; height: 100%;">
+                                <mat-nav-list>
+                                    <a href="/sqs-charts" mat-list-item>Simple Queueing Service</a>
+                                    <a href="/sns-charts" mat-list-item>Simple Notification Service</a>
+                                    <a href="/s3-charts" mat-list-item>S3 Storage Service</a>
+                                    <a href="/cognito-charts" mat-list-item>Cognito Service</a>
+                                </mat-nav-list>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+                            <div style="margin-left: -10px; width: 100%; height: 100%;">
+                                <mat-nav-list>
+                                    <a href="/lambda-charts" mat-list-item>Lambdas</a>
+                                </mat-nav-list>
+                            </div>
+                        </mat-grid-tile>
+                    </mat-grid-list>
                 </mat-card-content>
             </mat-card>
             <cpu-chart-component></cpu-chart-component>

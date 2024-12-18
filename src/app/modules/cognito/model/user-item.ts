@@ -3,7 +3,9 @@ export interface UserItem {
     userName: string | undefined;
     userPoolId: string | undefined;
     enabled: boolean | undefined;
-    status: string | undefined;
+    userStatus: string | undefined;
+    created: Date | undefined;
+    modified: Date | undefined;
 }
 
 export interface UserCountersResponse {

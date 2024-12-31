@@ -97,6 +97,16 @@ export const routes: Routes = [
                 path: 'lambda-charts',
                 component: LambdaChartsComponent,
             },
+            //=========================================================================
+            // Transfer server
+            //=========================================================================
+            {
+                path: 'transfer-server-list',
+                loadChildren: () => import('./modules/transfer/transfer.module').then(module => module.TransferModule),
+            },
+            //=========================================================================
+            // Not found
+            //=========================================================================
             {
                 path: '**',
                 component: NotFoundComponent,

@@ -1,0 +1,94 @@
+<mat-card appearance="outlined" style="margin: 3px;">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
+            <h4>Transfer Server</h4>
+        </span>
+        <!--button (click)="addQueue()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>add</mat-icon>
+        </button-->
+        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card appearance="outlined" style="margin: -10px;">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+                    <button (click)="setPrefix()" *ngIf="!prefixSet" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </button>
+                    <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-card-actions>
+            <div class="table-container">
+                <div *ngIf="listTransferServerCountersResponse$ | async as transferServerCounters" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="transferServerCounters.TransferServerCounters" class="mat-elevation-z8 queue-table"
+                           mat-table matSort>
+                        <ng-container matColumnDef="serverId">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Server ID" sortActionDescription="Sort by server ID">ServerId</th>
+                            <td *matCellDef="let element" mat-cell>
+                                <mat-nav-list>
+                                    <a mat-list-item routerLink="./messages/{{ element.Arn }}"> {{ element.ServerId }}</a>
+                                </mat-nav-list>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="created">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Transfer server creation timestamp"
+                                sortActionDescription="Sort by created">
+                                Created
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.Created|date:'dd-MM-yyyy HH:mm:ss' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modified">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Transfer server modified timestamp"
+                                sortActionDescription="Sort by modified">
+                                Modified
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.Modified|date:'dd-MM-yyyy HH:mm:ss' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:240px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="deleteTransferServer(row.SererId)" aria-label="Delete" mat-icon-button matTooltip="Delete the transfer server">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="columns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <mat-paginator (page)="handlePageEvent($event)"
+                           [disabled]="disabled"
+                           [hidePageSize]="hidePageSize"
+                           [length]="(listTransferServerCountersResponse$ | async)?.Total"
+                           [pageIndex]="(pageIndex$ | async)"
+                           [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                           [pageSize]="(pageSize$ | async)??false"
+                           [showFirstLastButtons]="showFirstLastButtons"
+                           aria-label="Select page" style="width:99%; margin-left:15px">
+
+            </mat-paginator>
+        </mat-card>
+        <div class="footer">
+            Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
+        </div>
+    </mat-card-content>
+</mat-card>

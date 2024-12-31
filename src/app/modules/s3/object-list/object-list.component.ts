@@ -45,7 +45,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     updateSubscription: Subscription | undefined;
 
     // Paging
-    columns: any[] = ['key', 'contentType', 'size', 'actions'];
+    columns: any[] = ['key', 'contentType', 'size', 'created', 'modified', 'actions'];
     pageSizeOptions = [5, 10, 20, 50, 100];
     hidePageSize = false;
     showPageSizeOptions = true;
@@ -209,7 +209,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
             dialogConfig.minWidth = '280px'
             dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType};
 
-            this.dialog.open(S3ObjectViewDialog, dialogConfig).afterClosed().subscribe((result: any) => {
+            this.dialog.open(S3ObjectViewDialog, dialogConfig).afterClosed().subscribe(() => {
             });
         }
     }

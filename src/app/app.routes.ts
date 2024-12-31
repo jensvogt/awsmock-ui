@@ -5,6 +5,8 @@ import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 import {SnsChartsComponent} from "./modules/sns/charts/sns-charts.component";
 import {S3ChartsComponent} from "./modules/s3/charts/s3-charts.component";
 import {BrowserModule} from "@angular/platform-browser";
+import {LambdaChartsComponent} from "./modules/lambda/charts/lambda-charts.component";
+import {CognitoUserDetailsComponent} from "./modules/cognito/user-detail/user-detail.component";
 
 export const routes: Routes = [
     {
@@ -75,6 +77,11 @@ export const routes: Routes = [
                 path: 'cognito',
                 loadChildren: () => import('./modules/cognito/cognito.module').then(module => module.CognitoModule),
             },
+            {
+                path: 'cognito-user/details/:userPoolId/:userName',
+                title: 'UserDetails',
+                component: CognitoUserDetailsComponent
+            },
             //=========================================================================
             // Lambda functions
             //=========================================================================
@@ -86,6 +93,20 @@ export const routes: Routes = [
                 path: 'lambda',
                 loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
             },
+            {
+                path: 'lambda-charts',
+                component: LambdaChartsComponent,
+            },
+            //=========================================================================
+            // Transfer server
+            //=========================================================================
+            {
+                path: 'transfer-server-list',
+                loadChildren: () => import('./modules/transfer/transfer.module').then(module => module.TransferModule),
+            },
+            //=========================================================================
+            // Not found
+            //=========================================================================
             {
                 path: '**',
                 component: NotFoundComponent,

@@ -1,0 +1,79 @@
+<mat-card appearance="outlined" style="margin: 3px;">
+    <mat-card-header>
+        <span>
+            <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        </span>
+        <span class="fill-remaining-space">
+            <h4>Cognito User Details: {{ this.userName }}</h4>
+        </span>
+        <span>
+            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </span>
+    </mat-card-header>
+    <mat-card appearance="outlined" style="margin: 3px;">
+        <mat-card-header>
+            <mat-card-title>Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-grid-list cols="2" rowHeight="420px">
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                        <mat-list>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>ID: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ userItem.Id }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>UserPoolId: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ userItem.UserPoolId }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>User name: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ userItem.Username }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Status: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ userItem.UserStatus }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Password: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ userItem.Password }}</p>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                        <mat-list>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Created:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ userItem.Created | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Modified:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ userItem.Modified | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:60px">
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-card-content>
+    </mat-card>
+    <mat-card-actions align="end">
+        <button (click)=back() mat-button>Close</button>
+        <button (click)=save() mat-button>Save</button>
+    </mat-card-actions>
+    <div class="footer">
+        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
+    </div>
+</mat-card>

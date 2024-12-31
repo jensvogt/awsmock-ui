@@ -4,6 +4,8 @@ export interface S3ObjectItem {
     key: string | undefined;
     size: number | undefined;
     contentType: string | undefined;
+    created: Date;
+    modified: Date;
 }
 
 export interface S3ObjectCounterResponse {

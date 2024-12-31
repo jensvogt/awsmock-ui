@@ -40,20 +40,19 @@
                         </ng-container>
                         <ng-container matColumnDef="messagesAvailable">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages available"
-                                sortActionDescription="Sort by messageAvailable">
-                                Messages available
+                                sortActionDescription="Sort by messageAvailable">Available
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.available }}</td>
                         </ng-container>
                         <ng-container matColumnDef="messagesInFlight">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages invisible"
-                                sortActionDescription="Sort by messagesInFlight">Messages in flight
+                                sortActionDescription="Sort by messagesInFlight">In flight
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.invisible }}</td>
                         </ng-container>
                         <ng-container matColumnDef="messagesDelayed">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages delayed"
-                                sortActionDescription="Sort by messagesDelayed">Messages delayed
+                                sortActionDescription="Sort by messagesDelayed">Delayed
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.delayed }}</td>
                         </ng-container>
@@ -62,6 +61,22 @@
                                 sortActionDescription="Sort by size">Size
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="created">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue creation timestamp" sortActionDescription="Sort by created">
+                                Created
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.created|date:'dd-MM-yyyy HH:mm:ss' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modified">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue modified timestamp" sortActionDescription="Sort by modified">
+                                Modified
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.modified|date:'dd-MM-yyyy HH:mm:ss' }}
+                            </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:240px">Actions</th>

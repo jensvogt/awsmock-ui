@@ -4,18 +4,18 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            <h4>Cognito User pools</h4>
+            <h4>Transfer Server</h4>
         </span>
-        <button (click)="addUserPool()" aria-label="Refresh" mat-icon-button>
+        <!--button (click)="addQueue()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
-        </button>
+        </button-->
         <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
             <mat-icon>refresh</mat-icon>
         </button>
     </mat-card-header>
     <mat-card-content>
         <mat-card appearance="outlined" style="margin: -10px;">
-            <mat-card-actions class="head-buttons">
+            <mat-card-actions align="start">
                 <mat-form-field style="width:100%">
                     <mat-label>Prefix</mat-label>
                     <input [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
@@ -28,31 +28,39 @@
                 </mat-form-field>
             </mat-card-actions>
             <div class="table-container">
-                <div *ngIf="listUserPoolCountersResponse$ | async as userPoolCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="userPoolCounters.userPools" class="mat-elevation-z8 queue-table" mat-table matSort>
-                        <ng-container matColumnDef="id" matTooltip="User PoolId">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User Pool ID" sortActionDescription="Sort by userPoolId">ID</th>
+                <div *ngIf="listTransferServerCountersResponse$ | async as transferServerCounters" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="transferServerCounters.TransferServerCounters" class="mat-elevation-z8 queue-table"
+                           mat-table matSort>
+                        <ng-container matColumnDef="serverId">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Server ID" sortActionDescription="Sort by server ID">ServerId</th>
                             <td *matCellDef="let element" mat-cell>
                                 <mat-nav-list>
-                                    <a mat-list-item routerLink="./users/{{ element.userPoolId }}">{{ element.userPoolId }}</a>
+                                    <a mat-list-item routerLink="./messages/{{ element.Arn }}"> {{ element.ServerId }}</a>
                                 </mat-nav-list>
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="created" matTooltip="Created">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Create timestamp" sortActionDescription="Sort by created">Created</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.created | date: 'dd-MM-yyyy hh:mm:ss' }}</td>
+                        <ng-container matColumnDef="created">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Transfer server creation timestamp"
+                                sortActionDescription="Sort by created">
+                                Created
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.Created|date:'dd-MM-yyyy HH:mm:ss' }}
+                            </td>
                         </ng-container>
-                        <ng-container matColumnDef="modified" matTooltip="Modified">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified timestamp" sortActionDescription="Sort by modified">Modified</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.modified | date: 'dd-MM-yyyy hh:mm:ss' }}</td>
+                        <ng-container matColumnDef="modified">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Transfer server modified timestamp"
+                                sortActionDescription="Sort by modified">
+                                Modified
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.Modified|date:'dd-MM-yyyy HH:mm:ss' }}
+                            </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
+                            <th *matHeaderCellDef mat-header-cell style="width:240px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <!--button (click)="listUsers(row.userPoolId)" aria-label="ListUsers" mat-icon-button matTooltip="Lists all users of that user pool">
-                                    <mat-icon>group</mat-icon>
-                                </button-->
-                                <button (click)="deleteUserPool(row.userPoolId)" aria-label="DeleteUserPool" mat-icon-button matTooltip="Delete user pool">
+                                <button (click)="deleteTransferServer(row.SererId)" aria-label="Delete" mat-icon-button matTooltip="Delete the transfer server">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>
@@ -70,12 +78,13 @@
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
-                           [length]="(listUserPoolCountersResponse$ | async)?.total"
+                           [length]="(listTransferServerCountersResponse$ | async)?.Total"
                            [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-                           [pageSize]="(pageSize$ | async)"
+                           [pageSize]="(pageSize$ | async)??false"
                            [showFirstLastButtons]="showFirstLastButtons"
                            aria-label="Select page" style="width:99%; margin-left:15px">
+
             </mat-paginator>
         </mat-card>
         <div class="footer">

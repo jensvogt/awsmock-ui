@@ -1,24 +1,6 @@
 import {Component, Inject} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable
-} from "@angular/material/table";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort, MatSortHeader} from "@angular/material/sort";
+import {MatButton} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {MatTooltip} from "@angular/material/tooltip";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -30,28 +12,6 @@ import {saveAs} from "file-saver";
     templateUrl: './s3-object-download.component.html',
     standalone: true,
     imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardSubtitle,
-        MatTable,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatColumnDef,
-        MatIcon,
-        MatHeaderCell,
-        MatCell,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatSortHeader,
-        MatRowDef,
-        MatNoDataRow,
-        MatIconButton,
-        MatRow,
-        MatPaginator,
-        MatSort,
-        MatTooltip,
         FormsModule,
         MatButton,
         MatDialogActions,
@@ -67,6 +27,7 @@ import {saveAs} from "file-saver";
 })
 export class S3ObjectDownloadComponent {
 
+    // Todo: Generate server download URL and send the file from there.
     body: string = '';
     fileName: string | undefined = '';
 

@@ -39,14 +39,14 @@ export class SqsQueueListEffects {
         ofType(sqsQueueListActions.purgeQueue),
         mergeMap(action =>
             this.sqsService.purgeQueue(action.queueUrl)
-                .then(() => sqsQueueListActions.addQueueSuccess()))
+                .then(() => sqsQueueListActions.purgeQueueSuccess()))
     ));
 
     deleteQueue$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueListActions.deleteQueue),
         mergeMap(action =>
             this.sqsService.deleteQueue(action.queueUrl)
-                .then(() => sqsQueueListActions.addQueueSuccess()))
+                .then(() => sqsQueueListActions.deleteQueueSuccess()))
     ));
 
     constructor(private actions$: Actions, private sqsService: SqsService) {

@@ -6,11 +6,13 @@ import {MatIcon} from "@angular/material/icon";
 import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
 import {MonitoringService} from "../../../services/monitoring.service";
-import {S3ServiceTimeChartComponent} from "./service-time/s3-service-time-chart.component";
+import {LambdaServiceTimeChartComponent} from "./service-time/lambda-service-time-chart.component";
+import {MatAccordion, MatExpansionPanel, MatExpansionPanelDescription, MatExpansionPanelHeader, MatExpansionPanelTitle} from "@angular/material/expansion";
+import {LambdaFunctionCounterChartComponent} from "./function-counter/lambda-function-counter-chart.component";
 
 @Component({
-    selector: 's3-chart-component',
-    templateUrl: './s3-charts.component.html',
+    selector: 'lambda-chart-component',
+    templateUrl: './lambda-charts.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -19,22 +21,28 @@ import {S3ServiceTimeChartComponent} from "./service-time/s3-service-time-chart.
         MatIcon,
         FormsModule,
         MatIconButton,
-        S3ServiceTimeChartComponent,
+        LambdaServiceTimeChartComponent,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelTitle,
+        MatExpansionPanelDescription,
+        MatExpansionPanelHeader,
+        LambdaFunctionCounterChartComponent,
     ],
     providers: [MonitoringService],
-    styleUrls: ['./s3-charts.component.scss']
+    styleUrls: ['./lambda-charts.component.scss']
 })
-export class S3ChartsComponent implements OnInit, OnDestroy {
+export class LambdaChartsComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
     // Auto-update
     updateSubscription: Subscription | undefined;
-    @ViewChild(S3ServiceTimeChartComponent) s3ServiceTimeChart: S3ServiceTimeChartComponent | undefined;
+    @ViewChild(LambdaServiceTimeChartComponent) s3ServiceTimeChart: LambdaServiceTimeChartComponent | undefined;
 
     constructor(private location: Location) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-            this.s3ServiceTimeChart?.loadS3ServiceTimeChart();
+            this.s3ServiceTimeChart?.loadLambdaServiceTimeChart();
         });
     }
 

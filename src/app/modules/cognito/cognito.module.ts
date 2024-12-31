@@ -36,9 +36,10 @@ import {CognitoUserPoolListEffects} from "./user-pool-list/state/cognito-userpoo
 import {CognitoUserListComponent} from "./user-list/user-list.component";
 import {cognitoUserListFeatureKey, cognitoUserListReducer} from "./user-list/state/cognito-user-list.reducer";
 import {CognitoUserListEffects} from "./user-list/state/cognito-user-list.effects";
+import {CognitoUserDetailsComponent} from "./user-detail/user-detail.component";
 
 @NgModule({
-    declarations: [CognitoUserPoolListComponent, CognitoUserListComponent],
+    declarations: [CognitoUserPoolListComponent, CognitoUserListComponent, CognitoUserDetailsComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -86,7 +87,7 @@ import {CognitoUserListEffects} from "./user-list/state/cognito-user-list.effect
         StoreModule.forFeature(cognitoUserListFeatureKey, cognitoUserListReducer),
         EffectsModule.forFeature([CognitoUserPoolListEffects, CognitoUserListEffects]),
     ],
-    exports: [CognitoUserPoolListComponent, CognitoUserListComponent],
+    exports: [CognitoUserPoolListComponent, CognitoUserListComponent, CognitoUserDetailsComponent],
     providers: [CognitoService],
 })
 export class CognitoModule {

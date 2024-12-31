@@ -29,7 +29,7 @@ export class CognitoUserListEffects {
         ofType(cognitoUserActions.addUser),
         mergeMap(action =>
             this.cognitoService.createUser(action.userPoolName, action.userName)
-                .pipe(map((queues: any) => cognitoUserActions.addUserSuccess()),
+                .pipe(map(() => cognitoUserActions.addUserSuccess()),
                     catchError((error) =>
                         of(cognitoUserActions.addUserFailure({error: error.message}))
                     )
@@ -41,9 +41,9 @@ export class CognitoUserListEffects {
         ofType(cognitoUserActions.confirmUser),
         mergeMap(action =>
             this.cognitoService.confirmUser(action.userPooId, action.userName)
-                .pipe(map((queues: any) => cognitoUserActions.deleteUserSuccess()),
+                .pipe(map(() => cognitoUserActions.confirmUserSuccess()),
                     catchError((error) =>
-                        of(cognitoUserActions.deleteUserFailure({error: error.message}))
+                        of(cognitoUserActions.confirmUserFailure({error: error.message}))
                     )
                 )
         )));
@@ -52,7 +52,7 @@ export class CognitoUserListEffects {
         ofType(cognitoUserActions.deleteUser),
         mergeMap(action =>
             this.cognitoService.deleteUserPool(action.userPoolName)
-                .pipe(map((queues: any) => cognitoUserActions.deleteUserSuccess()),
+                .pipe(map(() => cognitoUserActions.deleteUserSuccess()),
                     catchError((error) =>
                         of(cognitoUserActions.deleteUserFailure({error: error.message}))
                     )

@@ -1,0 +1,41 @@
+body {
+  margin: 40px;
+}
+
+.container {
+  width: 100%;
+}
+
+.form {
+  min-width: 150px;
+  //  max-width: 500px;
+  width: 100%;
+  margin-right: 10px;
+}
+
+.form-full-width {
+  width: 100%;
+}
+
+.head-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+  justify-content: flex-end;
+}
+
+.footer {
+  display: flex;
+  width: 50%;
+  font-size: x-small;
+  color: black;
+  padding-top: 15px;
+  padding-left: 15px;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}

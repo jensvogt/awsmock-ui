@@ -64,7 +64,7 @@ export class CognitoService {
     }
 
     public confirmUser(userPoolId: string, userName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "AdminConfirmSignUp");
+        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "admin-confirm-sign-up");
         const body = {
             Region: environment.awsmockRegion,
             UserPoolId: userPoolId,
@@ -74,7 +74,7 @@ export class CognitoService {
     }
 
     public createUserPool(userPoolName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "CreateUserPool");
+        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "create-user-pool");
         const body = {
             Region: environment.awsmockRegion,
             PoolName: userPoolName
@@ -83,7 +83,17 @@ export class CognitoService {
     }
 
     public createUser(userPoolId: string, userName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "AdminCreateUser");
+        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "admin-create-user");
+        const body = {
+            Region: environment.awsmockRegion,
+            Username: userName,
+            UserPoolId: userPoolId
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    public getUser(userPoolId: string, userName: string) {
+        let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "admin-get-user");
         const body = {
             Region: environment.awsmockRegion,
             Username: userName,

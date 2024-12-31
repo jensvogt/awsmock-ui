@@ -33,7 +33,7 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listUserCountersResponse$: Observable<UserCountersResponse> = this.store.select(selectUsersCounters);
-    columns: any[] = ['userName', 'status', 'enabled', 'created', 'modified', 'actions'];
+    columns: any[] = ['userName', 'userStatus', 'enabled', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;

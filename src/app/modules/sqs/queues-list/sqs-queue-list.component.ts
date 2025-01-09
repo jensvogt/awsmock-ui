@@ -13,6 +13,7 @@ import {selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from
 import {sqsQueueListActions} from "./state/sqs-queue-list.actions";
 import {SQSQueueListState} from "./state/sqs-queue-list.reducer";
 import {byteConversion} from "../../../shared/byte-utils.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -46,8 +47,8 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     prefixSet: boolean = false;
     protected readonly byteConversion = byteConversion;
 
-    constructor(private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService, private location: Location, private store: Store,
-                private actionsSubj$: ActionsSubject) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService,
+                private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
         this.actionsSubj$.pipe(
             filter((action) =>
                 action.type === sqsQueueListActions.addQueueSuccess.type ||
@@ -146,10 +147,6 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         });
     }
 
-    purgeQueue(queueUrl: string) {
-        this.store.dispatch(sqsQueueListActions.purgeQueue({queueUrl: queueUrl}));
-    }
-
     sendMessage(queueUrl: string) {
 
         const dialogConfig = new MatDialogConfig();
@@ -170,7 +167,13 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         });
     }
 
+    purgeQueue(queueUrl: string) {
+        this.store.dispatch(sqsQueueListActions.purgeQueue({queueUrl: queueUrl}));
+        this.snackBar.open('SQS queue purged, url: ' + queueUrl, 'Done', {duration: 5000})
+    }
+
     deleteQueue(queueUrl: string) {
         this.store.dispatch(sqsQueueListActions.deleteQueue({queueUrl: queueUrl}));
+        this.snackBar.open('SQS queue deleted, url: ' + queueUrl, 'Done', {duration: 5000})
     }
 }

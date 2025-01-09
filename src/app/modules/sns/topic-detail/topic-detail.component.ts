@@ -16,7 +16,7 @@ import {selectDetails, selectError, selectSubscriptionPageIndex, selectSubscript
 import {SnsTopicDetailsState} from "./state/sns-topic-detail.reducer";
 
 @Component({
-    selector: 'add-connection-dialog',
+    selector: 'sns-topic-detail-component',
     templateUrl: './topic-detail.component.html',
     styleUrls: ['./topic-detail.component.scss'],
     providers: [SnsService]

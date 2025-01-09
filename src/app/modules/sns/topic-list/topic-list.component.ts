@@ -17,7 +17,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
 
 @Component({
-    selector: 'app-home',
+    selector: 'sns-topic-list-component',
     templateUrl: './topic-list.component.html',
     styleUrls: ['./topic-list.component.scss'],
     providers: [SnsService]
@@ -45,7 +45,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
 
     // Prefix
     prefixSet: boolean = false;
-    prefix: string = '';
+    prefixValue: string = '';
 
     // Sorting, default available
     sortColumns: SortColumn[] = [{column: 'name', sortDirection: -1}];
@@ -87,12 +87,12 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     setPrefix() {
         this.prefixSet = true;
         this.state.value['sns-topic-list'].pageIndex = 0;
-        this.state.value['sns-topic-list'].prefix = this.prefix;
+        this.state.value['sns-topic-list'].prefix = this.prefixValue;
         this.loadTopics();
     }
 
     unsetPrefix() {
-        this.prefix = '';
+        this.prefixValue = '';
         this.prefixSet = false;
         this.state.value['sns-topic-list'].prefix = '';
         this.loadTopics();
@@ -163,9 +163,11 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
 
     purgeTopic(topicArn: string) {
         this.store.dispatch(snsTopicListActions.purgeTopic({topicArn: topicArn}));
+        this.snackBar.open('SNS topic purged, topicArn: ' + topicArn, 'Done', {duration: 5000});
     }
 
     deleteTopic(topicArn: string) {
         this.store.dispatch(snsTopicListActions.deleteTopic({topicArn: topicArn}));
+        this.snackBar.open('SNS topic deleted, topicArn: ' + topicArn, 'Done', {duration: 5000});
     }
 }

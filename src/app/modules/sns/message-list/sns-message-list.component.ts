@@ -15,7 +15,7 @@ import {selectMessageCounters, selectPageIndex, selectPageSize} from "./state/sn
 import {SnsViewMessageDialog} from "./view-message/sns-view-message.component";
 
 @Component({
-    selector: 'sns-message-list',
+    selector: 'sns-message-list-component',
     templateUrl: './sns-message-list.component.html',
     styleUrls: ['./sns-message-list.component.scss'],
     providers: [SnsService]
@@ -41,6 +41,10 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
 
     // Router parameter
     topicName: string = '';
+
+    // Prefix
+    prefixSet: boolean = false;
+    prefixValue: string = '';
 
     // Auto-update
     private updateSubscription: Subscription | undefined;
@@ -79,6 +83,20 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
+        this.loadMessages();
+    }
+
+    setPrefix() {
+        this.prefixSet = true;
+        this.state.value['sns-topic-list'].pageIndex = 0;
+        this.state.value['sns-topic-list'].prefix = this.prefixValue;
+        this.loadMessages();
+    }
+
+    unsetPrefix() {
+        this.prefixValue = '';
+        this.prefixSet = false;
+        this.state.value['sns-topic-list'].prefix = '';
         this.loadMessages();
     }
 

@@ -1,21 +1,12 @@
-import {
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle
-} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 
 @Component({
-    selector: 'add-connection-dialog',
+    selector: 'sns-topic-add-component',
     templateUrl: './topic-add.component.html',
     standalone: true,
     imports: [
@@ -25,11 +16,8 @@ import {MatInput} from "@angular/material/input";
         MatButton,
         MatDialogClose,
         MatFormField,
-        MatSelect,
-        MatOption,
         MatLabel,
         FormsModule,
-        MatTextColumn,
         MatInput,
         ReactiveFormsModule
     ],

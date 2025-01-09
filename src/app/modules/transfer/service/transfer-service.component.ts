@@ -47,7 +47,7 @@ export class TransferService {
     }
 
     /**
-     * @brief List all queues
+     * @brief List all transfer servers
      *
      * @par
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.

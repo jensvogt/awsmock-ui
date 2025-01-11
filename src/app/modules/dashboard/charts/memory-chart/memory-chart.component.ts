@@ -49,7 +49,7 @@ export type ChartOptions = {
 })
 export class MemoryChartComponent implements OnInit {
 
-    public memChartOptions: Partial<ChartOptions> | undefined;
+    public memChartOptions: Partial<ChartOptions> = {};
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

@@ -13,6 +13,7 @@ import {S3Service} from "../service/s3-service.component";
     selector: 'bucket-detail-component',
     templateUrl: './bucket-detail.component.html',
     styleUrls: ['./bucket-detail.component.scss'],
+    standalone: false,
     providers: [S3Service]
 })
 export class S3BucketDetailComponent implements OnInit, OnDestroy {

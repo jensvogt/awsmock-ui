@@ -20,6 +20,7 @@ import {selectUsersCounters} from "./state/cognito-user-list.selectors";
     selector: 'cognito-user-list',
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.scss'],
+    standalone: false,
     providers: [CognitoService]
 })
 export class CognitoUserListComponent implements OnInit, OnDestroy {

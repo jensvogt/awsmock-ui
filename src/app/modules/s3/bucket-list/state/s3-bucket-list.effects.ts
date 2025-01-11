@@ -28,7 +28,7 @@ export class S3BucketListEffects {
         )
     ));
 
-    addQueue$ = createEffect(() => this.actions$.pipe(
+    addBucket$ = createEffect(() => this.actions$.pipe(
         ofType(s3BucketListActions.addBucket),
         mergeMap(action =>
             this.s3Service.createBucket(action.bucketName)

@@ -11,6 +11,7 @@ export interface SQSQueueListState {
     pageSize: number;
     pageIndex: number;
     loading: boolean;
+    reload: boolean,
     sortColumns: SortColumn[];
     error: unknown;
 }
@@ -21,7 +22,8 @@ export const initialState: SQSQueueListState = {
     pageSize: 10,
     pageIndex: 0,
     loading: false,
-    sortColumns: [{column: 'attributes.approximateNumberOfMessages', sortDirection: -1}],
+    reload: false,
+    sortColumns: [{column: 'attributes.approximateNumberOfMessages', sortDirection: -1}, {column: 'name', sortDirection: 1}],
     error: {}
 };
 
@@ -29,25 +31,36 @@ export const sqsQueueListReducer = createReducer(
     initialState,
 
     // Initialize
-    on(sqsQueueListActions.initialize, (state: SQSQueueListState): SQSQueueListState => ({...state, pageIndex: 0, pageSize: 10, loading: true})),
+    on(sqsQueueListActions.initialize, (state: SQSQueueListState): SQSQueueListState => ({
+        ...state,
+        pageIndex: 0,
+        pageSize: 10,
+        loading: true,
+        reload: false,
+    })),
 
     // Queue list
-    on(sqsQueueListActions.loadQueues, (state: SQSQueueListState) => ({...state, loading: true})),
-    on(sqsQueueListActions.loadQueuesSuccess, (state: SQSQueueListState, {queues}) => ({...state, listQueueResponse: queues, loading: false})),
-    on(sqsQueueListActions.loadQueuesFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
+    on(sqsQueueListActions.loadQueues, (state: SQSQueueListState) => ({...state, loading: true, reload: false})),
+    on(sqsQueueListActions.loadQueuesSuccess, (state: SQSQueueListState, {queues}) => ({
+        ...state,
+        listQueueResponse: queues,
+        loading: false,
+        reload: false
+    })),
+    on(sqsQueueListActions.loadQueuesFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false, reload: false})),
 
     // Add queue
-    on(sqsQueueListActions.addQueue, (state: SQSQueueListState) => ({...state, loading: true})),
-    on(sqsQueueListActions.addQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false})),
-    on(sqsQueueListActions.addQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
+    on(sqsQueueListActions.createQueue, (state: SQSQueueListState) => ({...state, loading: true})),
+    on(sqsQueueListActions.createQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false, reload: true})),
+    on(sqsQueueListActions.createQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false, reload: false})),
 
     // Purge queue
     on(sqsQueueListActions.purgeQueue, (state: SQSQueueListState) => ({...state, loading: true})),
-    on(sqsQueueListActions.purgeQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false})),
-    on(sqsQueueListActions.purgeQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
+    on(sqsQueueListActions.purgeQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false, reload: true})),
+    on(sqsQueueListActions.purgeQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false, reload: false})),
 
     // Delete queue
     on(sqsQueueListActions.deleteQueue, (state: SQSQueueListState) => ({...state, loading: true})),
-    on(sqsQueueListActions.deleteQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false})),
-    on(sqsQueueListActions.deleteQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
+    on(sqsQueueListActions.deleteQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false, reload: true})),
+    on(sqsQueueListActions.deleteQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false, reload: true})),
 );

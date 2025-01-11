@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ModuleService} from "../../services/module.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Store} from "@ngrx/store";
 import {CpuChartComponent} from "./charts/cpu-chart/cpu-chart.component";
 import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
 import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component";
@@ -16,6 +15,7 @@ import {ImportInfrastructureComponentDialog} from "../infrastructure/import/impo
     selector: 'dashboard-component',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
+    standalone: false
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     @ViewChild(GatewayTimeComponent) gatewayTimeChart: GatewayTimeComponent | undefined;
     @ViewChild(ThreadsChartComponent) threadsChart: ThreadsChartComponent | undefined;
 
-    constructor(private snackBar: MatSnackBar, private moduleService: ModuleService, private dialog: MatDialog, private readonly store: Store) {
+    constructor(private snackBar: MatSnackBar, private moduleService: ModuleService, private dialog: MatDialog) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date();
             this.cpuChart?.loadCpuChart();

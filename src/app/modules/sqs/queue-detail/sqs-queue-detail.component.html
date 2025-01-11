@@ -6,7 +6,7 @@
             </button>
         </span>
         <span class="fill-remaining-space">
-            <h4>Queue: {{ (queueDetails$ | async)?.queueName }}</h4>
+            Queue Details: {{ (queueDetails$ | async)?.queueName }}
         </span>
         <span>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>

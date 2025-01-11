@@ -1,16 +1,8 @@
-import {
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle
-} from "@angular/material/dialog";
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, OnInit} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 
 @Component({
@@ -24,11 +16,8 @@ import {MatInput} from "@angular/material/input";
         MatButton,
         MatDialogClose,
         MatFormField,
-        MatSelect,
-        MatOption,
         MatLabel,
         FormsModule,
-        MatTextColumn,
         MatInput,
         ReactiveFormsModule
     ],

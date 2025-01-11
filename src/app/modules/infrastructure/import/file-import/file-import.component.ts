@@ -1,40 +1,22 @@
 import {Component, ElementRef, Inject, signal, ViewChild} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import {MatButton, MatIconButton, MatMiniFabButton} from "@angular/material/button";
+import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {MatTooltip} from "@angular/material/tooltip";
 import {FormsModule} from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {NgIf, NgOptimizedImage} from "@angular/common";
 
 @Component({
     selector: 'import-file-component',
     templateUrl: './file-import.component.html',
     standalone: true,
     imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardSubtitle,
         MatIcon,
-        MatIconButton,
-        MatTooltip,
         FormsModule,
         MatButton,
         MatDialogActions,
         MatDialogClose,
         MatDialogContent,
         MatDialogTitle,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        MatMiniFabButton,
-        NgIf,
-        NgOptimizedImage
     ],
     styleUrls: ['./file-import.component.scss'],
 })

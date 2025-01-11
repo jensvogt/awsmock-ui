@@ -40,12 +40,7 @@ export const transferServerListReducer = createReducer(
     })),
     on(transferServerListActions.loadTransferServerFailure, (state: TransferServerListState, {error}) => ({...state, error: error, loading: false})),
 
-    // Add queue
-    //on(transferServerListActions.addQueue, (state: TransferServerListState) => ({...state, loading: true})),
-    //on(transferServerListActions.addQueueSuccess, (state: TransferServerListState) => ({...state, loading: false})),
-    //on(transferServerListActions.addQueueFailure, (state: TransferServerListState, {error}) => ({...state, error: error, loading: false})),
-
-    // Delete queue
+    // Delete transfer server
     on(transferServerListActions.deleteTransferServer, (state: TransferServerListState) => ({...state, loading: true})),
     on(transferServerListActions.deleteTransferServerSuccess, (state: TransferServerListState) => ({...state, loading: false})),
     on(transferServerListActions.deleteTransferServerFailure, (state: TransferServerListState, {error}) => ({...state, error: error, loading: false})),

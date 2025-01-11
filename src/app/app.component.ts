@@ -7,6 +7,7 @@ import {ConfigComponentDialog} from "./modules/dashboard/settings/config.compone
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
+    standalone: false
 })
 export class AppComponent {
 
@@ -35,7 +36,7 @@ export class AppComponent {
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
 
-        this.dialog.open(ConfigComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(ConfigComponentDialog, dialogConfig).afterClosed().subscribe(() => {
         });
     }
 

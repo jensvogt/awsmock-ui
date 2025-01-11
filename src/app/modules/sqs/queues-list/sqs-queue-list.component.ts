@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {filter, interval, Observable, Subscription} from "rxjs";
+import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {ListQueueCountersResponse} from "../model/sqs-queue-item";
 import {Sort} from "@angular/material/sort";
@@ -7,7 +7,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
 import {SqsService} from "../service/sqs-service.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
-import {ActionsSubject, State, Store} from "@ngrx/store";
+import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from "./state/sqs-queue-list.selectors";
 import {sqsQueueListActions} from "./state/sqs-queue-list.actions";
@@ -19,6 +19,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     selector: 'sqs-queue-list',
     templateUrl: './sqs-queue-list.component.html',
     styleUrls: ['./sqs-queue-list.component.scss'],
+    standalone: false
 })
 export class SqsQueueListComponent implements OnInit, OnDestroy {
 
@@ -48,17 +49,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService,
-                private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
-        this.actionsSubj$.pipe(
-            filter((action) =>
-                action.type === sqsQueueListActions.addQueueSuccess.type ||
-                action.type === sqsQueueListActions.purgeQueueSuccess.type ||
-                action.type === sqsQueueListActions.deleteQueueSuccess.type
-            )
-        ).subscribe(() => {
-                this.loadQueues();
-            }
-        );
+                private location: Location, private store: Store) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {
@@ -133,7 +124,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         }));
     }
 
-    addQueue() {
+    createQueue() {
 
         const dialogConfig = new MatDialogConfig();
 
@@ -142,7 +133,10 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(QueueAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.store.dispatch(sqsQueueListActions.addQueue({name: result}));
+                this.sqsService.createQueue(result).subscribe(() => {
+                    this.loadQueues();
+                    this.snackBar.open('SQS queue created, url: ' + result, 'Done', {duration: 5000})
+                });
             }
         });
     }
@@ -161,19 +155,25 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.sqsService.sendMessage(queueUrl, result);
-                this.loadQueues();
+                this.sqsService.sendMessage(queueUrl, result, 0).subscribe(() => {
+                    this.loadQueues();
+                    this.snackBar.open('SQS message send created, url: ' + queueUrl, 'Done', {duration: 5000})
+                });
             }
         });
     }
 
     purgeQueue(queueUrl: string) {
-        this.store.dispatch(sqsQueueListActions.purgeQueue({queueUrl: queueUrl}));
-        this.snackBar.open('SQS queue purged, url: ' + queueUrl, 'Done', {duration: 5000})
+        this.sqsService.purgeQueue(queueUrl).subscribe(() => {
+            this.loadQueues();
+            this.snackBar.open('SQS queue purged, url: ' + queueUrl, 'Done', {duration: 5000})
+        });
     }
 
     deleteQueue(queueUrl: string) {
-        this.store.dispatch(sqsQueueListActions.deleteQueue({queueUrl: queueUrl}));
-        this.snackBar.open('SQS queue deleted, url: ' + queueUrl, 'Done', {duration: 5000})
+        this.sqsService.deleteQueue(queueUrl).subscribe(() => {
+            this.loadQueues()
+            this.snackBar.open('SQS queue deleted, url: ' + queueUrl, 'Done', {duration: 5000})
+        });
     }
 }

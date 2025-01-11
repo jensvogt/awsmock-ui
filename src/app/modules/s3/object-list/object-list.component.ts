@@ -24,6 +24,7 @@ import {S3ObjectViewDialog} from "./view/object-view.component";
     selector: 's3-object-list',
     templateUrl: './object-list.component.html',
     styleUrls: ['./object-list.component.scss'],
+    standalone: false,
     providers: [S3Service, AwsMockHttpService]
 })
 export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {

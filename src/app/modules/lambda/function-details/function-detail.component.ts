@@ -1,8 +1,7 @@
-import {Component, inject, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import {Sort} from "@angular/material/sort";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {LambdaService} from "../service/lambda-service.component";
 import {Environment, LambdaFunctionItem, Tag} from "../model/function-item";
 import {State, Store} from "@ngrx/store";
@@ -18,6 +17,7 @@ import {MatTableDataSource} from "@angular/material/table";
     selector: 'lambda-function-detail-component',
     templateUrl: './function-detail.component.html',
     styleUrls: ['./function-detail.component.scss'],
+    standalone: false,
     providers: [LambdaService]
 })
 export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
@@ -35,10 +35,8 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     tagsDataSource = new MatTableDataSource<Tag>;
 
     // Sorting
-    sortedEnvData: Environment[] = [];
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
-    private _liveAnnouncer = inject(LiveAnnouncer);
 
     constructor(private location: Location, private route: ActivatedRoute, private state: State<LambdaFunctionDetailsState>, private store: Store) {
     }

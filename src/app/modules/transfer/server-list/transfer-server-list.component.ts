@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {filter, interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {ActionsSubject, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectTransferServerCounters} from "./state/transfer-server-list.selectors";
@@ -15,6 +15,7 @@ import {ListTransferServerCountersResponse} from "../model/transfer-server-item"
     selector: 'transfer-server-list',
     templateUrl: './transfer-server-list.component.html',
     styleUrls: ['./transfer-server-list.component.scss'],
+    standalone: false
 })
 export class TransferServerListComponent implements OnInit, OnDestroy {
 
@@ -124,20 +125,6 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
             pageIndex: this.state.value['transfer-server-list'].pageIndex,
             sortColumns: this.state.value['transfer-server-list'].sortColumns
         }));
-    }
-
-    addTransferServer() {
-
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-
-        /*this.dialog.open(QueueAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                this.store.dispatch(transferServerListActions.addQueue({name: result}));
-            }
-        });*/
     }
 
     deleteTransferServer(serverId: string) {

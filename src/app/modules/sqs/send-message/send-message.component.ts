@@ -3,8 +3,6 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
@@ -21,11 +19,8 @@ import {FileImportComponent} from "../../infrastructure/import/file-import/file-
         MatButton,
         MatDialogClose,
         MatFormField,
-        MatSelect,
-        MatOption,
         MatLabel,
         FormsModule,
-        MatTextColumn,
         MatInput,
         ReactiveFormsModule,
         CdkDrag,

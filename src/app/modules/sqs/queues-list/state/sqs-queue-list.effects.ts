@@ -28,25 +28,52 @@ export class SqsQueueListEffects {
         ),
     ));
 
-    addQueue$ = createEffect(() => this.actions$.pipe(
-        ofType(sqsQueueListActions.addQueue),
+    createQueue$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueListActions.createQueue),
+        mergeMap((action) =>
+            this.sqsService.createQueue(action.name)
+                .pipe(map(() => sqsQueueListActions.createQueueSuccess),
+                    catchError((error) =>
+                        of(sqsQueueListActions.createQueueFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
+
+    sendMessage$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueListActions.sendMessage),
         mergeMap(action =>
-            this.sqsService.saveQueue(action.name)
-                .then(() => sqsQueueListActions.addQueueSuccess()))
+            this.sqsService.sendMessage(action.queueUrl, action.message, action.delay)
+                .pipe(map(() => sqsQueueListActions.sendMessageSuccess),
+                    catchError((error) =>
+                        of(sqsQueueListActions.sendMessageFailure({error: error.message}))
+                    )
+                )
+        )
     ));
 
     purgeQueue$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueListActions.purgeQueue),
         mergeMap(action =>
             this.sqsService.purgeQueue(action.queueUrl)
-                .then(() => sqsQueueListActions.purgeQueueSuccess()))
+                .pipe(map(() => sqsQueueListActions.purgeQueueSuccess()),
+                    catchError((error) =>
+                        of(sqsQueueListActions.purgeQueueFailure({error: error.message}))
+                    )
+                )
+        )
     ));
 
     deleteQueue$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueListActions.deleteQueue),
-        mergeMap(action =>
+        mergeMap((action) =>
             this.sqsService.deleteQueue(action.queueUrl)
-                .then(() => sqsQueueListActions.deleteQueueSuccess()))
+                .pipe(map(() => sqsQueueListActions.deleteQueueSuccess),
+                    catchError((error) =>
+                        of(sqsQueueListActions.deleteQueueFailure({error: error.message}))
+                    )
+                )
+        )
     ));
 
     constructor(private actions$: Actions, private sqsService: SqsService) {

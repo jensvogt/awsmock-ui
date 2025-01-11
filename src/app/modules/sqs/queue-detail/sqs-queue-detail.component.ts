@@ -12,6 +12,7 @@ import {selectDetails, selectError} from "./state/sqs-queue-detail.selectors";
     selector: 'sqs-queue-detail-component',
     templateUrl: './sqs-queue-detail.component.html',
     styleUrls: ['./sqs-queue-detail.component.scss'],
+    standalone: false
 })
 export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();

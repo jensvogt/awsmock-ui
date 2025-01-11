@@ -18,6 +18,7 @@ import {UserPoolCountersResponse} from "../model/user-pool-item";
     selector: 'cognito-user-pool-list',
     templateUrl: './user-pool-list.component.html',
     styleUrls: ['./user-pool-list.component.scss'],
+    standalone: false,
     providers: [CognitoService]
 })
 export class CognitoUserPoolListComponent implements OnInit, OnDestroy {

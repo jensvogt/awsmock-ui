@@ -21,6 +21,7 @@ import {MatTableDataSource} from "@angular/material/table";
     selector: 's3-bucket-list',
     templateUrl: './bucket-list.component.html',
     styleUrls: ['./bucket-list.component.scss'],
+    standalone: false,
     providers: [S3Service, AwsMockHttpService]
 })
 export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {

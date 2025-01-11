@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {CreateTopicCommand, DeleteTopicCommand, ListTopicsCommand, PublishCommand, SNSClient, SubscribeCommand} from "@aws-sdk/client-sns";
+import {CreateTopicCommand, DeleteTopicCommand, PublishCommand, SNSClient, SubscribeCommand} from "@aws-sdk/client-sns";
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
@@ -29,15 +29,6 @@ export class SnsService {
     url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
-    }
-
-    listTopics(pageIndex: number, pageSize: number): any {
-
-        const input = {
-            NextToken: (pageIndex * pageSize).toString(),
-            MaxResults: pageSize,
-        };
-        return this.client.send(new ListTopicsCommand(input));
     }
 
     addTopic(topicName: string) {

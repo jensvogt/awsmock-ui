@@ -38,3 +38,9 @@ export const selectQueueCounters: SelectorType<ListQueueCountersResponse> = crea
     selectQueueListFeature,
     (state: SQSQueueListState) => state?.listQueueResponse
 );
+
+export const selectReload: SelectorType<boolean> = createSelector(
+    selectQueueListFeature,
+    (state: SQSQueueListState) => state?.reload
+);
+

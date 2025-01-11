@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {MatTextColumn} from "@angular/material/table";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {SqsService} from "../../../sqs/service/sqs-service.component";
@@ -36,7 +35,6 @@ export const Protocols: string[] = [
         MatOption,
         MatLabel,
         FormsModule,
-        MatTextColumn,
         MatInput,
         ReactiveFormsModule,
         NgIf

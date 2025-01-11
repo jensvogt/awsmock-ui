@@ -20,6 +20,7 @@ import {byteConversion} from "../../../shared/byte-utils.component";
     selector: 'sns-topic-list-component',
     templateUrl: './topic-list.component.html',
     styleUrls: ['./topic-list.component.scss'],
+    standalone: false,
     providers: [SnsService]
 })
 export class SnsTopicListComponent implements OnInit, OnDestroy {

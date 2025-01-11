@@ -49,7 +49,7 @@ export type ChartOptions = {
 })
 export class ThreadsChartComponent implements OnInit {
 
-    public threadsChartOptions: Partial<ChartOptions> | undefined;
+    public threadsChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

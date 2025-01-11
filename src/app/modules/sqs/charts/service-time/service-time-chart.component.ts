@@ -48,7 +48,7 @@ export type ChartOptions = {
 })
 export class SqsServiceTimeChartComponent implements OnInit {
 
-    public serviceTimeChartOptions: Partial<ChartOptions> | undefined;
+    public serviceTimeChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

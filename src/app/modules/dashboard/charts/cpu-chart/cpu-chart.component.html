@@ -21,7 +21,7 @@
     </mat-card-header>
     <mat-card-content>
         <apx-chart *ngIf="cpuChartOptions"
-                   [chart]="cpuChartOptions.chart"
+                   [chart]="cpuChartOptions?.chart"
                    [dataLabels]="cpuChartOptions.dataLabels"
                    [grid]="cpuChartOptions.grid"
                    [series]="cpuChartOptions.series"

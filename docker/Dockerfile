@@ -9,7 +9,7 @@ WORKDIR /app
 RUN cd /app && \
     git clone https://github.com/jensvogt/awsmock-ui.git && \
     cd /app/awsmock-ui && \
-    npm install && \
+    npm install --legacy-peer-deps && \
     npm run build --prod
 
 # Serve Application using Nginx Server

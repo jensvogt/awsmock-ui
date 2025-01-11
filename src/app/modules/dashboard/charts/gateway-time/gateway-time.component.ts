@@ -49,7 +49,7 @@ export type ChartOptions = {
 })
 export class GatewayTimeComponent implements OnInit {
 
-    public httpTimeChartOptions: Partial<ChartOptions> = {};
+    public httpTimeChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
@@ -82,7 +82,7 @@ export class GatewayTimeComponent implements OnInit {
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
                         yaxis: {
                             min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "HTTP Response Time [ms]"}, labels: {
-                                formatter: function (val) {
+                                formatter: function (val: number) {
                                     return val.toFixed(0)
                                 },
                                 offsetX: 10

@@ -49,7 +49,7 @@ export type ChartOptions = {
 })
 export class MemoryChartComponent implements OnInit {
 
-    public memChartOptions: Partial<ChartOptions> = {};
+    public memChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
@@ -82,7 +82,7 @@ export class MemoryChartComponent implements OnInit {
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
                         yaxis: {
                             min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "Memory [MB]"}, labels: {
-                                formatter: function (val) {
+                                formatter: function (val: number) {
                                     val /= 1024;
                                     return val.toFixed(0);
                                 },

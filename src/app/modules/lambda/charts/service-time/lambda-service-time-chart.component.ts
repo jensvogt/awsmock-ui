@@ -48,7 +48,7 @@ export type ChartOptions = {
 })
 export class LambdaServiceTimeChartComponent implements OnInit {
 
-    public lambdaServiceTimeChartOptions: Partial<ChartOptions> | undefined;
+    public lambdaServiceTimeChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

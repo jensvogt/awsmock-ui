@@ -48,7 +48,7 @@ export type ChartOptions = {
 })
 export class LambdaFunctionCounterChartComponent implements OnInit {
 
-    public lambdaFunctionCounterChartOptions: Partial<ChartOptions> | undefined;
+    public lambdaFunctionCounterChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

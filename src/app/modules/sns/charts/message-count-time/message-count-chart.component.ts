@@ -48,7 +48,7 @@ export type ChartOptions = {
 })
 export class SnsMessageCountChartComponent implements OnInit {
 
-    public messageCountChartOptions: Partial<ChartOptions> | undefined;
+    public messageCountChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

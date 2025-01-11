@@ -49,7 +49,7 @@ export type ChartOptions = {
 })
 export class GatewayTimeComponent implements OnInit {
 
-    public httpTimeChartOptions: Partial<ChartOptions> | undefined;
+    public httpTimeChartOptions: Partial<ChartOptions> = {};
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

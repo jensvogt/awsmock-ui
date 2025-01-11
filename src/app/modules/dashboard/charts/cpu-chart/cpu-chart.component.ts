@@ -49,7 +49,7 @@ export type ChartOptions = {
 })
 export class CpuChartComponent implements OnInit {
 
-    public cpuChartOptions: Partial<ChartOptions> | undefined;
+    public cpuChartOptions: Partial<ChartOptions> = {};
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

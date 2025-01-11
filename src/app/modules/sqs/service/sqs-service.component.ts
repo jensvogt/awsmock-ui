@@ -1,36 +1,10 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
-import {
-    CreateQueueCommand,
-    DeleteMessageCommand,
-    DeleteMessageCommandOutput,
-    DeleteQueueCommand,
-    GetQueueAttributesCommand,
-    GetQueueUrlCommand,
-    ListQueuesCommand,
-    PurgeQueueCommand,
-    QueueAttributeName,
-    SendMessageCommand,
-    SQSClient
-} from "@aws-sdk/client-sqs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 
 @Injectable({providedIn: 'root'})
 export class SqsService {
-
-    client = new SQSClient({
-        region: environment.awsmockRegion,
-        endpoint: environment.gatewayEndpoint,
-        credentials: {
-            accessKeyId: 'test',
-            secretAccessKey: 'test',
-        },
-        requestHandler: {
-            requestTimeout: 30_000,
-            httpsAgent: {maxSockets: 25},
-        },
-    });
 
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({
@@ -42,85 +16,18 @@ export class SqsService {
     constructor(private http: HttpClient) {
     }
 
-    listQueues(pageIndex: number, pageSize: number, prefix: string): any {
-        const input = {
-            QueueNamePrefix: prefix,
-            NextToken: (pageIndex * pageSize).toString(),
-            MaxResults: pageSize,
-        };
-        return this.client.send(new ListQueuesCommand(input));
-    }
-
-    purgeQueue(queueName: string) {
-        const input = {
-            QueueUrl: queueName
-        };
-        return this.client.send(new PurgeQueueCommand(input))
-    }
-
-    getQueueAttributes(queueUrl: string) {
-        const input = {
-            QueueUrl: queueUrl,
-            AttributeNames: [QueueAttributeName.All],
-        };
-        return this.client.send(new GetQueueAttributesCommand(input));
-    }
-
-    getQueueArn(queueUrl: string) {
-        const input = {
-            QueueUrl: queueUrl,
-            AttributeNames: [QueueAttributeName.QueueArn],
-        };
-        return this.client.send(new GetQueueAttributesCommand(input));
-    }
-
-    getQueueUrl(queueName: string) {
-        const input = {
-            QueueName: queueName
-        };
-        return this.client.send(new GetQueueUrlCommand(input));
-    }
-
-    saveQueue(queueName: string) {
-        const input = {
-            QueueName: queueName
-        };
-        return this.client.send(new CreateQueueCommand(input));
-    }
-
-    deleteQueue(queueUrl: string) {
-        const input = {
-            QueueUrl: queueUrl
-        };
-        return this.client.send(new DeleteQueueCommand(input));
-    }
-
-    sendMessage(queueUrl: string, message: string) {
-        const input = {
-            QueueUrl: queueUrl,
-            MessageBody: message,
-            DelaySeconds: 0
-        };
-        return this.client.send(new SendMessageCommand(input));
-    }
-
-    deleteMessage(queueUrl: string, receiptHandle: string): Promise<DeleteMessageCommandOutput> {
-        const input = {
-            QueueUrl: queueUrl,
-            ReceiptHandle: receiptHandle,
-        };
-        return this.client.send(new DeleteMessageCommand(input));
-    }
-
-    cleanup() {
-        this.client.destroy();
+    /**
+     * @brief Creates a new queue
+     *
+     * @param queueName SQS queue name
+     */
+    public createQueue(queueName: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'CreateQueue');
+        return this.http.post(this.url, {QueueName: queueName}, {headers: headers});
     }
 
     /**
      * @brief List all queue ARNs
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
     public listQueueArns() {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueArns');
@@ -128,10 +35,17 @@ export class SqsService {
     }
 
     /**
-     * @brief List all queues
+     * @brief Purge a queue
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     * @param queueUrl SQS queue URL
+     */
+    purgeQueue(queueUrl: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'PurgeQueue');
+        return this.http.post(this.url, {QueueUrl: queueUrl}, {headers: headers});
+    }
+
+    /**
+     * @brief List all queues
      *
      * @param prefix bucket name prefix
      * @param pageSize page size
@@ -144,31 +58,7 @@ export class SqsService {
     }
 
     /**
-     * @brief List all messages for a queues
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     *
-     * @param queueArn queue ARN
-     * @param pageSize page size
-     * @param pageIndex page index
-     * @param sortColumns sorting columns
-     */
-    public listSqsMessages(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListMessages');
-        return this.http.post(this.url, {
-            queueArn: queueArn,
-            pageSize: pageSize,
-            pageIndex: pageIndex,
-            sortColumns: sortColumns
-        }, {headers: headers});
-    }
-
-    /**
      * @brief List queue details
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param queueArn SQS queue ARN
      */
@@ -178,10 +68,27 @@ export class SqsService {
     }
 
     /**
-     * @brief List all queues
+     * @brief Return the SQS queue URL
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     * @param queueName SQS queue name
+     */
+    public getQueueUrl(queueName: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'GetQueueUrl');
+        return this.http.post(this.url, {QueueName: queueName}, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a queue
+     *
+     * @param queueUrl SQS queue URL
+     */
+    public deleteQueue(queueUrl: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteQueue');
+        return this.http.post(this.url, {QueueUrl: queueUrl}, {headers: headers});
+    }
+
+    /**
+     * @brief List all message counters
      *
      * @param queueArn SQS queue ARN
      * @param prefix SQS message prefix
@@ -194,12 +101,23 @@ export class SqsService {
         return this.http.post(this.url, {queueArn: queueArn, prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
+    /**
+     * @brief Send a SQS message
+     *
+     * @param queueUrl SQS queue URL
+     * @param message message body to send
+     * @param delaySeconds number of seconds delay
+     */
+    public sendMessage(queueUrl: string, message: string, delaySeconds: number) {
+        console.log("queueUrl: ", queueUrl);
+        console.log("message: ", message);
+        console.log("delaySeconds: ", delaySeconds);
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'SendMessage');
+        return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds}, {headers: headers});
+    }
 
     /**
      * @brief Delete message
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param queueUrl SQS queue URL
      * @param receiptHandle SQS receipt handle

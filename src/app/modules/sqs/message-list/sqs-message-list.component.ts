@@ -91,14 +91,9 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
             this.queueArn = decodeURI(params['queueArn']);
         });
         this.queueName = this.queueArn.substring(this.queueArn.lastIndexOf(':') + 1);
-        this.sqsService.getQueueUrl(this.queueName)
-            .then((data: any) => {
-                this.queueUrl = data.QueueUrl;
-            })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                this.sqsService.cleanup();
-            });
+        this.sqsService.getQueueUrl(this.queueName).subscribe((data: any) => {
+            this.queueUrl = data;
+        });
         this.loadMessages();
         this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
     }
@@ -187,7 +182,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.sqsService.sendMessage(this.queueUrl, result).then(() => {
+                this.sqsService.sendMessage(this.queueUrl, result, 0).subscribe(() => {
                     this.loadMessages();
                     this.snackBar.open('Message send, queueArn: ' + this.queueArn, 'Done', {duration: 5000});
                 });

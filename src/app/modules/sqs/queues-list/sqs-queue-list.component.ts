@@ -51,7 +51,8 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
                 private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
         this.actionsSubj$.pipe(
             filter((action) =>
-                action.type === sqsQueueListActions.addQueueSuccess.type ||
+                action.type === sqsQueueListActions.createQueueSuccess.type ||
+                action.type === sqsQueueListActions.sendMessageSuccess.type ||
                 action.type === sqsQueueListActions.purgeQueueSuccess.type ||
                 action.type === sqsQueueListActions.deleteQueueSuccess.type
             )
@@ -133,7 +134,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         }));
     }
 
-    addQueue() {
+    createQueue() {
 
         const dialogConfig = new MatDialogConfig();
 
@@ -142,7 +143,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(QueueAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.store.dispatch(sqsQueueListActions.addQueue({name: result}));
+                this.store.dispatch(sqsQueueListActions.createQueue({name: result}));
             }
         });
     }
@@ -161,8 +162,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.sqsService.sendMessage(queueUrl, result);
-                this.loadQueues();
+                this.store.dispatch(sqsQueueListActions.sendMessage({queueUrl: queueUrl, message: result, delay: 0}));
             }
         });
     }

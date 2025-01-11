@@ -37,9 +37,9 @@ export const sqsQueueListReducer = createReducer(
     on(sqsQueueListActions.loadQueuesFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
 
     // Add queue
-    on(sqsQueueListActions.addQueue, (state: SQSQueueListState) => ({...state, loading: true})),
-    on(sqsQueueListActions.addQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false})),
-    on(sqsQueueListActions.addQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
+    on(sqsQueueListActions.createQueue, (state: SQSQueueListState) => ({...state, loading: true})),
+    on(sqsQueueListActions.createQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false})),
+    on(sqsQueueListActions.createQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
 
     // Purge queue
     on(sqsQueueListActions.purgeQueue, (state: SQSQueueListState) => ({...state, loading: true})),

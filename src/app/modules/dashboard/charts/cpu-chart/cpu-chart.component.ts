@@ -53,7 +53,7 @@ export class CpuChartComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("cpuChart") cpuChart: ChartComponent | undefined;
+    @ViewChild("cpuChart") cpuChart: ChartComponent = new ChartComponent();
 
     constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }

@@ -18,6 +18,7 @@ import {SnsViewMessageDialog} from "./view-message/sns-view-message.component";
     selector: 'sns-message-list-component',
     templateUrl: './sns-message-list.component.html',
     styleUrls: ['./sns-message-list.component.scss'],
+    standalone: false,
     providers: [SnsService]
 })
 export class SnsMessageListComponent implements OnInit, OnDestroy {

@@ -1,16 +1,11 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatToolbar} from "@angular/material/toolbar";
-import {Location, NgForOf, NgIf} from "@angular/common";
-import {MatList, MatListItem, MatListOption, MatNavList, MatSelectionList} from "@angular/material/list";
+import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIconButton} from "@angular/material/button";
+import {Location} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
-import {RouterLink} from "@angular/router";
-import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
 import {MonitoringService} from "../../../services/monitoring.service";
-import {MatTooltip} from "@angular/material/tooltip";
 import {SqsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
 import {SqsMessageWaitTimeChartComponent} from "./message-wait-time/message-wait-time-chart.component";
 
@@ -22,25 +17,9 @@ import {SqsMessageWaitTimeChartComponent} from "./message-wait-time/message-wait
         MatCard,
         MatCardHeader,
         MatCardContent,
-        MatCardActions,
-        MatCardImage,
-        MatCardTitle,
-        MatButton,
-        MatToolbar,
-        NgIf,
-        NgForOf,
-        MatList,
         MatIcon,
-        MatListItem,
-        RouterLink,
-        MatSelect,
         FormsModule,
-        MatOption,
         MatIconButton,
-        MatListOption,
-        MatSelectionList,
-        MatNavList,
-        MatTooltip,
         SqsServiceTimeChartComponent,
         SqsServiceTimeChartComponent,
         SqsServiceTimeChartComponent,

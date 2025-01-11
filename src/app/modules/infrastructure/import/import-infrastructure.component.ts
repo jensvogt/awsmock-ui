@@ -1,13 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
-import {ChartComponent} from "ng-apexcharts";
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatToolbar} from "@angular/material/toolbar";
-import {NgForOf, NgIf} from "@angular/common";
-import {MatList, MatListItem, MatListOption, MatNavList, MatSelectionList} from "@angular/material/list";
-import {MatIcon} from "@angular/material/icon";
-import {RouterLink} from "@angular/router";
-import {MatFormField, MatLabel, MatOption, MatSelect} from "@angular/material/select";
+import {MatButton} from "@angular/material/button";
+import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {MatInput} from "@angular/material/input";
@@ -22,28 +15,8 @@ import {ModuleService} from "../../../services/module.service";
     templateUrl: './import-infrastructure.component.html',
     standalone: true,
     imports: [
-        ChartComponent,
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardImage,
-        MatCardTitle,
         MatButton,
-        MatToolbar,
-        NgIf,
-        NgForOf,
-        MatList,
-        MatIcon,
-        MatListItem,
-        RouterLink,
-        MatSelect,
         FormsModule,
-        MatOption,
-        MatIconButton,
-        MatListOption,
-        MatSelectionList,
-        MatNavList,
         MatDialogActions,
         MatDialogClose,
         MatDialogContent,

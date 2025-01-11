@@ -15,6 +15,7 @@ import {ListTransferServerCountersResponse} from "../model/transfer-server-item"
     selector: 'transfer-server-list',
     templateUrl: './transfer-server-list.component.html',
     styleUrls: ['./transfer-server-list.component.scss'],
+    standalone: false
 })
 export class TransferServerListComponent implements OnInit, OnDestroy {
 

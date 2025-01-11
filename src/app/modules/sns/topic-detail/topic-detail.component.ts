@@ -19,6 +19,7 @@ import {SnsTopicDetailsState} from "./state/sns-topic-detail.reducer";
     selector: 'sns-topic-detail-component',
     templateUrl: './topic-detail.component.html',
     styleUrls: ['./topic-detail.component.scss'],
+    standalone: false,
     providers: [SnsService]
 })
 export class SnsTopicDetailComponent implements OnInit, OnDestroy {

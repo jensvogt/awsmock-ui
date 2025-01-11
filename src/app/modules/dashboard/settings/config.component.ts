@@ -2,10 +2,6 @@ import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDia
 import {Component, OnInit} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatTextColumn} from "@angular/material/table";
-import {MatInput} from "@angular/material/input";
 import {MatList, MatListItem, MatListItemLine, MatListItemTitle} from "@angular/material/list";
 import {ModuleService} from "../../../services/module.service";
 import packageJson from "../../../../../package.json";
@@ -21,13 +17,7 @@ import {MatGridList, MatGridTile} from "@angular/material/grid-list";
         MatDialogActions,
         MatButton,
         MatDialogClose,
-        MatFormField,
-        MatSelect,
-        MatOption,
-        MatLabel,
         FormsModule,
-        MatTextColumn,
-        MatInput,
         ReactiveFormsModule,
         MatList,
         MatListItem,

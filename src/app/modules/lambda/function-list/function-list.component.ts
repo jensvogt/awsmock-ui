@@ -19,6 +19,7 @@ import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
     selector: 'lambda-function-list',
     templateUrl: './function-list.component.html',
     styleUrls: ['./function-list.component.scss'],
+    standalone: false,
     providers: [LambdaService]
 })
 export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -169,7 +170,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
 
     sortChange(sortState: Sort) {
         this.state.value['lambda-function-list'].sortColumns = [];
-        let direction = 1;
+        let direction: number;
         let column = 'keys';
         if (sortState.active === 'size') {
             column = 'size'

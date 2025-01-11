@@ -21,6 +21,7 @@ import {SQSMessageListState} from "./state/sqs-message-list.reducer";
     selector: 'sqs-message-list',
     templateUrl: './sqs-message-list.component.html',
     styleUrls: ['./sqs-message-list.component.scss'],
+    standalone: false
 })
 export class SqsMessageListComponent implements OnInit, OnDestroy {
 

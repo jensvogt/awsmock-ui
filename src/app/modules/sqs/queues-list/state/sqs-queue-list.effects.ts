@@ -30,7 +30,7 @@ export class SqsQueueListEffects {
 
     createQueue$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueListActions.createQueue),
-        mergeMap(action =>
+        mergeMap((action) =>
             this.sqsService.createQueue(action.name)
                 .pipe(map(() => sqsQueueListActions.createQueueSuccess),
                     catchError((error) =>
@@ -66,7 +66,7 @@ export class SqsQueueListEffects {
 
     deleteQueue$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueListActions.deleteQueue),
-        mergeMap(action =>
+        mergeMap((action) =>
             this.sqsService.deleteQueue(action.queueUrl)
                 .pipe(map(() => sqsQueueListActions.deleteQueueSuccess),
                     catchError((error) =>

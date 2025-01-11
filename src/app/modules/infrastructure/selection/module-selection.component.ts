@@ -1,13 +1,8 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from "@angular/core";
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatToolbar} from "@angular/material/toolbar";
-import {JsonPipe, NgForOf, NgIf, SlicePipe} from "@angular/common";
-import {MatList, MatListItem, MatListOption} from "@angular/material/list";
-import {MatIcon} from "@angular/material/icon";
-import {MatFormField, MatLabel, MatOption, MatSelect} from "@angular/material/select";
+import {MatButton} from "@angular/material/button";
+import {NgForOf, NgIf, SlicePipe} from "@angular/common";
+import {MatList, MatListItem} from "@angular/material/list";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {MatInput} from "@angular/material/input";
 import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
 import {FormsModule} from "@angular/forms";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
@@ -34,33 +29,17 @@ const AllModules = {
     templateUrl: './module-selection.component.html',
     standalone: true,
     imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardContent,
-        MatCardActions,
-        MatCardImage,
-        MatCardTitle,
         MatButton,
-        MatToolbar,
         NgIf,
         NgForOf,
         MatList,
-        MatIcon,
         MatListItem,
-        MatSelect,
-        MatOption,
-        MatIconButton,
-        MatListOption,
         MatDialogActions,
         MatDialogClose,
         MatDialogContent,
         MatDialogTitle,
-        MatFormField,
-        MatInput,
-        MatLabel,
         MatCheckbox,
         MatCheckboxModule,
-        JsonPipe,
         SlicePipe,
         FormsModule,
         CdkDrag,

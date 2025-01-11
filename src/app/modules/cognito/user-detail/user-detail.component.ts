@@ -9,6 +9,7 @@ import {CognitoService} from "../service/cognito.service";
     selector: 'user-detail-component',
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.scss'],
+    standalone: false,
     providers: [CognitoService]
 })
 export class CognitoUserDetailsComponent implements OnInit, OnDestroy {

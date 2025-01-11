@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from "@angular/material/card";
-import {MatButton} from "@angular/material/button";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -40,9 +39,6 @@ export type ChartOptions = {
         MatCardHeader,
         MatCardContent,
         MatCardActions,
-        MatCardImage,
-        MatCardTitle,
-        MatButton,
         MatSelect,
         MatOption,
         FormsModule,

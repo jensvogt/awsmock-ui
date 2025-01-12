@@ -48,6 +48,19 @@ export class SnsTopicDetailEffects {
         ),
     ));
 
+    loadTopicAttributes$ = createEffect(() => this.actions$.pipe(
+        ofType(snsTopicDetailsActions.loadAttributes),
+        mergeMap(action =>
+            this.snsService.listAttributeCounters(action.topicArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((attributes: any) =>
+                        snsTopicDetailsActions.loadAttributesSuccess({attributes})),
+                    catchError((error) =>
+                        of(snsTopicDetailsActions.loadAttributesFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     constructor(private actions$: Actions, private snsService: SnsService) {
     }
 }

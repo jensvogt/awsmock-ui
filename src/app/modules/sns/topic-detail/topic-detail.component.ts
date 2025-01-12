@@ -3,7 +3,8 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
 import {Sort} from "@angular/material/sort";
-import {SnsSubscriptionCountersResponse, SnsTagCountersResponse} from "../model/sns-subscription-item";
+import {SnsSubscriptionCountersResponse} from "../model/sns-subscription-item";
+import {SnsTagCountersResponse} from "../model/sns-tag-item";
 import {PageEvent} from "@angular/material/paginator";
 import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-add.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -12,9 +13,24 @@ import {SnsService} from "../service/sns-service.component";
 import {State, Store} from "@ngrx/store";
 import {snsTopicDetailsActions} from "./state/sns-topic-detail.actions";
 import {Observable} from "rxjs";
-import {selectDetails, selectError, selectSubscriptionPageIndex, selectSubscriptionPageSize, selectSubscriptions, selectTagPageIndex, selectTagPageSize, selectTags} from "./state/sns-topic-detail.selectors";
+import {
+    selectAttributePageIndex,
+    selectAttributePageSize,
+    selectAttributes,
+    selectDetails,
+    selectError,
+    selectSubscriptionPageIndex,
+    selectSubscriptionPageSize,
+    selectSubscriptions,
+    selectTagPageIndex,
+    selectTagPageSize,
+    selectTags
+} from "./state/sns-topic-detail.selectors";
 import {SnsTopicDetailsState} from "./state/sns-topic-detail.reducer";
 import {TagAddComponentDialog} from "./tag-add/tag-add.component";
+import {SnsAttributeCountersResponse} from "../model/sns-attribute-item";
+import {TagEditComponentDialog} from "./tag-edit/tag-edit.component";
+import {SubscriptionEditComponentDialog} from "./subscription-edit/subscription-edit.component";
 
 @Component({
     selector: 'sns-topic-detail-component',
@@ -47,6 +63,13 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     tagColumns: any[] = ['name', 'value', 'actions'];
     tagPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Attributes Table
+    topicAttributes$: Observable<SnsAttributeCountersResponse> = this.store.select(selectAttributes);
+    attributePageSize$: Observable<number> = this.store.select(selectAttributePageSize);
+    attributePageIndex$: Observable<number> = this.store.select(selectAttributePageIndex);
+    attributeColumns: any[] = ['name', 'value', 'actions'];
+    attributePageSizeOptions = [5, 10, 20, 50, 100];
+
     private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private snsService: SnsService, private route: ActivatedRoute, private dialog: MatDialog,
@@ -60,6 +83,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             this.loadTopicDetails();
             this.loadSubscriptions();
             this.loadTags();
+            this.loadAttributes();
         });
         this.topicDetailsError$.subscribe((msg: string) => {
             if (msg && msg.length) {
@@ -135,7 +159,22 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             })
     }
 
-    editSubscription(topicArn: string) {
+    editSubscription(subscriptionArn: string, protocol: string, endpoint: string) {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {topicArn: this.topicArn, subscriptionArn: subscriptionArn, protocol: protocol, endpoint: endpoint};
+
+        this.dialog.open(SubscriptionEditComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.snsService.updateSubscription(result.topicArn, result.subscriptionArn, result.endpoint, result.protocol)
+                    .subscribe((data: any) => {
+                        this.loadSubscriptions();
+                        this.snackBar.open('SNS subscription updated, subscription ARN:' + data.SubscriptionArn, 'Dismiss', {duration: 5000});
+                    })
+            }
+        });
     }
 
     addSubscription() {
@@ -147,7 +186,11 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
         this.dialog.open(SubscriptionAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.subscribe(result)
+                this.snsService.subscribe(result.topicArn, result.endpoint, result.protocol)
+                    .subscribe((data: any) => {
+                        this.loadSubscriptions();
+                        this.snackBar.open('SNS subscription added, subscription ARN:' + data.SubscriptionArn, 'Dismiss', {duration: 5000});
+                    })
             }
         });
     }
@@ -199,7 +242,26 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             })
     }
 
-    editTag(topicArn: string) {
+    editTag(key: string, value: string) {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName, key: key, value: value};
+
+        this.dialog.open(TagEditComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.key !== key || result.value !== value) {
+                    this.snsService.addTag(result.topicArn, result.key, result.value)
+                        .subscribe(() => {
+                            this.loadTags();
+                            this.snackBar.open('SNS tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('SNS tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
     }
 
     addTag() {
@@ -218,5 +280,54 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
                     })
             }
         });
+    }
+
+    // ===================================================================================================================
+    // Attributes
+    // ===================================================================================================================
+    handleAttributePageEvent(e: PageEvent) {
+        this.state.value['sns-topic-details'].attributePageSize = e.pageSize;
+        this.state.value['sns-topic-details'].attributePageIndex = e.pageIndex;
+        this.loadAttributes();
+    }
+
+    loadAttributes() {
+        this.store.dispatch(snsTopicDetailsActions.loadAttributes({
+            topicArn: this.topicArn,
+            pageSize: this.state.value['sns-topic-details'].attributePageSize,
+            pageIndex: this.state.value['sns-topic-details'].attributePageIndex,
+            sortColumns: this.state.value['sns-topic-details'].sortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    attributeSortChange(sortState: Sort) {
+        this.state.value['sns-topic-details'].sortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['sns-topic-details'].sortColumns = [{column: column, sortDirection: direction}];
+        this.loadAttributes();
+    }
+
+    refreshAttributes() {
+        this.loadAttributes();
+    }
+
+    addAttribute() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName};
+
+        /*this.dialog.open(AttributeAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.snsService.addAttribute(result.topicArn, result.key, result.value)
+                    .subscribe(() => {
+                        this.loadAttributes();
+                        this.snackBar.open('SNS attribute added, name: ' + result.key, 'Dismiss', {duration: 5000});
+                    })
+            }
+        });*/
     }
 }

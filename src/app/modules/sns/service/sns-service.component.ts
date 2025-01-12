@@ -113,6 +113,19 @@ export class SnsService {
     }
 
     /**
+     * @brief Subscribe to a topic
+     *
+     * @param topicArn topic ARN
+     * @param subscriptionArn topic ARN
+     * @param endpoint subscription endpoint
+     * @param protocol subscription protocol
+     */
+    updateSubscription(topicArn: string, subscriptionArn: string, endpoint: string, protocol: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'UpdateSubscription');
+        return this.http.post(this.url, {topicArn: topicArn, subscriptionArn: subscriptionArn, endpoint: endpoint, protocol: protocol}, {headers: headers});
+    }
+
+    /**
      * @brief Publish a new message to the topic
      *
      * @param topicArn AWS topic ARN
@@ -180,7 +193,7 @@ export class SnsService {
     }
 
     /**
-     * @brief Gets a list of subscriptions for a topic
+     * @brief Gets a list of tags for a topic
      *
      * @param topicArn topic ARN
      * @param pageSize page size
@@ -203,4 +216,27 @@ export class SnsService {
         return this.http.post(this.url, "ResourceArn=" + topicArn + "&TagKeys.TagKey.1=" + key, {headers: headers, responseType: 'text'});
     }
 
+    /**
+     * @brief Gets a list of attributes for a topic
+     *
+     * @param topicArn topic ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listAttributeCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListAttributeCounters');
+        return this.http.post(this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a topic attribute
+     *
+     * @param topicArn topic ARN
+     * @param key attribute key
+     */
+    deleteAttribute(topicArn: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'DeleteAttribute');
+        return this.http.post(this.url, "ResourceArn=" + topicArn + "&AttributeKeys.AttributeKey.1=" + key, {headers: headers, responseType: 'text'});
+    }
 }

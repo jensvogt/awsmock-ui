@@ -7,8 +7,8 @@ import {MatInput} from "@angular/material/input";
 import {SqsService} from "../../../sqs/service/sqs-service.component";
 
 @Component({
-    selector: 'tag-add-dialog',
-    templateUrl: './tag-add.component.html',
+    selector: 'tag-edit-dialog',
+    templateUrl: './tag-edit.component.html',
     standalone: true,
     imports: [
         MatDialogContent,
@@ -22,10 +22,10 @@ import {SqsService} from "../../../sqs/service/sqs-service.component";
         MatInput,
         ReactiveFormsModule
     ],
-    styleUrls: ['./tag-add.component.scss'],
+    styleUrls: ['./tag-edit.component.scss'],
     providers: [SqsService]
 })
-export class TagAddComponentDialog implements OnInit {
+export class TagEditComponentDialog implements OnInit {
 
     // @ts-ignore
     form: FormGroup;
@@ -34,9 +34,11 @@ export class TagAddComponentDialog implements OnInit {
     key: string = '';
     value: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<TagAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<TagEditComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicName;
+        this.key = data.key;
+        this.value = data.value;
     }
 
     ngOnInit() {

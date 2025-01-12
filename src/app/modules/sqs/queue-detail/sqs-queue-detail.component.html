@@ -102,24 +102,45 @@
         <mat-card-content>
             <mat-tab-group>
                 <mat-tab label="Attributes">
-                    <mat-grid-list cols="1">
-                        <mat-grid-tile [colspan]="1" [rowspan]="1">
-                            <mat-list>
-                                <mat-list-item>
-                                    <span matListItemTitle>Available: </span>
-                                    <span matListItemLine>{{ (queueDetails$ | async)?.available }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span matListItemTitle>Invisible: </span>
-                                    <span matListItemLine>{{ (queueDetails$ | async)?.invisible }}</span>
-                                </mat-list-item>
-                                <mat-list-item>
-                                    <span matListItemTitle>Delayed: </span>
-                                    <span matListItemLine>{{ (queueDetails$ | async)?.delayed }}</span>
-                                </mat-list-item>
-                            </mat-list>
-                        </mat-grid-tile>
-                    </mat-grid-list>
+                    <mat-card-actions class="head-buttons">
+                        <!--button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button-->
+                    </mat-card-actions>
+                    <div *ngIf="queueAttributes$ | async as attributes" class="row">
+                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.AttributeCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator (page)="handleAttributePageEvent($event)"
+                                   [disabled]="false"
+                                   [hidePageSize]="false"
+                                   [length]="(queueAttributes$ | async)?.Total"
+                                   [pageIndex]="(attributePageIndex$ | async)"
+                                   [pageSizeOptions]="attributePageSizeOptions"
+                                   [pageSize]="(attributePageSize$ | async)"
+                                   [showFirstLastButtons]="true"
+                                   aria-label="Select page">
+                    </mat-paginator>
                 </mat-tab>
                 <mat-tab label="Tags">
                     Tags

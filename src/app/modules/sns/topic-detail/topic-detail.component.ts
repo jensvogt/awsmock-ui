@@ -312,22 +312,4 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     refreshAttributes() {
         this.loadAttributes();
     }
-
-    addAttribute() {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName};
-
-        /*this.dialog.open(AttributeAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                this.snsService.addAttribute(result.topicArn, result.key, result.value)
-                    .subscribe(() => {
-                        this.loadAttributes();
-                        this.snackBar.open('SNS attribute added, name: ' + result.key, 'Dismiss', {duration: 5000});
-                    })
-            }
-        });*/
-    }
 }

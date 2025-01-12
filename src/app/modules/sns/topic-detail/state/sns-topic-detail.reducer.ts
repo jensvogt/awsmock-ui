@@ -41,7 +41,7 @@ export const initialState: SnsTopicDetailsState = {
     tagPageSize: 10,
     tagPageIndex: 0,
     tagSortColumns: [{column: 'endpoint', sortDirection: -1}],
-    // Tags
+    // Attributes
     snsTopicAttributes: {} as SnsAttributeCountersResponse,
     attributePageSize: 10,
     attributePageIndex: 0,

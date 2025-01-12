@@ -78,6 +78,19 @@ export class SqsService {
     }
 
     /**
+     * @brief Gets a list of attributes for a queue
+     *
+     * @param queueArn queue ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listQueueAttributeCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueAttributeCounters');
+        return this.http.post(this.url, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a queue
      *
      * @param queueUrl SQS queue URL

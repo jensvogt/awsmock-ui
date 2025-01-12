@@ -25,6 +25,19 @@ export class SqsQueueDetailEffects {
         ),
     ));
 
+    loadQueueAttributes$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.loadAttributes),
+        mergeMap(action =>
+            this.sqsService.listQueueAttributeCounters(action.queueArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((attributes: any) =>
+                        sqsQueueDetailsActions.loadAttributesSuccess({attributes})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.loadAttributesFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     constructor(private actions$: Actions, private sqsService: SqsService) {
     }
 }

@@ -67,7 +67,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     topicAttributes$: Observable<SnsAttributeCountersResponse> = this.store.select(selectAttributes);
     attributePageSize$: Observable<number> = this.store.select(selectAttributePageSize);
     attributePageIndex$: Observable<number> = this.store.select(selectAttributePageIndex);
-    attributeColumns: any[] = ['name', 'value', 'actions'];
+    attributeColumns: any[] = ['name', 'value'];
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
     private routerSubscription: any;
@@ -193,14 +193,6 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
                     })
             }
         });
-    }
-
-    subscribe(subscription: any) {
-        this.snsService.subscribe(subscription.topicArn, subscription.endpoint, subscription.protocol)
-            .subscribe((data: any) => {
-                this.loadSubscriptions();
-                this.snackBar.open('SNS subscription added, subscription ARN:' + data.SubscriptionArn, 'Dismiss', {duration: 5000});
-            })
     }
 
     // ===================================================================================================================

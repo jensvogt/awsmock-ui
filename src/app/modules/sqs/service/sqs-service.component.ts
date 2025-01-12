@@ -3,6 +3,15 @@ import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 
+export interface SqsTag {
+    key: string;
+}
+
+export interface SqsAddTagRequest {
+    QueueUrl: string | undefined;
+    Tags: SqsTag[];
+}
+
 @Injectable({providedIn: 'root'})
 export class SqsService {
 
@@ -88,6 +97,42 @@ export class SqsService {
     public listQueueAttributeCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueAttributeCounters');
         return this.http.post(this.url, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Add a tag to a queue
+     *
+     * @param queueUrl queue URL
+     * @param key tag key
+     * @param value tag value
+     */
+    addTag(queueUrl: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'TagQueue');
+        return this.http.post(this.url, {QueueUrl: queueUrl, Tags: {[key]: value}}, {headers: headers});
+    }
+
+    /**
+     * @brief Gets a list of tags for a queue
+     *
+     * @param queueArn queue ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listTagCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListTagCounters');
+        return this.http.post(this.url, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a queue tag
+     *
+     * @param queueUrl queue URL
+     * @param key tag key
+     */
+    deleteTag(queueUrl: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'UntagQueue');
+        return this.http.post(this.url, {QueueUrl: queueUrl, TagKeys: [key]}, {headers: headers});
     }
 
     /**

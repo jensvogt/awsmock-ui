@@ -38,6 +38,19 @@ export class SqsQueueDetailEffects {
         ),
     ));
 
+    loadQueueTags$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.loadTags),
+        mergeMap(action =>
+            this.sqsService.listTagCounters(action.queueArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((tags: any) =>
+                        sqsQueueDetailsActions.loadTagsSuccess({tags})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.loadTagsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     constructor(private actions$: Actions, private sqsService: SqsService) {
     }
 }

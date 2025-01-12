@@ -75,11 +75,102 @@
         </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined" style="margin-top: 5px;">
-        <mat-card-header>
+        <!--mat-card-header>
             <mat-card-title>Attributes</mat-card-title>
-        </mat-card-header>
+        </mat-card-header-->
         <mat-card-content>
             <mat-tab-group>
+                <mat-tab label="Attributes">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="topicAttributes$ | async as attributes" class="row">
+                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.AttributeCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator (page)="handleAttributePageEvent($event)"
+                                   [disabled]="false"
+                                   [hidePageSize]="false"
+                                   [length]="(topicAttributes$ | async)?.Total"
+                                   [pageIndex]="(attributePageIndex$ | async)"
+                                   [pageSizeOptions]="attributePageSizeOptions"
+                                   [pageSize]="(attributePageSize$ | async)"
+                                   [showFirstLastButtons]="true"
+                                   aria-label="Select page">
+                    </mat-paginator>
+                </mat-tab>
+                <mat-tab label="Tags">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button (click)="refreshTags()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="topicTags$ | async as tags" class="row">
+                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.TagCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by tag value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="editTag(row.Key, row.Value)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button (click)="deleteTag(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="tagColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator (page)="handleTagPageEvent($event)"
+                                   [disabled]="false"
+                                   [hidePageSize]="false"
+                                   [length]="(topicTags$ | async)?.Total"
+                                   [pageIndex]="(tagPageIndex$ | async)"
+                                   [pageSizeOptions]="tagPageSizeOptions"
+                                   [pageSize]="(tagPageSize$ | async)"
+                                   [showFirstLastButtons]="true"
+                                   aria-label="Select page">
+                    </mat-paginator>
+                </mat-tab>
                 <mat-tab label="Subscriptions">
                     <mat-card-actions class="head-buttons">
                         <button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
@@ -138,104 +229,13 @@
                                    aria-label="Select page">
                     </mat-paginator>
                 </mat-tab>
-                <mat-tab label="Tags">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="refreshTags()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="topicTags$ | async as tags" class="row">
-                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.TagCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="name">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by tag value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editTag(row.Key, row.Value)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button (click)="deleteTag(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="tagColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator (page)="handleTagPageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="(topicTags$ | async)?.Total"
-                                   [pageIndex]="(tagPageIndex$ | async)"
-                                   [pageSizeOptions]="tagPageSizeOptions"
-                                   [pageSize]="(tagPageSize$ | async)"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator>
-                </mat-tab>
-                <mat-tab label="Attributes">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="topicAttributes$ | async as attributes" class="row">
-                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.AttributeCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="name">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator (page)="handleAttributePageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="(topicAttributes$ | async)?.Total"
-                                   [pageIndex]="(attributePageIndex$ | async)"
-                                   [pageSizeOptions]="attributePageSizeOptions"
-                                   [pageSize]="(attributePageSize$ | async)"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator>
-                </mat-tab>
             </mat-tab-group>
         </mat-card-content>
     </mat-card>
-    <mat-card-actions align="end">
+    <!--mat-card-actions align="end">
         <button (click)=close() mat-button>Close</button>
         <button (click)=save() mat-button>Save</button>
-    </mat-card-actions>
+    </mat-card-actions-->
     <div class="footer">
         Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
     </div>

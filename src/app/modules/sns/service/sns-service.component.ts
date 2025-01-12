@@ -31,17 +31,6 @@ export class SnsService {
     constructor(private http: HttpClient) {
     }
 
-    /*
-        subscribe(topicArn: string, endpoint: string, protocol: string) {
-            const input = {
-                TopicArn: topicArn,
-                Protocol: protocol,
-                Endpoint: endpoint,
-                ReturnSubscriptionArn: true
-            };
-            return this.client.send(new SubscribeCommand(input));
-        }
-    */
     /**
      * @brief Create a new topic.
      *

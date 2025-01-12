@@ -73,7 +73,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 action.type === lambdaFunctionListActions.deleteFunctionSuccess.type
             )
         ).subscribe(() => {
-            console.log("Action Subscription");
             this.loadFunctions();
         });
         this.prefix$.subscribe((data: string) => {

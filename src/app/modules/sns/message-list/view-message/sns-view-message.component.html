@@ -1,6 +1,7 @@
 <h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Edit SNS message: {{ messageId }}</h2>
 <mat-dialog-actions>
     <mat-slide-toggle (change)="changePrettyPrint($event)"
+                      *ngIf="isJson"
                       [checked]="prettyPrint"
                       labelPosition="before">
         Pretty Print:

@@ -57,7 +57,6 @@ export class CognitoUserDetailsComponent implements OnInit, OnDestroy {
         this.cognitoService.getUser(this.userPoolId, this.userName)
             .subscribe((data: any) => {
                 this.lastUpdate = new Date();
-                console.log("Data: ", data);
                 if (data) {
                     this.userItem = data;
                 }

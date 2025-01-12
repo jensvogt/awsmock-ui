@@ -50,7 +50,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionItem = data;
             this.environmentDataSource = this.convertEnvironment(data);
             this.tagsDataSource = this.convertTags(data);
-            console.log(data);
         });
         this.loadFunction();
     }

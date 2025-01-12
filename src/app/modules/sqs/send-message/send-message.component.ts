@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -35,10 +35,9 @@ export class SendMessageComponentDialog implements OnInit {
     queueName: string = '';
     message: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
-                private fileDialog: MatDialog) {
+    constructor(private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private fileDialog: MatDialog) {
         this.queueUrl = data.queueUrl;
-        this.queueName = data.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
+        this.queueName = this.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
     }
 
     ngOnInit() {

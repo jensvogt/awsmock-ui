@@ -1,8 +1,8 @@
 <h2 cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" cdkcdkDrag mat-dialog-title>SQS message: {{ messageId }}</h2>
 <mat-dialog-actions>
     <mat-slide-toggle (change)="changePrettyPrint($event)"
-                      [checked]="prettyPrint"
-                      labelPosition="before">
+                      *ngIf="isJson"
+                      [checked]="prettyPrint" labelPosition="before">
         Pretty Print:
     </mat-slide-toggle>
 </mat-dialog-actions>

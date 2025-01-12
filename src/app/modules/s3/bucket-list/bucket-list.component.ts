@@ -185,11 +185,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else if (sortState.active === 'name') {
             column = 'name';
         }
-        if (sortState.direction === 'asc') {
-            direction = 1;
-        } else {
-            direction = -1;
-        }
+        direction = sortState.direction === 'asc' ? 1 : -1;
         this.state.value['s3-bucket-list'].sortColumns = [{column: column, sortDirection: direction}];
         this.loadBuckets();
     }

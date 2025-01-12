@@ -4,15 +4,16 @@ import {Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {filter, interval, Observable, Subscription} from "rxjs";
+import {interval, Observable, Subscription} from "rxjs";
 import {SnsMessageCountersResponse, SnsMessageItem} from "../model/sns-message-item";
 import {PublishMessageComponentDialog} from "./publish-message/publish-message.component";
 import {SnsService} from "../service/sns-service.component";
-import {ActionsSubject, State, Store} from "@ngrx/store";
+import {State, Store} from "@ngrx/store";
 import {SNSMessageListState} from "./state/sns-message-list.reducer";
 import {snsMessageListActions} from "./state/sns-message-list.actions";
 import {selectMessageCounters, selectPageIndex, selectPageSize} from "./state/sns-message-list.selectors";
 import {SnsViewMessageDialog} from "./view-message/sns-view-message.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'sns-message-list-component',
@@ -52,17 +53,8 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     private routerSubscription: Subscription | undefined;
 
     constructor(private route: ActivatedRoute, private location: Location, private dialog: MatDialog, private store: Store, private state: State<SNSMessageListState>,
-                private actionsSubj$: ActionsSubject) {
-        this.actionsSubj$.pipe(
-            filter((action) =>
-                action.type === snsMessageListActions.publishMessageSuccess.type ||
-                action.type === snsMessageListActions.deleteMessageSuccess.type
-            )
-        ).subscribe(() => {
-                this.lastUpdate = new Date();
-                this.loadMessages();
-            }
-        );
+                private snsService: SnsService, private snackBar: MatSnackBar) {
+//        this.listMessageCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {
@@ -149,7 +141,10 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     }
 
     deleteMessage(messageId: string) {
-        this.store.dispatch(snsMessageListActions.deleteMessage({topicArn: this.topicArn, messageId: messageId}));
+        this.snsService.deleteMessage(this.topicArn, messageId).subscribe(() => {
+            this.loadMessages();
+            this.snackBar.open('SNS message deleted, messageId: ' + messageId, 'Done', {duration: 5000})
+        });
     }
 
     publishMessage() {
@@ -163,9 +158,12 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "90%"
 
-        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                this.store.dispatch(snsMessageListActions.publishMessage({topicArn: this.topicArn, message: result}));
+        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(message => {
+            if (message) {
+                this.snsService.publishMessage(this.topicArn, message).subscribe(() => {
+                    this.loadMessages();
+                    this.snackBar.open('SNS message published, topicName: ' + this.topicName, 'Done', {duration: 5000})
+                });
             }
         });
     }

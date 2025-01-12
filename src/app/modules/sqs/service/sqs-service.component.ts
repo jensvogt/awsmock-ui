@@ -109,9 +109,6 @@ export class SqsService {
      * @param delaySeconds number of seconds delay
      */
     public sendMessage(queueUrl: string, message: string, delaySeconds: number) {
-        console.log("queueUrl: ", queueUrl);
-        console.log("message: ", message);
-        console.log("delaySeconds: ", delaySeconds);
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'SendMessage');
         return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds}, {headers: headers});
     }

@@ -2,14 +2,14 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PageEvent} from "@angular/material/paginator";
 import {Location} from "@angular/common";
 import {Sort} from "@angular/material/sort";
-import {filter, interval, Observable, Subscription} from "rxjs";
+import {interval, Observable, Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ListTopicCountersResponse} from "../model/sns-topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
 import {SnsService} from "../service/sns-service.component";
 import {PublishMessageComponentDialog} from "../message-list/publish-message/publish-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {ActionsSubject, State, Store} from "@ngrx/store";
+import {State, Store} from "@ngrx/store";
 import {snsTopicListActions} from "./state/sns-topic-list.actions";
 import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
 import {SNSTopicListState} from "./state/sns-topic-list.reducer";
@@ -53,19 +53,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<SNSTopicListState>, private store: Store,
-                private actionsSubj$: ActionsSubject) {
-        this.actionsSubj$.pipe(
-            filter((action) =>
-                action.type === snsTopicListActions.addTopicSuccess.type ||
-                action.type === snsTopicListActions.publishMessageSuccess.type ||
-                action.type === snsTopicListActions.purgeTopicSuccess.type ||
-                action.type === snsTopicListActions.deleteTopicSuccess.type
-            )
-        ).subscribe(() => {
-                this.lastUpdate = new Date();
-                this.loadTopics();
-            }
-        );
+                private snsService: SnsService) {
     }
 
     ngOnInit(): void {
@@ -139,7 +127,10 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(TopicAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.store.dispatch(snsTopicListActions.addTopic({name: result}));
+                this.snsService.createTopic(result).subscribe(() => {
+                    this.loadTopics();
+                    this.snackBar.open('SNS topic created, name: ' + result, 'Done', {duration: 5000})
+                });
             }
         });
     }
@@ -155,9 +146,12 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "90%"
 
-        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                this.store.dispatch(snsTopicListActions.publishMessage({topicArn: topicArn, message: result}));
+        this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(message => {
+            if (message) {
+                this.snsService.publishMessage(topicArn, message).subscribe(() => {
+                    this.loadTopics();
+                    this.snackBar.open('SNS message published, topicArn: ' + topicArn, 'Done', {duration: 5000})
+                });
             }
         });
     }
@@ -168,7 +162,9 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     }
 
     deleteTopic(topicArn: string) {
-        this.store.dispatch(snsTopicListActions.deleteTopic({topicArn: topicArn}));
-        this.snackBar.open('SNS topic deleted, topicArn: ' + topicArn, 'Done', {duration: 5000});
+        this.snsService.deleteTopic(topicArn).subscribe(() => {
+            this.loadTopics();
+            this.snackBar.open('SNS topic deleted, topicArn: ' + topicArn, 'Done', {duration: 5000})
+        });
     }
 }

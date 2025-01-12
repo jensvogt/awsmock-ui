@@ -68,16 +68,6 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
                 this.loadMessages();
             }
         );
-        this.actionsSubj$.pipe(
-            filter((action) =>
-                action.type === sqsMessageListActions.deleteMessageSuccess.type
-            )
-        ).subscribe(() => {
-                this.snackBar.open('Message send, queueArn: ' + this.queueArn, 'Done', {duration: 5000});
-                this.loadMessages();
-            }
-        );
-
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {
@@ -93,7 +83,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         });
         this.queueName = this.queueArn.substring(this.queueArn.lastIndexOf(':') + 1);
         this.sqsService.getQueueUrl(this.queueName).subscribe((data: any) => {
-            this.queueUrl = data;
+            this.queueUrl = data.QueueUrl;
         });
         this.loadMessages();
         this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());

@@ -8,6 +8,8 @@ import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {SnsMessageItem} from "../../model/sns-message-item";
 import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {isJson} from "../../../../shared/format/message-format-component";
+import {NgIf} from "@angular/common";
 
 @Component({
     selector: 'sns-edit-message-dialog',
@@ -27,7 +29,8 @@ import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-togg
         CdkDrag,
         CdkDragHandle,
         CdkTextareaAutosize,
-        MatSlideToggle
+        MatSlideToggle,
+        NgIf
     ],
     styleUrls: ['./sns-view-message.component.scss']
 })
@@ -38,15 +41,17 @@ export class SnsViewMessageDialog implements OnInit {
     messageId: string | undefined = '';
     message: SnsMessageItem | undefined;
     prettyPrint: boolean = true;
+    isJson: boolean = false;
 
     constructor(private dialogRef: MatDialogRef<SnsViewMessageDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.message = data.message;
-        this.rawMessage = this.message?.message;
-        this.messageId = this.message?.messageId;
-        if (this.prettyPrint) {
-            this.body = JSON.stringify(JSON.parse(data.message.message), null, 2);
+        this.rawMessage = this.message?.Message;
+        this.messageId = this.message?.MessageId;
+        this.isJson = isJson(this.rawMessage);
+        if (this.isJson && this.prettyPrint) {
+            this.body = JSON.stringify(JSON.parse(this.data.message.Message), null, 2);
         } else {
-            this.body = data.message.message;
+            this.body = data.message.Message;
         }
     }
 
@@ -58,11 +63,11 @@ export class SnsViewMessageDialog implements OnInit {
     }
 
     changePrettyPrint(event: MatSlideToggleChange) {
-        if (this.message?.message !== undefined) {
+        if (this.message?.Message !== undefined) {
             if (event.checked) {
-                this.body = JSON.stringify(JSON.parse(this.message?.message), null, 2);
+                this.body = JSON.stringify(JSON.parse(this.message?.Message), null, 2);
             } else {
-                this.body = this.message?.message;
+                this.body = this.message?.Message;
             }
         }
     }

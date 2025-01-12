@@ -28,20 +28,22 @@ export class SnsTopicListEffects {
         ),
     ));
 
-    addTopic$ = createEffect(() => this.actions$.pipe(
+    /*addTopic$ = createEffect(() => this.actions$.pipe(
         ofType(snsTopicListActions.addTopic),
         mergeMap(action =>
-            this.snsService.addTopic(action.name)
+            this.snsService.createTopic(action.name)
                 .then(() => snsTopicListActions.addTopicSuccess()))
-    ));
+    ));*/
 
     publishMessage$ = createEffect(() => this.actions$.pipe(
         ofType(snsTopicListActions.publishMessage),
         mergeMap(action =>
             this.snsService.publishMessage(action.topicArn, action.message)
-                .then(() => snsTopicListActions.publishMessageSuccess())
-                .catch((error: any) => snsTopicListActions.publishMessageFailure({error: error}))
-                .finally(() => this.snsService.cleanup)
+                .pipe(map(() => snsTopicListActions.publishMessageSuccess),
+                    catchError((error) =>
+                        of(snsTopicListActions.publishMessageFailure({error: error.message}))
+                    )
+                )
         )
     ));
 
@@ -57,12 +59,12 @@ export class SnsTopicListEffects {
         )
     ));
 
-    deleteTopic$ = createEffect(() => this.actions$.pipe(
-        ofType(snsTopicListActions.deleteTopic),
-        mergeMap(action =>
-            this.snsService.deleteTopic(action.topicArn)
-                .then(() => snsTopicListActions.addTopicSuccess()))
-    ));
+    /* deleteTopic$ = createEffect(() => this.actions$.pipe(
+         ofType(snsTopicListActions.deleteTopic),
+         mergeMap(action =>
+             this.snsService.deleteTopic(action.topicArn)
+                 .then(() => snsTopicListActions.addTopicSuccess()))
+     ));*/
 
     constructor(private actions$: Actions, private snsService: SnsService) {
     }

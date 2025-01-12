@@ -15,7 +15,7 @@ export interface SNSMessageListState {
 }
 
 export const initialState: SNSMessageListState = {
-    snsMessageCountersResponse: {total: 0, messages: []},
+    snsMessageCountersResponse: {Total: 0, Messages: []},
     pageSize: 10,
     pageIndex: 0,
     loading: false,

@@ -5,6 +5,7 @@ import {mergeMap, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {snsMessageListActions} from './sns-message-list.actions';
 import {SnsService} from "../../service/sns-service.component";
+import {snsTopicListActions} from "../../topic-list/state/sns-topic-list.actions";
 
 @Injectable()
 export class SnsMessageListEffects {
@@ -29,9 +30,11 @@ export class SnsMessageListEffects {
         ofType(snsMessageListActions.publishMessage),
         mergeMap(action =>
             this.snsService.publishMessage(action.topicArn, action.message)
-                .then(() => snsMessageListActions.publishMessageSuccess())
-                .catch((error: any) => snsMessageListActions.publishMessageFailure({error: error}))
-                .finally(() => this.snsService.cleanup)
+                .pipe(map(() => snsTopicListActions.publishMessageSuccess),
+                    catchError((error) =>
+                        of(snsTopicListActions.publishMessageFailure({error: error.message}))
+                    )
+                )
         )
     ));
 

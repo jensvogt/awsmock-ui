@@ -8,6 +8,8 @@ import {CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {SqsMessageItem} from "../../model/sqs-message-item";
 import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {isJson} from "../../../../shared/format/message-format-component";
+import {NgIf} from "@angular/common";
 
 @Component({
     selector: 'sqs-edit-message-dialog',
@@ -26,7 +28,8 @@ import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-togg
         ReactiveFormsModule,
         CdkDragHandle,
         CdkTextareaAutosize,
-        MatSlideToggle
+        MatSlideToggle,
+        NgIf
     ],
     styleUrls: ['./view-message.component.scss']
 })
@@ -36,11 +39,13 @@ export class ViewMessageComponentDialog implements OnInit {
     messageId: string | undefined = '';
     message: SqsMessageItem;
     prettyPrint: boolean = true;
+    isJson: boolean = false;
 
     constructor(private dialogRef: MatDialogRef<ViewMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.message = data.message;
         if (this.message.body?.length) {
-            if (this.prettyPrint) {
+            this.isJson = isJson(this.message.body);
+            if (isJson(this.message.body) && this.prettyPrint) {
                 this.body = JSON.stringify(JSON.parse(data.message.body), null, 2);
             } else {
                 this.body = data.message.body;

@@ -1,7 +1,7 @@
 import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelector} from "@ngrx/store";
 import {snsTopicDetailsFeatureKey, SnsTopicDetailsState} from "./sns-topic-detail.reducer";
 import {SnsTopicDetails} from "../../model/sns-topic-details";
-import {SnsSubscriptionCountersResponse} from "../../model/sns-subscription-item";
+import {SnsSubscriptionCountersResponse, SnsTagCountersResponse} from "../../model/sns-subscription-item";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
@@ -27,6 +27,21 @@ export const selectSubscriptionPageSize: SelectorType<number> = createSelector(
 export const selectSubscriptionPageIndex: SelectorType<number> = createSelector(
     selectTopicDetailsFeature,
     (state: SnsTopicDetailsState) => state?.subscriptionPageIndex
+);
+
+export const selectTags: SelectorType<SnsTagCountersResponse> = createSelector(
+    selectTopicDetailsFeature,
+    (state: SnsTopicDetailsState) => state?.snsTopicTags
+);
+
+export const selectTagPageSize: SelectorType<number> = createSelector(
+    selectTopicDetailsFeature,
+    (state: SnsTopicDetailsState) => state?.tagPageSize
+);
+
+export const selectTagPageIndex: SelectorType<number> = createSelector(
+    selectTopicDetailsFeature,
+    (state: SnsTopicDetailsState) => state?.tagPageIndex
 );
 
 export const selectError: SelectorType<any> = createSelector(

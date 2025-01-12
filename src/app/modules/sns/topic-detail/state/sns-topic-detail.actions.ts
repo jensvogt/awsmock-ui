@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SnsTopicDetails} from "../../model/sns-topic-details";
-import {SnsSubscriptionCountersResponse} from "../../model/sns-subscription-item";
+import {SnsSubscriptionCountersResponse, SnsTagCountersResponse} from "../../model/sns-subscription-item";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 
 export const snsTopicDetailsActions = {
@@ -17,17 +17,12 @@ export const snsTopicDetailsActions = {
     loadAttributesFailure: createAction('[sns-topic-details] Load topics attributes error', props<{ error: string }>()),
 
     // Load subscriptions
-    loadSubscriptions: createAction('[sns-topic-details] Load topics subscriptions', props<{
-        topicArn: string,
-        pageSize: number,
-        pageIndex: number,
-        sortColumns: SortColumn[]
-    }>()),
+    loadSubscriptions: createAction('[sns-topic-details] Load topics subscriptions', props<{ topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     loadSubscriptionsSuccess: createAction('[sns-topic-details] Load topics subscriptions success', props<{ subscriptions: SnsSubscriptionCountersResponse }>()),
     loadSubscriptionsFailure: createAction('[sns-topic-details] Load topics subscriptions error', props<{ error: string }>()),
 
     // Load tags
-    loadTags: createAction('[sns-topic-details] Load topics tags', props<{ topicArn: string }>()),
-    loadTagsSuccess: createAction('[sns-topic-details] Load topics tags success', props<{ tags: SnsTopicDetails }>()),
+    loadTags: createAction('[sns-topic-details] Load topics tags', props<{ topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadTagsSuccess: createAction('[sns-topic-details] Load topics tags success', props<{ tags: SnsTagCountersResponse }>()),
     loadTagsFailure: createAction('[sns-topic-details] Load topics tags error', props<{ error: string }>()),
 }

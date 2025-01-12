@@ -164,9 +164,43 @@ export class SnsService {
      */
     public listSubscriptionsCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListSubscriptionCounters');
-        return this.http.post(this.url, {
-            topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns
-        }, {headers: headers, responseType: 'text'});
+        return this.http.post(this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Add a tag to a topic
+     *
+     * @param topicArn topic ARN
+     * @param key tag key
+     * @param value tag value
+     */
+    addTag(topicArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'TagResource');
+        return this.http.post(this.url, "ResourceArn=" + topicArn + "&Tags.Tag.1.Key=" + key + "&Tags.Tag.1.Value=" + value, {headers: headers, responseType: 'text'});
+    }
+
+    /**
+     * @brief Gets a list of subscriptions for a topic
+     *
+     * @param topicArn topic ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listTagCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListTagCounters');
+        return this.http.post(this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a topic tag
+     *
+     * @param topicArn topic ARN
+     * @param key tag key
+     */
+    deleteTag(topicArn: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'UntagResource');
+        return this.http.post(this.url, "ResourceArn=" + topicArn + "&TagKeys.TagKey.1=" + key, {headers: headers, responseType: 'text'});
     }
 
 }

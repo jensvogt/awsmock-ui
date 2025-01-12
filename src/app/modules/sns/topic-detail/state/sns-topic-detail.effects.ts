@@ -27,9 +27,22 @@ export class SnsTopicDetailEffects {
         mergeMap(action =>
             this.snsService.listSubscriptionsCounters(action.topicArn, action.pageSize, action.pageIndex, action.sortColumns)
                 .pipe(map((subscriptions: any) =>
-                        snsTopicDetailsActions.loadSubscriptionsSuccess({subscriptions: subscriptions})),
+                        snsTopicDetailsActions.loadSubscriptionsSuccess({subscriptions})),
                     catchError((error) =>
                         of(snsTopicDetailsActions.loadSubscriptionsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    loadTopicTags$ = createEffect(() => this.actions$.pipe(
+        ofType(snsTopicDetailsActions.loadTags),
+        mergeMap(action =>
+            this.snsService.listTagCounters(action.topicArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((tags: any) =>
+                        snsTopicDetailsActions.loadTagsSuccess({tags})),
+                    catchError((error) =>
+                        of(snsTopicDetailsActions.loadTagsFailure({error: error.message}))
                     )
                 )
         ),

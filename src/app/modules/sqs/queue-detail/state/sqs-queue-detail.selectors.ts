@@ -1,6 +1,8 @@
 import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelector} from "@ngrx/store";
 import {sqsQueueDetailsFeatureKey, SqsQueueDetailsState} from "./sqs-queue-detail.reducer";
 import {SqsQueueDetails} from "../../model/sqs-queue-details";
+import {SqsAttributeCountersResponse} from "../../model/sqs-attribute-item";
+import {SnsTagCountersResponse} from "../../../sns/model/sns-tag-item";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
@@ -13,7 +15,37 @@ export const selectDetails: SelectorType<SqsQueueDetails> = createSelector(
     (state: SqsQueueDetailsState) => state?.sqsQueueDetails
 );
 
+export const selectAttributes: SelectorType<SqsAttributeCountersResponse> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.sqsQueueAttributes
+);
+
+export const selectAttributePageSize: SelectorType<number> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.attributePageSize
+);
+
+export const selectAttributePageIndex: SelectorType<number> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.attributePageIndex
+);
+
 export const selectError: SelectorType<any> = createSelector(
     selectQueueDetailsFeature,
     (state: SqsQueueDetailsState) => state?.error
+);
+
+export const selectTags: SelectorType<SnsTagCountersResponse> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.sqsQueueTags
+);
+
+export const selectTagPageSize: SelectorType<number> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.tagPageSize
+);
+
+export const selectTagPageIndex: SelectorType<number> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.tagPageIndex
 );

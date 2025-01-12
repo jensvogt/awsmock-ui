@@ -25,6 +25,32 @@ export class SqsQueueDetailEffects {
         ),
     ));
 
+    loadQueueAttributes$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.loadAttributes),
+        mergeMap(action =>
+            this.sqsService.listQueueAttributeCounters(action.queueArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((attributes: any) =>
+                        sqsQueueDetailsActions.loadAttributesSuccess({attributes})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.loadAttributesFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    loadQueueTags$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.loadTags),
+        mergeMap(action =>
+            this.sqsService.listTagCounters(action.queueArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((tags: any) =>
+                        sqsQueueDetailsActions.loadTagsSuccess({tags})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.loadTagsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     constructor(private actions$: Actions, private sqsService: SqsService) {
     }
 }

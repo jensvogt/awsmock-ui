@@ -67,7 +67,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     topicAttributes$: Observable<SnsAttributeCountersResponse> = this.store.select(selectAttributes);
     attributePageSize$: Observable<number> = this.store.select(selectAttributePageSize);
     attributePageIndex$: Observable<number> = this.store.select(selectAttributePageIndex);
-    attributeColumns: any[] = ['name', 'value', 'actions'];
+    attributeColumns: any[] = ['name', 'value'];
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
     private routerSubscription: any;
@@ -195,14 +195,6 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    subscribe(subscription: any) {
-        this.snsService.subscribe(subscription.topicArn, subscription.endpoint, subscription.protocol)
-            .subscribe((data: any) => {
-                this.loadSubscriptions();
-                this.snackBar.open('SNS subscription added, subscription ARN:' + data.SubscriptionArn, 'Dismiss', {duration: 5000});
-            })
-    }
-
     // ===================================================================================================================
     // Tags
     // ===================================================================================================================
@@ -311,23 +303,5 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
     refreshAttributes() {
         this.loadAttributes();
-    }
-
-    addAttribute() {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName};
-
-        /*this.dialog.open(AttributeAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                this.snsService.addAttribute(result.topicArn, result.key, result.value)
-                    .subscribe(() => {
-                        this.loadAttributes();
-                        this.snackBar.open('SNS attribute added, name: ' + result.key, 'Dismiss', {duration: 5000});
-                    })
-            }
-        });*/
     }
 }

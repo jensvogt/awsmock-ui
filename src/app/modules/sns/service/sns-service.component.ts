@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {SNSClient, SubscribeCommand} from "@aws-sdk/client-sns";
+import {SNSClient} from "@aws-sdk/client-sns";
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
@@ -31,16 +31,17 @@ export class SnsService {
     constructor(private http: HttpClient) {
     }
 
-    subscribe(topicArn: string, endpoint: string, protocol: string) {
-        const input = {
-            TopicArn: topicArn,
-            Protocol: protocol,
-            Endpoint: endpoint,
-            ReturnSubscriptionArn: true
-        };
-        return this.client.send(new SubscribeCommand(input));
-    }
-
+    /*
+        subscribe(topicArn: string, endpoint: string, protocol: string) {
+            const input = {
+                TopicArn: topicArn,
+                Protocol: protocol,
+                Endpoint: endpoint,
+                ReturnSubscriptionArn: true
+            };
+            return this.client.send(new SubscribeCommand(input));
+        }
+    */
     /**
      * @brief Create a new topic.
      *
@@ -87,6 +88,28 @@ export class SnsService {
     public purgeTopic(topicArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'PurgeTopic');
         return this.http.post(this.url, {topicArn: topicArn}, {headers: headers});
+    }
+
+    /**
+     * @brief Subscribe to a topic
+     *
+     * @param topicArn topic ARN
+     * @param endpoint subscription endpoint
+     * @param protocol subscription protocol
+     */
+    subscribe(topicArn: string, endpoint: string, protocol: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'Subscribe');
+        return this.http.post(this.url, "TopicArn=" + topicArn + "&Endpoint=" + endpoint + "&Protocol=" + protocol, {headers: headers, responseType: 'text'});
+    }
+
+    /**
+     * @brief Subscribe to a topic
+     *
+     * @param subscriptionArn subscription ARN
+     */
+    unsubscribe(subscriptionArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'Unsubscribe');
+        return this.http.post(this.url, "SubscriptionArn=" + subscriptionArn, {headers: headers, responseType: 'text'});
     }
 
     /**

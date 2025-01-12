@@ -28,6 +28,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
     topicArn: string = '';
+    topicName: string = '';
     topicDetails$: Observable<SnsTopicDetails> = this.store.select(selectDetails);
     topicDetailsError$: Observable<string> = this.store.select(selectError);
 
@@ -47,6 +48,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.topicArn = params['topicArn'];
+            this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(":"));
             this.loadTopicDetails();
             this.loadSubscriptions();
         });
@@ -135,7 +137,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        //dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicDetails$?.topicName};
+        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName};
 
         this.dialog.open(SubscriptionAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
@@ -146,13 +148,9 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
     subscribe(subscription: any) {
         this.snsService.subscribe(subscription.topicArn, subscription.endpoint, subscription.protocol)
-            .then((data: any) => {
+            .subscribe((data: any) => {
                 this.loadSubscriptions();
-                this.snackBar.open('Subscription saved, subscription ARN:' + data.SubscriptionArn, 'Dismiss', {duration: 5000});
+                this.snackBar.open('SNA subscription added, subscription ARN:' + data.SubscriptionArn, 'Dismiss', {duration: 5000});
             })
-            .catch((error: any) => console.error(error))
-            .finally(() => {
-                //this.client.destroy();
-            });
     }
 }

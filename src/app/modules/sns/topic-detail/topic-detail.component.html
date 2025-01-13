@@ -22,34 +22,16 @@
                         <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
-                                    <p matListItemTitle>Topic Name: </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.topicName }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Topic Name: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicName }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p matListItemTitle>ARN: </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.topicArn }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>ARN: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicArn }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p matListItemTitle>URL: </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.topicUrl }}</p>
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
-                            <mat-list>
-                                <mat-list-item style="height:80px">
-                                    <p matListItemTitle>Owner: </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.owner }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                    <p matListItemTitle>Messages: </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.messageCount }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                    <p matListItemTitle>Size (kB): </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.size }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>URL: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicUrl }}</p>
                                 </mat-list-item>
                             </mat-list>
                         </div>
@@ -58,12 +40,30 @@
                         <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
-                                    <p matListItemTitle>Created: </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.created | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Owner: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.owner }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p matListItemTitle>Modified: </p>
-                                    <p class="map-list-item-title" matListItemLine>{{ topicDetails.modified | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Messages: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.messageCount }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Size (kB): </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.size }}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Created: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.created | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Modified: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.modified | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
                                 </mat-list-item>
@@ -232,10 +232,6 @@
             </mat-tab-group>
         </mat-card-content>
     </mat-card>
-    <!--mat-card-actions align="end">
-        <button (click)=close() mat-button>Close</button>
-        <button (click)=save() mat-button>Save</button>
-    </mat-card-actions-->
     <div class="footer">
         Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
     </div>

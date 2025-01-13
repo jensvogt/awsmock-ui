@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
-import {CreateBucketCommand, DeleteBucketCommand, DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
+import {CreateBucketCommand, DeleteBucketCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
@@ -40,14 +40,6 @@ export class S3Service {
         return this.client.send(new CreateBucketCommand(input));
     }
 
-    listObjects(bucketName: string, pageSize: number, pageIndex: number) {
-        const command = new ListObjectsV2Command({
-            Bucket: bucketName,
-            MaxKeys: pageSize * pageIndex,
-        });
-        return this.client.send(command);
-    }
-
     async putObjects(bucketName: string, key: string, content: Blob) {
         const command = {
             Bucket: bucketName,
@@ -80,15 +72,8 @@ export class S3Service {
         return this.client.send(new DeleteBucketCommand(input));
     }
 
-    cleanup() {
-        this.client.destroy();
-    }
-
     /**
      * @brief List all bucket counters
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param prefix bucket name prefix
      * @param pageSize page size
@@ -109,9 +94,6 @@ export class S3Service {
 
     /**
      * @brief List all object counters
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param bucket bucket name
      * @param prefix object name prefix
@@ -135,9 +117,6 @@ export class S3Service {
     /**
      * @brief Get a bucket details
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     *
      * @param bucketName bucket name
      */
     public getBucket(bucketName: string) {
@@ -150,23 +129,7 @@ export class S3Service {
     }
 
     /**
-     * @brief Saves a modified bucket.
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     *
-     * @param bucket bucket object
-     */
-    public saveBucket(bucket: any) {
-        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'SaveBucket');
-        return this.http.post(this.url, bucket, {headers: headers});
-    }
-
-    /**
      * @brief Deletes a S3 bucket. This will delete all objects of that bucket.
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param bucketName bucket name
      */
@@ -181,9 +144,6 @@ export class S3Service {
 
     /**
      * @brief Deletes a S3 bucket. This will delete all objects of that bucket.
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param bucketName bucket name
      */

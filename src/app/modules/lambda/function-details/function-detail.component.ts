@@ -44,6 +44,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routerSubscription = this.route.params.subscribe(params => {
             this.functionName = params['functionName'];
+            this.loadFunction();
         });
         this.functionItem$?.subscribe((data: LambdaFunctionItem) => {
             this.lastUpdate = new Date();
@@ -51,7 +52,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.environmentDataSource = this.convertEnvironment(data);
             this.tagsDataSource = this.convertTags(data);
         });
-        this.loadFunction();
     }
 
     ngOnDestroy() {

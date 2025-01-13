@@ -1,25 +1,10 @@
 import {Injectable} from "@angular/core";
-import {SNSClient} from "@aws-sdk/client-sns";
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable()
 export class SnsService {
-
-    client = new SNSClient({
-        region: environment.awsmockRegion,
-        endpoint: environment.gatewayEndpoint,
-        maxAttempts: 1,
-        credentials: {
-            accessKeyId: 'test',
-            secretAccessKey: 'test',
-        },
-        requestHandler: {
-            requestTimeout: 3000,
-            httpsAgent: {maxSockets: 25, keepAlive: true},
-        },
-    });
 
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({

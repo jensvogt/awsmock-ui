@@ -3,15 +3,6 @@ import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 
-export interface SqsTag {
-    key: string;
-}
-
-export interface SqsAddTagRequest {
-    QueueUrl: string | undefined;
-    Tags: SqsTag[];
-}
-
 @Injectable({providedIn: 'root'})
 export class SqsService {
 

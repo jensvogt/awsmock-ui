@@ -1,11 +1,11 @@
-import {isDevMode, NgModule} from "@angular/core";
+import {NgModule} from "@angular/core";
 import {AppComponent} from "./app.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {AppRoutingModule, routes} from "./app.routes";
 import {DashboardModule} from "./modules/dashboard/dashboard.module";
 import {provideRouter, RouterModule, RouterOutlet} from "@angular/router";
-import {provideStoreDevtools, StoreDevtoolsConfig, StoreDevtoolsModule} from "@ngrx/store-devtools";
+import {StoreDevtoolsConfig} from "@ngrx/store-devtools";
 import {environment} from "../environments/environment";
 import {EffectsModule, provideEffects} from "@ngrx/effects";
 import {provideStore, StoreModule} from "@ngrx/store";
@@ -27,12 +27,10 @@ const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly:
     providers: [
         provideRouter(routes),
         provideHttpClient(),
-        // Currently PIM uses modules and standalone components,
-        // therefore store, effects and dev tools must be defined in imports as well as in providers!
         provideStore(reducers, {}),
         provideEffects(RootEffect),
-        provideStoreDevtools(storeDevToolsOptions),
-        //AwsMockHttpService,
+        // Redux dev tools. Results in all http request send twice. SO use it only for debugging purposes.
+//        provideStoreDevtools(storeDevToolsOptions),
     ],
     imports: [
         BrowserModule,
@@ -47,8 +45,9 @@ const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly:
         BrowserAnimationsModule,
         StoreModule.forRoot(reducers, {}),
         EffectsModule.forRoot(RootEffect),
-        !environment.production ? StoreDevtoolsModule.instrument() : [],
-        StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}),
+        // Redux dev tools. Results in all http request send twice. SO use it only for debugging purposes.
+        //!environment.production ? StoreDevtoolsModule.instrument() : [],
+        //StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}),
         StoreRouterConnectingModule.forRoot(),
         MatLabel,
         MatInput,

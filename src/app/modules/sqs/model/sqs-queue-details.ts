@@ -12,6 +12,8 @@ export interface SqsQueueDetails {
     available: number;
     invisible: number;
     delayed: number;
+    dlqArn: string;
+    dlqMaxReceive: number;
     created: Date;
     modified: Date;
 }

@@ -143,10 +143,10 @@
                     <mat-card-actions class="head-buttons">
                         <!--button (click)="addLambdaTrigger()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="refreshLambdaTrigger()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
                         </button-->
+                        <button (click)="refreshLambdaTriggers()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
                     </mat-card-actions>
                     <div *ngIf="lambdaTriggers$ | async as lambdaTriggersCounter;else lambdaTriggerNotExistent" class="row">
                         <table (matSortChange)="lambdaTriggerSortChange($event)" [dataSource]="lambdaTriggersCounter.LambdaTriggerCounters" class="mat-elevation-z8" mat-table matSort>

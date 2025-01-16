@@ -6,7 +6,19 @@ import {Location} from "@angular/common";
 import {State, Store} from "@ngrx/store";
 import {sqsQueueDetailsActions} from "./state/sqs-queue-detail.actions";
 import {Observable} from "rxjs";
-import {selectAttributePageIndex, selectAttributePageSize, selectAttributes, selectDetails, selectError, selectTagPageIndex, selectTagPageSize, selectTags} from "./state/sqs-queue-detail.selectors";
+import {
+    selectAttributePageIndex,
+    selectAttributePageSize,
+    selectAttributes,
+    selectDetails,
+    selectError,
+    selectLambdaTriggerPageIndex,
+    selectLambdaTriggerPageSize,
+    selectLambdaTriggers,
+    selectTagPageIndex,
+    selectTagPageSize,
+    selectTags
+} from "./state/sqs-queue-detail.selectors";
 import {SqsAttributeCountersResponse} from "../model/sqs-attribute-item";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
@@ -16,6 +28,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {SqsService} from "../service/sqs-service.component";
 import {SqsTagAddDialog} from "./tag-add/tag-add.component";
 import {SqsTagEditDialog} from "./tag-edit/tag-edit.component";
+import {SqsLambdaTriggerCountersResponse} from "../model/sqs-lambda-trigger-item";
 
 @Component({
     selector: 'sqs-queue-detail-component',
@@ -39,6 +52,13 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     attributeColumns: any[] = ['name', 'value'];
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Attributes Table
+    lambdaTriggers$: Observable<SqsLambdaTriggerCountersResponse> = this.store.select(selectLambdaTriggers);
+    lambdaTriggerPageSize$: Observable<number> = this.store.select(selectLambdaTriggerPageSize);
+    lambdaTriggerPageIndex$: Observable<number> = this.store.select(selectLambdaTriggerPageIndex);
+    lambdaTriggerColumns: any[] = ['uuid', 'arn', 'enabled'];
+    lambdaTriggerPageSizeOptions = [5, 10, 20, 50, 100];
+
     // Tags Table
     queueTags$: Observable<SnsTagCountersResponse> = this.store.select(selectTags);
     tagPageSize$: Observable<number> = this.store.select(selectTagPageSize);
@@ -56,6 +76,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             this.queueArn = params['queueArn'];
             this.loadDetails();
             this.loadAttributes();
+            this.loadLambdaTrigger();
             this.loadTags();
         });
         this.queueDetailsError$.subscribe((msg: string) => {
@@ -68,7 +89,8 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             this.queueName = data.queueName;
         });
         //this.queueAttributes$.subscribe((data: any) => console.log("Data: ", data));
-        this.queueTags$.subscribe((data: any) => console.log("Data: ", data));
+        //this.queueTags$.subscribe((data: any) => console.log("Data: ", data));
+        //this.lambdaTriggers$.subscribe((data: any) => console.log("Data: ", data));
     }
 
     ngOnDestroy() {
@@ -106,7 +128,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             queueArn: this.queueArn,
             pageSize: this.state.value['sqs-queue-details'].attributePageSize,
             pageIndex: this.state.value['sqs-queue-details'].attributePageIndex,
-            sortColumns: this.state.value['sqs-queue-details'].sortColumns
+            sortColumns: this.state.value['sqs-queue-details'].attributeSortColumns
         }));
         this.lastUpdate = new Date();
     }
@@ -115,12 +137,39 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
         this.state.value['sqs-queue-details'].sortColumns = [];
         let column = sortState.active;
         let direction = sortState.direction === 'asc' ? 1 : -1;
-        this.state.value['sqs-queue-details'].sortColumns = [{column: column, sortDirection: direction}];
+        this.state.value['sqs-queue-details'].attributeSortColumns = [{column: column, sortDirection: direction}];
         this.loadAttributes();
     }
 
     refreshAttributes() {
         this.loadAttributes();
+    }
+
+    // ===================================================================================================================
+    // Lambda trigger
+    // ===================================================================================================================
+    handleLambdaTriggerPageEvent(e: PageEvent) {
+        this.state.value['sqs-queue-details'].lambdaTriggerPageSize = e.pageSize;
+        this.state.value['sqs-queue-details'].lambdaTriggerPageIndex = e.pageIndex;
+        this.loadLambdaTrigger();
+    }
+
+    lambdaTriggerSortChange(sortState: Sort) {
+        this.state.value['sqs-queue-details'].sortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['sqs-queue-details'].lambdaTriggerSortColumns = [{column: column, sortDirection: direction}];
+        this.loadLambdaTrigger();
+    }
+
+    loadLambdaTrigger() {
+        this.store.dispatch(sqsQueueDetailsActions.loadLambdaTriggers({
+            queueArn: this.queueArn,
+            pageSize: this.state.value['sqs-queue-details'].lambdaTriggerPageSize,
+            pageIndex: this.state.value['sqs-queue-details'].lambdaTriggerPageIndex,
+            sortColumns: this.state.value['sqs-queue-details'].lambdaTriggerSortColumns
+        }));
+        this.lastUpdate = new Date();
     }
 
     // ===================================================================================================================
@@ -137,7 +186,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             queueArn: this.queueArn,
             pageSize: this.state.value['sqs-queue-details'].tagPageSize,
             pageIndex: this.state.value['sqs-queue-details'].tagPageIndex,
-            sortColumns: this.state.value['sqs-queue-details'].sortColumns
+            sortColumns: this.state.value['sqs-queue-details'].tagSortColumns
         }));
         this.lastUpdate = new Date();
     }

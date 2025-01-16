@@ -92,6 +92,19 @@ export class SqsService {
     }
 
     /**
+     * @brief Gets a list of lambda triggers for a queue
+     *
+     * @param queueArn queue ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listLambdaTriggerCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListLambdaTriggerCounters');
+        return this.http.post(this.url, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
      * @brief Add a tag to a queue
      *
      * @param queueUrl queue URL

@@ -3,6 +3,7 @@ import {SqsQueueDetails} from "../../model/sqs-queue-details";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {SqsAttributeCountersResponse} from "../../model/sqs-attribute-item";
 import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
+import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
 
 export const sqsQueueDetailsActions = {
     initialize: createAction('[sqs-queue-details] initialize'),
@@ -16,6 +17,11 @@ export const sqsQueueDetailsActions = {
     loadAttributes: createAction('[sqs-queue-details] Load queue attributes', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     loadAttributesSuccess: createAction('[sqs-queue-details] Load queue attributes success', props<{ attributes: SqsAttributeCountersResponse }>()),
     loadAttributesFailure: createAction('[sqs-queue-details] Load queue attributes error', props<{ error: string }>()),
+
+    // Load lambda triggers
+    loadLambdaTriggers: createAction('[sqs-queue-details] Load queue attributes', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadLambdaTriggersSuccess: createAction('[sqs-queue-details] Load queue attributes success', props<{ lambdaTriggers: SqsLambdaTriggerCountersResponse }>()),
+    loadLambdaTriggersFailure: createAction('[sqs-queue-details] Load queue attributes error', props<{ error: string }>()),
 
     // Load tags
     loadTags: createAction('[sns-topic-details] Load topics tags', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),

@@ -19,9 +19,9 @@ export const sqsQueueDetailsActions = {
     loadAttributesFailure: createAction('[sqs-queue-details] Load queue attributes error', props<{ error: string }>()),
 
     // Load lambda triggers
-    loadLambdaTriggers: createAction('[sqs-queue-details] Load queue attributes', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
-    loadLambdaTriggersSuccess: createAction('[sqs-queue-details] Load queue attributes success', props<{ lambdaTriggers: SqsLambdaTriggerCountersResponse }>()),
-    loadLambdaTriggersFailure: createAction('[sqs-queue-details] Load queue attributes error', props<{ error: string }>()),
+    loadLambdaTriggers: createAction('[sqs-queue-details] Load queue lambda trigger', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadLambdaTriggersSuccess: createAction('[sqs-queue-details] Load queue lambda trigger success', props<{ lambdaTriggers: SqsLambdaTriggerCountersResponse }>()),
+    loadLambdaTriggersFailure: createAction('[sqs-queue-details] Load queue lambda trigger error', props<{ error: string }>()),
 
     // Load tags
     loadTags: createAction('[sns-topic-details] Load topics tags', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),

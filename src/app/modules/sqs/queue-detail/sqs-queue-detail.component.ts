@@ -90,7 +90,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
         });
         //this.queueAttributes$.subscribe((data: any) => console.log("Data: ", data));
         //this.queueTags$.subscribe((data: any) => console.log("Data: ", data));
-        //this.lambdaTriggers$.subscribe((data: any) => console.log("Data: ", data));
+        this.lambdaTriggers$.subscribe((data: any) => console.log("Data: ", data));
     }
 
     ngOnDestroy() {
@@ -170,6 +170,10 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             sortColumns: this.state.value['sqs-queue-details'].lambdaTriggerSortColumns
         }));
         this.lastUpdate = new Date();
+    }
+
+    refreshLambdaTriggers() {
+        this.loadLambdaTrigger();
     }
 
     // ===================================================================================================================

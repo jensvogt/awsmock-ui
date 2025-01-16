@@ -1,5 +1,52 @@
 # Changelog
 
+## [1.4.0](https://github.com/jensvogt/awsmock-ui/compare/v1.3.0...v1.4.0) (2025-01-16)
+
+
+### Features
+
+* **66-s3-object-list-download-button:** add cognito module ([fcf9a98](https://github.com/jensvogt/awsmock-ui/commit/fcf9a98f8f171aa72fd7438b33ed15ee6a37c296))
+* **66-s3-object-list-download-button:** add cognito user details ([1492a86](https://github.com/jensvogt/awsmock-ui/commit/1492a86d763cedf2e60a53bf4ef7fc819f3b1394))
+* **66-s3-object-list-download-button:** add cognito user details ([7242f36](https://github.com/jensvogt/awsmock-ui/commit/7242f365ac39b5ffa150940bc24d2b709ce5eb2b))
+* **66-s3-object-list-download-button:** add cognito user list ([bd020d5](https://github.com/jensvogt/awsmock-ui/commit/bd020d5e9c3d549532e263cb2aa42250b59807a1))
+* **66-s3-object-list-download-button:** add cognito user list ([5ce6439](https://github.com/jensvogt/awsmock-ui/commit/5ce64397822a88ace59df36d2d7e812488f1a6ff))
+* **66-s3-object-list-download-button:** add lambda performance counters ([0b0b7b1](https://github.com/jensvogt/awsmock-ui/commit/0b0b7b1bbd0aa2aee314a430e583b3129f50e7bd))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([4d66eef](https://github.com/jensvogt/awsmock-ui/commit/4d66eef9656f6c7a6be812fe0637d56cb5ebc997))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([8e595bf](https://github.com/jensvogt/awsmock-ui/commit/8e595bfe313803e9187145f9a4206aa170ffd662))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([832e65d](https://github.com/jensvogt/awsmock-ui/commit/832e65df56b94388f0e6b947c7df1c083ea7a6be))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([9997f6a](https://github.com/jensvogt/awsmock-ui/commit/9997f6a32826e2be9c310b42633246d33a3f50a1))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([f6b2084](https://github.com/jensvogt/awsmock-ui/commit/f6b208440251f7584e1529d04e02a05e27d7412f))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([346c924](https://github.com/jensvogt/awsmock-ui/commit/346c924d4ced9bbe4b2214efbcef21c6bc22cc7e))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([1637bbc](https://github.com/jensvogt/awsmock-ui/commit/1637bbc383cd681b48eb612488f62e6d848d178f))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([de71ef0](https://github.com/jensvogt/awsmock-ui/commit/de71ef0eb505f12d78426764c05eb6e99f753cd6))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([6abce90](https://github.com/jensvogt/awsmock-ui/commit/6abce90f8c7c276018a16059ad037ebd50a9b1e8))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([836bef7](https://github.com/jensvogt/awsmock-ui/commit/836bef7d890d222594589000af81d5b7598c4152))
+* **66-s3-object-list-download-button:** add prefix buttons, keyup callback ([f906110](https://github.com/jensvogt/awsmock-ui/commit/f9061106bcc48635d9ee319468f0d1b7fe3e9b55))
+* **66-s3-object-list-download-button:** add s3 view object dialog, sns view message dialog ([1926155](https://github.com/jensvogt/awsmock-ui/commit/1926155f0f726a317c5424c3c4ce46195a6baad8))
+* **66-s3-object-list-download-button:** add SNS topic attributes, edit tage, edit subscriptions ([49645e0](https://github.com/jensvogt/awsmock-ui/commit/49645e0b75cde3f2f9033a1c3e45419ea112d2f7))
+* **66-s3-object-list-download-button:** add SNS topic tags ([a455530](https://github.com/jensvogt/awsmock-ui/commit/a4555308642d30e7dc6fff8181f569fbebcdd68c))
+* **66-s3-object-list-download-button:** add SNS/SQS queue/topic sizes ([0ee4709](https://github.com/jensvogt/awsmock-ui/commit/0ee4709603185466be1567e46dbbf8e53b2603a1))
+* **66-s3-object-list-download-button:** add SQS lambda triggers ([b11250d](https://github.com/jensvogt/awsmock-ui/commit/b11250d2eb152e570d324f3b366bf69556e016c1))
+* **66-s3-object-list-download-button:** add SQS lambda triggers ([6bafb22](https://github.com/jensvogt/awsmock-ui/commit/6bafb227f6d881efc0e9dd69a43b6dd1a9451728))
+* **66-s3-object-list-download-button:** add sqs message file load dialog ([5c35f16](https://github.com/jensvogt/awsmock-ui/commit/5c35f168e4f62b997fd82d2694757ec822729baa))
+* **66-s3-object-list-download-button:** add sqs message file load dialog ([59783e3](https://github.com/jensvogt/awsmock-ui/commit/59783e31c07e53092c412a6a60b72aab6eb087d4))
+* **66-s3-object-list-download-button:** add sqs message file load dialog ([e83d19b](https://github.com/jensvogt/awsmock-ui/commit/e83d19bcdb48c26f94a299f927aeac4a1e7a9363))
+* **66-s3-object-list-download-button:** add SQS queue attributes ([5aa6602](https://github.com/jensvogt/awsmock-ui/commit/5aa66020384666bc5f7d178ee3c7cac3e94bd5f8))
+* **66-s3-object-list-download-button:** add SQS queue tags/attributes ([090c8bd](https://github.com/jensvogt/awsmock-ui/commit/090c8bdb0050f5a21499e7d4655576c4d2dc4398))
+* **66-s3-object-list-download-button:** add SQS queue tags/attributes ([f7b754d](https://github.com/jensvogt/awsmock-ui/commit/f7b754d0195e9eedf612c5d54130ce0ab5ab64d2))
+* **66-s3-object-list-download-button:** add SQS queue tags/attributes ([0477e81](https://github.com/jensvogt/awsmock-ui/commit/0477e81ebfc4b12e3268c7547693eaa36ecc5cb8))
+* **66-s3-object-list-download-button:** add SQS queue tags/attributes ([70ec7cc](https://github.com/jensvogt/awsmock-ui/commit/70ec7cc8b12ecd663f8205b7cdfaa335a5a91534))
+* **66-s3-object-list-download-button:** fix S3 object list paging ([5eb1eb6](https://github.com/jensvogt/awsmock-ui/commit/5eb1eb6d21f0d30ce9369b5baf49e407ea0dd9db))
+* **66-s3-object-list-download-button:** fix SNS purge topic ([b0b8611](https://github.com/jensvogt/awsmock-ui/commit/b0b8611ba439f82bf9767896bb15291503790b08))
+* **66-s3-object-list-download-button:** fix various SNS/SQS issues ([0d26801](https://github.com/jensvogt/awsmock-ui/commit/0d2680139d3f4a676c966bde69cdbe594d477389))
+* **66-s3-object-list-download-button:** fix various SNS/SQS issues ([786c855](https://github.com/jensvogt/awsmock-ui/commit/786c855fbbf222ba3a0ffa9b3934d11a5204f906))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([7fbe329](https://github.com/jensvogt/awsmock-ui/commit/7fbe32942268ce0d72b257dacf5034eb78b0cba6))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([1081cec](https://github.com/jensvogt/awsmock-ui/commit/1081cec0f8c6d1fd75161b5118b1289c217d915b))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([bd5ba20](https://github.com/jensvogt/awsmock-ui/commit/bd5ba2033854c6357f4369cf129dc918f1f0e6f8))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([730445d](https://github.com/jensvogt/awsmock-ui/commit/730445d45ddd5ee3fb6b186e67f18f70016ef900))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([6a85e48](https://github.com/jensvogt/awsmock-ui/commit/6a85e48011ca44b70daf511508e8c80f3ed24b23))
+* **66-s3-object-list-download-button:** SQS message list redux pattern ([363dfe1](https://github.com/jensvogt/awsmock-ui/commit/363dfe1f3cb0e65d14cf13b8e10fa36ab93cf2c7))
+
 ## [1.3.0](https://github.com/jensvogt/awsmock-ui/compare/v1.2.18...v1.3.0) (2024-11-04)
 
 

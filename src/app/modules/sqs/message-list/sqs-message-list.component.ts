@@ -118,11 +118,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     sortChange(sortState: Sort) {
         this.sortColumns = [];
-        if (sortState.direction === 'asc') {
-            this.sortColumns.push({column: sortState.active, sortDirection: 1});
-        } else {
-            this.sortColumns.push({column: sortState.active, sortDirection: -1});
-        }
+        sortState.direction === 'asc' ? this.sortColumns.push({column: sortState.active, sortDirection: 1}) : this.sortColumns.push({column: sortState.active, sortDirection: -1});
         this.state.value['sqs-message-list'].sortColumns = this.sortColumns;
         this.loadMessages();
     }

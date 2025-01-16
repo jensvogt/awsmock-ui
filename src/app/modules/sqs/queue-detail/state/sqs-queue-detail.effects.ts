@@ -38,6 +38,19 @@ export class SqsQueueDetailEffects {
         ),
     ));
 
+    loadLambdaTriggers$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.loadLambdaTriggers),
+        mergeMap(action =>
+            this.sqsService.listLambdaTriggerCounters(action.queueArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((lambdaTriggers: any) =>
+                        sqsQueueDetailsActions.loadLambdaTriggersSuccess({lambdaTriggers})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.loadLambdaTriggersFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     loadQueueTags$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueDetailsActions.loadTags),
         mergeMap(action =>

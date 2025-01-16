@@ -139,6 +139,55 @@
                                    aria-label="Select page">
                     </mat-paginator>
                 </mat-tab>
+                <mat-tab label="Lambda Trigger">
+                    <mat-card-actions class="head-buttons">
+                        <!--button (click)="addLambdaTrigger()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button (click)="refreshLambdaTrigger()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button-->
+                    </mat-card-actions>
+                    <div *ngIf="lambdaTriggers$ | async as lambdaTriggersCounter;else lambdaTriggerNotExistent" class="row">
+                        <table (matSortChange)="lambdaTriggerSortChange($event)" [dataSource]="lambdaTriggersCounter.LambdaTriggerCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="uuid">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by lambda trigger UUID">UUID</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.uuid }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="arn">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Lambda trigger ARN" sortActionDescription="Sort by lambda trigger ARN">ARN</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.arn }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="enabled">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Lambda trigger enabled" sortActionDescription="Sort by lambda trigger enabled flag">Enabled</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.enabled }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="lambdaTriggerColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: lambdaTriggerColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="lambdaTriggerColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleLambdaTriggerPageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(lambdaTriggers$ | async)?.Total"
+                                       [pageIndex]="(lambdaTriggerPageIndex$ | async)"
+                                       [pageSizeOptions]="lambdaTriggerPageSizeOptions"
+                                       [pageSize]="(lambdaTriggerPageSize$ | async)"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
+                    <ng-template #lambdaTriggerNotExistent>No lambda triggers found</ng-template>
+                </mat-tab>
                 <mat-tab label="Dead Letter Queue">
                     <mat-card-actions class="head-buttons">
                         <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
@@ -173,7 +222,7 @@
                             <mat-icon>refresh</mat-icon>
                         </button>
                     </mat-card-actions>
-                    <div *ngIf="queueTags$ | async as tags" class="row">
+                    <div *ngIf="queueTags$ | async as tags;else tagsNotFound" class="row">
                         <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.TagCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
@@ -202,17 +251,18 @@
                                 </td>
                             </tr>
                         </table>
+                        <mat-paginator (page)="handleTagPageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(queueTags$ | async)?.Total"
+                                       [pageIndex]="(tagPageIndex$ | async)"
+                                       [pageSizeOptions]="tagPageSizeOptions"
+                                       [pageSize]="(tagPageSize$ | async)"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
                     </div>
-                    <mat-paginator (page)="handleTagPageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="(queueTags$ | async)?.Total"
-                                   [pageIndex]="(tagPageIndex$ | async)"
-                                   [pageSizeOptions]="tagPageSizeOptions"
-                                   [pageSize]="(tagPageSize$ | async)"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator>
+                    <ng-template #tagsNotFound>No tags found</ng-template>
                 </mat-tab>
             </mat-tab-group>
         </mat-card-content>

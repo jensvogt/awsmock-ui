@@ -6,15 +6,8 @@ export const transferServerListActions = {
     initialize: createAction('[transfer-server-list] initialize'),
 
     // Load server list
-    loadTransferServer: createAction('[transfer-server-list] Load transfer server', props<{
-        prefix: string,
-        pageSize: number,
-        pageIndex: number,
-        sortColumns: SortColumn[]
-    }>()),
-    loadTransferServerSuccess: createAction('[transfer-server-list] Load transfer server success', props<{
-        listTransferServerCountersResponse: ListTransferServerCountersResponse
-    }>()),
+    loadTransferServer: createAction('[transfer-server-list] Load transfer server', props<{ prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadTransferServerSuccess: createAction('[transfer-server-list] Load transfer server success', props<{ listTransferServerCountersResponse: ListTransferServerCountersResponse }>()),
     loadTransferServerFailure: createAction('[transfer-server-list] Load transfer server error', props<{ error: string }>()),
 
     // Add queue

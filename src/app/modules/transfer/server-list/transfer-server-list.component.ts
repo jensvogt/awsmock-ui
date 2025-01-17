@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {filter, interval, Observable, Subscription} from "rxjs";
+import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatDialog} from "@angular/material/dialog";
-import {ActionsSubject, State, Store} from "@ngrx/store";
+import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectTransferServerCounters} from "./state/transfer-server-list.selectors";
 import {transferServerListActions} from "./state/transfer-server-list.actions";
@@ -44,15 +44,7 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
     prefixSet: boolean = false;
     protected readonly byteConversion = byteConversion;
 
-    constructor(private dialog: MatDialog, private state: State<TransferServerListState>, private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
-        this.actionsSubj$.pipe(
-            filter((action) =>
-                action.type === transferServerListActions.deleteTransferServerSuccess.type
-            )
-        ).subscribe(() => {
-                this.loadTransferServer();
-            }
-        );
+    constructor(private dialog: MatDialog, private state: State<TransferServerListState>, private location: Location, private store: Store) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {
@@ -60,6 +52,7 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
+        //this.listTransferServerCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {

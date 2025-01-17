@@ -3,19 +3,7 @@ import {AsyncPipe, DatePipe, NgIf} from '@angular/common';
 
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable
-} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -34,9 +22,12 @@ import {StoreModule} from "@ngrx/store";
 import {transferServerListFeatureKey, transferServerListReducer} from "./server-list/state/transfer-server-list.reducer";
 import {EffectsModule} from "@ngrx/effects";
 import {TransferServerListEffects} from "./server-list/state/transfer-server-list.effects";
+import {TransferServerDetailComponent} from "./transfer-details/transfer-server-detail.component";
+import {TransferServerDetailEffects} from "./transfer-details/state/transfer-server-detail.effects";
+import {transferServerDetailReducer, transferServerDetailsFeatureKey} from "./transfer-details/state/transfer-server-detail.reducer";
 
 @NgModule({
-    declarations: [TransferServerListComponent],
+    declarations: [TransferServerListComponent, TransferServerDetailComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -81,7 +72,8 @@ import {TransferServerListEffects} from "./server-list/state/transfer-server-lis
         AsyncPipe,
         TransferRoutingModule,
         StoreModule.forFeature(transferServerListFeatureKey, transferServerListReducer),
-        EffectsModule.forFeature([TransferServerListEffects]),
+        StoreModule.forFeature(transferServerDetailsFeatureKey, transferServerDetailReducer),
+        EffectsModule.forFeature([TransferServerListEffects, TransferServerDetailEffects]),
     ],
     exports: [TransferServerListComponent],
     providers: [TransferService],

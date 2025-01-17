@@ -49,10 +49,7 @@ export class TransferService {
     /**
      * @brief List all transfer servers
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     *
-     * @param prefix bucket name prefix
+     * @param prefix server name prefix
      * @param pageSize page size
      * @param pageIndex page index
      * @param sortColumns sorting columns
@@ -60,5 +57,39 @@ export class TransferService {
     public listTransferServerCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.ListServerCounters');
         return this.http.post(this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Load a transfer server details
+     *
+     * @param serverId server ID
+     */
+    public loadTransferServerDetails(serverId: string) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.GetServerDetails');
+        return this.http.post(this.url, {region: environment.awsmockRegion, serverId: serverId}, {headers: headers});
+    }
+
+    /**
+     * @brief List all transfer servers
+     *
+     * @param serverId server ID
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listTransferServerUserCounters(serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.ListUserCounters');
+        return this.http.post(this.url, {return: environment.awsmockRegion, serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a user from a server
+     *
+     * @param serverId server ID
+     * @param userName user name
+     */
+    public deleteUser(serverId: string, userName: string) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteUser');
+        return this.http.post(this.url, {Region: environment.awsmockRegion, ServerId: serverId, UserName: userName}, {headers: headers});
     }
 }

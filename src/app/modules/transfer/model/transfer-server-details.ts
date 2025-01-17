@@ -1,17 +1,14 @@
 export interface TransferServerDetails {
-    region: string;
-    queueName: string;
-    queueUrl: string;
-    queueArn: string;
-    retentionPeriod: number;
-    maxMessageSize: number;
-    size: number;
-    visibilityTimeout: number;
-    delay: number;
-    messageCount: number;
-    available: number;
-    invisible: number;
-    delayed: number;
-    created: Date;
-    modified: Date;
+    Region: string;
+    ServerId: string;
+    Arn: string;
+    Concurrency: number;
+    Port: number;
+    State: string;
+    Created: Date;
+    Modified: Date;
+}
+
+export interface TransferServerDetailsResponse {
+    server: TransferServerDetails;
 }

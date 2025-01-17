@@ -76,7 +76,7 @@
     </mat-card>
     <mat-card appearance="outlined" style="margin-top: 5px;">
         <mat-card-content>
-            <mat-tab-group>
+            <mat-tab-group (selectedTabChange)="onTabChanged($event);">
                 <mat-tab label="Users">
                     <mat-card-actions class="head-buttons">
                         <button (click)="refreshUsers()" aria-label="Refresh" mat-icon-button>
@@ -84,18 +84,21 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="users$ | async as users" class="row">
-                        <table (matSortChange)="userSortChange($event)" [dataSource]="users.users" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="userSortChange($event)" [dataSource]="users.UserCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by user name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Name }}</td>
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User name" sortActionDescription="Sort by user name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.UserName }}</td>
                             </ng-container>
                             <ng-container matColumnDef="password">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User password" sortActionDescription="Sort by user password">Value</th>
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User password" sortActionDescription="Sort by user password">Password</th>
                                 <td *matCellDef="let element" mat-cell> {{ element.Password }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <th *matHeaderCellDef mat-header-cell style="width:40px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
+                                    <button (click)="deleteUser(row.UserName)" aria-label="Delete" mat-icon-button matTooltip="Delete user">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
                                 </td>
                             </ng-container>
                             <tr *matHeaderRowDef="userColumns" mat-header-row></tr>
@@ -110,7 +113,7 @@
                     <mat-paginator (page)="handleUserPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(users$ | async)?.total"
+                                   [length]="(users$ | async)?.Total"
                                    [pageIndex]="(userPageIndex$ | async)"
                                    [pageSizeOptions]="userPageSizeOptions"
                                    [pageSize]="(userPageSize$ | async)"

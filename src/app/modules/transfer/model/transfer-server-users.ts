@@ -1,11 +1,11 @@
 export interface TransferServerUser {
-    Name: string;
+    UserName: string;
     Password: string;
     Created: Date;
     Modified: Date;
 }
 
 export interface TransferServerUsersResponse {
-    users: TransferServerUser[];
-    total: number;
+    UserCounters: TransferServerUser[];
+    Total: number;
 }

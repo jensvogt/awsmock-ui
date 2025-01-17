@@ -13,6 +13,7 @@ import {transferServerDetailActions} from "./state/transfer-server-detail.action
 import {TransferServerUsersResponse} from "../model/transfer-server-users";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
+import {MatTabChangeEvent} from "@angular/material/tabs";
 
 @Component({
     selector: 'transfer-server-detail-component',
@@ -48,13 +49,15 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
         this.routerSubscription = this.route.params.subscribe(params => {
             this.serverId = params['serverId'];
             this.loadTransferServerDetails();
+            this.loadUsers();
         });
         this.serverDetailsError$.subscribe((msg: string) => {
             if (msg && msg.length) {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
-        this.serverDetails$.subscribe((data) => console.log("Data: ", data));
+        //this.serverDetails$.subscribe((data) => console.log("Data: ", data));
+        this.users$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnDestroy() {
@@ -69,6 +72,11 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
         this.loadTransferServerDetails();
     }
 
+    onTabChanged(e: MatTabChangeEvent) {
+        console.log("Event: ", e.tab.textLabel);
+
+    }
+
     // ===================================================================================================================
     // Details
     // ===================================================================================================================
@@ -81,26 +89,26 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
     // Tags
     // ===================================================================================================================
     handleUserPageEvent(e: PageEvent) {
-        this.state.value['sns-topic-details'].tagPageSize = e.pageSize;
-        this.state.value['sns-topic-details'].tagPageIndex = e.pageIndex;
+        this.state.value['transfer-server-details'].tagPageSize = e.pageSize;
+        this.state.value['transfer-server-details'].tagPageIndex = e.pageIndex;
         this.loadUsers();
     }
 
     loadUsers() {
-        /*this.store.dispatch(snsTopicDetailsActions.loadTags({
-            topicArn: this.topicArn,
-            pageSize: this.state.value['sns-topic-details'].tagPageSize,
-            pageIndex: this.state.value['sns-topic-details'].tagPageIndex,
-            sortColumns: this.state.value['sns-topic-details'].sortColumns
-        }));*/
+        this.store.dispatch(transferServerDetailActions.loadUsers({
+            serverId: this.serverId,
+            pageSize: this.state.value['transfer-server-details'].tagPageSize,
+            pageIndex: this.state.value['transfer-server-details'].tagPageIndex,
+            sortColumns: this.state.value['transfer-server-details'].sortColumns
+        }));
         this.lastUpdate = new Date();
     }
 
     userSortChange(sortState: Sort) {
-        this.state.value['sns-topic-details'].sortColumns = [];
+        this.state.value['transfer-server-details'].sortColumns = [];
         let column = sortState.active;
         let direction = sortState.direction === 'asc' ? 1 : -1;
-        this.state.value['sns-topic-details'].sortColumns = [{column: column, sortDirection: direction}];
+        this.state.value['transfer-server-details'].sortColumns = [{column: column, sortDirection: direction}];
         this.loadUsers();
     }
 
@@ -108,4 +116,11 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
         this.loadUsers();
     }
 
+    deleteUser(name: string) {
+        this.transferService.deleteUser(this.serverId, name)
+            .subscribe(() => {
+                this.loadUsers();
+                this.snackBar.open('Transfer user deleted, name: ' + name, 'Dismiss', {duration: 5000});
+            });
+    }
 }

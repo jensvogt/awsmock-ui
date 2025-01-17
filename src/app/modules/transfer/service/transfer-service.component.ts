@@ -79,6 +79,17 @@ export class TransferService {
      */
     public listTransferServerUserCounters(serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.ListUserCounters');
-        return this.http.post(this.url, {serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.url, {return: environment.awsmockRegion, serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a user from a server
+     *
+     * @param serverId server ID
+     * @param userName user name
+     */
+    public deleteUser(serverId: string, userName: string) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteUser');
+        return this.http.post(this.url, {Region: environment.awsmockRegion, ServerId: serverId, UserName: userName}, {headers: headers});
     }
 }

@@ -17,23 +17,23 @@ export class DynamodbService {
     constructor(private http: HttpClient) {
     }
 
-    public listTableCounters(tableId: string, maxResults: number, pageIndex: number, sortColumns: SortColumn[]) {
+    public listTableCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "ListTableCounters");
         const body = {
             Region: environment.awsmockRegion,
-            TableId: tableId,
-            MaxResults: maxResults,
+            Prefix: prefix,
+            PageSize: pageSize,
             PageIndex: pageIndex,
             SortColumns: sortColumns
         }
         return this.http.post(this.url, body, {headers: headers});
     }
 
-    public deleteTable(tableId: string) {
+    public deleteTable(tableName: string) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "DeleteTable");
         const body = {
             Region: environment.awsmockRegion,
-            TableId: tableId
+            TableName: tableName
         }
         return this.http.post(this.url, body, {headers: headers});
     }

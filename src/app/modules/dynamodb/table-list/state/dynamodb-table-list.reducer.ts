@@ -16,7 +16,7 @@ export interface DynamodbTableListState {
 }
 
 export const initialState: DynamodbTableListState = {
-    listTableResponse: {total: 0, tables: []},
+    listTableResponse: {total: 0, tableCounters: []},
     prefix: '',
     pageSize: 10,
     pageIndex: 0,

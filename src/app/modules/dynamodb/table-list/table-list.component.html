@@ -6,7 +6,7 @@
         <span class="fill-remaining-space">
             DynamodDB Tables
         </span>
-        <button (click)="addUserPool()" aria-label="Refresh" mat-icon-button>
+        <button (click)="addTable()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
         </button>
         <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
@@ -29,14 +29,22 @@
             </mat-card-actions>
             <div class="table-container">
                 <div *ngIf="listTableCountersResponse$ | async as tableCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="tableCounters.tables" class="mat-elevation-z8 queue-table" mat-table matSort>
+                    <table (matSortChange)="sortChange($event)" [dataSource]="tableCounters.tableCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="id" matTooltip="Table ID">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Table ID" sortActionDescription="Sort by table ID">ID</th>
                             <td *matCellDef="let element" mat-cell>
                                 <mat-nav-list>
-                                    <a mat-list-item routerLink="./tables/{{ element.userPoolId }}">{{ element.userPoolId }}</a>
+                                    <a mat-list-item routerLink="./tables/{{ element.tableName }}">{{ element.tableName }}</a>
                                 </mat-nav-list>
                             </td>
+                        </ng-container>
+                        <ng-container matColumnDef="items" matTooltip="Number of items">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of items" sortActionDescription="Sort by items">Items</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.items }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="size" matTooltip="Total size of table">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="STable size" sortActionDescription="Sort by size">Size</th>
+                            <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created" matTooltip="Created">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Create timestamp" sortActionDescription="Sort by created">Created</th>
@@ -52,7 +60,7 @@
                                 <!--button (click)="listUsers(row.userPoolId)" aria-label="ListUsers" mat-icon-button matTooltip="Lists all users of that table">
                                     <mat-icon>group</mat-icon>
                                 </button-->
-                                <button (click)="deleteTable(row.userPoolId)" aria-label="DeleteTable" mat-icon-button matTooltip="Delete table">
+                                <button (click)="deleteTable(row.tableName)" aria-label="DeleteTable" mat-icon-button matTooltip="Delete table">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>

@@ -12,6 +12,8 @@ import {DynamodbTableListState} from "./state/dynamodb-table-list.reducer";
 import {selectPageIndex, selectPageSize, selectPrefix, selectTableCounters} from "./state/dynamodb-table-list.selectors";
 import {TableCountersResponse} from "../model/table-item";
 import {dynamodbTableListActions} from "./state/dynamodb-table-list.actions";
+import {byteConversion} from "../../../shared/byte-utils.component";
+import {DynamodbService} from "../service/dynamodb.service";
 
 @Component({
     selector: 'dynamodb-table-list',
@@ -30,7 +32,7 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listTableCountersResponse$: Observable<TableCountersResponse> = this.store.select(selectTableCounters);
-    columns: any[] = ['id', 'created', 'modified', 'actions'];
+    columns: any[] = ['id', 'items', 'size', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -48,8 +50,9 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
     // Prefix
     prefixValue: string = this.state.value['dynamodb-table-list'].prefix;
     prefixSet: boolean = false;
+    protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<DynamodbTableListState>, private store: Store) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<DynamodbTableListState>, private store: Store, private dynamodbService: DynamodbService) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {
@@ -57,11 +60,12 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
+        this.listTableCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {
-        this.loadUserpools();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadUserpools());
+        this.loadTables();
+        this.updateSubscription = interval(60000).subscribe(() => this.loadTables());
     }
 
     ngOnDestroy(): void {
@@ -72,14 +76,14 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
         this.prefixSet = true;
         this.state.value['dynamodb-table-list'].pageIndex = 0;
         this.state.value['dynamodb-table-list'].prefix = this.prefixValue;
-        this.loadUserpools();
+        this.loadTables();
     }
 
     unsetPrefix() {
         this.prefixValue = '';
         this.prefixSet = false;
         this.state.value['dynamodb-table-list'].prefix = '';
-        this.loadUserpools();
+        this.loadTables();
     }
 
     back() {
@@ -87,13 +91,13 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-        this.loadUserpools();
+        this.loadTables();
     }
 
     handlePageEvent(e: PageEvent) {
         this.state.value['dynamodb-table-list'].pageSize = e.pageSize;
         this.state.value['dynamodb-table-list'].pageIndex = e.pageIndex;
-        this.loadUserpools();
+        this.loadTables();
     }
 
     sortChange(sortState: Sort) {
@@ -103,10 +107,10 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
         } else {
             this.sortColumns.push({column: sortState.active, sortDirection: -1});
         }
-        this.loadUserpools();
+        this.loadTables();
     }
 
-    loadUserpools() {
+    loadTables() {
         this.lastUpdate = new Date();
         this.store.dispatch(dynamodbTableListActions.loadTables({
             prefix: this.state.value['dynamodb-table-list'].prefix,
@@ -116,7 +120,7 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
         }));
     }
 
-    addUserPool() {
+    addTable() {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
@@ -133,11 +137,11 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
         this.store.dispatch(dynamodbTableListActions.addTable({tableName: tableName}));
     }
 
-    deleteTable(userPoolId: string) {
-        /* this.cognitoService.deleteUserPool(userPoolId)
-             .subscribe(() => {
-                 this.snackBar.open('Userpool deleted, Id: ' + userPoolId, 'Done', {duration: 5000});
-                 this.loadUserpools();
-             });*/
+    deleteTable(tableName: string) {
+        this.dynamodbService.deleteTable(tableName)
+            .subscribe(() => {
+                this.snackBar.open('Table deleted, name: ' + tableName, 'Done', {duration: 5000});
+                this.loadTables();
+            });
     }
 }

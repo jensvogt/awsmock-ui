@@ -1,11 +1,13 @@
 export interface TableItem {
-    Id: string | undefined;
-    Name: string | undefined;
-    Created: Date | undefined;
-    Modified: Date | undefined;
+    id: string | undefined;
+    tableName: string | undefined;
+    items: number;
+    size: number;
+    created: Date | undefined;
+    modified: Date | undefined;
 }
 
 export interface TableCountersResponse {
     total: number | undefined;
-    tables: TableItem[];
+    tableCounters: TableItem[];
 }

@@ -43,7 +43,7 @@ export class SqsQueueListEffects {
     sendMessage$ = createEffect(() => this.actions$.pipe(
         ofType(sqsQueueListActions.sendMessage),
         mergeMap(action =>
-            this.sqsService.sendMessage(action.queueUrl, action.message, action.delay)
+            this.sqsService.sendMessage(action.queueUrl, action.message, action.delay, action.attributes)
                 .pipe(map(() => sqsQueueListActions.sendMessageSuccess),
                     catchError((error) =>
                         of(sqsQueueListActions.sendMessageFailure({error: error.message}))

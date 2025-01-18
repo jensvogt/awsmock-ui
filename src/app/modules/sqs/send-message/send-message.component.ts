@@ -1,33 +1,19 @@
-import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FileImportComponent} from "../../infrastructure/import/file-import/file-import.component";
+import {MatTableDataSource} from "@angular/material/table";
+import {PageEvent} from "@angular/material/paginator";
+import {Sort} from "@angular/material/sort";
+import {SqsMessageAttribute} from "../model/sqs-message-item";
+import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {SqsMessageAttributeAddDialog} from "./attribute-add/attribute-add.component";
 
 @Component({
     selector: 'queue-send-message-dialog',
     templateUrl: './send-message.component.html',
-    standalone: true,
-    imports: [
-        MatDialogContent,
-        MatDialogTitle,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-        MatFormField,
-        MatLabel,
-        FormsModule,
-        MatInput,
-        ReactiveFormsModule,
-        CdkDrag,
-        CdkDragHandle,
-        CdkTextareaAutosize
-    ],
-    styleUrls: ['./send-message.component.scss']
+    styleUrls: ['./send-message.component.scss'],
+    standalone: false,
+    providers: []
 })
 export class SendMessageComponentDialog implements OnInit {
 
@@ -35,16 +21,29 @@ export class SendMessageComponentDialog implements OnInit {
     queueName: string = '';
     message: string = '';
 
-    constructor(private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private fileDialog: MatDialog) {
+    // Attributes Table
+    messageAttributes = new MatTableDataSource<SqsMessageAttribute>();
+    messageAttributeLength: number = 0;
+    attributes: SqsMessageAttribute[] = [];
+    attributePageSize: number = 10;
+    attributePageIndex: number = 0;
+    attributeColumns: any[] = ['key', 'value', 'actions'];
+    attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
+    attributePageSizeOptions = [5, 10, 20, 50, 100];
+
+    constructor(private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private fileDialog: MatDialog, private attributeAdd: MatDialog) {
         this.queueUrl = data.queueUrl;
         this.queueName = this.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
     }
 
     ngOnInit() {
+        //this.messageAttributes.Attributes = [];
+        this.dialogRef.updateSize("1000px", "600px");
     }
 
     sendMessage() {
-        this.dialogRef.close(this.message);
+        let messageAttributes = this.convertMessageAttributes(this.attributes);
+        this.dialogRef.close({message: this.message, attributes: messageAttributes});
     }
 
     loadFromFile() {
@@ -60,7 +59,54 @@ export class SendMessageComponentDialog implements OnInit {
         });
     }
 
-    close() {
-        this.dialogRef.close(false);
+    handleAttributePageEvent(e: PageEvent) {
+        this.attributePageSize = e.pageSize;
+        this.attributePageIndex = e.pageIndex;
+    }
+
+    attributeSortChange(sortState: Sort) {
+        this.attributeSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.attributeSortColumns = [{column: column, sortDirection: direction}];
+    }
+
+    deleteAttribute(key: string) {
+        if (key) {
+            this.attributes = this.attributes.filter(element => {
+                return element.Key !== key
+            });
+            this.messageAttributes = new MatTableDataSource(this.attributes);
+        }
+    }
+
+    addAttribute() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {};
+
+        this.attributeAdd.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.attributes.push({Key: result.Key, Value: result.Value, DataType: result.DataType});
+                this.messageAttributes = new MatTableDataSource(this.attributes);
+                this.messageAttributeLength = this.attributes.length;
+            }
+        });
+    }
+
+    convertMessageAttributes(attributes: SqsMessageAttribute[]): any {
+        let messageAttr: any = {}
+        attributes.forEach((element) => {
+            if (element.DataType === 'string') {
+                messageAttr[element.Key] = {DataType: 'string', StringValue: element.Value}
+            } else if (element.DataType === 'number') {
+                messageAttr[element.Key] = {DataType: element.DataType, NumberValue: element.Value}
+            } else if (element.DataType === 'binary') {
+                messageAttr[element.Key] = {DataType: element.DataType, BinaryValue: element.Value}
+            }
+        });
+        return messageAttr;
     }
 }

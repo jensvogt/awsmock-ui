@@ -106,8 +106,6 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
             direction = -1;
         }
         this.state.value['sns-message-list'].sortColumns = [{column: column, sortDirection: direction}];
-        console.log("Sorting: ", this.state.value['sns-message-list'].sortColumns)
-        console.log("Sorting: ", sortState)
         this.loadMessages();
     }
 

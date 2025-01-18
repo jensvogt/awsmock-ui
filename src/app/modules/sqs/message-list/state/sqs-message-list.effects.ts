@@ -34,10 +34,21 @@ export class SqsMessageListEffects {
                 .then(() => sqsMessageListActions.addMessageSuccess()))
     ));*/
 
+    deleteAttribute$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsMessageListActions.deleteAttribute),
+        mergeMap(action =>
+            this.sqsService.deleteAttribute(action.messageId, action.name)
+                .pipe(map(() => sqsMessageListActions.deleteAttributeSuccess()),
+                    catchError((error) =>
+                        of(sqsMessageListActions.deleteAttributeFailure({error: error.message}))
+                    )
+                )
+        )));
+
     deleteMessage$ = createEffect(() => this.actions$.pipe(
         ofType(sqsMessageListActions.deleteMessage),
         mergeMap(action =>
-            this.sqsService.deleteMessageAws(action.queueUrl, action.receiptHandle)
+            this.sqsService.deleteMessage(action.queueUrl, action.receiptHandle)
                 .pipe(map(() => sqsMessageListActions.deleteMessageSuccess()),
                     catchError((error) =>
                         of(sqsMessageListActions.deleteMessageFailure({error: error.message}))

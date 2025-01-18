@@ -5,6 +5,7 @@ export interface TransferServerDetails {
     Concurrency: number;
     Port: number;
     State: string;
+    LastStarted: Date;
     Created: Date;
     Modified: Date;
 }

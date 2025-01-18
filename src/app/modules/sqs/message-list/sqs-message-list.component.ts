@@ -7,7 +7,7 @@ import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {filter, interval, Observable, Subscription} from "rxjs";
-import {ListMessageCountersResponse, SqsMessageItem} from "../model/sqs-message-item";
+import {ListMessageCountersResponse, SqsMessageDialogResult, SqsMessageItem} from "../model/sqs-message-item";
 import {ViewMessageComponentDialog} from "./view-message/view-message.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
@@ -59,7 +59,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private state: State<SQSMessageListState>,
-                private location: Location, private store: Store, private actionsSubj$: ActionsSubject) {
+                private location: Location, private store: Store<SQSMessageListState>, private actionsSubj$: ActionsSubject) {
         this.actionsSubj$.pipe(
             filter((action) =>
                 action.type === sqsMessageListActions.addMessageSuccess.type
@@ -152,6 +152,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.width = "70%"
 
         this.dialog.open(ViewMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
+            this.loadMessages();
         });
     }
 
@@ -167,9 +168,9 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.width = "90%"
         dialogConfig.panelClass = 'full-screen-modal';
 
-        this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe((result: SqsMessageDialogResult) => {
             if (result) {
-                this.sqsService.sendMessage(this.queueUrl, result, 0).subscribe(() => {
+                this.sqsService.sendMessage(this.queueUrl, result.message, 0, result.attributes).subscribe(() => {
                     this.loadMessages();
                     this.snackBar.open('Message send, queueArn: ' + this.queueArn, 'Done', {duration: 5000});
                 });

@@ -8,19 +8,7 @@ import {EffectsModule} from "@ngrx/effects";
 import {sqsQueueListFeatureKey, sqsQueueListReducer} from "./queues-list/state/sqs-queue-list.reducer";
 import {SqsQueueListEffects} from "./queues-list/state/sqs-queue-list.effects";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable
-} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -40,9 +28,15 @@ import {SqsQueueDetailEffects} from "./queue-detail/state/sqs-queue-detail.effec
 import {sqsQueueDetailReducer, sqsQueueDetailsFeatureKey} from "./queue-detail/state/sqs-queue-detail.reducer";
 import {sqsMessageListFeatureKey, sqsMessageListReducer} from "./message-list/state/sqs-message-list.reducer";
 import {SqsMessageListEffects} from "./message-list/state/sqs-message-list.effects";
+import {SendMessageComponentDialog} from "./send-message/send-message.component";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {ViewMessageComponentDialog} from "./message-list/view-message/view-message.component";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
 
 @NgModule({
-    declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
+    declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent, SendMessageComponentDialog, ViewMessageComponentDialog],
     imports: [
         MatCard,
         MatCardHeader,
@@ -90,6 +84,14 @@ import {SqsMessageListEffects} from "./message-list/state/sqs-message-list.effec
         StoreModule.forFeature(sqsQueueDetailsFeatureKey, sqsQueueDetailReducer),
         StoreModule.forFeature(sqsMessageListFeatureKey, sqsMessageListReducer),
         EffectsModule.forFeature([SqsQueueListEffects, SqsQueueDetailEffects, SqsMessageListEffects]),
+        CdkTextareaAutosize,
+        CdkDrag,
+        CdkDragHandle,
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogClose,
+        MatSlideToggle,
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

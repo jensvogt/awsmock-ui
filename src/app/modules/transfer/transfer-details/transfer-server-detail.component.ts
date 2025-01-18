@@ -56,8 +56,8 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
-        //this.serverDetails$.subscribe((data) => console.log("Data: ", data));
-        this.users$.subscribe((data) => console.log("Data: ", data));
+        // this.serverDetails$.subscribe((data) => console.log("Data: ", data));
+        //this.users$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnDestroy() {
@@ -74,7 +74,9 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
 
     onTabChanged(e: MatTabChangeEvent) {
         console.log("Event: ", e.tab.textLabel);
-
+        if (e.tab.textLabel == 'Users') {
+            this.loadUsers();
+        }
     }
 
     // ===================================================================================================================

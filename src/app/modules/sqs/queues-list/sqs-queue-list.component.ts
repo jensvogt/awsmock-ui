@@ -14,6 +14,7 @@ import {sqsQueueListActions} from "./state/sqs-queue-list.actions";
 import {SQSQueueListState} from "./state/sqs-queue-list.reducer";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {SqsMessageDialogResult} from "../model/sqs-message-item";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -97,19 +98,13 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        this.state.value['sqs-queue-list'].sortColumns = [];
-        let direction;
         let column = 'attributes.approximateNumberOfMessages';
         if (sortState.active === 'messagesInFlight') {
             column = 'attributes.approximateNumberOfMessagesNotVisible'
         } else if (sortState.active === 'messagesDelayed') {
             column = 'attributes.approximateNumberOfMessagesDelayed';
         }
-        if (sortState.direction === 'asc') {
-            direction = 1;
-        } else {
-            direction = -1;
-        }
+        let direction = sortState.direction === 'asc' ? 1 : -1
         this.state.value['sqs-queue-list'].sortColumns = [{column: column, sortDirection: direction}];
         this.loadQueues();
     }
@@ -153,9 +148,9 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "90%"
 
-        this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe((result: SqsMessageDialogResult) => {
             if (result) {
-                this.sqsService.sendMessage(queueUrl, result, 0).subscribe(() => {
+                this.sqsService.sendMessage(queueUrl, result.message, 0, result.attributes).subscribe(() => {
                     this.loadQueues();
                     this.snackBar.open('SQS message send created, url: ' + queueUrl, 'Done', {duration: 5000})
                 });

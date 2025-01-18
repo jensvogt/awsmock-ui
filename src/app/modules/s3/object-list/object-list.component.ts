@@ -69,9 +69,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         ).subscribe(() => {
             this.loadObjects();
         });
-        this.s3ObjectCountersResponse$.subscribe((data) => {
-            console.log(data);
-        });
+//        this.s3ObjectCountersResponse$.subscribe((data) => {console.log(data);});
     }
 
     ngOnInit(): void {

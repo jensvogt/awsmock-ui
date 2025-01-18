@@ -53,7 +53,6 @@ export class SqsService {
      * @param sortColumns sorting columns
      */
     public listQueueCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        console.log("listQueueCounters");
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueCounters');
         return this.http.post(this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
@@ -170,10 +169,22 @@ export class SqsService {
      * @param queueUrl SQS queue URL
      * @param message message body to send
      * @param delaySeconds number of seconds delay
+     * @param attributes message attributes
      */
-    public sendMessage(queueUrl: string, message: string, delaySeconds: number) {
+    public sendMessage(queueUrl: string, message: string, delaySeconds: number, attributes: any) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'SendMessage');
-        return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds}, {headers: headers});
+        return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds, MessageAttributes: attributes}, {headers: headers});
+    }
+
+    /**
+     * @brief Update message
+     *
+     * @param messageId SQS message ID
+     * @param name attribute name
+     */
+    public deleteAttribute(messageId: string, name: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteAttribute');
+        return this.http.post(this.url, {MessageId: messageId, Name: name}, {headers: headers});
     }
 
     /**
@@ -182,7 +193,7 @@ export class SqsService {
      * @param queueUrl SQS queue URL
      * @param receiptHandle SQS receipt handle
      */
-    public deleteMessageAws(queueUrl: string, receiptHandle: string) {
+    public deleteMessage(queueUrl: string, receiptHandle: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteMessage');
         return this.http.post(this.url, {QueueUrl: queueUrl, ReceiptHandle: receiptHandle}, {headers: headers});
     }

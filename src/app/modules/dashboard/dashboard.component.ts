@@ -85,11 +85,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     exportDialogConfig.width = "90%"
                     exportDialogConfig.data = data;
 
-                    this.dialog.open(ExportInfrastructureComponentDialog, exportDialogConfig).afterClosed().subscribe(result => {
-                        if (result) {
-                            console.log(result);
-                        }
-                    });
+                    this.dialog.open(ExportInfrastructureComponentDialog, exportDialogConfig);
                 });
             }
         });
@@ -108,7 +104,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.dialog.open(ImportInfrastructureComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                console.log(result);
                 // this.moduleService.setInfrastructure().subscribe((data: any) => {
                 //
                 // });

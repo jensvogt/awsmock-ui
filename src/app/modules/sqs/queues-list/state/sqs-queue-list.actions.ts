@@ -16,7 +16,7 @@ export const sqsQueueListActions = {
     createQueueFailure: createAction('[sqs-queue-list] Create queue error', props<{ error: string }>()),
 
     // Send a message
-    sendMessage: createAction('[sqs-queue-list] Send message', props<{ queueUrl: string, message: string, delay: number }>()),
+    sendMessage: createAction('[sqs-queue-list] Send message', props<{ queueUrl: string, message: string, delay: number, attributes: any }>()),
     sendMessageSuccess: createAction('[sqs-queue-list] Send message success'),
     sendMessageFailure: createAction('[sqs-queue-list] Send message error', props<{ error: string }>()),
 

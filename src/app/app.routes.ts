@@ -98,6 +98,13 @@ export const routes: Routes = [
                 component: LambdaChartsComponent,
             },
             //=========================================================================
+            // DynamoDB tables
+            //=========================================================================
+            {
+                path: 'dynamodb-table-list',
+                loadChildren: () => import('./modules/dynamodb/dynamodb-module').then(module => module.DynamodbModule),
+            },
+            //=========================================================================
             // Transfer server
             //=========================================================================
             {

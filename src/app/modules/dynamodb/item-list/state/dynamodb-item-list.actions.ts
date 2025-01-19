@@ -10,13 +10,4 @@ export const dynamodbItemListActions = {
     loadItemsSuccess: createAction('[dynamodb-item-list] Load items success', props<{ items: ItemCountersResponse }>()),
     loadItemsFailure: createAction('[dynamodb-item-list] Load items error', props<{ error: string }>()),
 
-    // Add user pool
-    addItem: createAction('[dynamodb-item-list] Add item', props<{ itemName: string }>()),
-    addItemSuccess: createAction('[dynamodb-item-list] Add item success'),
-    addItemFailure: createAction('[dynamodb-item-list] Add item error', props<{ error: string }>()),
-
-    // Delete user pool
-    deleteItem: createAction('[dynamodb-item-list] Delete item', props<{ tableName: string, keys: string[] }>()),
-    deleteItemSuccess: createAction('[dynamodb-item-list] Delete item success'),
-    deleteItemFailure: createAction('[dynamodb-item-list] Delete item error', props<{ error: string }>()),
 }

@@ -67,7 +67,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {
@@ -146,7 +146,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     }
 
     createItem(itemName: string) {
-        this.store.dispatch(dynamodbItemListActions.addItem({itemName: itemName}));
+        //this.store.dispatch(dynamodbItemListActions.addItem({itemName: itemName}));
     }
 
     getSize(element: ItemItem) {
@@ -169,11 +169,11 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
         });
     }
 
-    deleteItem(itemId: string) {
-        let keys: string[] = [];
-        this.dynamodbService.deleteItem(this.tableName, keys)
+    deleteItem(item: ItemItem) {
+        console.log("Delete: ", item);
+        this.dynamodbService.deleteItem(this.tableName, item.keys)
             .subscribe(() => {
-                this.snackBar.open('Item deleted, ID: ' + itemId, 'Done', {duration: 5000});
+                this.snackBar.open('Item deleted, ID: ' + item.oid, 'Done', {duration: 5000});
                 this.loadItems();
             });
     }

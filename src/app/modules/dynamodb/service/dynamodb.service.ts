@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {Attribute} from "../model/item-item";
 
 @Injectable()
 export class DynamodbService {
@@ -88,12 +89,12 @@ export class DynamodbService {
         return this.http.post(this.url, body, {headers: headers});
     }
 
-    public deleteItem(tableName: string, keys: string[]) {
+    public deleteItem(tableName: string, keys: Attribute[] | undefined) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "DeleteItem");
         const body = {
             Region: environment.awsmockRegion,
-            Keys: keys,
-            TableName: tableName
+            TableName: tableName,
+            Key: keys
         }
         return this.http.post(this.url, body, {headers: headers});
     }

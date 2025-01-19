@@ -41,12 +41,12 @@ export const dynamodbItemListReducer = createReducer(
     on(dynamodbItemListActions.loadItemsFailure, (state: DynamodbItemListState, {error}) => ({...state, error: error, loading: false})),
 
     // Add queue
-    on(dynamodbItemListActions.addItem, (state: DynamodbItemListState) => ({...state, loading: true})),
-    on(dynamodbItemListActions.addItemSuccess, (state: DynamodbItemListState) => ({...state, loading: false})),
-    on(dynamodbItemListActions.addItemFailure, (state: DynamodbItemListState, {error}) => ({...state, error: error, loading: false})),
+    // on(dynamodbItemListActions.addItem, (state: DynamodbItemListState) => ({...state, loading: true})),
+    // on(dynamodbItemListActions.addItemSuccess, (state: DynamodbItemListState) => ({...state, loading: false})),
+    // on(dynamodbItemListActions.addItemFailure, (state: DynamodbItemListState, {error}) => ({...state, error: error, loading: false})),
 
     // Delete queue
-    on(dynamodbItemListActions.deleteItem, (state: DynamodbItemListState) => ({...state, loading: true})),
-    on(dynamodbItemListActions.deleteItemSuccess, (state: DynamodbItemListState) => ({...state, loading: false})),
-    on(dynamodbItemListActions.deleteItemFailure, (state: DynamodbItemListState, {error}) => ({...state, error: error, loading: false})),
+    // on(dynamodbItemListActions.deleteItem, (state: DynamodbItemListState) => ({...state, loading: true})),
+    // on(dynamodbItemListActions.deleteItemSuccess, (state: DynamodbItemListState) => ({...state, loading: false})),
+    // on(dynamodbItemListActions.deleteItemFailure, (state: DynamodbItemListState, {error}) => ({...state, error: error, loading: false})),
 );

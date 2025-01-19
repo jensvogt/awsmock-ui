@@ -25,28 +25,16 @@ export class DynamodbItemListEffects {
         ),
     ));
 
-    putItem$ = createEffect(() => this.actions$.pipe(
-        ofType(dynamodbItemListActions.deleteItem),
-        mergeMap(action =>
-            this.dynamodbService.putItem(action.tableName)
-                .pipe(map(() => dynamodbItemListActions.addItemSuccess()),
-                    catchError((error) =>
-                        of(dynamodbItemListActions.addItemFailure({error: error.message}))
-                    )
-                )
-        )));
-
-
-    deleteItem$ = createEffect(() => this.actions$.pipe(
-        ofType(dynamodbItemListActions.deleteItem),
-        mergeMap(action =>
-            this.dynamodbService.deleteItem(action.tableName, action.keys)
-                .pipe(map(() => dynamodbItemListActions.deleteItemSuccess()),
-                    catchError((error) =>
-                        of(dynamodbItemListActions.deleteItemFailure({error: error.message}))
-                    )
-                )
-        )));
+    /* putItem$ = createEffect(() => this.actions$.pipe(
+         ofType(dynamodbItemListActions.putItem),
+         mergeMap(action =>
+             this.dynamodbService.putItem(action.tableName)
+                 .pipe(map(() => dynamodbItemListActions.addItemSuccess()),
+                     catchError((error) =>
+                         of(dynamodbItemListActions.addItemFailure({error: error.message}))
+                     )
+                 )
+         )));*/
 
     constructor(private actions$: Actions, private dynamodbService: DynamodbService) {
     }

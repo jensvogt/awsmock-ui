@@ -1,3 +1,5 @@
+import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
+
 export interface SqsMessageAttribute {
     Key: string,
     Value: string,
@@ -11,8 +13,8 @@ export interface SqsMessageItem {
     body: string | undefined;
     receiptHandle: string | undefined;
     md5Sum: string | undefined;
-    created: Date | undefined;
-    modified: Date | undefined;
+    created: BsonDateTime | undefined;
+    modified: BsonDateTime | undefined;
     messageAttributes: SqsMessageAttribute[];
 }
 

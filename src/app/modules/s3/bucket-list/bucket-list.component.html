@@ -51,11 +51,11 @@
                             </ng-container>
                             <ng-container matColumnDef="created" matTooltip="Created">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Create timestamp" sortActionDescription="Sort by created">Created</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.created | date: 'dd-MM-yyyy hh:mm:ss' }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.created.$date | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
                             </ng-container>
                             <ng-container matColumnDef="modified" matTooltip="Modified">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified timestamp" sortActionDescription="Sort by modified">Modified</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.modified | date: 'dd-MM-yyyy hh:mm:ss' }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.modified.$date | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>

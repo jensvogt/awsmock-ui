@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.5.0](https://github.com/jensvogt/awsmock-ui/compare/v1.4.0...v1.5.0) (2025-01-19)
+
+
+### Features
+
+* **107-sqs-add-message-dialog:** add delete table ([c72e339](https://github.com/jensvogt/awsmock-ui/commit/c72e3394592ef60eaf229003c6fdacb174afb8dc))
+* **107-sqs-add-message-dialog:** add DynamoDB module ([de33da0](https://github.com/jensvogt/awsmock-ui/commit/de33da0ebe1e248521d3f10c47338c0547e2cc08))
+* **107-sqs-add-message-dialog:** add item counter page ([a1a708c](https://github.com/jensvogt/awsmock-ui/commit/a1a708c5192dbcff416690a8fc7ea1878cab119d))
+* **107-sqs-add-message-dialog:** add item counter page ([69c8adf](https://github.com/jensvogt/awsmock-ui/commit/69c8adff8176067ccd61be2f35973bfe150d2ec2))
+* **107-sqs-add-message-dialog:** add SQS message attributes to message add dialog ([34c65ae](https://github.com/jensvogt/awsmock-ui/commit/34c65ae90e56cad270dd70fd2eca6beb2d3179ba))
+* **111-dynamodb-support:** add dynamodb support ([514cf2d](https://github.com/jensvogt/awsmock-ui/commit/514cf2d777d634a9da14217ab5a83ba32a80ee48))
+* **66-s3-object-list-download-button:** add transfer details page ([7807b36](https://github.com/jensvogt/awsmock-ui/commit/7807b368f9077a28154a4d4133b04c20cff6c2ac))
+* **66-s3-object-list-download-button:** add transfer details page ([4999f99](https://github.com/jensvogt/awsmock-ui/commit/4999f99f31ef0f9e50412e6091ad72966a0ff2b7))
+
 ## [1.4.0](https://github.com/jensvogt/awsmock-ui/compare/v1.3.0...v1.4.0) (2025-01-16)
 
 

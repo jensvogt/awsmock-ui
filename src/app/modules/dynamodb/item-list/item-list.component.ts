@@ -149,6 +149,10 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
         this.store.dispatch(dynamodbItemListActions.addItem({itemName: itemName}));
     }
 
+    getSize(element: ItemItem) {
+        return JSON.stringify(element.attributes).length;
+    }
+
     editItem(item: ItemItem) {
 
         const dialogConfig = new MatDialogConfig();

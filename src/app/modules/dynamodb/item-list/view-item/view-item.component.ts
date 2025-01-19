@@ -1,4 +1,4 @@
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
@@ -35,11 +35,10 @@ export class DynamodbViewItemDialog implements OnInit {
     item: ItemItem | undefined;
     oid: string | undefined = '';
     prettyPrint: boolean = true;
-    isJson: boolean = false;
 
-    constructor(private dialogRef: MatDialogRef<DynamodbViewItemDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
         this.item = data;
-        this.oid = this.item?.id;
+        this.oid = this.item?.oid;
         this.body = JSON.stringify(this.item?.attributes, null, 2);
     }
 

@@ -60,7 +60,7 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        this.listTableCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        //this.listTableCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {

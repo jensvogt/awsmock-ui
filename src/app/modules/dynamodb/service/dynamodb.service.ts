@@ -39,7 +39,7 @@ export class DynamodbService {
     }
 
     public createTable(tableName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "create-user-pool");
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "CreateTable");
         const body = {
             Region: environment.awsmockRegion,
             PoolName: tableName
@@ -48,11 +48,52 @@ export class DynamodbService {
     }
 
     public getTable(tableId: string, userName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "admin-get-user");
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "GetTableDetails");
         const body = {
             Region: environment.awsmockRegion,
             Username: userName,
             TableId: tableId
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    public listItemCounters(tableName: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "ListItemCounters");
+        const body = {
+            tegion: environment.awsmockRegion,
+            tableName: tableName,
+            prefix: prefix,
+            pageSize: pageSize,
+            pageIndex: pageIndex,
+            sortColumns: sortColumns
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    public putItem(tableName: string) {
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "PutItem");
+        const body = {
+            Region: environment.awsmockRegion,
+            PoolName: tableName
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    public getItem(tableName: string) {
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "GetItem");
+        const body = {
+            Region: environment.awsmockRegion,
+            PoolName: tableName
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    public deleteItem(tableName: string, keys: string[]) {
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "DeleteItem");
+        const body = {
+            Region: environment.awsmockRegion,
+            Keys: keys,
+            TableName: tableName
         }
         return this.http.post(this.url, body, {headers: headers});
     }

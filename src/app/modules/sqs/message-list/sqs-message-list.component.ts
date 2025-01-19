@@ -180,9 +180,9 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     deleteMessage(receiptHandle: string) {
         this.lastUpdate = new Date();
-        this.store.dispatch(sqsMessageListActions.deleteMessage({
-            queueUrl: this.queueUrl,
-            receiptHandle: receiptHandle
-        }));
+        this.sqsService.deleteMessage(this.queueUrl, receiptHandle).subscribe(() => {
+            this.loadMessages();
+            this.snackBar.open('Message deleted, queueUrl: ' + this.queueUrl, 'Done', {duration: 5000});
+        });
     }
 }

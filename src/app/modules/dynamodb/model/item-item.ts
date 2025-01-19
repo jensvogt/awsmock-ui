@@ -3,7 +3,7 @@ export interface Attribute {
 }
 
 export interface ItemItem {
-    id: string | undefined;
+    oid: string | undefined;
     attributes: Attribute[] | undefined;
     keys: Attribute[] | undefined
     created: Date | undefined;

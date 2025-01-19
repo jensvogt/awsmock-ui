@@ -21,9 +21,12 @@ import {DynamodbTableListComponent} from "./table-list/table-list.component";
 import {dynamodbTableListFeatureKey, dynamodbTableListReducer} from "./table-list/state/dynamodb-table-list.reducer";
 import {DynamodbTableListEffects} from "./table-list/state/dynamodb-table-list.effects";
 import {DynamodbService} from "./service/dynamodb.service";
+import {DynamodbItemListComponent} from "./item-list/item-list.component";
+import {dynamodbItemListFeatureKey, dynamodbItemListReducer} from "./item-list/state/dynamodb-item-list.reducer";
+import {DynamodbItemListEffects} from "./item-list/state/dynamodb-item-list.effects";
 
 @NgModule({
-    declarations: [DynamodbTableListComponent],
+    declarations: [DynamodbTableListComponent, DynamodbItemListComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -68,7 +71,8 @@ import {DynamodbService} from "./service/dynamodb.service";
         AsyncPipe,
         DynamodbRoutingModule,
         StoreModule.forFeature(dynamodbTableListFeatureKey, dynamodbTableListReducer),
-        EffectsModule.forFeature([DynamodbTableListEffects]),
+        StoreModule.forFeature(dynamodbItemListFeatureKey, dynamodbItemListReducer),
+        EffectsModule.forFeature([DynamodbTableListEffects, DynamodbItemListEffects]),
     ],
     exports: [DynamodbTableListComponent],
     providers: [DynamodbService],

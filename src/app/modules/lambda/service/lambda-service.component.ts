@@ -3,6 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {DeleteFunctionCommand, LambdaClient} from "@aws-sdk/client-lambda";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {CreateFunctionRequest} from "../model/function-item";
 
 
 @Injectable({providedIn: 'root'})
@@ -87,6 +88,19 @@ export class LambdaService {
             functionName: name
         }
         return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Reset the function counters
+     *
+     * @par
+     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     *
+     * @param request create function request
+     */
+    public createFunction(request: CreateFunctionRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'functions');
+        return this.http.post(this.url + "2025-01-01/functions", request, {headers: headers});
     }
 
     /**

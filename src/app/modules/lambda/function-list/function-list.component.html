@@ -44,6 +44,10 @@
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Runtime" sortActionDescription="Sort by runtime">Runtime</th>
                             <td *matCellDef="let element" mat-cell> {{ element.runtime }}</td>
                         </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.state }}</td>
+                        </ng-container>
                         <ng-container matColumnDef="invocations">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Invocations" sortActionDescription="Sort by invocations">Invocations</th>
                             <td *matCellDef="let element" mat-cell> {{ element.invocations }}</td>

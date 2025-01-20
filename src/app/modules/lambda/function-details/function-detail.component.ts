@@ -50,7 +50,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.routerSubscription.unsubscribe();
-        //this.updateSubscription.unsubscribe();
     }
 
     back() {
@@ -68,7 +67,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.environmentDataSource = this.convertEnvironment(data);
             this.tagsDataSource = this.convertTags(data);
         });
-        //this.store.dispatch(lambdaFunctionDetailsActions.loadFunction({name: this.functionName}));
     }
 
     save() {

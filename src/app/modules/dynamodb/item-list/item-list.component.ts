@@ -9,13 +9,14 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {CognitoService} from "../../../services/cognito.service";
 import {State, Store} from "@ngrx/store";
 import {selectItemCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/dynamodb-item-list.selectors";
-import {ItemCountersResponse, ItemItem} from "../model/item-item";
+import {ItemCountersResponse, ItemItem, PutItemRequest} from "../model/item-item";
 import {dynamodbItemListActions} from "./state/dynamodb-item-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {DynamodbService} from "../service/dynamodb.service";
 import {DynamodbItemListState} from "./state/dynamodb-item-list.reducer";
 import {ActivatedRoute} from "@angular/router";
 import {DynamodbViewItemDialog} from "./view-item/view-item.component";
+import {DynamoDbAddItemDialog} from "./add-item/add-item.component";
 
 @Component({
     selector: 'dynamodb-item-list',
@@ -67,7 +68,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        //this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {
@@ -137,16 +138,21 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        /*
-                this.dialog.open(UserPoolAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-                    if (result) {
-                        this.createUserPool(result)
-                    }
-                });*/
-    }
+        dialogConfig.data = {tableName: this.tableName};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "70%"
 
-    createItem(itemName: string) {
-        //this.store.dispatch(dynamodbItemListActions.addItem({itemName: itemName}));
+        this.dialog.open(DynamoDbAddItemDialog, dialogConfig).afterClosed().subscribe((result: PutItemRequest) => {
+            if (result) {
+                this.dynamodbService.putItem(result)
+                    .subscribe(() => {
+                        this.snackBar.open('Item added, tableName: ' + this.tableName, 'Done', {duration: 5000});
+                        this.loadItems();
+                    });
+            }
+        });
     }
 
     getSize(element: ItemItem) {
@@ -159,13 +165,20 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = item;
+        dialogConfig.data = {tableName: this.tableName, item: item};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "70%"
 
-        this.dialog.open(DynamodbViewItemDialog, dialogConfig).afterClosed().subscribe(() => {
+        this.dialog.open(DynamodbViewItemDialog, dialogConfig).afterClosed().subscribe((result: PutItemRequest) => {
+            if (result) {
+                this.dynamodbService.putItem(result)
+                    .subscribe(() => {
+                        this.snackBar.open('Item updated, tableName: ' + this.tableName, 'Done', {duration: 5000});
+                        this.loadItems();
+                    });
+            }
         });
     }
 

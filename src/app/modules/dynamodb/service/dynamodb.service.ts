@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {Attribute} from "../model/item-item";
+import {Attribute, PutItemRequest} from "../model/item-item";
 
 @Injectable()
 export class DynamodbService {
@@ -71,13 +71,10 @@ export class DynamodbService {
         return this.http.post(this.url, body, {headers: headers});
     }
 
-    public putItem(tableName: string) {
+    public putItem(request: PutItemRequest) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "PutItem");
-        const body = {
-            Region: environment.awsmockRegion,
-            PoolName: tableName
-        }
-        return this.http.post(this.url, body, {headers: headers});
+        console.log("PutItemRequest: ", request);
+        return this.http.post(this.url, request, {headers: headers});
     }
 
     public getItem(tableName: string) {

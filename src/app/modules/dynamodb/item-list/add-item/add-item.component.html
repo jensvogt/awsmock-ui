@@ -1,0 +1,11 @@
+<h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Add Item: {{ tableName }}</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-form-field style="width: 100%;height:100%">
+        <mat-label>Item:</mat-label>
+        <textarea [(ngModel)]="itemJson" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Item" style="width:100%; height:100%"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="addItem()" cdkFocusInitial mat-button>Save</button>
+</mat-dialog-actions>

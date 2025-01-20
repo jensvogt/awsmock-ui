@@ -2,18 +2,18 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {debounceTime, distinctUntilChanged, filter, interval, merge, Observable, Subject, Subscription, tap} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Router} from "@angular/router";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {selectFunctionCounters, selectIsLoading, selectPageIndex, selectPageSize, selectPrefix, selectTotal} from "./state/lambda-function-list.selectors";
 import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {lambdaFunctionListActions} from "./state/lambda-function-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
-import {LambdaFunctionItem} from "../model/function-item";
+import {Code, CreateFunctionRequest, LambdaFunctionItem} from "../model/function-item";
 import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
+import {FunctionUploadDialog} from "../function-upload/function-upload-dialog.component";
 
 @Component({
     selector: 'lambda-function-list',
@@ -62,7 +62,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator | undefined;
     private filter: string = "";
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private router: Router, private state: State<LambdaFunctionListState>, private store: Store,
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private lambdaService: LambdaService, private state: State<LambdaFunctionListState>, private store: Store,
                 private actionsSubj$: ActionsSubject, private location: Location) {
 
         // Subscribe to action events, reload table when the action got successful executed
@@ -200,6 +200,31 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
 
     resetCounters(functionName: string) {
         this.store.dispatch(lambdaFunctionListActions.resetCounters({functionName: functionName}));
+    }
+
+    createLambda() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {}
+        dialogConfig.height = "430px"
+
+        this.dialog.open(FunctionUploadDialog, dialogConfig).afterClosed().subscribe((result: any) => {
+            if (result) {
+                let request: CreateFunctionRequest = {} as CreateFunctionRequest;
+                request.Code = {} as Code;
+                request.Code.ZipFile = result.content;
+                request.FunctionName = 'test-function';
+                request.Runtime = 'java21';
+                request.Handler = 'org.springframework.cloud.function.adapter.aws.FunctionInvoker';
+                this.lambdaService.createFunction(request).subscribe(() => {
+                    this.loadFunctions();
+                    this.snackBar.open('Lambda function creation started, name: ' + request.FunctionName, 'Done', {duration: 5000});
+                });
+            }
+        });
     }
 
     private initializeData(functions: LambdaFunctionItem[]): void {

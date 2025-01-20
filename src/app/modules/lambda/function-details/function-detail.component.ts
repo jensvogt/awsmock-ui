@@ -4,13 +4,12 @@ import {ActivatedRoute} from "@angular/router";
 import {Sort} from "@angular/material/sort";
 import {LambdaService} from "../service/lambda-service.component";
 import {Environment, LambdaFunctionItem, Tag} from "../model/function-item";
-import {State, Store} from "@ngrx/store";
-import {LambdaFunctionDetailsState} from "./state/lambda-function-details.reducer";
-import {lambdaFunctionDetailsActions} from "./state/lambda-function-details.actions";
+import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {selectFunctionItem} from "./state/lambda-function-details.selectors";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatTableDataSource} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
 
 
 @Component({
@@ -38,7 +37,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
-    constructor(private location: Location, private route: ActivatedRoute, private state: State<LambdaFunctionDetailsState>, private store: Store) {
+    constructor(private location: Location, private route: ActivatedRoute, private dialog: MatDialog, private store: Store, private lambdaService: LambdaService) {
     }
 
     ngOnInit() {
@@ -46,16 +45,12 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionName = params['functionName'];
             this.loadFunction();
         });
-        this.functionItem$?.subscribe((data: LambdaFunctionItem) => {
-            this.lastUpdate = new Date();
-            this.functionItem = data;
-            this.environmentDataSource = this.convertEnvironment(data);
-            this.tagsDataSource = this.convertTags(data);
-        });
+        this.loadFunction();
     }
 
     ngOnDestroy() {
         this.routerSubscription.unsubscribe();
+        //this.updateSubscription.unsubscribe();
     }
 
     back() {
@@ -67,9 +62,13 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     }
 
     loadFunction() {
-        this.store.dispatch(lambdaFunctionDetailsActions.loadFunction({
-            name: this.functionName
-        }));
+        this.lambdaService.getFunction(this.functionName).subscribe((data: any) => {
+            this.lastUpdate = new Date();
+            this.functionItem = data;
+            this.environmentDataSource = this.convertEnvironment(data);
+            this.tagsDataSource = this.convertTags(data);
+        });
+        //this.store.dispatch(lambdaFunctionDetailsActions.loadFunction({name: this.functionName}));
     }
 
     save() {

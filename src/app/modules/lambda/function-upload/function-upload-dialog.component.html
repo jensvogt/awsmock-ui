@@ -1,23 +1,63 @@
-<h2 mat-dialog-title>Upload Lambda function</h2>
-<mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
-    <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
-        <input #fileInput (change)="onFileChange($event)" hidden type="file"/>
-        <div (click)="fileInput.click()" class="file-dropper">
-            <mat-icon>upload</mat-icon>
-            <p>Upload file</p>
-        </div>
-    </div>
-    <mat-form-field style="width: 100%">
-        <mat-label>File</mat-label>
-        <input [(ngModel)]="fileName" matInput readonly value="">
-    </mat-form-field>
-    <mat-form-field style="width: 100%">
-        <mat-label>Key</mat-label>
-        <input [(ngModel)]="key" matInput value="">
-    </mat-form-field>
+<h2 mat-dialog-title>Create Lambda function</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-grid-list cols="2" rowHeight="480px">
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <mat-list style="width:100%">
+                <mat-list-item style="height:80px; width:100%">
+                    <mat-form-field style="width:100%">
+                        <mat-label>Name</mat-label>
+                        <input (change)="onInputChanged($event)" [(ngModel)]="functionName" matInput value="">
+                    </mat-form-field>
+                </mat-list-item>
+                <mat-list-item style="height:80px; width:100%">
+                    <mat-form-field style="width:100%">
+                        <mat-label>File</mat-label>
+                        <input (change)="onInputChanged($event)" [(ngModel)]="fileName" matInput readonly value="">
+                    </mat-form-field>
+                </mat-list-item>
+                <mat-list-item style="height:80px; width:100%">
+                    <mat-form-field style="width:100%">
+                        <mat-label>Handler</mat-label>
+                        <input (change)="onInputChanged($event)" [(ngModel)]="handlerName" matInput value="">
+                    </mat-form-field>
+                </mat-list-item>
+                <mat-list-item style="height:80px; width:100%">
+                    <mat-form-field style="width:100%">
+                        <mat-label>Runtime</mat-label>
+                        <mat-select [(ngModel)]="selectedRuntime">
+                            @for (runtime of runtimes; track runtime) {
+                                <mat-option [value]="runtime.value">{{ runtime.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </mat-list-item>
+                <mat-list-item style="height:80px; width:100%">
+                    <mat-form-field style="width:100%">
+                        <mat-label>Memory (MB)</mat-label>
+                        <input [(ngModel)]="memorySize" matInput value="512">
+                    </mat-form-field>
+                </mat-list-item>
+                <mat-list-item style="height:80px; width:100%">
+                    <mat-form-field style="width:100%">
+                        <mat-label>Timeout (s)</mat-label>
+                        <input [(ngModel)]="timeout" matInput value="3600">
+                    </mat-form-field>
+                </mat-list-item>
+            </mat-list>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
+                <input #fileInput (change)="onFileChange($event)" hidden type="file"/>
+                <div (click)="fileInput.click()" class="file-dropper">
+                    <mat-icon>upload</mat-icon>
+                    <p>Upload file</p>
+                </div>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
     <mat-progress-bar mode="determinate" value="{{progress}}"></mat-progress-bar>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="doUpload()" cdkFocusInitial disabled="{{uploadDisabled}}" mat-button>Upload</button>
+    <button (click)="doCreate()" cdkFocusInitial disabled="{{createDisabled}}" mat-button>Create</button>
 </mat-dialog-actions>

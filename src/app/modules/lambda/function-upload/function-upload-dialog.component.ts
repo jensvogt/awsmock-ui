@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, signal, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit, signal, ViewChild} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
@@ -8,6 +8,15 @@ import {MatInput} from "@angular/material/input";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatProgressBar} from "@angular/material/progress-bar";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
+
+interface Runtime {
+    value: string;
+    viewValue: string;
+}
 
 @Component({
     selector: 'lambda-function-upload',
@@ -24,17 +33,25 @@ import {MatProgressBar} from "@angular/material/progress-bar";
         MatFormField,
         MatInput,
         MatLabel,
-        MatProgressBar
+        MatProgressBar,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+        MatOption,
+        MatSelect
     ],
     styleUrls: ['./function-upload-dialog.component.scss']
 })
-export class FunctionUploadDialog {
+export class FunctionUploadDialog implements OnInit {
 
-    key: string = '';
-    bucketName: string = '';
     file: File = {} as File;
-    fileName: string = '';
-    uploadDisabled: boolean = true;
+    fileName: string | undefined;
+    functionName: string | undefined;
+    handlerName: string | undefined;
+    memorySize: number = 512;
+    timeout: number = 3600;
+    createDisabled: boolean = true;
     progress: number = 0;
     fileSize = signal(0);
     maxSize: number = 256 * 1024 * 1024;
@@ -42,19 +59,38 @@ export class FunctionUploadDialog {
     selectedFile: File | null = null;
     uploadSuccess: boolean = false;
     uploadError: boolean = false;
+
+    // Runtime
+    selectedRuntime: string = 'java21';
+    runtimes: Runtime[] = [
+        {value: 'java11', viewValue: 'Java 11'},
+        {value: 'java17', viewValue: 'Java 17'},
+        {value: 'java21', viewValue: 'Java 21'},
+        {value: 'python3.8', viewValue: 'Python 3.8'},
+        {value: 'python3.9', viewValue: 'Python 3.9'},
+        {value: 'python3.10', viewValue: 'Python 3.10'},
+        {value: 'python3.11', viewValue: 'Python 3.11'},
+        {value: 'python3.12', viewValue: 'Python 3.12'},
+        {value: 'provided', viewValue: 'Provided'},
+        {value: 'nodejs20.x', viewValue: 'NodeJS 20'},
+        {value: 'go', viewValue: 'Go'},
+    ];
+
+    // Byte conversion
     protected readonly byteConversion = byteConversion;
 
     constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<FunctionUploadDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.bucketName = data.bucketName;
     }
 
-    // Method to handle file upload
-    // Handler for file input change
+    ngOnInit() {
+        this.dialogRef.updateSize("1000px", "630px");
+    }
+
+    // Method to handle file upload Handler for file input change
     onFileChange(event: any): void {
         this.file = event.target.files[0];
         this.fileName = this.file.name;
-        this.key = this.file.name;
-        this.uploadDisabled = !(this.file && this.key && this.fileName)
+        this.createDisabled = !(this.functionName && this.fileName && this.handlerName && this.selectedRuntime)
     }
 
     // Handler for file drop
@@ -64,12 +100,16 @@ export class FunctionUploadDialog {
             this.file = event.dataTransfer.files[0];
             this.fileName = this.file.name;
         }
-        this.uploadDisabled = !(this.file && this.key && this.fileName)
+        this.createDisabled = !(this.file && this.fileName)
     }
 
     // Prevent default dragover behavior
     onDragOver(event: DragEvent): void {
         event.preventDefault();
+    }
+
+    onInputChanged(event: any) {
+        this.createDisabled = !(this.functionName && this.fileName && this.handlerName && this.selectedRuntime)
     }
 
     // Method to handle file upload
@@ -85,8 +125,8 @@ export class FunctionUploadDialog {
             }
             const reader = new FileReader();
             reader.onload = () => {
-                let content = reader.result as string;
-                this.dialogRef.close({content: btoa(content)});
+                const content: any = reader.result;
+                this.dialogRef.close({content: content.split(',')[1], functionName: this.functionName, fileName: this.fileName, handler: this.handlerName, runtime: this.selectedRuntime, memorySize: this.memorySize, timeout: this.timeout});
             };
             reader.addEventListener("progress", this.handleProgress);
             reader.readAsDataURL(file);
@@ -96,7 +136,7 @@ export class FunctionUploadDialog {
         }
     }
 
-    doUpload() {
+    doCreate() {
         this.uploadFile(this.file);
     }
 

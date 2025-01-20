@@ -10,7 +10,7 @@ import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {lambdaFunctionListActions} from "./state/lambda-function-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
-import {Code, CreateFunctionRequest, LambdaFunctionItem} from "../model/function-item";
+import {Code, CreateFunctionRequest, EphemeralStorage, LambdaFunctionItem, Tags} from "../model/function-item";
 import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
 import {FunctionUploadDialog} from "../function-upload/function-upload-dialog.component";
@@ -33,7 +33,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
-    columns: any[] = ['name', 'runtime', 'invocations', 'averageRuntime', 'actions'];
+    columns: any[] = ['name', 'runtime', 'status', 'invocations', 'averageRuntime', 'actions'];
     dataSource: MatTableDataSource<LambdaFunctionItem> = new MatTableDataSource();
     defaultSort: Sort = {active: "name", direction: "asc"};
     filterSubject = new Subject<string>();
@@ -209,16 +209,27 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {}
-        dialogConfig.height = "430px"
+//        dialogConfig.height = "450px"
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.width = "100%"
+        dialogConfig.panelClass = 'full-screen-modal';
 
         this.dialog.open(FunctionUploadDialog, dialogConfig).afterClosed().subscribe((result: any) => {
             if (result) {
                 let request: CreateFunctionRequest = {} as CreateFunctionRequest;
                 request.Code = {} as Code;
                 request.Code.ZipFile = result.content;
-                request.FunctionName = 'test-function';
-                request.Runtime = 'java21';
-                request.Handler = 'org.springframework.cloud.function.adapter.aws.FunctionInvoker';
+                request.FunctionName = result.functionName;
+                request.Runtime = result.runtime;
+                request.Handler = result.handler;
+                request.MemorySize = result.memorySize;
+                request.Timeout = result.timeout;
+                request.EphemeralStorage = {} as EphemeralStorage;
+                request.EphemeralStorage.Size = 10;
+                request.Tags = {} as Tags;
+                request.Tags.version = "latest";
+                request.Tags.tag = "latest";
                 this.lambdaService.createFunction(request).subscribe(() => {
                     this.loadFunctions();
                     this.snackBar.open('Lambda function creation started, name: ' + request.FunctionName, 'Done', {duration: 5000});

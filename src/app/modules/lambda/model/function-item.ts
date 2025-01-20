@@ -16,6 +16,7 @@ export interface LambdaFunctionItem {
     functionName: string | undefined;
     runtime: string | undefined;
     handler: string | undefined;
+    state: string | undefined;
     tags: any;
     environment: Environment[];
     user: string | undefined;
@@ -39,10 +40,21 @@ export interface Code {
     ZipFile: string; // Base64 encoded ZIP file
 }
 
+export interface EphemeralStorage {
+    Size: number;
+}
+
+export interface Tags {
+}
+
 export interface CreateFunctionRequest {
     FunctionName: string;
     Handler: string;
     Runtime: string;
     Code: Code;
-    role: string;
+    Role: string;
+    MemorySize: number;
+    Timeout: number;
+    EphemeralStorage: EphemeralStorage;
+    Tags: any;
 }

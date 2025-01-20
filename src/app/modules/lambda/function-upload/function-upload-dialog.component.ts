@@ -71,7 +71,9 @@ export class FunctionUploadDialog implements OnInit {
         {value: 'python3.10', viewValue: 'Python 3.10'},
         {value: 'python3.11', viewValue: 'Python 3.11'},
         {value: 'python3.12', viewValue: 'Python 3.12'},
-        {value: 'provided', viewValue: 'Provided'},
+        {value: 'provided.al2', viewValue: 'Provided AL2'},
+        {value: 'provided.al2023', viewValue: 'Provided AL2023'},
+        {value: 'provided.latest', viewValue: 'Provided Latest'},
         {value: 'nodejs20.x', viewValue: 'NodeJS 20'},
         {value: 'go', viewValue: 'Go'},
     ];

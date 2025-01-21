@@ -12,6 +12,7 @@ import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatList, MatListItem} from "@angular/material/list";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 
 interface Runtime {
     value: string;
@@ -19,8 +20,8 @@ interface Runtime {
 }
 
 @Component({
-    selector: 'lambda-function-upload',
-    templateUrl: './function-upload-dialog.component.html',
+    selector: 'lambda-function-create',
+    templateUrl: './function-create-dialog.component.html',
     standalone: true,
     imports: [
         MatIcon,
@@ -39,11 +40,12 @@ interface Runtime {
         MatList,
         MatListItem,
         MatOption,
-        MatSelect
+        MatSelect,
+        CdkTextareaAutosize
     ],
-    styleUrls: ['./function-upload-dialog.component.scss']
+    styleUrls: ['./function-create-dialog.component.scss']
 })
-export class FunctionUploadDialog implements OnInit {
+export class LambdaFunctionCreateDialog implements OnInit {
 
     file: File = {} as File;
     fileName: string | undefined;
@@ -51,6 +53,8 @@ export class FunctionUploadDialog implements OnInit {
     handlerName: string | undefined;
     memorySize: number = 512;
     timeout: number = 3600;
+    jsonEnvironment: string | undefined;
+    jsonTags: string | undefined;
     createDisabled: boolean = true;
     progress: number = 0;
     fileSize = signal(0);
@@ -71,7 +75,9 @@ export class FunctionUploadDialog implements OnInit {
         {value: 'python3.10', viewValue: 'Python 3.10'},
         {value: 'python3.11', viewValue: 'Python 3.11'},
         {value: 'python3.12', viewValue: 'Python 3.12'},
-        {value: 'provided', viewValue: 'Provided'},
+        {value: 'provided.al2', viewValue: 'Provided AL2'},
+        {value: 'provided.al2023', viewValue: 'Provided AL2023'},
+        {value: 'provided.latest', viewValue: 'Provided Latest'},
         {value: 'nodejs20.x', viewValue: 'NodeJS 20'},
         {value: 'go', viewValue: 'Go'},
     ];
@@ -79,11 +85,11 @@ export class FunctionUploadDialog implements OnInit {
     // Byte conversion
     protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<FunctionUploadDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaFunctionCreateDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
     }
 
     ngOnInit() {
-        this.dialogRef.updateSize("1000px", "630px");
+        this.dialogRef.updateSize("1200px", "630px");
     }
 
     // Method to handle file upload Handler for file input change
@@ -126,7 +132,10 @@ export class FunctionUploadDialog implements OnInit {
             const reader = new FileReader();
             reader.onload = () => {
                 const content: any = reader.result;
-                this.dialogRef.close({content: content.split(',')[1], functionName: this.functionName, fileName: this.fileName, handler: this.handlerName, runtime: this.selectedRuntime, memorySize: this.memorySize, timeout: this.timeout});
+                this.dialogRef.close({
+                    content: content.split(',')[1], functionName: this.functionName, fileName: this.fileName, handler: this.handlerName,
+                    runtime: this.selectedRuntime, memorySize: this.memorySize, timeout: this.timeout, jsonEnvironment: this.jsonEnvironment
+                });
             };
             reader.addEventListener("progress", this.handleProgress);
             reader.readAsDataURL(file);

@@ -10,10 +10,10 @@ import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {lambdaFunctionListActions} from "./state/lambda-function-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
-import {Code, CreateFunctionRequest, EphemeralStorage, LambdaFunctionItem, Tags} from "../model/function-item";
+import {Code, CreateFunctionRequest, EphemeralStorage, LambdaEnvironment, LambdaFunctionItem} from "../model/function-item";
 import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
-import {FunctionUploadDialog} from "../function-upload/function-upload-dialog.component";
+import {LambdaFunctionCreateDialog} from "../function-create/function-create-dialog.component";
 
 @Component({
     selector: 'lambda-function-list',
@@ -209,13 +209,12 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {}
-//        dialogConfig.height = "450px"
-        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxWidth = '100%';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.width = "100%"
         dialogConfig.panelClass = 'full-screen-modal';
 
-        this.dialog.open(FunctionUploadDialog, dialogConfig).afterClosed().subscribe((result: any) => {
+        this.dialog.open(LambdaFunctionCreateDialog, dialogConfig).afterClosed().subscribe((result: any) => {
             if (result) {
                 let request: CreateFunctionRequest = {} as CreateFunctionRequest;
                 request.Code = {} as Code;
@@ -227,9 +226,12 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 request.Timeout = result.timeout;
                 request.EphemeralStorage = {} as EphemeralStorage;
                 request.EphemeralStorage.Size = 10;
-                request.Tags = {} as Tags;
+                request.Tags = {};
                 request.Tags.version = "latest";
                 request.Tags.tag = "latest";
+                request.Environment = {} as LambdaEnvironment;
+                request.Environment = JSON.parse(result.jsonEnvironment);
+                console.log("Request: ", request);
                 this.lambdaService.createFunction(request).subscribe(() => {
                     this.loadFunctions();
                     this.snackBar.open('Lambda function creation started, name: ' + request.FunctionName, 'Done', {duration: 5000});

@@ -44,7 +44,8 @@ export interface EphemeralStorage {
     Size: number;
 }
 
-export interface Tags {
+export interface LambdaEnvironment {
+    Variables: any;
 }
 
 export interface CreateFunctionRequest {
@@ -57,4 +58,5 @@ export interface CreateFunctionRequest {
     Timeout: number;
     EphemeralStorage: EphemeralStorage;
     Tags: any;
+    Environment: LambdaEnvironment;
 }

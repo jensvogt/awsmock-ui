@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {FunctionUploadDialog} from './function-upload-dialog.component';
+import {LambdaFunctionCreateDialog} from './function-create-dialog.component';
 
 describe('HomeComponent', () => {
-    let component: FunctionUploadDialog;
-    let fixture: ComponentFixture<FunctionUploadDialog>;
+    let component: LambdaFunctionCreateDialog;
+    let fixture: ComponentFixture<LambdaFunctionCreateDialog>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [FunctionUploadDialog]
+            declarations: [LambdaFunctionCreateDialog]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(FunctionUploadDialog);
+        fixture = TestBed.createComponent(LambdaFunctionCreateDialog);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

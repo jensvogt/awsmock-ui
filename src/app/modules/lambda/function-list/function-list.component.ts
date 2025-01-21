@@ -5,7 +5,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
-import {selectFunctionCounters, selectIsLoading, selectPageIndex, selectPageSize, selectPrefix, selectTotal} from "./state/lambda-function-list.selectors";
+import {selectFunctionCounters, selectPageIndex, selectPageSize, selectPrefix, selectTotal} from "./state/lambda-function-list.selectors";
 import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {lambdaFunctionListActions} from "./state/lambda-function-list.actions";
@@ -33,7 +33,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
-    columns: any[] = ['name', 'runtime', 'status', 'invocations', 'averageRuntime', 'actions'];
+    columns: any[] = ['name', 'runtime', 'version', 'status', 'invocations', 'averageRuntime', 'actions'];
     dataSource: MatTableDataSource<LambdaFunctionItem> = new MatTableDataSource();
     defaultSort: Sort = {active: "name", direction: "asc"};
     filterSubject = new Subject<string>();
@@ -91,14 +91,14 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         this.store
             .pipe(select(selectTotal))
             .subscribe((total) => (this.total = total));
-        this.tableSubscription.add(
-            this.store.pipe(select(selectIsLoading)).subscribe((loading) => {
-                if (loading) {
-                    this.dataSource = new MatTableDataSource(this.noData);
-                }
-                this.loading = loading;
-            })
-        );
+        /* this.tableSubscription.add(
+             this.store.pipe(select(selectIsLoading)).subscribe((loading) => {
+                 if (loading) {
+                     this.dataSource = new MatTableDataSource(this.noData);
+                 }
+                 this.loading = loading;
+             })
+         );*/
         this.updateSubscription = interval(60000).subscribe(() => this.loadFunctions());
     }
 
@@ -135,8 +135,8 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     ngOnDestroy(): void {
-        this.actionsSubj$?.unsubscribe();
-        this.tableSubscription.unsubscribe();
+        // this.actionsSubj$?.unsubscribe();
+        //this.tableSubscription.unsubscribe();
         this.updateSubscription?.unsubscribe();
     }
 

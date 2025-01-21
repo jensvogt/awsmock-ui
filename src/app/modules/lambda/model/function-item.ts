@@ -18,6 +18,7 @@ export interface LambdaFunctionItem {
     handler: string | undefined;
     state: string | undefined;
     tags: any;
+    version: string;
     environment: Environment[];
     user: string | undefined;
     role: string | undefined;

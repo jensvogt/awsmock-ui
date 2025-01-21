@@ -4,12 +4,8 @@ import {ActivatedRoute} from "@angular/router";
 import {Sort} from "@angular/material/sort";
 import {LambdaService} from "../service/lambda-service.component";
 import {Environment, LambdaFunctionItem, Tag} from "../model/function-item";
-import {Store} from "@ngrx/store";
-import {Observable} from "rxjs";
-import {selectFunctionItem} from "./state/lambda-function-details.selectors";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -25,7 +21,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     functionItem = {} as LambdaFunctionItem;
     functionName: string = '';
-    functionItem$: Observable<LambdaFunctionItem> = this.store.select(selectFunctionItem);
+    //functionItem$: Observable<LambdaFunctionItem> = this.store.select(selectFunctionItem);
 
     // Environment
     environmentColumns: string[] = ['name', 'value'];
@@ -36,7 +32,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
-    constructor(private location: Location, private route: ActivatedRoute, private dialog: MatDialog, private store: Store, private lambdaService: LambdaService) {
+    constructor(private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService) {
     }
 
     ngOnInit() {
@@ -44,7 +40,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionName = params['functionName'];
             this.loadFunction();
         });
-        this.loadFunction();
     }
 
     ngOnDestroy() {
@@ -66,10 +61,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.environmentDataSource = this.convertEnvironment(data);
             this.tagsDataSource = this.convertTags(data);
         });
-    }
-
-    save() {
-        this.location.back();
     }
 
     environmentSortChanged(sortState: Sort) {

@@ -89,7 +89,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
     }
 
     ngOnInit() {
-        this.dialogRef.updateSize("1200px", "630px");
+        this.dialogRef.updateSize("1400px", "630px");
     }
 
     // Method to handle file upload Handler for file input change

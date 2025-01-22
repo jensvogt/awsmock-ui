@@ -45,3 +45,14 @@
   flex-direction: column;
   align-items: center;
 }
+
+.full-screen-modal .mat-dialog-container {
+  padding: 1em;
+  width: 90%;
+  height: 80%;
+  resize: both;
+  overflow: auto;
+  max-width: unset !important;
+  max-height: unset !important;
+  position: absolute !important;
+}

@@ -10,10 +10,11 @@ import {CognitoService} from "../../../services/cognito.service";
 import {State, Store} from "@ngrx/store";
 import {DynamodbTableListState} from "./state/dynamodb-table-list.reducer";
 import {selectPageIndex, selectPageSize, selectPrefix, selectTableCounters} from "./state/dynamodb-table-list.selectors";
-import {TableCountersResponse} from "../model/table-item";
+import {CreateTableRequest, TableCountersResponse} from "../model/table-item";
 import {dynamodbTableListActions} from "./state/dynamodb-table-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {DynamodbService} from "../service/dynamodb.service";
+import {DynamoDbAddTableDialog} from "./add-table/add-table.component";
 
 @Component({
     selector: 'dynamodb-table-list',
@@ -125,12 +126,22 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        /*
-                this.dialog.open(UserPoolAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-                    if (result) {
-                        this.createUserPool(result)
-                    }
-                });*/
+        dialogConfig.data = {};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "70%"
+
+        this.dialog.open(DynamoDbAddTableDialog, dialogConfig).afterClosed().subscribe((result: CreateTableRequest) => {
+            if (result) {
+                console.log("DynamoDB: ", result);
+                this.dynamodbService.createTable(result)
+                    .subscribe(() => {
+                        this.snackBar.open('Table added, tableName: ' + result.TableName, 'Done', {duration: 5000});
+                        this.loadTables();
+                    });
+            }
+        });
     }
 
     createTable(tableName: string) {

@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {Attribute, PutItemRequest} from "../model/item-item";
+import {CreateTableRequest} from "../model/table-item";
 
 @Injectable()
 export class DynamodbService {
@@ -39,13 +40,9 @@ export class DynamodbService {
         return this.http.post(this.url, body, {headers: headers});
     }
 
-    public createTable(tableName: string) {
+    public createTable(request: CreateTableRequest) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "CreateTable");
-        const body = {
-            Region: environment.awsmockRegion,
-            PoolName: tableName
-        }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.url, request, {headers: headers});
     }
 
     public getTable(tableId: string, userName: string) {

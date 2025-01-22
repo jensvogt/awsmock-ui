@@ -21,17 +21,3 @@ export interface PutItemRequest {
     ReturnConsumedCapacity: string;
     ReturnItemCollectionMetrics: string;
 }
-
-// {
-//     "TableName" : "pim_local_feature_state",
-//     "Item" : {
-//     "featureName" : {
-//         "S" : "ONIX_SPLITTING"
-//     },
-//     "featureState" : {
-//         "S" : "{\"enabled\":true,\"strategyId\":null,\"parameters\":{}}"
-//     }
-// },
-//     "ReturnConsumedCapacity" : "TOTAL",
-//     "ReturnItemCollectionMetrics" : "SIZE"
-// }

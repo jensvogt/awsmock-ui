@@ -40,6 +40,17 @@
   overflow: auto;
 }
 
+.full-screen-modal .mat-dialog-container {
+  padding: 1em;
+  width: 90%;
+  height: 80%;
+  resize: both;
+  overflow: auto;
+  max-width: unset !important;
+  max-height: unset !important;
+  position: absolute !important;
+}
+
 .footer-buttons {
   display: flex;
   flex-direction: row;

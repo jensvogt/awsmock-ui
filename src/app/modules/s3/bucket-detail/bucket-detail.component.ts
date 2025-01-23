@@ -4,7 +4,7 @@ import {MatTableDataSource,} from "@angular/material/table";
 import {ActivatedRoute} from "@angular/router";
 import {Sort} from "@angular/material/sort";
 import {PageEvent} from "@angular/material/paginator";
-import {LambdaConfiguration, S3BucketItem} from "../model/s3-bucket-item";
+import {LambdaConfiguration, QueueConfiguration, S3BucketItem, TopicConfiguration} from "../model/s3-bucket-item";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {S3Service} from "../service/s3-service.component";
@@ -22,7 +22,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     bucketItem = {} as S3BucketItem;
     bucketName: string = '';
 
-    // Subscription Table
+    // Lambda notification Table
     lambdaNotificationColumns: any[] = ['id', 'lambdaArn', 'actions'];
     lambdaNotificationData: LambdaConfiguration[] = [];
     lambdaNotificationDataSource = new MatTableDataSource(this.lambdaNotificationData);
@@ -30,6 +30,24 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     lambdaNotificationPageIndex = 0;
     lambdaNotificationLength = 0;
     lambdaNotificationPageSizeOptions = [5, 10, 20, 50, 100];
+
+    // Queue notification Table
+    queueNotificationColumns: any[] = ['id', 'queue', 'actions'];
+    queueNotificationData: QueueConfiguration[] = [];
+    queueNotificationDataSource = new MatTableDataSource(this.queueNotificationData);
+    queueNotificationPageSize = 10;
+    queueNotificationPageIndex = 0;
+    queueNotificationLength = 0;
+    queueNotificationPageSizeOptions = [5, 10, 20, 50, 100];
+
+    // Topic notification Table
+    topicNotificationColumns: any[] = ['id', 'topicArn', 'actions'];
+    topicNotificationData: TopicConfiguration[] = [];
+    topicNotificationDataSource = new MatTableDataSource(this.topicNotificationData);
+    topicNotificationPageSize = 10;
+    topicNotificationPageIndex = 0;
+    topicNotificationLength = 0;
+    topicNotificationPageSizeOptions = [5, 10, 20, 50, 100];
 
     //
     protected readonly byteConversion = byteConversion;
@@ -72,9 +90,18 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
                 this.lastUpdate = this.lastUpdateTime();
                 if (data) {
                     this.bucketItem = data;
+                    console.log("Data: ", data);
                     if (this.bucketItem.lambdaConfigurations) {
                         this.lambdaNotificationData = this.bucketItem.lambdaConfigurations;
                         this.lambdaNotificationDataSource.data = this.lambdaNotificationData;
+                    }
+                    if (this.bucketItem.queueConfigurations) {
+                        this.queueNotificationData = this.bucketItem.queueConfigurations;
+                        this.queueNotificationDataSource.data = this.queueNotificationData;
+                    }
+                    if (this.bucketItem.topicConfigurations) {
+                        this.topicNotificationData = this.bucketItem.topicConfigurations;
+                        this.topicNotificationDataSource.data = this.topicNotificationData;
                     }
                 }
             });
@@ -97,7 +124,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     }
 
     deleteLambdaNotification(lambdaNotificationArn: string) {
-        this.bucketItem.lambdaConfigurations = this.bucketItem.lambdaConfigurations?.filter((ele) => ele.lambdaArn !== lambdaNotificationArn);
+        this.bucketItem.lambdaConfigurations = this.bucketItem.lambdaConfigurations?.filter((ele) => ele.CloudFunction !== lambdaNotificationArn);
         if (this.bucketItem.lambdaConfigurations) {
             this.lambdaNotificationData = this.bucketItem.lambdaConfigurations;
             this.lambdaNotificationDataSource.data = this.lambdaNotificationData;
@@ -107,6 +134,26 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     // ===================================================================================================================
     // Queue Notifications
     // ===================================================================================================================
+    queueNotificationSortChange(sortState: Sort) {
+        if (sortState.direction) {
+            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+        } else {
+            this._liveAnnouncer.announce('Sorting cleared');
+        }
+        this.loadBucket();
+    }
+
+    handleQueueNotificationPageEvent(e: PageEvent) {
+
+    }
+
+    deleteQueueNotification(queueNotificationArn: string) {
+        this.bucketItem.queueConfigurations = this.bucketItem.queueConfigurations?.filter((ele) => ele.Queue !== queueNotificationArn);
+        if (this.bucketItem.queueConfigurations) {
+            this.queueNotificationData = this.bucketItem.queueConfigurations;
+            this.queueNotificationDataSource.data = this.queueNotificationData;
+        }
+    }
 
     // ===================================================================================================================
     // Topic Notifications

@@ -5,8 +5,20 @@ export interface NotificationEvents {
 }
 
 export interface LambdaConfiguration {
+    Id: string,
+    CloudFunction: string,
+    Event: NotificationEvents[],
+}
+
+export interface QueueConfiguration {
+    Id: string,
+    Queue: string,
+    Event: NotificationEvents[],
+}
+
+export interface TopicConfiguration {
     id: string,
-    lambdaArn: string,
+    topicArn: string,
     events: NotificationEvents[],
 }
 
@@ -22,6 +34,8 @@ export interface S3BucketItem {
     created: BsonDateTime;
     modified: BsonDateTime;
     lambdaConfigurations: LambdaConfiguration[] | undefined;
+    queueConfigurations: QueueConfiguration[] | undefined;
+    topicConfigurations: TopicConfiguration[] | undefined;
 }
 
 export interface S3BucketCountersResponse {

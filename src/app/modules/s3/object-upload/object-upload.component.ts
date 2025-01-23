@@ -57,7 +57,7 @@ export class ObjectUploadComponent {
         this.uploadDisabled = !(this.file && this.key && this.fileName)
     }
 
-    onFileNameChange(event: any): void {
+    onFileNameChange(): void {
         this.uploadDisabled = !(this.file && this.key && this.fileName)
     }
 
@@ -67,8 +67,9 @@ export class ObjectUploadComponent {
         if (event.dataTransfer) {
             this.file = event.dataTransfer.files[0];
             this.fileName = this.file.name;
+            this.key = this.file.name;
+            this.uploadDisabled = !(this.file && this.key && this.fileName)
         }
-        this.uploadDisabled = !(this.file && this.key && this.fileName)
     }
 
     // Prevent default dragover behavior

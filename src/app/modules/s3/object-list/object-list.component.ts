@@ -86,8 +86,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        // @ts-ignore
-        this.objectData.sort = this.sort;
+//        this.objectData.sort = this.sort;
     }
 
     setPrefix() {

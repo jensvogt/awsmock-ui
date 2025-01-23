@@ -41,7 +41,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     queueNotificationPageSizeOptions = [5, 10, 20, 50, 100];
 
     // Topic notification Table
-    topicNotificationColumns: any[] = ['id', 'topicArn', 'actions'];
+    topicNotificationColumns: any[] = ['id', 'topic', 'actions'];
     topicNotificationData: TopicConfiguration[] = [];
     topicNotificationDataSource = new MatTableDataSource(this.topicNotificationData);
     topicNotificationPageSize = 10;

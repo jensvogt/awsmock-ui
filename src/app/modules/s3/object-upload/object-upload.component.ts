@@ -57,6 +57,10 @@ export class ObjectUploadComponent {
         this.uploadDisabled = !(this.file && this.key && this.fileName)
     }
 
+    onFileNameChange(event: any): void {
+        this.uploadDisabled = !(this.file && this.key && this.fileName)
+    }
+
     // Handler for file drop
     onFileDrop(event: DragEvent): void {
         event.preventDefault();

@@ -21,7 +21,7 @@
 <h2 mat-dialog-title>Upload File</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
     <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
-        <input #fileInput (change)="onFileChange($event)" accept="application/json" hidden type="file"/>
+        <input #fileInput (change)="onFileChange($event)" hidden type="file"/>
         <div (click)="fileInput.click()" class="file-dropper">
             <mat-icon>upload</mat-icon>
             <p>Upload file</p>
@@ -33,7 +33,7 @@
     </mat-form-field>
     <mat-form-field style="width: 100%">
         <mat-label>Key</mat-label>
-        <input [(ngModel)]="key" matInput value="">
+        <input (change)="onFileNameChange($event)" [(ngModel)]="key" matInput value="">
     </mat-form-field>
     <mat-progress-bar mode="determinate" value="{{progress}}"></mat-progress-bar>
 </mat-dialog-content>

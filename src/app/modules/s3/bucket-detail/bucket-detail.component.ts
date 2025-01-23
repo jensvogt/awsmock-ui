@@ -158,6 +158,26 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     // ===================================================================================================================
     // Topic Notifications
     // ===================================================================================================================
+    topicNotificationSortChange(sortState: Sort) {
+        if (sortState.direction) {
+            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+        } else {
+            this._liveAnnouncer.announce('Sorting cleared');
+        }
+        this.loadBucket();
+    }
+
+    handleTopicNotificationPageEvent(e: PageEvent) {
+
+    }
+
+    deleteTopicNotification(topicNotificationArn: string) {
+        this.bucketItem.topicConfigurations = this.bucketItem.topicConfigurations?.filter((ele) => ele.Topic !== topicNotificationArn);
+        if (this.bucketItem.topicConfigurations) {
+            this.topicNotificationData = this.bucketItem.topicConfigurations;
+            this.topicNotificationDataSource.data = this.topicNotificationData;
+        }
+    }
 
     save() {
         this.location.back();

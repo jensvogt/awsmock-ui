@@ -17,9 +17,9 @@ export interface QueueConfiguration {
 }
 
 export interface TopicConfiguration {
-    id: string,
-    topicArn: string,
-    events: NotificationEvents[],
+    Id: string,
+    Topic: string,
+    Events: NotificationEvents[],
 }
 
 export interface S3BucketItem {

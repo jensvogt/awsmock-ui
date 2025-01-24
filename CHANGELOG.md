@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.6.0](https://github.com/jensvogt/awsmock-ui/compare/v1.5.0...v1.6.0) (2025-01-24)
+
+
+### Features
+
+* **111-dynamodb-support:** add dynamodb add table dialog ([a09fc54](https://github.com/jensvogt/awsmock-ui/commit/a09fc549fdd2908e335d07c441102990d9c70a06))
+* **111-dynamodb-support:** add lambda create ([cc5d1f9](https://github.com/jensvogt/awsmock-ui/commit/cc5d1f9e997b6ba03dcd42d8194637f3ac049af5))
+* **111-dynamodb-support:** add lambda create function ([fd126d9](https://github.com/jensvogt/awsmock-ui/commit/fd126d9c68c46eba46403b96f550f8e4952bdfd2))
+* **111-dynamodb-support:** add lambda create function ([0f0c250](https://github.com/jensvogt/awsmock-ui/commit/0f0c2509addcdd99ae58583f1987d87006b224ec))
+* **111-dynamodb-support:** add lambda create function ([5920d2a](https://github.com/jensvogt/awsmock-ui/commit/5920d2a7034d490bd5e28420763a9d86afe6e38d))
+* **111-dynamodb-support:** add lambda create function ([98f9473](https://github.com/jensvogt/awsmock-ui/commit/98f9473a92e9a31d2b574d89c1fec62f7abb1844))
+
+
+### Bug Fixes
+
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notificartion to S3 bucket details ([cf278c9](https://github.com/jensvogt/awsmock-ui/commit/cf278c94ca4eac590e2677aea748921f69d63557))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([b5f2488](https://github.com/jensvogt/awsmock-ui/commit/b5f2488e7ec197b0cf98581973a02605da446cc1))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([95d864d](https://github.com/jensvogt/awsmock-ui/commit/95d864d757876257785c29dc55d1f705f2777a77))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([bceaf2d](https://github.com/jensvogt/awsmock-ui/commit/bceaf2dd7289f3bba4d9891f4b37387f755a21d4))
+
 ## [1.5.0](https://github.com/jensvogt/awsmock-ui/compare/v1.4.0...v1.5.0) (2025-01-19)
 
 

@@ -9,5 +9,5 @@
     <button (click)="onClear()" mat-button>Clear</button>
     <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
     <button (click)="loadFromFile()" mat-button>Load File</button>
-    <button (click)="importInfrastructure()" [disabled]="loadDisabled" cdkFocusInitial="loadEnabled" mat-button>Import</button>
+    <button #importButton (click)="importInfrastructure()" [disabled]="loadDisabled" cdkFocusInitial="loadEnabled" mat-button>Import</button>
 </mat-dialog-actions>

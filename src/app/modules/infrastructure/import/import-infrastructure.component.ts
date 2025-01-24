@@ -1,4 +1,4 @@
-import {Component, Inject} from "@angular/core";
+import {Component, Inject, ViewChild} from "@angular/core";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
@@ -35,6 +35,7 @@ export class ImportInfrastructureComponentDialog {
 
     body: string | undefined = '';
     loadDisabled: boolean = true;
+    @ViewChild('importButton') importButton: MatInput | undefined;
     protected readonly onchange = onchange;
 
     constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar,
@@ -74,6 +75,7 @@ export class ImportInfrastructureComponentDialog {
             if (result) {
                 this.loadDisabled = false;
                 this.body = result;
+                this.importButton?.focus();
             }
         });
     }

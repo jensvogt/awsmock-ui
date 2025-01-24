@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Backend Server</h2>
+<mat-dialog-content>
+    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+        <mat-list style="width:100%">
+            <mat-list-item style="height: 80px;width:100%">
+                <mat-form-field style="width:100%">
+                    <mat-label>Backend Server</mat-label>
+                    <input [(ngModel)]="backendServer" matInput style="width:100%">
+                </mat-form-field>
+            </mat-list-item>
+        </mat-list>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+    <button (click)="save()" mat-button>Save</button>
+</mat-dialog-actions>

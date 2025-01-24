@@ -39,6 +39,7 @@ export class ConfigComponentDialog implements OnInit {
 
     ngOnInit() {
         this.getConfig();
+        this.dialogRef.updateSize("600px", "500px");
     }
 
     getConfig() {

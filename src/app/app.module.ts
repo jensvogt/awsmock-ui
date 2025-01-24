@@ -19,6 +19,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly: environment.production};
 
@@ -55,7 +56,10 @@ const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly:
         FormsModule,
         ReactiveFormsModule,
         MatButton,
-        MatSuffix
+        MatSuffix,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem
     ],
     bootstrap: [AppComponent]
 })

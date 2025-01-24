@@ -1,5 +1,6 @@
-import {ActionReducer, ActionReducerMap, createReducer, on} from '@ngrx/store';
+import {ActionReducer, ActionReducerMap, createReducer} from '@ngrx/store';
 import {routerReducer, RouterState} from '@ngrx/router-store';
+import {environment} from "../../environments/environment";
 
 export const rootFeatureName: string = 'root';
 
@@ -9,9 +10,11 @@ export interface GlobalState {
 }
 
 export interface RootState {
+    backendServer: string;
 }
 
 export const initialState: RootState = {
+    backendServer: environment.gatewayEndpoint
 };
 
 export const rootReducer: ActionReducer<RootState> = createReducer(

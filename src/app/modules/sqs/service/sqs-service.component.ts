@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
-import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {environment} from "../../../../environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class SqsService {
@@ -11,7 +11,7 @@ export class SqsService {
         'Content-Type': 'application/json',
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
-    url: string = environment.gatewayEndpoint + '/';
+    url: string = environment.gatewayEndpoint;
 
     constructor(private http: HttpClient) {
     }

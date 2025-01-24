@@ -1,3 +1,5 @@
+import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
+
 export interface SnsTopicDetails {
     region: string;
     topicArn: string;
@@ -6,6 +8,6 @@ export interface SnsTopicDetails {
     owner: string;
     messageCount: number;
     size: number;
-    created: Date;
-    modified: Date;
+    created: BsonDateTime;
+    modified: BsonDateTime;
 }

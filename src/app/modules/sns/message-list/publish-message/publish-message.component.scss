@@ -1,1 +1,20 @@
 
+.full-screen-modal .mat-dialog-container {
+  padding: 1em;
+  width: 90%;
+  height: 80%;
+  resize: both;
+  overflow: auto;
+  max-width: unset !important;
+  max-height: unset !important;
+  position: absolute !important;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+  padding-top: 6px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-size: x-large;
+}
+

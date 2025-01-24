@@ -4,19 +4,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable
-} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -39,9 +27,15 @@ import {snsTopicDetailReducer, snsTopicDetailsFeatureKey} from "./topic-detail/s
 import {SnsTopicDetailEffects} from "./topic-detail/state/sns-topic-detail.effects";
 import {snsMessageListFeatureKey, snsMessageListReducer} from "./message-list/state/sns-message-list.reducer";
 import {SnsMessageListEffects} from "./message-list/state/sns-message-list.effects";
+import {PublishMessageComponentDialog} from "./message-list/publish-message/publish-message.component";
+import {SnsViewMessageDialog} from "./message-list/view-message/sns-view-message.component";
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
 
 @NgModule({
-    declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent],
+    declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, SnsViewMessageDialog, PublishMessageComponentDialog],
     imports: [
         MatCard,
         MatCardHeader,
@@ -89,8 +83,16 @@ import {SnsMessageListEffects} from "./message-list/state/sns-message-list.effec
         StoreModule.forFeature(snsTopicDetailsFeatureKey, snsTopicDetailReducer),
         StoreModule.forFeature(snsMessageListFeatureKey, snsMessageListReducer),
         EffectsModule.forFeature([SnsTopicListEffects, SnsTopicDetailEffects, SnsMessageListEffects]),
+        MatDialogContent,
+        CdkTextareaAutosize,
+        CdkDrag,
+        CdkDragHandle,
+        MatDialogTitle,
+        MatDialogActions,
+        MatDialogClose,
+        MatSlideToggle,
     ],
-    exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent],
+    exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, PublishMessageComponentDialog, SnsViewMessageDialog],
     providers: [SnsService],
 })
 export class SnsModule {

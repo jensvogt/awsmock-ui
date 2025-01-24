@@ -38,7 +38,7 @@ export class SnsTopicListEffects {
     publishMessage$ = createEffect(() => this.actions$.pipe(
         ofType(snsTopicListActions.publishMessage),
         mergeMap(action =>
-            this.snsService.publishMessage(action.topicArn, action.message)
+            this.snsService.publishMessage(action.topicArn, action.message, action.attributes)
                 .pipe(map(() => snsTopicListActions.publishMessageSuccess),
                     catchError((error) =>
                         of(snsTopicListActions.publishMessageFailure({error: error.message}))

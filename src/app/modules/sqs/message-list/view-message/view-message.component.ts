@@ -1,4 +1,4 @@
-import {MAT_DIALOG_DATA, MatDialogConfig} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
 import {SqsMessageAttribute, SqsMessageItem} from "../../model/sqs-message-item";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
@@ -36,7 +36,7 @@ export class ViewMessageComponentDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SQSMessageListState>) {
+    constructor(private dialogRef: MatDialogRef<ViewMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SQSMessageListState>) {
         this.message = data.message;
         if (this.message.body?.length) {
             this.isJson = isJson(this.message.body);
@@ -60,6 +60,7 @@ export class ViewMessageComponentDialog implements OnInit {
     }
 
     ngOnInit() {
+        this.dialogRef.updateSize("1200px", "800px");
     }
 
     changePrettyPrint(event: MatSlideToggleChange) {

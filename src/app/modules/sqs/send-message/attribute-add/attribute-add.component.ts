@@ -41,11 +41,11 @@ export class SqsMessageAttributeAddDialog implements OnInit {
     value: string = '';
 
     dataTypes: DataType[] = [
-        {value: 'string', viewValue: 'String'},
-        {value: 'number', viewValue: 'Number'},
-        {value: 'binary', viewValue: 'Binary'},
+        {value: 'String', viewValue: 'String'},
+        {value: 'Number', viewValue: 'Number'},
+        {value: 'Binary', viewValue: 'Binary'},
     ];
-    selectedDataType: string = 'string';
+    selectedDataType: string = 'String';
 
     constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SqsMessageAttributeAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
     }

@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
+import {Component, Inject} from "@angular/core";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
@@ -31,18 +31,14 @@ import {ModuleService} from "../../../services/module.service";
     providers: [ModuleService],
     styleUrls: ['./import-infrastructure.component.scss']
 })
-export class ImportInfrastructureComponentDialog implements OnInit, OnDestroy {
+export class ImportInfrastructureComponentDialog {
 
     body: string | undefined = '';
+    loadDisabled: boolean = true;
+    protected readonly onchange = onchange;
 
     constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar,
                 private dialog: MatDialog, private moduleService: ModuleService) {
-    }
-
-    ngOnInit(): void {
-    }
-
-    ngOnDestroy(): void {
     }
 
     importInfrastructure() {
@@ -56,6 +52,17 @@ export class ImportInfrastructureComponentDialog implements OnInit, OnDestroy {
         });
     }
 
+    onChange(event: any) {
+        if (event) {
+            this.loadDisabled = false;
+        }
+    }
+
+    onClear() {
+        this.body = '';
+        this.loadDisabled = true;
+    }
+
     loadFromFile() {
 
         const dialogConfig = new MatDialogConfig();
@@ -65,6 +72,7 @@ export class ImportInfrastructureComponentDialog implements OnInit, OnDestroy {
 
         this.dialog.open(FileImportComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
+                this.loadDisabled = false;
                 this.body = result;
             }
         });

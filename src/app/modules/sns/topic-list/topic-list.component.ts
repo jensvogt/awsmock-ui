@@ -148,7 +148,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(message => {
             if (message) {
-                this.snsService.publishMessage(topicArn, message).subscribe(() => {
+                this.snsService.publishMessage(topicArn, message.message, message.attributes).subscribe(() => {
                     this.loadTopics();
                     this.snackBar.open('SNS message published, topicArn: ' + topicArn, 'Done', {duration: 5000})
                 });

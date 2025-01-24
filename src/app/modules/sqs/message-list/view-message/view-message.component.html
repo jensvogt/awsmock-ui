@@ -1,8 +1,7 @@
 <h2 cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" cdkcdkDrag mat-dialog-title>SQS message: {{ messageId }}</h2>
 <div *ngIf="isJson">
     <mat-dialog-actions>
-        <mat-slide-toggle (change)="changePrettyPrint($event)"
-                          [checked]="prettyPrint" labelPosition="before">
+        <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" labelPosition="before">
             Pretty Print:
         </mat-slide-toggle>
     </mat-dialog-actions>
@@ -12,8 +11,7 @@
         <mat-tab label="Body">
             <mat-form-field style="width: 100%;height:100%">
                 <mat-label>Message:</mat-label>
-                <textarea [(ngModel)]="body" cdkAutosizeMinRows="20" cdkTextareaAutosize matInput placeholder="Message" readonly
-                          style="width:100%; height:100%"></textarea>
+                <textarea [(ngModel)]="body" cdkAutosizeMinRows="20" cdkTextareaAutosize matInput placeholder="Message" readonly style="width:100%; height:100%"></textarea>
             </mat-form-field>
         </mat-tab>
         <mat-tab label="Attribute">

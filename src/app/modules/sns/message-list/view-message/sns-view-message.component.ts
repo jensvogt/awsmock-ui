@@ -1,38 +1,22 @@
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {SnsMessageItem} from "../../model/sns-message-item";
-import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {SnsMessageAttribute, SnsMessageItem} from "../../model/sns-message-item";
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {isJson} from "../../../../shared/format/message-format-component";
-import {NgIf} from "@angular/common";
+import {MatTableDataSource} from "@angular/material/table";
+import {PageEvent} from "@angular/material/paginator";
+import {Sort} from "@angular/material/sort";
+import {SqsMessageAttribute} from "../../../sqs/model/sqs-message-item";
+import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {Store} from "@ngrx/store";
+import {SNSMessageListState} from "../state/sns-message-list.reducer";
+import {snsMessageListActions} from "../state/sns-message-list.actions";
 
 @Component({
     selector: 'sns-edit-message-dialog',
     templateUrl: './sns-view-message.component.html',
-    standalone: true,
-    imports: [
-        MatDialogContent,
-        MatDialogTitle,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-        MatFormField,
-        MatLabel,
-        FormsModule,
-        MatInput,
-        ReactiveFormsModule,
-        CdkDrag,
-        CdkDragHandle,
-        CdkTextareaAutosize,
-        MatSlideToggle,
-        NgIf
-    ],
-    styleUrls: ['./sns-view-message.component.scss']
+    styleUrls: ['./sns-view-message.component.scss'],
+    standalone: false
 })
 export class SnsViewMessageDialog implements OnInit {
 
@@ -43,23 +27,43 @@ export class SnsViewMessageDialog implements OnInit {
     prettyPrint: boolean = true;
     isJson: boolean = false;
 
-    constructor(private dialogRef: MatDialogRef<SnsViewMessageDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    // Attributes Table
+    messageAttributes = new MatTableDataSource<SnsMessageAttribute>();
+    messageAttributeLength: number = 0;
+    attributes: SqsMessageAttribute[] = [];
+    attributePageSize: number = 10;
+    attributePageIndex: number = 0;
+    attributeColumns: any[] = ['key', 'value', 'type', 'actions'];
+    attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
+    attributePageSizeOptions = [5, 10, 20, 50, 100];
+
+    constructor(private dialogRef: MatDialogRef<SnsViewMessageDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SNSMessageListState>) {
+        console.log("Data: ", data);
         this.message = data.message;
         this.rawMessage = this.message?.Message;
         this.messageId = this.message?.MessageId;
-        this.isJson = isJson(this.rawMessage);
-        if (this.isJson && this.prettyPrint) {
-            this.body = JSON.stringify(JSON.parse(this.data.message.Message), null, 2);
-        } else {
-            this.body = data.message.Message;
+        if (this.message?.Message?.length) {
+            this.isJson = isJson(this.rawMessage);
+            if (this.isJson && this.prettyPrint) {
+                this.body = JSON.stringify(JSON.parse(this.data.message.Message), null, 2);
+            } else {
+                this.body = data.message.Message;
+            }
+        }
+        if (data.message.messageAttributes) {
+            data.message.messageAttributes.forEach((a: any) => {
+                for (const key in a) {
+                    let attribute: SqsMessageAttribute = {Key: a[key].Name, Value: a[key].StringValue, DataType: a[key].DataType};
+                    this.attributes.push(attribute);
+                    this.messageAttributes = new MatTableDataSource(this.attributes);
+                    this.messageAttributeLength = this.attributes.length;
+                }
+            });
         }
     }
 
     ngOnInit() {
-    }
-
-    sendMessage() {
-        this.dialogRef.close(true);
+        this.dialogRef.updateSize("1200px", "800px");
     }
 
     changePrettyPrint(event: MatSlideToggleChange) {
@@ -72,7 +76,41 @@ export class SnsViewMessageDialog implements OnInit {
         }
     }
 
-    close() {
-        this.dialogRef.close(false);
+    handleAttributePageEvent(e: PageEvent) {
+        this.attributePageSize = e.pageSize;
+        this.attributePageIndex = e.pageIndex;
+    }
+
+    attributeSortChange(sortState: Sort) {
+        this.attributeSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.attributeSortColumns = [{column: column, sortDirection: direction}];
+    }
+
+    deleteAttribute(key: string) {
+        if (key && this.messageId) {
+            this.attributes = this.attributes.filter(element => {
+                return element.Key !== key
+            });
+            this.messageAttributes = new MatTableDataSource(this.attributes);
+            this.store.dispatch(snsMessageListActions.deleteAttribute({messageId: this.messageId, name: key}));
+        }
+    }
+
+    addAttribute() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {};
+
+        /*this.attributeAdd.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.attributes.push({Key: result.Key, Value: result.Value, DataType: result.DataType});
+                this.messageAttributes = new MatTableDataSource(this.attributes);
+                this.messageAttributeLength = this.attributes.length;
+            }
+        });*/
     }
 }

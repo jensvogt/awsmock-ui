@@ -1,5 +1,8 @@
 export function isJson(message: string): boolean {
-    return message.startsWith("{") || message?.startsWith("[");
+    if (!message) {
+        return false;
+    }
+    return message.startsWith("{") || message.startsWith("[");
 }
 
 export function isSml(message: string): boolean {

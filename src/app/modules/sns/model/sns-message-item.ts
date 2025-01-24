@@ -1,3 +1,9 @@
+export interface SnsMessageAttribute {
+    Key: string,
+    Value: string,
+    DataType: string
+}
+
 export interface SnsMessageItem {
     Id: string | undefined;
     Region: string | undefined
@@ -9,6 +15,7 @@ export interface SnsMessageItem {
     LastSend: Date | undefined;
     Created: Date | undefined;
     Modified: Date | undefined;
+    messageAttributes: SnsMessageAttribute[];
 }
 
 export interface SnsMessageCountersResponse {

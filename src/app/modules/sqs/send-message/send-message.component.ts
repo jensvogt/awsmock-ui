@@ -31,7 +31,7 @@ export class SendMessageComponentDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private fileDialog: MatDialog, private attributeAdd: MatDialog) {
+    constructor(private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private fileDialog: MatDialog, private dialog: MatDialog) {
         this.queueUrl = data.queueUrl;
         this.queueName = this.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
     }
@@ -87,7 +87,7 @@ export class SendMessageComponentDialog implements OnInit {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {};
 
-        this.attributeAdd.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 this.attributes.push({Key: result.Key, Value: result.Value, DataType: result.DataType});
                 this.messageAttributes = new MatTableDataSource(this.attributes);

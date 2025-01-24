@@ -2,11 +2,12 @@
 <mat-dialog-content class="mat-typography">
     <mat-form-field style="width: 100%;height:100%">
         <mat-label>Infrastructure:</mat-label>
-        <textarea [(ngModel)]="body" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Infrastructure" style="width:100%; height:100%">{{ body }}</textarea>
+        <textarea (ngModelChange)="onChange($event)" [(ngModel)]="body" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput ng-copy="event=copy" placeholder="Infrastructure" style="width:100%; height:100%">{{ body }}</textarea>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
+    <button (click)="onClear()" mat-button>Clear</button>
     <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
     <button (click)="loadFromFile()" mat-button>Load File</button>
-    <button (click)="importInfrastructure()" cdkFocusInitial mat-button>Import</button>
+    <button (click)="importInfrastructure()" [disabled]="loadDisabled" cdkFocusInitial="loadEnabled" mat-button>Import</button>
 </mat-dialog-actions>

@@ -29,7 +29,7 @@ export class SnsMessageListEffects {
     publishMessage$ = createEffect(() => this.actions$.pipe(
         ofType(snsMessageListActions.publishMessage),
         mergeMap(action =>
-            this.snsService.publishMessage(action.topicArn, action.message)
+            this.snsService.publishMessage(action.topicArn, action.message, action.attributes)
                 .pipe(map(() => snsTopicListActions.publishMessageSuccess),
                     catchError((error) =>
                         of(snsTopicListActions.publishMessageFailure({error: error.message}))
@@ -37,6 +37,17 @@ export class SnsMessageListEffects {
                 )
         )
     ));
+
+    deleteAttribute$ = createEffect(() => this.actions$.pipe(
+        ofType(snsMessageListActions.deleteAttribute),
+        mergeMap(action =>
+            this.snsService.deleteAttribute(action.messageId, action.name)
+                .pipe(map(() => snsMessageListActions.deleteAttributeSuccess()),
+                    catchError((error) =>
+                        of(snsMessageListActions.deleteAttributeFailure({error: error.message}))
+                    )
+                )
+        )));
 
     deleteMessage$ = createEffect(() => this.actions$.pipe(
         ofType(snsMessageListActions.deleteMessage),

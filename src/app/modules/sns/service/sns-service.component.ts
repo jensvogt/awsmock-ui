@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {SnsMessageAttribute} from "../model/sns-message-item";
 
 @Injectable()
 export class SnsService {
@@ -49,9 +50,7 @@ export class SnsService {
      */
     public listMessageCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListMessageCounters');
-        return this.http.post(this.url, {
-            topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns
-        }, {headers: headers});
+        return this.http.post(this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -104,10 +103,19 @@ export class SnsService {
      *
      * @param topicArn AWS topic ARN
      * @param message message body
+     * @param attributes message attributes
      */
-    publishMessage(topicArn: string, message: string) {
+    publishMessage(topicArn: string, message: string, attributes: SnsMessageAttribute[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'Publish');
-        return this.http.post(this.url, "TopicArn=" + topicArn + "&Message=" + message, {headers: headers, responseType: 'text'});
+        console.log("Attributes: ", attributes);
+        let queryString: string = "TopicArn=" + encodeURI(topicArn) + "&Message=" + encodeURI(message);
+        for (let i = 0; i < attributes.length; i++) {
+            queryString += "&MessageAttributes.entry." + (i + 1) + ".Name=" + encodeURI(attributes[i].Key);
+            queryString += "&MessageAttributes.entry." + (i + 1) + ".Value.DataType=" + encodeURI(attributes[i].DataType);
+            queryString += "&MessageAttributes.entry." + (i + 1) + ".Value.StringValue=" + encodeURI(attributes[i].Value);
+        }
+        //console.log("QueryString: ", queryString);
+        return this.http.post(this.url, queryString, {headers: headers, responseType: 'text'});
     }
 
     /**

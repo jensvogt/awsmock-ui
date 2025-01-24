@@ -1,6 +1,7 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {ListTopicCountersResponse} from "../../model/sns-topic-item";
+import {SnsMessageAttribute} from "../../model/sns-message-item";
 
 export const snsTopicListActions = {
     initialize: createAction('[sns-topic-list] initialize'),
@@ -16,7 +17,7 @@ export const snsTopicListActions = {
     addTopicFailure: createAction('[sns-topic-list] Add Topic Error', props<{ error: string }>()),
 
     // Publish message
-    publishMessage: createAction('[sns-topic-list] Publish message', props<{ topicArn: string, message: string }>()),
+    publishMessage: createAction('[sns-topic-list] Publish message', props<{ topicArn: string, message: string, attributes: SnsMessageAttribute[] }>()),
     publishMessageSuccess: createAction('[sns-topic-list] Publish message success'),
     publishMessageFailure: createAction('[sns-topic-list] Publish message error', props<{ error: string }>()),
 

@@ -61,7 +61,7 @@ export class ImportInfrastructureComponentDialog implements OnInit, OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = this.body;
+        dialogConfig.data = {extensions: ['.json', '.bson']}
 
         this.dialog.open(FileImportComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

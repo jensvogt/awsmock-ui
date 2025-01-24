@@ -22,20 +22,18 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class FileImportComponent {
 
-    imageName = signal('');
     fileSize = signal(0);
-    uploadProgress = signal(0);
-    imagePreview = signal('');
     @ViewChild('fileInput') fileInput: ElementRef | undefined;
     selectedFile: File | null = null;
     uploadSuccess: boolean = false;
     uploadError: boolean = false;
+    extensions: string[] = [];
 
     constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<FileImportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.extensions = data.extensions;
     }
 
-    // Method to handle file upload
-    // Handler for file input change
+    // Method to handle file upload. Handler for file input change
     onFileChange(event: any): void {
         const file = event.target.files[0] as File | null;
         this.uploadFile(file);
@@ -55,7 +53,8 @@ export class FileImportComponent {
 
     // Method to handle file upload
     uploadFile(file: File | null): void {
-        if (file && file.type.startsWith('application/json')) {
+        console.log("file.type: ", file?.name)
+        if (file && (this.checkFileName(file.name))) {
             this.selectedFile = file;
             this.fileSize.set(Math.round(file.size / 1024)); // Set file size in KB
 
@@ -67,21 +66,19 @@ export class FileImportComponent {
 
             this.uploadSuccess = true;
             this.uploadError = false;
+
         } else {
+
             this.uploadSuccess = false;
             this.uploadError = true;
-            this.snackBar.open('Only JSON files are supported!', 'Close', {duration: 3000, panelClass: 'error'});
+            this.snackBar.open('Only JSON or BSON files are supported!', 'Close', {duration: 3000, panelClass: 'error'});
         }
     }
 
-    // Method to remove the uploaded files
-    removeFile(): void {
-        this.selectedFile = null;
-        this.imageName.set('');
-        this.fileSize.set(0);
-        this.imagePreview.set('');
-        this.uploadSuccess = false;
-        this.uploadError = false;
-        this.uploadProgress.set(0);
+    private checkFileName(fileName: string): boolean {
+        if (this.extensions.length === 0) {
+            return true;
+        }
+        return this.extensions.includes(fileName.toLowerCase().substring(fileName.lastIndexOf('.')));
     }
 }

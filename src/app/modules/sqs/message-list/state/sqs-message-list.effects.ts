@@ -26,21 +26,13 @@ export class SqsMessageListEffects {
         ),
     ));
 
-    /*
-    addMessage$ = createEffect(() => this.actions$.pipe(
-        ofType(sqsMessageListActions.addMessage),
+    updateMessage$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsMessageListActions.updateMessage),
         mergeMap(action =>
-            this.sqsService.addMessage(action.name)
-                .then(() => sqsMessageListActions.addMessageSuccess()))
-    ));*/
-
-    deleteAttribute$ = createEffect(() => this.actions$.pipe(
-        ofType(sqsMessageListActions.deleteAttribute),
-        mergeMap(action =>
-            this.sqsService.deleteAttribute(action.messageId, action.name)
-                .pipe(map(() => sqsMessageListActions.deleteAttributeSuccess()),
+            this.sqsService.updateMessage(action.messageId, action.messageAttributes)
+                .pipe(map(() => sqsMessageListActions.updateMessageSuccess()),
                     catchError((error) =>
-                        of(sqsMessageListActions.deleteAttributeFailure({error: error.message}))
+                        of(sqsMessageListActions.updateMessageFailure({error: error.message}))
                     )
                 )
         )));

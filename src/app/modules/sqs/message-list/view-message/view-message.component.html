@@ -14,7 +14,7 @@
                 <textarea [(ngModel)]="body" cdkAutosizeMinRows="20" cdkTextareaAutosize matInput placeholder="Message" readonly style="width:100%; height:100%"></textarea>
             </mat-form-field>
         </mat-tab>
-        <mat-tab label="Attribute">
+        <mat-tab label="Attributes">
             <mat-card-actions class="head-buttons">
                 <span class="fill-remaining-space">
                 </span>
@@ -36,8 +36,11 @@
                     <td *matCellDef="let element" mat-cell> {{ element.DataType }}</td>
                 </ng-container>
                 <ng-container matColumnDef="actions">
-                    <th *matHeaderCellDef mat-header-cell style="width:40px">Actions</th>
+                    <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                     <td *matCellDef="let row" mat-cell>
+                        <button (click)="editAttribute(row)" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                            <mat-icon>edit</mat-icon>
+                        </button>
                         <button (click)="deleteAttribute(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
                             <mat-icon>delete</mat-icon>
                         </button>

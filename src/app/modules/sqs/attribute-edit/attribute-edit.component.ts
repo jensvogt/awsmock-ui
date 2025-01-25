@@ -1,11 +1,12 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {Component, Inject, OnInit} from "@angular/core";
+import {Component, Inject} from "@angular/core";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {SqsService} from "../../service/sqs-service.component";
+import {SqsService} from "../service/sqs-service.component";
 import {MatOption, MatSelect} from "@angular/material/select";
+import {SqsMessageAttribute} from "../model/sqs-message-item";
 
 interface DataType {
     value: string;
@@ -14,7 +15,7 @@ interface DataType {
 
 @Component({
     selector: 'sqs-tag-add-dialog',
-    templateUrl: './attribute-add.component.html',
+    templateUrl: './attribute-edit.component.html',
     standalone: true,
     imports: [
         MatDialogContent,
@@ -30,13 +31,14 @@ interface DataType {
         MatSelect,
         MatOption
     ],
-    styleUrls: ['./attribute-add.component.scss'],
+    styleUrls: ['./attribute-edit.component.scss'],
     providers: [SqsService]
 })
-export class SqsMessageAttributeAddDialog implements OnInit {
+export class SqsMessageAttributeEditDialog {
 
     // @ts-ignore
     form: FormGroup;
+    attribute: SqsMessageAttribute;
     key: string = '';
     value: string = '';
 
@@ -47,17 +49,14 @@ export class SqsMessageAttributeAddDialog implements OnInit {
     ];
     selectedDataType: string = 'String';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SqsMessageAttributeAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-    }
-
-    ngOnInit() {
-        this.form = this.fb.group({
-            key: [""],
-            value: [""]
-        });
+    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SqsMessageAttributeEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.attribute = data.attribute;
+        this.key = data.attribute.Key;
+        this.value = data.attribute.Value;
+        this.selectedDataType = data.attribute.DataType;
     }
 
     save() {
-        this.dialogRef.close({Key: this.key, Value: this.value, DataType: this.selectedDataType});
+        this.dialogRef.close({attribute: this.attribute});
     }
 }

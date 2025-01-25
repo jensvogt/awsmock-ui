@@ -1,6 +1,7 @@
 export interface SqsAttributeItem {
-    name: string | undefined;
-    value: string | undefined;
+    Name: string | undefined;
+    Value: string | undefined;
+    DataType: string | undefined;
 }
 
 export interface SqsAttributeCountersResponse {

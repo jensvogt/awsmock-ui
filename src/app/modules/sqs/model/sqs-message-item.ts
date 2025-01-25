@@ -13,6 +13,7 @@ export interface SqsMessageItem {
     body: string | undefined;
     receiptHandle: string | undefined;
     md5Sum: string | undefined;
+    retries: number | undefined;
     created: BsonDateTime | undefined;
     modified: BsonDateTime | undefined;
     messageAttributes: SqsMessageAttribute[];

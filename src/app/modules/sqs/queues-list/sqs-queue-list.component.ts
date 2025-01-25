@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
-import {ListQueueCountersResponse} from "../model/sqs-queue-item";
+import {ListQueueCountersResponse, SqsQueueItem} from "../model/sqs-queue-item";
 import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
@@ -47,6 +47,8 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     // Prefix
     prefixValue: string = this.state.value['sqs-queue-list'].prefix;
     prefixSet: boolean = false;
+
+    // Misc
     protected readonly byteConversion = byteConversion;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService,
@@ -58,6 +60,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
+        //this.listQueueCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {
@@ -98,8 +101,12 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        let column = 'attributes.approximateNumberOfMessages';
-        if (sortState.active === 'messagesInFlight') {
+        let column = sortState.active;
+        if (sortState.active === 'queueName') {
+            column = 'name'
+        } else if (sortState.active === 'messagesInFlight') {
+            column = 'attributes.approximateNumberOfMessagesNotVisible'
+        } else if (sortState.active === 'messagesInFlight') {
             column = 'attributes.approximateNumberOfMessagesNotVisible'
         } else if (sortState.active === 'messagesDelayed') {
             column = 'attributes.approximateNumberOfMessagesDelayed';
@@ -165,10 +172,23 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         });
     }
 
+    redriveMessages(queue: SqsQueueItem) {
+        if (queue && queue.queueArn) {
+            this.sqsService.redriveMessages(queue.queueArn).subscribe(() => {
+                this.loadQueues()
+                this.snackBar.open('SQS queue redrive executed, queueArn: ' + queue.queueArn, 'Done', {duration: 5000})
+            });
+        }
+    }
+
     deleteQueue(queueUrl: string) {
         this.sqsService.deleteQueue(queueUrl).subscribe(() => {
             this.loadQueues()
             this.snackBar.open('SQS queue deleted, url: ' + queueUrl, 'Done', {duration: 5000})
         });
+    }
+
+    isDlq(queueUrl: string): boolean {
+        return queueUrl.endsWith('dlqueue');
     }
 }

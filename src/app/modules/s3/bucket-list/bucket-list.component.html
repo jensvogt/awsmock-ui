@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            S3 Buckets
+            S3 Buckets ({{ (s3BucketCountersResponse$|async)?.total }})
         </span>
         <button (click)="addBucket()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>

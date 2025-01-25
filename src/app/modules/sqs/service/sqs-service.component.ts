@@ -150,6 +150,16 @@ export class SqsService {
     }
 
     /**
+     * @brief Redrive messages
+     *
+     * @param queueArn SQS queue ARN
+     */
+    public redriveMessages(queueArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'RedriveMessages');
+        return this.http.post(this.url, {queueArn: queueArn}, {headers: headers});
+    }
+
+    /**
      * @brief List all message counters
      *
      * @param queueArn SQS queue ARN

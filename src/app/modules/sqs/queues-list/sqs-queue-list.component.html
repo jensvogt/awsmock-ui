@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            SQS Queues
+            SQS Queues ({{ (listQueueCountersResponse$ | async)?.Total }})
         </span>
         <button (click)="createQueue()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
@@ -81,13 +81,16 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:240px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="sendMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message">
+                                <button (click)="sendMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message to the queue">
                                     <mat-icon>send</mat-icon>
                                 </button>
-                                <button aria-label="MessageList" mat-icon-button matTooltip="Lists all messages" routerLink="./details/{{ row.queueArn }}">
+                                <button (click)="redriveMessages(row)" [disabled]="!row.isDlq" aria-label="Send" mat-icon-button matTooltip="Redrive messages">
+                                    <mat-icon>redo</mat-icon>
+                                </button>
+                                <button aria-label="MessageList" mat-icon-button matTooltip="Edit queue details" routerLink="./details/{{ row.queueArn }}">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button (click)="purgeQueue(row.queueUrl)" aria-label="Purge" mat-icon-button matTooltip="Purge the queue">
+                                <button (click)="purgeQueue(row.queueUrl)" aria-label="Purge" mat-icon-button matTooltip="Purge queue">
                                     <mat-icon>clear_all</mat-icon>
                                 </button>
                                 <button (click)="deleteQueue(row.queueUrl)" aria-label="Purge" mat-icon-button matTooltip="Delete the queue">

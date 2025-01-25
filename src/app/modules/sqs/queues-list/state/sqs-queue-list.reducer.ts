@@ -23,7 +23,7 @@ export const initialState: SQSQueueListState = {
     pageIndex: 0,
     loading: false,
     reload: false,
-    sortColumns: [{column: 'attributes.approximateNumberOfMessages', sortDirection: -1}, {column: 'name', sortDirection: 1}],
+    sortColumns: [{column: 'attributes.approximateNumberOfMessages', sortDirection: -1}, {column: 'queueName', sortDirection: 1}],
     error: {}
 };
 

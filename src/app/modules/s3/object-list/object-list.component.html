@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            S3 Objects: {{ bucketName }}
+            S3 Objects: {{ bucketName }}  ({{ (s3ObjectCountersResponse$|async)?.total }})
         </span>
         <button (click)="uploadObject()" aria-label="Refresh" mat-icon-button>
             <mat-icon>upload</mat-icon>

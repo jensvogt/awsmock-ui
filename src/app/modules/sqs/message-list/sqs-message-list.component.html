@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            SQS Messages: {{ queueName }}
+            SQS Messages: {{ queueName }} ({{ (listMessageCountersResponse$ | async)?.Total }})
         </span>
         <button (click)="sendMessage()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
@@ -39,6 +39,10 @@
                                     <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
                                 </mat-nav-list>
                             </td>
+                        </ng-container>
+                        <ng-container matColumnDef="retries">
+                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by retries">Retries</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.retries }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created">
                             <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Created"

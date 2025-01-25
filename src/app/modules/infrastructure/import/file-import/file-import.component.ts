@@ -27,10 +27,12 @@ export class FileImportComponent {
     selectedFile: File | null = null;
     uploadSuccess: boolean = false;
     uploadError: boolean = false;
-    extensions: string[] = [];
+    extensions: string[] | undefined;
 
     constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<FileImportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.extensions = data.extensions;
+        if (data && data.extensions) {
+            this.extensions = data.extensions;
+        }
     }
 
     // Method to handle file upload. Handler for file input change
@@ -76,7 +78,7 @@ export class FileImportComponent {
     }
 
     private checkFileName(fileName: string): boolean {
-        if (this.extensions.length === 0) {
+        if (!this.extensions || this.extensions.length === 0) {
             return true;
         }
         return this.extensions.includes(fileName.toLowerCase().substring(fileName.lastIndexOf('.')));

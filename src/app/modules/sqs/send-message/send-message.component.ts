@@ -6,7 +6,7 @@ import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {SqsMessageAttribute} from "../model/sqs-message-item";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {SqsMessageAttributeAddDialog} from "./attribute-add/attribute-add.component";
+import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
 
 @Component({
     selector: 'queue-send-message-dialog',

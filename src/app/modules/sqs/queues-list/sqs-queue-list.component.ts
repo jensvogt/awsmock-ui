@@ -100,6 +100,10 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         this.loadQueues();
     }
 
+    setDlq() {
+
+    }
+
     sortChange(sortState: Sort) {
         let column = sortState.active;
         if (sortState.active === 'queueName') {

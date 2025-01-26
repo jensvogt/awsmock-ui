@@ -26,6 +26,7 @@
                         <mat-icon matSuffix>search</mat-icon>
                     </button>
                 </mat-form-field>
+                <!--mat-checkbox [(ngModel)]="setDlq">DLQs</mat-checkbox-->
             </mat-card-actions>
             <div class="table-container">
                 <div *ngIf="listQueueCountersResponse$ | async as queueCounters" class="row">

@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {environment} from "../../../../environments/environment";
+import {SqsMessageAttribute} from "../model/sqs-message-item";
 
 @Injectable({providedIn: 'root'})
 export class SqsService {
@@ -187,7 +188,18 @@ export class SqsService {
     }
 
     /**
-     * @brief Update message
+     * @brief Update attribute
+     *
+     * @param messageId SQS message ID
+     * @param messageAttributes attributes
+     */
+    public updateMessage(messageId: string, messageAttributes: SqsMessageAttribute[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'UpdateMessage');
+        return this.http.post(this.url, {MessageId: messageId, MessageAttributes: messageAttributes}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete attribute
      *
      * @param messageId SQS message ID
      * @param name attribute name

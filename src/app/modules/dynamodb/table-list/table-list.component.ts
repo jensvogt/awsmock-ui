@@ -134,7 +134,6 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(DynamoDbAddTableDialog, dialogConfig).afterClosed().subscribe((result: CreateTableRequest) => {
             if (result) {
-                console.log("DynamoDB: ", result);
                 this.dynamodbService.createTable(result)
                     .subscribe(() => {
                         this.snackBar.open('Table added, tableName: ' + result.TableName, 'Done', {duration: 5000});

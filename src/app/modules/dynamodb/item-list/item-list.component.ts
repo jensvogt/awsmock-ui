@@ -183,7 +183,6 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     }
 
     deleteItem(item: ItemItem) {
-        console.log("Delete: ", item);
         this.dynamodbService.deleteItem(this.tableName, item.keys)
             .subscribe(() => {
                 this.snackBar.open('Item deleted, ID: ' + item.oid, 'Done', {duration: 5000});

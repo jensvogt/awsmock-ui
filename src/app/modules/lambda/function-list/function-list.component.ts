@@ -232,7 +232,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 request.Tags.tag = "latest";
                 request.Environment = {} as LambdaEnvironment;
                 request.Environment = JSON.parse(result.jsonEnvironment);
-                console.log("Request: ", request);
                 this.lambdaService.createFunction(request).subscribe(() => {
                     this.loadFunctions();
                     this.snackBar.open('Lambda function creation started, name: ' + request.FunctionName, 'Done', {duration: 5000});
@@ -265,7 +264,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     private initializeData(functions: LambdaFunctionItem[]): void {
         this.total = 0;
         if (functions.length && functions.length > 0) {
-            console.log("Function: ", functions)
             this.dataSource = new MatTableDataSource(functions);
             this.total = this.dataSource.data.length;
         }

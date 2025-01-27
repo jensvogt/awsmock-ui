@@ -38,7 +38,6 @@ export class SnsViewMessageDialog implements OnInit {
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
     constructor(private dialogRef: MatDialogRef<SnsViewMessageDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SNSMessageListState>) {
-        console.log("Data: ", data);
         this.message = data.message;
         this.rawMessage = this.message?.Message;
         this.messageId = this.message?.MessageId;

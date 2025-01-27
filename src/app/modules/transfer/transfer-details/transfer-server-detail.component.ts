@@ -73,7 +73,6 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
     }
 
     onTabChanged(e: MatTabChangeEvent) {
-        console.log("Event: ", e.tab.textLabel);
         if (e.tab.textLabel == 'Users') {
             this.loadUsers();
         }

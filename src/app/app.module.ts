@@ -20,6 +20,7 @@ import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {BinaryFileUploadComponent} from "./shared/binary-file-upload/binary-file-upload.component";
 
 const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly: environment.production};
 
@@ -50,6 +51,7 @@ const storeDevToolsOptions: Partial<StoreDevtoolsConfig> = {maxAge: 25, logOnly:
         //!environment.production ? StoreDevtoolsModule.instrument() : [],
         //StoreDevtoolsModule.instrument({maxAge: 25, logOnly: !isDevMode()}),
         StoreRouterConnectingModule.forRoot(),
+        BinaryFileUploadComponent,
         MatLabel,
         MatInput,
         MatFormField,

@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
-import {DeleteFunctionCommand, LambdaClient} from "@aws-sdk/client-lambda";
+import {LambdaClient} from "@aws-sdk/client-lambda";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {CreateFunctionRequest} from "../model/function-item";
@@ -36,9 +36,6 @@ export class LambdaService {
     /**
      * @brief List all function counters
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     *
      * @param prefix bucket name prefix
      * @param pageSize page size
      * @param pageIndex page index
@@ -59,9 +56,6 @@ export class LambdaService {
     /**
      * @brief Get a single function counter
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     *
      * @param name function name
      */
     public getFunction(name: string) {
@@ -75,9 +69,6 @@ export class LambdaService {
 
     /**
      * @brief Reset the function counters
-     *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      *
      * @param name function name
      */
@@ -93,9 +84,6 @@ export class LambdaService {
     /**
      * @brief Reset the function counters
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
-     *
      * @param request create function request
      */
     public createFunction(request: CreateFunctionRequest) {
@@ -104,17 +92,24 @@ export class LambdaService {
     }
 
     /**
-     * @brief Get a single function counter
+     * @brief Upload new function code
      *
-     * @par
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     * @param functionArn lambda function AWS ARN
+     * @param functionCode base64 encoded function code
+     * @param version function code version
+     */
+    public uploadFunctionCode(functionArn: string, functionCode: string, version: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'upload-function-code');
+        return this.http.post(this.url, {FunctionArn: functionArn, FunctionCode: functionCode, Version: version}, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function
      *
      * @param functionName function name
      */
     public deleteFunction(functionName: string) {
-        const input = {
-            FunctionName: functionName
-        };
-        return this.client.send(new DeleteFunctionCommand(input));
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-upload');
+        return this.http.post(this.url, {functionName: functionName}, {headers: headers});
     }
 }

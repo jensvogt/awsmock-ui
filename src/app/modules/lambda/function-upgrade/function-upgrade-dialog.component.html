@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Upload Lambda Function Code</h2>
+<mat-dialog-content class="mat-typography">
+    <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
+        <input #fileInput (change)="onFileChange($event)" hidden type="file"/>
+        <div (click)="fileInput.click()" class="file-dropper">
+            <mat-icon>upload</mat-icon>
+            <p>Upload file</p>
+        </div>
+    </div>
+    <mat-list>
+        <mat-list-item style="height:80px">
+            <mat-form-field style="width:100%">
+                <mat-label>Version</mat-label>
+                <input (change)="onInputChanged($event)" [(ngModel)]="version" matInput value="">
+            </mat-form-field>
+        </mat-list-item>
+    </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="onUpgrade()" cdkFocusInitial disabled="{{createDisabled}}" mat-button>Upload</button>
+</mat-dialog-actions>

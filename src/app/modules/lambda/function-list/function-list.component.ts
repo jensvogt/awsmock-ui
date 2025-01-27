@@ -14,6 +14,7 @@ import {Code, CreateFunctionRequest, EphemeralStorage, LambdaEnvironment, Lambda
 import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
 import {LambdaFunctionCreateDialog} from "../function-create/function-create-dialog.component";
+import {LambdaFunctionUpgradeDialog} from "../function-upgrade/function-upgrade-dialog.component";
 
 @Component({
     selector: 'lambda-function-list',
@@ -240,11 +241,34 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         });
     }
 
+    uploadCode(functionArn: string) {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: functionArn};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+
+        this.dialog.open(LambdaFunctionUpgradeDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.lambdaService.uploadFunctionCode(result.functionArn, result.functionCode, result.version).subscribe(() => {
+                    this.loadFunctions();
+                    this.snackBar.open('Lambda function code uploaded, ARN: ' + functionArn, 'Done', {duration: 5000});
+                });
+            }
+        });
+    }
+
     private initializeData(functions: LambdaFunctionItem[]): void {
         this.total = 0;
         if (functions.length && functions.length > 0) {
+            console.log("Function: ", functions)
             this.dataSource = new MatTableDataSource(functions);
             this.total = this.dataSource.data.length;
         }
     }
+
 }

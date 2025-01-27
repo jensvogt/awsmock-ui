@@ -1,26 +1,24 @@
 import {Component, ElementRef, Inject, signal, ViewChild} from '@angular/core';
-import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogContent} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Subject} from "rxjs";
+
 
 @Component({
-    selector: 'import-file-component',
-    templateUrl: './file-import.component.html',
+    selector: 'binary-file-upload-component',
+    templateUrl: './binary-file-upload.component.html',
     standalone: true,
     imports: [
         MatIcon,
         FormsModule,
-        MatButton,
-        MatDialogActions,
-        MatDialogClose,
         MatDialogContent,
-        MatDialogTitle
+
     ],
-    styleUrls: ['./file-import.component.scss'],
+    styleUrls: ['./binary-file-upload.component.scss'],
 })
-export class FileImportComponent {
+export class BinaryFileUploadComponent {
 
     fileSize = signal(0);
     @ViewChild('fileInput') fileInput: ElementRef | undefined;
@@ -28,8 +26,10 @@ export class FileImportComponent {
     uploadSuccess: boolean = false;
     uploadError: boolean = false;
     extensions: string[] | undefined;
+    contentSubject$ = new Subject<string>(); // import { Subject } from rxjs
+    content$ = this.contentSubject$.asObservable()
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<FileImportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data && data.extensions) {
             this.extensions = data.extensions;
         }
@@ -62,9 +62,11 @@ export class FileImportComponent {
 
             const reader = new FileReader();
             reader.onload = () => {
-                this.dialogRef.close(reader.result as string);
+                const content: any = reader.result;
+                //this.content$ = content.split(',')[1];
+                this.contentSubject$.next(content.split(',')[1]);
             };
-            reader.readAsText(file);
+            reader.readAsDataURL(file);
 
             this.uploadSuccess = true;
             this.uploadError = false;
@@ -75,6 +77,13 @@ export class FileImportComponent {
             this.uploadError = true;
             this.snackBar.open('Only JSON or BSON files are supported!', 'Close', {duration: 3000, panelClass: 'error'});
         }
+    }
+
+    getFileTypes(): string[] {
+        if ((!this.extensions || this.extensions.length === 0)) {
+            return ["*.*"];
+        }
+        return this.extensions;
     }
 
     private checkFileName(fileName: string): boolean {

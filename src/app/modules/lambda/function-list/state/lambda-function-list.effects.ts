@@ -39,9 +39,12 @@ export class LambdaFunctionListEffects {
         ofType(lambdaFunctionListActions.deleteFunction),
         mergeMap(action =>
             this.lambdaService.deleteFunction(action.functionName)
-                .then(() => lambdaFunctionListActions.deleteFunctionSuccess())
-                .catch((reason: any) => lambdaFunctionListActions.deleteFunctionFailure(reason)))
-    ));
+                .pipe(map(() => lambdaFunctionListActions.resetCountersSuccess()),
+                    catchError((error) =>
+                        of(lambdaFunctionListActions.resetCountersFailure({error: error.message}))
+                    )
+                )
+        )));
 
     constructor(private actions$: Actions, private lambdaService: LambdaService) {
     }

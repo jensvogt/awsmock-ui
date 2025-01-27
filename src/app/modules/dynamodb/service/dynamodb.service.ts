@@ -70,7 +70,6 @@ export class DynamodbService {
 
     public putItem(request: PutItemRequest) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "PutItem");
-        console.log("PutItemRequest: ", request);
         return this.http.post(this.url, request, {headers: headers});
     }
 

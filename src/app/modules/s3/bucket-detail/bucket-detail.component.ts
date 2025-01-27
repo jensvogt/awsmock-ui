@@ -90,7 +90,6 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
                 this.lastUpdate = this.lastUpdateTime();
                 if (data) {
                     this.bucketItem = data;
-                    console.log("Data: ", data);
                     if (this.bucketItem.lambdaConfigurations) {
                         this.lambdaNotificationData = this.bucketItem.lambdaConfigurations;
                         this.lambdaNotificationDataSource.data = this.lambdaNotificationData;

@@ -107,7 +107,6 @@ export class SnsService {
      */
     publishMessage(topicArn: string, message: string, attributes: SnsMessageAttribute[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'Publish');
-        console.log("Attributes: ", attributes);
         let queryString: string = "TopicArn=" + encodeURI(topicArn) + "&Message=" + encodeURI(message);
         for (let i = 0; i < attributes.length; i++) {
             queryString += "&MessageAttributes.entry." + (i + 1) + ".Name=" + encodeURI(attributes[i].Key);

@@ -1,17 +1,12 @@
-import {Component, ElementRef, Inject, OnInit, signal, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, signal} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {byteConversion} from "../../../shared/byte-utils.component";
-import {MatProgressBar} from "@angular/material/progress-bar";
-import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatList, MatListItem} from "@angular/material/list";
-import {MatOption} from "@angular/material/core";
-import {MatSelect} from "@angular/material/select";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {BinaryFileUploadComponent} from "../../../shared/binary-file-upload/binary-file-upload.component";
 import {MatIcon} from "@angular/material/icon";
 
 interface Runtime {
@@ -20,8 +15,8 @@ interface Runtime {
 }
 
 @Component({
-    selector: 'lambda-function-create',
-    templateUrl: './function-create-dialog.component.html',
+    selector: 'lambda-function-upgrade',
+    templateUrl: './function-upgrade-dialog.component.html',
     standalone: true,
     imports: [
         FormsModule,
@@ -33,70 +28,40 @@ interface Runtime {
         MatFormField,
         MatInput,
         MatLabel,
-        MatProgressBar,
-        MatGridList,
-        MatGridTile,
         MatList,
         MatListItem,
-        MatOption,
-        MatSelect,
-        CdkTextareaAutosize,
         MatIcon
     ],
-    styleUrls: ['./function-create-dialog.component.scss']
+    styleUrls: ['./function-upgrade-dialog.component.scss'],
+    providers: [BinaryFileUploadComponent]
 })
-export class LambdaFunctionCreateDialog implements OnInit {
+export class LambdaFunctionUpgradeDialog implements OnInit {
 
     file: File = {} as File;
     fileName: string | undefined;
-    functionName: string | undefined;
-    handlerName: string | undefined;
-    memorySize: number = 512;
-    timeout: number = 3600;
-    jsonEnvironment: string | undefined;
-    jsonTags: string | undefined;
+    functionArn: string | undefined;
+    version: string | undefined;
     createDisabled: boolean = true;
-    progress: number = 0;
+    selectedFile: File | null = null;
     fileSize = signal(0);
     maxSize: number = 256 * 1024 * 1024;
-    @ViewChild('fileInput') fileInput: ElementRef | undefined;
-    selectedFile: File | null = null;
+    progress: number = 0;
     uploadSuccess: boolean = false;
     uploadError: boolean = false;
 
-    // Runtime
-    selectedRuntime: string = 'java21';
-    runtimes: Runtime[] = [
-        {value: 'java11', viewValue: 'Java 11'},
-        {value: 'java17', viewValue: 'Java 17'},
-        {value: 'java21', viewValue: 'Java 21'},
-        {value: 'python3.8', viewValue: 'Python 3.8'},
-        {value: 'python3.9', viewValue: 'Python 3.9'},
-        {value: 'python3.10', viewValue: 'Python 3.10'},
-        {value: 'python3.11', viewValue: 'Python 3.11'},
-        {value: 'python3.12', viewValue: 'Python 3.12'},
-        {value: 'provided.al2', viewValue: 'Provided AL2'},
-        {value: 'provided.al2023', viewValue: 'Provided AL2023'},
-        {value: 'provided.latest', viewValue: 'Provided Latest'},
-        {value: 'nodejs20.x', viewValue: 'NodeJS 20'},
-        {value: 'go', viewValue: 'Go'},
-    ];
-
-    // Byte conversion
-    protected readonly byteConversion = byteConversion;
-
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaFunctionCreateDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaFunctionUpgradeDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.functionArn = data.functionArn;
     }
 
     ngOnInit() {
-        this.dialogRef.updateSize("1400px", "630px");
+        this.dialogRef.updateSize("620px", "400px");
     }
 
     // Method to handle file upload Handler for file input change
     onFileChange(event: any): void {
         this.file = event.target.files[0];
         this.fileName = this.file.name;
-        this.createDisabled = !(this.functionName && this.fileName && this.handlerName && this.selectedRuntime)
+        this.createDisabled = !(this.version && this.fileName)
     }
 
     // Handler for file drop
@@ -115,7 +80,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
     }
 
     onInputChanged(event: any) {
-        this.createDisabled = !(this.functionName && this.fileName && this.handlerName && this.selectedRuntime)
+        this.createDisabled = !(this.version)
     }
 
     // Method to handle file upload
@@ -132,10 +97,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
             const reader = new FileReader();
             reader.onload = () => {
                 const content: any = reader.result;
-                this.dialogRef.close({
-                    content: content.split(',')[1], functionName: this.functionName, fileName: this.fileName, handler: this.handlerName,
-                    runtime: this.selectedRuntime, memorySize: this.memorySize, timeout: this.timeout, jsonEnvironment: this.jsonEnvironment
-                });
+                this.dialogRef.close({functionArn: this.functionArn, functionCode: content.split(',')[1], version: this.version});
             };
             reader.addEventListener("progress", this.handleProgress);
             reader.readAsDataURL(file);
@@ -145,7 +107,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
         }
     }
 
-    doCreate() {
+    onUpgrade() {
         this.uploadFile(this.file);
     }
 

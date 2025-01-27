@@ -1,0 +1,9 @@
+<mat-dialog-content class="mat-typography">
+    <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
+        <input #fileInput (change)="onFileChange($event)" [accept]="getFileTypes()" hidden type="file"/>
+        <div (click)="fileInput.click()" class="file-dropper">
+            <mat-icon>upload</mat-icon>
+            <p>Upload file</p>
+        </div>
+    </div>
+</mat-dialog-content>

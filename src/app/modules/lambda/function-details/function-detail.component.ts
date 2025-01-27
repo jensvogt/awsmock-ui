@@ -6,6 +6,9 @@ import {LambdaService} from "../service/lambda-service.component";
 import {Environment, LambdaFunctionItem, Tag} from "../model/function-item";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatTableDataSource} from "@angular/material/table";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {LambdaFunctionUpgradeDialog} from "../function-upgrade/function-upgrade-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -32,7 +35,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
-    constructor(private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService) {
     }
 
     ngOnInit() {
@@ -74,6 +77,27 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         } else {
             //this.environmentDataSource = new MatTableDataSource(this.sortEnvData(this.functionItem.environment, 'name', 'desc'));
         }
+    }
+
+    uploadCode() {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.functionItem.functionArn};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+
+        this.dialog.open(LambdaFunctionUpgradeDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.lambdaService.uploadFunctionCode(result.functionArn, result.functionCode, result.version).subscribe(() => {
+                    this.loadFunction();
+                    this.snackBar.open('Lambda function code uploaded, ARN: ' + this.functionItem.functionArn, 'Done', {duration: 5000});
+                });
+            }
+        });
     }
 
     private convertEnvironment(data: any): MatTableDataSource<Environment> {

@@ -9,6 +9,9 @@
             Lambda Function Details: {{ this.functionName }}
         </span>
         <span>
+            <button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
+                <mat-icon>upload</mat-icon>
+            </button>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -40,8 +43,8 @@
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.role }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>User: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.user }}</p>
+                                <p class="mat-list-span-title" matListItemTitle>ARN: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionArn }}</p>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -49,6 +52,10 @@
                 <mat-grid-tile [colspan]="1" [rowspan]="1">
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>User: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.user }}</p>
+                            </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Runtime: </p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.runtime }}</p>
@@ -64,10 +71,6 @@
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Concurrency:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.concurrency }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:60px">
-                                <p class="mat-list-span-title" matListItemTitle></p>
-                                <p class="mat-list-span-value" matListItemLine></p>
                             </mat-list-item>
                         </mat-list>
                     </div>

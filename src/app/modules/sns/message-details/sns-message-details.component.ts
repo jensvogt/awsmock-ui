@@ -1,24 +1,24 @@
 import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {SnsMessageAttribute, SnsMessageItem} from "../../model/sns-message-item";
+import {SnsMessageAttribute, SnsMessageItem} from "../model/sns-message-item";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
-import {isJson} from "../../../../shared/format/message-format-component";
+import {isJson} from "../../../shared/format/message-format-component";
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {SqsMessageAttribute} from "../../../sqs/model/sqs-message-item";
-import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {SqsMessageAttribute} from "../../sqs/model/sqs-message-item";
+import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {Store} from "@ngrx/store";
-import {SNSMessageListState} from "../state/sns-message-list.reducer";
-import {snsMessageListActions} from "../state/sns-message-list.actions";
+import {SNSMessageListState} from "../message-list/state/sns-message-list.reducer";
+import {snsMessageListActions} from "../message-list/state/sns-message-list.actions";
 
 @Component({
-    selector: 'sns-edit-message-dialog',
-    templateUrl: './sns-view-message.component.html',
-    styleUrls: ['./sns-view-message.component.scss'],
+    selector: 'sns-message-details-dialog',
+    templateUrl: './sns-message-details.component.html',
+    styleUrls: ['./sns-message-details.component.scss'],
     standalone: false
 })
-export class SnsViewMessageDialog implements OnInit {
+export class SnsMessageDetailsDialog implements OnInit {
 
     body: string | undefined = '';
     rawMessage: any | undefined = '';
@@ -37,7 +37,7 @@ export class SnsViewMessageDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(private dialogRef: MatDialogRef<SnsViewMessageDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SNSMessageListState>) {
+    constructor(private dialogRef: MatDialogRef<SnsMessageDetailsDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SNSMessageListState>) {
         this.message = data.message;
         this.rawMessage = this.message?.Message;
         this.messageId = this.message?.MessageId;

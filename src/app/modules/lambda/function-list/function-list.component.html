@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            Lambda Functions
+            Lambda Functions ({{ total }})
         </span>
         <button (click)="createLambda()" aria-label="Upload" mat-icon-button>
             <mat-icon>add</mat-icon>
@@ -29,9 +29,7 @@
             </mat-card-actions>
             <mat-card-content>
                 <div *ngIf="total>0" class="table-container">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" [matSortActive]="defaultSort.active"
-                           [matSortDirection]="defaultSort.direction"
-                           mat-table matSort matSortDisableClear="false">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" [matSortActive]="defaultSort.active" [matSortDirection]="defaultSort.direction" mat-table matSort matSortDisableClear="false">
                         <ng-container matColumnDef="name">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
                             <td *matCellDef="let element" mat-cell>

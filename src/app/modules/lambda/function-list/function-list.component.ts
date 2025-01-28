@@ -63,8 +63,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator | undefined;
     private filter: string = "";
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private lambdaService: LambdaService, private state: State<LambdaFunctionListState>, private store: Store,
-                private actionsSubj$: ActionsSubject, private location: Location) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private lambdaService: LambdaService, private state: State<LambdaFunctionListState>, private store: Store, private actionsSubj$: ActionsSubject, private location: Location) {
 
         // Subscribe to action events, reload table when the action got successful executed
         this.actionsSubj$.pipe(
@@ -92,14 +91,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         this.store
             .pipe(select(selectTotal))
             .subscribe((total) => (this.total = total));
-        /* this.tableSubscription.add(
-             this.store.pipe(select(selectIsLoading)).subscribe((loading) => {
-                 if (loading) {
-                     this.dataSource = new MatTableDataSource(this.noData);
-                 }
-                 this.loading = loading;
-             })
-         );*/
         this.updateSubscription = interval(60000).subscribe(() => this.loadFunctions());
     }
 
@@ -136,8 +127,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     ngOnDestroy(): void {
-        // this.actionsSubj$?.unsubscribe();
-        //this.tableSubscription.unsubscribe();
         this.updateSubscription?.unsubscribe();
     }
 
@@ -263,10 +252,10 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
 
     private initializeData(functions: LambdaFunctionItem[]): void {
         this.total = 0;
+        this.lastUpdate = new Date();
         if (functions.length && functions.length > 0) {
             this.dataSource = new MatTableDataSource(functions);
             this.total = this.dataSource.data.length;
         }
     }
-
 }

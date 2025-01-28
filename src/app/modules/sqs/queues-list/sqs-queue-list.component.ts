@@ -108,8 +108,8 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         let column = sortState.active;
         if (sortState.active === 'queueName') {
             column = 'name'
-        } else if (sortState.active === 'messagesInFlight') {
-            column = 'attributes.approximateNumberOfMessagesNotVisible'
+        } else if (sortState.active === 'messagesAvailable') {
+            column = 'attributes.approximateNumberOfMessages'
         } else if (sortState.active === 'messagesInFlight') {
             column = 'attributes.approximateNumberOfMessagesNotVisible'
         } else if (sortState.active === 'messagesDelayed') {

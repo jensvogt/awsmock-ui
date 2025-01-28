@@ -29,6 +29,7 @@ import {SqsService} from "../service/sqs-service.component";
 import {SqsTagAddDialog} from "./tag-add/tag-add.component";
 import {SqsTagEditDialog} from "./tag-edit/tag-edit.component";
 import {SqsLambdaTriggerCountersResponse} from "../model/sqs-lambda-trigger-item";
+import {SqsDqlEditDialog} from "./dlq-edit/dlq-edit.component";
 
 @Component({
     selector: 'sqs-queue-detail-component',
@@ -42,6 +43,8 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     queueArn: string = '';
     queueUrl: string = '';
     queueName: string = '';
+    targetArn: string = '';
+    retries: string = '';
     queueDetails$: Observable<SqsQueueDetails> = this.store.select(selectDetails);
     queueDetailsError$: Observable<string> = this.store.select(selectError);
 
@@ -87,6 +90,8 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
         this.queueDetails$.subscribe((data: any) => {
             this.queueUrl = data.queueUrl;
             this.queueName = data.queueName;
+            this.targetArn = data.dlqArn;
+            this.retries = data.dlqMaxReceive;
         });
         //this.queueAttributes$.subscribe((data: any) => console.log("Data: ", data));
         //this.queueTags$.subscribe((data: any) => console.log("Data: ", data));
@@ -213,6 +218,29 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
                 this.loadTags();
                 this.snackBar.open('SQS tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
             })
+    }
+
+    editDql() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {queueArn: this.queueArn, targetArn: this.targetArn, retries: this.retries};
+
+        this.dialog.open(SqsDqlEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.dlqTargetArn !== this.targetArn || result.dlqRetries !== this.retries) {
+                    this.sqsService.updateDql(result.queueArn, result.targetArn, result.retries)
+                        .subscribe(() => {
+                            this.loadDetails();
+                            this.snackBar.open('SQS DQL changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('SQS DQL unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
     }
 
     editTag(key: string, value: string) {

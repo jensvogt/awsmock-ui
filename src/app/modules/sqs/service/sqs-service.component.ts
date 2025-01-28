@@ -117,6 +117,18 @@ export class SqsService {
     }
 
     /**
+     * @brief Updates the DQL subscription
+     *
+     * @param queueArn queue ARN
+     * @param dlqTargetArn target queue ARN
+     * @param dlqRetries max retries number
+     */
+    updateDql(queueArn: string, dlqTargetArn: string, dlqRetries: number) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'UpdateDlq');
+        return this.http.post(this.url, {QueueArn: queueArn, TargetArn: dlqTargetArn, Retries: dlqRetries as number}, {headers: headers});
+    }
+
+    /**
      * @brief Gets a list of tags for a queue
      *
      * @param queueArn queue ARN

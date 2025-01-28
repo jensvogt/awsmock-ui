@@ -81,3 +81,31 @@
   color: black;
   padding-top: 15px;
 }
+
+.mat-column-messagesAvailable {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-messagesInFlight {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-messagesDelayed {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-size {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-created {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-modified {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-actions {
+  flex: 0 0 10% !important;
+}

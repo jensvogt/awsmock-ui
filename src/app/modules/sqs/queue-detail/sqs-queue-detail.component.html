@@ -190,19 +190,18 @@
                 </mat-tab>
                 <mat-tab label="Dead Letter Queue">
                     <mat-card-actions class="head-buttons">
-                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
+                        <!--button (click)="addTag()" aria-label="Add tags" mat-icon-button>
                             <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="refreshTags()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
+                        </button-->
+                        <button (click)="editDql()" aria-label="Refresh tags" mat-icon-button>
+                            <mat-icon>edit</mat-icon>
                         </button>
                     </mat-card-actions>
                     <div *ngIf="(queueDetails$ | async) as queueDetails">
-
                         <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Queue:</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Target Queue ARN:</p>
                                     <p class="mat-list-span-value" matListItemLine>{{ queueDetails.dlqArn }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">

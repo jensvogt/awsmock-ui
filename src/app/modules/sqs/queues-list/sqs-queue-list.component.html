@@ -85,11 +85,11 @@
                                 <button (click)="sendMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message to the queue">
                                     <mat-icon>send</mat-icon>
                                 </button>
-                                <button (click)="redriveMessages(row)" [disabled]="!row.isDlq" aria-label="Send" mat-icon-button matTooltip="Redrive messages">
+                                <button (click)="redriveMessages(row)" [disabled]="!row.isDlq" aria-label="Send" mat-icon-button matTooltip="Redrive messages. Only available for DQLs.">
                                     <mat-icon>redo</mat-icon>
                                 </button>
-                                <button aria-label="MessageList" mat-icon-button matTooltip="Edit queue details" routerLink="./details/{{ row.queueArn }}">
-                                    <mat-icon>edit</mat-icon>
+                                <button aria-label="QueueDetails" mat-icon-button matTooltip="View queue details" routerLink="./details/{{ row.queueArn }}">
+                                    <mat-icon>visibility</mat-icon>
                                 </button>
                                 <button (click)="purgeQueue(row.queueUrl)" aria-label="Purge" mat-icon-button matTooltip="Purge queue">
                                     <mat-icon>clear_all</mat-icon>

@@ -5,7 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {CpuChartComponent} from "./charts/cpu-chart/cpu-chart.component";
 import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
 import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component";
-import {MemoryChartComponent} from "./charts/memory-chart/memory-chart.component";
+import {RealMemoryChartComponent} from "./charts/real-memory-chart/real-memory-chart.component";
 import {interval, Subscription} from "rxjs";
 import {ModuleSelectionComponentDialog} from "../infrastructure/selection/module-selection.component";
 import {ExportInfrastructureComponentDialog} from "../infrastructure/export/export-infrastructure.component";
@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Auto-update
     updateSubscription: Subscription | undefined;
     @ViewChild(CpuChartComponent) cpuChart: CpuChartComponent | undefined;
-    @ViewChild(MemoryChartComponent) memoryChart: MemoryChartComponent | undefined;
+    @ViewChild(RealMemoryChartComponent) memoryChart: RealMemoryChartComponent | undefined;
     @ViewChild(GatewayTimeComponent) gatewayTimeChart: GatewayTimeComponent | undefined;
     @ViewChild(ThreadsChartComponent) threadsChart: ThreadsChartComponent | undefined;
 

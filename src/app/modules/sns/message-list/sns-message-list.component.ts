@@ -6,13 +6,13 @@ import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {interval, Observable, Subscription} from "rxjs";
 import {SnsMessageCountersResponse, SnsMessageItem} from "../model/sns-message-item";
-import {PublishMessageComponentDialog} from "./publish-message/publish-message.component";
+import {PublishMessageComponentDialog} from "../message-publish/publish-message.component";
 import {SnsService} from "../service/sns-service.component";
 import {State, Store} from "@ngrx/store";
 import {SNSMessageListState} from "./state/sns-message-list.reducer";
 import {snsMessageListActions} from "./state/sns-message-list.actions";
 import {selectMessageCounters, selectPageIndex, selectPageSize} from "./state/sns-message-list.selectors";
-import {SnsViewMessageDialog} from "./view-message/sns-view-message.component";
+import {SnsMessageDetailsDialog} from "../message-details/sns-message-details.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -136,7 +136,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "70%"
 
-        this.dialog.open(SnsViewMessageDialog, dialogConfig).afterClosed().subscribe(() => {
+        this.dialog.open(SnsMessageDetailsDialog, dialogConfig).afterClosed().subscribe(() => {
         });
     }
 

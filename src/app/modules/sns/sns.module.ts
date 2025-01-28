@@ -27,15 +27,15 @@ import {snsTopicDetailReducer, snsTopicDetailsFeatureKey} from "./topic-detail/s
 import {SnsTopicDetailEffects} from "./topic-detail/state/sns-topic-detail.effects";
 import {snsMessageListFeatureKey, snsMessageListReducer} from "./message-list/state/sns-message-list.reducer";
 import {SnsMessageListEffects} from "./message-list/state/sns-message-list.effects";
-import {PublishMessageComponentDialog} from "./message-list/publish-message/publish-message.component";
-import {SnsViewMessageDialog} from "./message-list/view-message/sns-view-message.component";
+import {PublishMessageComponentDialog} from "./message-publish/publish-message.component";
+import {SnsMessageDetailsDialog} from "./message-details/sns-message-details.component";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 
 @NgModule({
-    declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, SnsViewMessageDialog, PublishMessageComponentDialog],
+    declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, SnsMessageDetailsDialog, PublishMessageComponentDialog],
     imports: [
         MatCard,
         MatCardHeader,
@@ -92,7 +92,7 @@ import {MatSlideToggle} from "@angular/material/slide-toggle";
         MatDialogClose,
         MatSlideToggle,
     ],
-    exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, PublishMessageComponentDialog, SnsViewMessageDialog],
+    exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, PublishMessageComponentDialog, SnsMessageDetailsDialog],
     providers: [SnsService],
 })
 export class SnsModule {

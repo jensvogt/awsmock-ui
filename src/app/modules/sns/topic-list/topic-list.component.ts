@@ -7,7 +7,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ListTopicCountersResponse} from "../model/sns-topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
 import {SnsService} from "../service/sns-service.component";
-import {PublishMessageComponentDialog} from "../message-list/publish-message/publish-message.component";
+import {PublishMessageComponentDialog} from "../message-publish/publish-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {State, Store} from "@ngrx/store";
 import {snsTopicListActions} from "./state/sns-topic-list.actions";

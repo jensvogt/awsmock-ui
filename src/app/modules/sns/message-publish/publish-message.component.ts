@@ -3,9 +3,9 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {SnsMessageAttribute} from "../../model/sns-message-item";
-import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {SqsMessageAttributeAddDialog} from "../../../sqs/attribute-add/attribute-add.component";
+import {SnsMessageAttribute} from "../model/sns-message-item";
+import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {SqsMessageAttributeAddDialog} from "../../sqs/attribute-add/attribute-add.component";
 
 @Component({
     selector: 'sns-publish-message-dialog',

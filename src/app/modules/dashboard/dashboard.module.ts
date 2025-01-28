@@ -23,10 +23,12 @@ import {MatOptionModule} from "@angular/material/core";
 import {DashboardRoutingModule} from "./dashboard-routing.module";
 import {MonitoringService} from "../../services/monitoring.service";
 import {ModuleService} from "../../services/module.service";
-import {MemoryChartComponent} from "./charts/memory-chart/memory-chart.component";
+import {RealMemoryChartComponent} from "./charts/real-memory-chart/real-memory-chart.component";
 import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component";
 import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {GatewayRequestsComponent} from "./charts/gateway-requests/gateway-requests.component";
+import {VirtMemoryChartComponent} from "./charts/virt-memory-chart/virt-memory-chart.component";
 
 @NgModule({
     declarations: [DashboardComponent],
@@ -52,13 +54,15 @@ import {MatGridList, MatGridTile} from "@angular/material/grid-list";
         ChartComponent,
         DashboardRoutingModule,
         CpuChartComponent,
-        MemoryChartComponent,
+        RealMemoryChartComponent,
         GatewayTimeComponent,
         ThreadsChartComponent,
         StoreModule.forFeature(dashboardFeatureKey, dashboardReducer),
         EffectsModule.forFeature([DashboardEffects]),
         MatGridList,
         MatGridTile,
+        GatewayRequestsComponent,
+        VirtMemoryChartComponent,
     ],
     exports: [DashboardComponent],
     providers: [MonitoringService, ModuleService],

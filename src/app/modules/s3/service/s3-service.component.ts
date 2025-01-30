@@ -18,7 +18,7 @@ export class S3Service {
             secretAccessKey: 'none',
         },
         requestHandler: {
-            requestTimeout: 3_000,
+            requestTimeout: 30000,
             httpsAgent: {maxSockets: 25, keepAlive: false},
         },
     });
@@ -40,7 +40,7 @@ export class S3Service {
         return this.client.send(new CreateBucketCommand(input));
     }
 
-    async putObjects(bucketName: string, key: string, content: Blob) {
+    async putObject(bucketName: string, key: string, content: Blob) {
         const command = {
             Bucket: bucketName,
             Key: key,

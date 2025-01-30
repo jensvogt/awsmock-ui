@@ -45,7 +45,7 @@
                                 Created
                             </th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.Created|date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.Created.$date|date:'dd-MM-yyyy HH:mm:ss' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
@@ -54,11 +54,11 @@
                                 Modified
                             </th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.Modified|date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.Modified.$date|date:'dd-MM-yyyy HH:mm:ss' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:240px">Actions</th>
+                            <th *matHeaderCellDef mat-header-cell style="width:140px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
                                 <button (click)="deleteTransferServer(row.SererId)" aria-label="Delete" mat-icon-button matTooltip="Delete the transfer server">
                                     <mat-icon>delete</mat-icon>

@@ -5,7 +5,7 @@ import {mergeMap, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {transferServerListActions} from './transfer-server-list.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {TransferService} from "../../service/transfer-service.component";
+import {TransferService} from "../../service/transfer.service";
 
 @Injectable()
 export class TransferServerListEffects {
@@ -15,7 +15,7 @@ export class TransferServerListEffects {
     loadTransferServer$ = createEffect(() => this.actions$.pipe(
         ofType(transferServerListActions.loadTransferServer),
         mergeMap(action =>
-            this.transferService.listTransferServerCounters(
+            this.transferService.listTransferServer(
                 action.prefix,
                 action.pageSize,
                 action.pageIndex,
@@ -33,8 +33,12 @@ export class TransferServerListEffects {
         ofType(transferServerListActions.deleteTransferServer),
         mergeMap(action =>
             this.transferService.deleteServer(action.serverId)
-                .then(() => transferServerListActions.deleteTransferServerSuccess()))
-    ));
+                .pipe(map(() => transferServerListActions.deleteTransferServerSuccess()),
+                    catchError((error) =>
+                        of(transferServerListActions.deleteTransferServerFailure({error: error.message}))
+                    )
+                )
+        )));
 
     constructor(private actions$: Actions, private transferService: TransferService) {
     }

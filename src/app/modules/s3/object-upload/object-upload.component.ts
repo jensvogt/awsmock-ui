@@ -90,10 +90,12 @@ export class ObjectUploadComponent {
             }
             const reader = new FileReader();
             reader.onload = () => {
-                this.dialogRef.close({content: new Blob([reader.result as ArrayBuffer]), key: this.key});
+                const content: any = reader.result;
+
+                this.dialogRef.close({content: content.split(',')[1], key: this.key});
             };
             reader.addEventListener("progress", this.handleProgress);
-            reader.readAsText(file);
+            reader.readAsDataURL(file);
 
             this.uploadSuccess = true;
             this.uploadError = false;

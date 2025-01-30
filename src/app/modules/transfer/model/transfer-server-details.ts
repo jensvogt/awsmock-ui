@@ -1,3 +1,5 @@
+import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
+
 export interface TransferServerDetails {
     Region: string;
     ServerId: string;
@@ -5,9 +7,9 @@ export interface TransferServerDetails {
     Concurrency: number;
     Port: number;
     State: string;
-    LastStarted: Date;
-    Created: Date;
-    Modified: Date;
+    LastStarted: BsonDateTime;
+    Created: BsonDateTime;
+    Modified: BsonDateTime;
 }
 
 export interface TransferServerDetailsResponse {

@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {MatDialog} from "@angular/material/dialog";
 import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectTransferServerCounters} from "./state/transfer-server-list.selectors";
@@ -44,7 +43,7 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
     prefixSet: boolean = false;
     protected readonly byteConversion = byteConversion;
 
-    constructor(private dialog: MatDialog, private state: State<TransferServerListState>, private location: Location, private store: Store) {
+    constructor(private state: State<TransferServerListState>, private location: Location, private store: Store) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {

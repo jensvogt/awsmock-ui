@@ -16,7 +16,7 @@ import {MatInput} from "@angular/material/input";
 import {TransferRoutingModule} from "./transfer-routing.module";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
-import {TransferService} from "./service/transfer-service.component";
+import {TransferService} from "./service/transfer.service";
 import {TransferServerListComponent} from "./server-list/transfer-server-list.component";
 import {StoreModule} from "@ngrx/store";
 import {transferServerListFeatureKey, transferServerListReducer} from "./server-list/state/transfer-server-list.reducer";

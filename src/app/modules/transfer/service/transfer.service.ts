@@ -2,23 +2,9 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {DeleteServerCommand, ListServersCommand, TransferClient} from "@aws-sdk/client-transfer";
 
 @Injectable({providedIn: 'root'})
 export class TransferService {
-
-    client = new TransferClient({
-        region: environment.awsmockRegion,
-        endpoint: environment.gatewayEndpoint,
-        credentials: {
-            accessKeyId: 'test',
-            secretAccessKey: 'test',
-        },
-        requestHandler: {
-            requestTimeout: 30_000,
-            httpsAgent: {maxSockets: 25},
-        },
-    });
 
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({
@@ -30,22 +16,6 @@ export class TransferService {
     constructor(private http: HttpClient) {
     }
 
-    listServers(pageIndex: number, pageSize: number, prefix: string): any {
-        const input = {
-            QueueNamePrefix: prefix,
-            NextToken: (pageIndex * pageSize).toString(),
-            MaxResults: pageSize,
-        };
-        return this.client.send(new ListServersCommand(input));
-    }
-
-    deleteServer(serverId: string): any {
-        const input = {
-            ServerId: serverId
-        };
-        return this.client.send(new DeleteServerCommand(input));
-    }
-
     /**
      * @brief List all transfer servers
      *
@@ -54,7 +24,7 @@ export class TransferService {
      * @param pageIndex page index
      * @param sortColumns sorting columns
      */
-    public listTransferServerCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+    public listTransferServer(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.ListServerCounters');
         return this.http.post(this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
@@ -77,9 +47,19 @@ export class TransferService {
      * @param pageIndex page index
      * @param sortColumns sorting columns
      */
-    public listTransferServerUserCounters(serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+    public listTransferServerUser(serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.ListUserCounters');
         return this.http.post(this.url, {return: environment.awsmockRegion, serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a server
+     *
+     * @param serverId server ID
+     */
+    public deleteServer(serverId: string) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteServer');
+        return this.http.post(this.url, {Region: environment.awsmockRegion, ServerId: serverId}, {headers: headers});
     }
 
     /**

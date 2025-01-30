@@ -6,6 +6,7 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {saveAs} from "file-saver";
+import {S3Service} from "../../service/s3-service.component";
 
 @Component({
     selector: 'export-file-download',

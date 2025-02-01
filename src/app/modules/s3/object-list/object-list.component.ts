@@ -186,7 +186,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     viewObject(object: S3ObjectItem) {
 
         if (object !== undefined) {
-            if (object.size !== undefined && object.size > 1024 * 1024) {
+            if (object.size !== undefined && object.size > 256 * 1024 * 1024) {
                 this.snackBar.open("Object to big, maxSize: 1MB", "Error", {duration: 5000});
                 return;
             }
@@ -222,6 +222,8 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     hasAllowedContentType(contentType: string) {
-        return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html" || contentType.startsWith("text/plain");
+        return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html"
+            || contentType.startsWith("text/plain") || contentType.startsWith("image/jpg") || contentType.startsWith("image/jpeg")
+            || contentType.startsWith("image/png") || contentType.startsWith("image/gif");
     }
 }

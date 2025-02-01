@@ -37,7 +37,7 @@ export class S3ObjectDownloadComponent {
     constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<S3ObjectDownloadComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service) {
         this.bucket = data.bucketName;
         this.key = data.key;
-        this.fileName = this.key.substring(this.key.lastIndexOf('/'));
+        this.fileName = this.key.substring(this.key.lastIndexOf('/') + 1);
     }
 
     // Method to handle file upload

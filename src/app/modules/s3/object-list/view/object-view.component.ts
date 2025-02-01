@@ -10,6 +10,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
 import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
 import xmlFormat from 'xml-formatter';
+import {NgIf} from "@angular/common";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
     selector: 's3-object-view',
@@ -31,7 +33,8 @@ import xmlFormat from 'xml-formatter';
         MatLabel,
         ReactiveFormsModule,
         FormsModule,
-        MatSlideToggle
+        MatSlideToggle,
+        NgIf
     ]
 })
 export class S3ObjectViewDialog {
@@ -42,18 +45,29 @@ export class S3ObjectViewDialog {
     contentType: string = '';
     prettyPrint: boolean = true;
     transformedBody: string = '';
+    isImage: boolean = false;
+    image: any = '';
 
-    constructor(private dialogRef: MatDialogRef<S3ObjectViewDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service) {
+    constructor(private dialogRef: MatDialogRef<S3ObjectViewDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service, private sanitizer: DomSanitizer) {
         this.bucketName = data.bucketName;
         this.key = data.key;
         this.contentType = data.contentType;
         this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
-            data.Body?.transformToString().then((data: string) => {
-                this.body = data;
-                if (this.prettyPrint) {
-                    this.transformedBody = this.transform(this.body);
-                }
-            });
+            if (!data.ContentType?.startsWith("image")) {
+                data.Body?.transformToString().then((data: string) => {
+                    this.body = data;
+                    if (this.prettyPrint) {
+                        this.transformedBody = this.transform(this.body);
+                    }
+                });
+            } else {
+                this.isImage = true;
+                data.Body?.transformToByteArray().then((data) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => this.image = e.target?.result;
+                    reader.readAsDataURL(new Blob([data]));
+                })
+            }
         });
     }
 

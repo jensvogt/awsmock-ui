@@ -62,6 +62,9 @@
                                 <button (click)="downloadObject(row.bucketName, row.key)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
                                     <mat-icon>download</mat-icon>
                                 </button>
+                                <button aria-label="Details" mat-icon-button matTooltip="View object details" routerLink="./details/{{row.oid}}">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
                                 <button (click)="deleteObject(row.key)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete object">
                                     <mat-icon>delete</mat-icon>
                                 </button>

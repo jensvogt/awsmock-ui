@@ -49,6 +49,7 @@ export class S3Service {
         return this.client.send(new PutObjectCommand(command));
     }
 
+
     async getObject(bucketName: string, key: string) {
         const command = {
             Bucket: bucketName,
@@ -124,6 +125,20 @@ export class S3Service {
         const body = {
             region: environment.awsmockRegion,
             bucketName: bucketName
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Get a bucket details
+     *
+     * @param id object OID
+     */
+    public getObjectCounter(id: string) {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'GetObjectCounter');
+        const body = {
+            region: environment.awsmockRegion,
+            id: id
         }
         return this.http.post(this.url, body, {headers: headers});
     }

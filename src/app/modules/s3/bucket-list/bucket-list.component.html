@@ -37,7 +37,7 @@
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                                 <td *matCellDef="let element" mat-cell>
                                     <mat-nav-list>
-                                        <a mat-list-item routerLink="./objects/{{ element.bucketName }}"> {{ element.bucketName }}</a>
+                                        <a mat-list-item routerLink="objects/{{ element.bucketName }}"> {{ element.bucketName }}</a>
                                     </mat-nav-list>
                                 </td>
                             </ng-container>

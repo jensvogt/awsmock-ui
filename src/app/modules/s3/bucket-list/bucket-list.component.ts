@@ -70,6 +70,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
+        //this.s3BucketCountersResponse$.subscribe(()=>{});
     }
 
     ngOnInit(): void {

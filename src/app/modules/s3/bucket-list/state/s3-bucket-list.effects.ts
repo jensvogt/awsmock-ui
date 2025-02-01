@@ -46,9 +46,9 @@ export class S3BucketListEffects {
         ofType(s3BucketListActions.purgeBucket),
         mergeMap(action =>
             this.s3Service.purgeBucket(action.bucketName)
-                .pipe(map((buckets: any) => s3BucketListActions.loadBucketsSuccess({buckets})),
+                .pipe(map(() => s3BucketListActions.purgeBucketSuccess()),
                     catchError((error) =>
-                        of(s3BucketListActions.loadBucketsFailure({error: error.message}))
+                        of(s3BucketListActions.purgeBucketFailure({error: error.message}))
                     )
                 )
         )

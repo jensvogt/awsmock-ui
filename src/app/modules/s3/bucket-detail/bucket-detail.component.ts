@@ -17,7 +17,7 @@ import {S3Service} from "../service/s3-service.component";
     providers: [S3Service]
 })
 export class S3BucketDetailComponent implements OnInit, OnDestroy {
-    lastUpdate: string = '';
+    lastUpdate: Date = new Date();
 
     bucketItem = {} as S3BucketItem;
     bucketName: string = '';
@@ -87,7 +87,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     loadBucket() {
         this.s3Service.getBucket(this.bucketName)
             .subscribe((data: any) => {
-                this.lastUpdate = this.lastUpdateTime();
+                this.lastUpdate = new Date();
                 if (data) {
                     this.bucketItem = data;
                     if (this.bucketItem.lambdaConfigurations) {

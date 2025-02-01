@@ -234,6 +234,6 @@
         <button (click)=save() mat-button>Save</button>
     </mat-card-actions>
     <div class="footer">
-        Last update: {{ lastUpdate }}
+        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
     </div>
 </mat-card>

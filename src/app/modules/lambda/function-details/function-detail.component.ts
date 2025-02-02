@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
-import {Sort} from "@angular/material/sort";
+import {MatSort, Sort} from "@angular/material/sort";
 import {LambdaService} from "../service/lambda-service.component";
 import {Environment, LambdaFunctionItem, Tag} from "../model/function-item";
 import {byteConversion} from "../../../shared/byte-utils.component";
@@ -9,6 +9,8 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {LambdaFunctionUpgradeDialog} from "../function-upgrade/function-upgrade-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {LiveAnnouncer} from "@angular/cdk/a11y";
+import {dateConversion} from "../../../shared/date-utils.component";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -24,18 +26,27 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     functionItem = {} as LambdaFunctionItem;
     functionName: string = '';
-    //functionItem$: Observable<LambdaFunctionItem> = this.store.select(selectFunctionItem);
 
     // Environment
-    environmentColumns: string[] = ['name', 'value'];
-    environmentDataSource = new MatTableDataSource<Environment>;
+    environmentColumns: string[] = ['key', 'value', 'actions'];
+    environmentDataSource = new MatTableDataSource<Environment>();
+    environments: Environment[] = [];
+    // @ts-ignore
+    @ViewChild('environmentTable', {read: MatSort, static: true}) environmentSort: MatSort;
+
+    //@ViewChild('table2', { read: MatSort, static: true }) sort2: MatSort;
+    // Tags
+    tagColumns: string[] = ['key', 'value', 'actions'];
     tagsDataSource = new MatTableDataSource<Tag>;
+    @ViewChild(MatSort) tagSort!: MatSort;
 
-    // Sorting
     protected readonly byteConversion = byteConversion;
+    protected readonly dateConversion = dateConversion;
     private routerSubscription: any;
+    // Sorting
+    private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService, private cdRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -43,6 +54,8 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionName = params['functionName'];
             this.loadFunction();
         });
+        this.environmentDataSource.sort = this.environmentSort;
+        //this.cdRef.detectChanges();
     }
 
     ngOnDestroy() {
@@ -67,8 +80,8 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     }
 
     environmentSortChanged(sortState: Sort) {
-//        console.log("Sort:", sortState);
-//        this.environmentDataSource = new MatTableDataSource(this.sortEnvData(sortState));
+        console.log("Sort: ", sortState);
+        this.environmentDataSource = this.sortEnvs(this.functionItem.environment, sortState.active, sortState.direction);
     }
 
     tagsSortChanged(sortState: Sort) {
@@ -102,11 +115,11 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     private convertEnvironment(data: any): MatTableDataSource<Environment> {
         let i = 0;
-        let env: Environment[] = [];
+        this.environments = [];
         for (let t in data.environment) {
-            env[i++] = {key: t, value: data.environment[t]};
+            this.environments [i++] = {key: t, value: data.environment[t]};
         }
-        return new MatTableDataSource(env);
+        return new MatTableDataSource(this.environments);
     }
 
     private convertTags(data: any): MatTableDataSource<Tag> {
@@ -116,5 +129,19 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             tags[i++] = {key: t, value: data.tags[t]};
         }
         return new MatTableDataSource(tags)
+    }
+
+    private sortEnvs(array: Environment[], attr: string, direction: string): any {
+        if (attr === 'key') {
+            if (direction === 'asc') {
+                array.sort((a: Environment, b: Environment) => a.key.localeCompare(b.key));
+            } else {
+                array.sort((a: { key: string; }, b: { key: string; }) => b.key.localeCompare(b.key));
+            }
+        } else if (attr === 'value') {
+            array.sort((a: { value: string; }, b: { value: string; }) => a.value.localeCompare(b.value));
+        }
+        console.log(array);
+        return this.convertEnvironment(array);
     }
 }

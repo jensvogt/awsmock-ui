@@ -217,10 +217,14 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 request.EphemeralStorage = {} as EphemeralStorage;
                 request.EphemeralStorage.Size = 10;
                 request.Tags = {};
-                request.Tags.version = "latest";
+                if (result.jsonTags) {
+                    request.Tags.version = "latest";
+                }
                 request.Tags.tag = "latest";
                 request.Environment = {} as LambdaEnvironment;
-                request.Environment = JSON.parse(result.jsonEnvironment);
+                if (result.jsonEnvironment) {
+                    request.Environment = JSON.parse(result.jsonEnvironment);
+                }
                 this.lambdaService.createFunction(request).subscribe(() => {
                     this.loadFunctions();
                     this.snackBar.open('Lambda function creation started, name: ' + request.FunctionName, 'Done', {duration: 5000});

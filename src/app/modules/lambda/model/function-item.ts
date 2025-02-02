@@ -6,8 +6,8 @@ export interface Tag {
 }
 
 export interface Environment {
-    key: string | undefined;
-    value: string | undefined;
+    key: string;
+    value: string;
 }
 
 export interface LambdaFunctionItem {

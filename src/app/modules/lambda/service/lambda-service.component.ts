@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
-import {LambdaClient} from "@aws-sdk/client-lambda";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {CreateFunctionRequest} from "../model/function-item";
@@ -8,20 +7,6 @@ import {CreateFunctionRequest} from "../model/function-item";
 
 @Injectable({providedIn: 'root'})
 export class LambdaService {
-
-    // S3 client for AWS calls
-    client = new LambdaClient({
-        region: environment.awsmockRegion,
-        endpoint: environment.gatewayEndpoint,
-        credentials: {
-            accessKeyId: 'none',
-            secretAccessKey: 'none',
-        },
-        requestHandler: {
-            requestTimeout: 3_000,
-            httpsAgent: {maxSockets: 25, keepAlive: false},
-        },
-    });
 
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({
@@ -109,7 +94,11 @@ export class LambdaService {
      * @param functionName function name
      */
     public deleteFunction(functionName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-upload');
-        return this.http.post(this.url, {functionName: functionName}, {headers: headers});
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-function');
+        const body = {
+            Region: environment.awsmockRegion,
+            FunctionName: functionName
+        }
+        return this.http.post(this.url, body, {headers: headers});
     }
 }

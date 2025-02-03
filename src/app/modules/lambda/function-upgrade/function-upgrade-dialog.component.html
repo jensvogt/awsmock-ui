@@ -10,13 +10,19 @@
     <mat-list>
         <mat-list-item style="height:80px">
             <mat-form-field style="width:100%">
+                <mat-label>Filename</mat-label>
+                <input [(ngModel)]="fileName" matInput readonly value="">
+            </mat-form-field>
+        </mat-list-item>
+        <mat-list-item style="height:80px">
+            <mat-form-field style="width:100%">
                 <mat-label>Version</mat-label>
-                <input (change)="onInputChanged($event)" [(ngModel)]="version" matInput value="">
+                <input (input)="onInputChanged($event)" [(ngModel)]="version" matInput value="">
             </mat-form-field>
         </mat-list-item>
     </mat-list>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="onUpgrade()" cdkFocusInitial disabled="{{createDisabled}}" mat-button>Upload</button>
+    <button (click)="onUpgrade()" [cdkTrapFocusAutoCapture]="uploadFocus" [cdkTrapFocus]="uploadFocus" disabled="{{uploadDisabled}}" mat-button>Upload</button>
 </mat-dialog-actions>

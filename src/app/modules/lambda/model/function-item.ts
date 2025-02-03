@@ -27,10 +27,10 @@ export interface LambdaFunctionItem {
     concurrency: number | undefined;
     invocations: number | undefined;
     averageRuntime: number | undefined;
-    lastStarted: BsonDateTime;
-    lastInvocation: BsonDateTime;
-    created: BsonDateTime;
-    modified: BsonDateTime;
+    lastStarted: BsonDateTime | { $date: undefined };
+    lastInvocation: BsonDateTime | { $date: undefined };
+    created: BsonDateTime | { $date: undefined };
+    modified: BsonDateTime | { $date: undefined };
 }
 
 export interface LambdaFunctionCountersResponse {

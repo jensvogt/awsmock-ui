@@ -42,6 +42,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     protected readonly byteConversion = byteConversion;
     protected readonly dateConversion = dateConversion;
+
     private routerSubscription: any;
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);

@@ -8,6 +8,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatList, MatListItem} from "@angular/material/list";
 import {BinaryFileUploadComponent} from "../../../shared/binary-file-upload/binary-file-upload.component";
 import {MatIcon} from "@angular/material/icon";
+import {CdkTrapFocus} from "@angular/cdk/a11y";
 
 interface Runtime {
     value: string;
@@ -30,7 +31,8 @@ interface Runtime {
         MatLabel,
         MatList,
         MatListItem,
-        MatIcon
+        MatIcon,
+        CdkTrapFocus
     ],
     styleUrls: ['./function-upgrade-dialog.component.scss'],
     providers: [BinaryFileUploadComponent]
@@ -41,7 +43,8 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     fileName: string | undefined;
     functionArn: string | undefined;
     version: string | undefined;
-    createDisabled: boolean = true;
+    uploadDisabled: boolean = true;
+    uploadFocus: boolean = false;
     selectedFile: File | null = null;
     fileSize = signal(0);
     maxSize: number = 256 * 1024 * 1024;
@@ -54,14 +57,14 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     }
 
     ngOnInit() {
-        this.dialogRef.updateSize("620px", "400px");
+        this.dialogRef.updateSize("620px", "500px");
     }
 
     // Method to handle file upload Handler for file input change
     onFileChange(event: any): void {
         this.file = event.target.files[0];
         this.fileName = this.file.name;
-        this.createDisabled = !(this.version && this.fileName)
+        this.uploadDisabled = !(this.version && this.fileName)
     }
 
     // Handler for file drop
@@ -71,7 +74,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
             this.file = event.dataTransfer.files[0];
             this.fileName = this.file.name;
         }
-        this.createDisabled = !(this.file && this.fileName)
+        this.uploadDisabled = !(this.file && this.fileName && this.version?.length)
     }
 
     // Prevent default dragover behavior
@@ -80,7 +83,8 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     }
 
     onInputChanged(event: any) {
-        this.createDisabled = !(this.version)
+        this.uploadDisabled = !(this.file && this.fileName && this.version?.length)
+        this.uploadFocus = true;
     }
 
     // Method to handle file upload

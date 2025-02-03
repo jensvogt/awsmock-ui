@@ -24,5 +24,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="onUpgrade()" [cdkTrapFocusAutoCapture]="uploadFocus" [cdkTrapFocus]="uploadFocus" disabled="{{uploadDisabled}}" mat-button>Upload</button>
+    <button (click)="onUpgrade()" disabled="{{uploadDisabled}}" mat-button ngDefaultControl>Upload</button>
 </mat-dialog-actions>

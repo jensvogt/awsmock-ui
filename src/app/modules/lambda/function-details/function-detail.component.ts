@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import {MatSort, Sort} from "@angular/material/sort";
@@ -9,8 +9,13 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {LambdaFunctionUpgradeDialog} from "../function-upgrade/function-upgrade-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
-import {dateConversion} from "../../../shared/date-utils.component";
+import {Observable} from "rxjs";
+import {LambdaTagCountersResponse} from "../model/lambda-tag-item";
+import {State, Store} from "@ngrx/store";
+import {LambdaFunctionDetailsState} from "./state/lambda-function-details.reducer";
+import {selectTagPageIndex, selectTagPageSize, selectTags} from "./state/lambda-function-details.selectors";
+import {lambdaFunctionDetailsActions} from "./state/lambda-function-details.actions";
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -25,6 +30,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
     functionItem = {} as LambdaFunctionItem;
+    functionArn: string = '';
     functionName: string = '';
 
     // Environment
@@ -34,29 +40,28 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     // @ts-ignore
     @ViewChild('environmentTable', {read: MatSort, static: true}) environmentSort: MatSort;
 
-    //@ViewChild('table2', { read: MatSort, static: true }) sort2: MatSort;
-    // Tags
-    tagColumns: string[] = ['key', 'value', 'actions'];
-    tagsDataSource = new MatTableDataSource<Tag>;
-    @ViewChild(MatSort) tagSort!: MatSort;
+    // Tags Table
+    tagColumns: any[] = ['key', 'value', 'actions'];
+    lambdaTags$: Observable<LambdaTagCountersResponse> = this.store.select(selectTags);
+    tagPageSize$: Observable<number> = this.store.select(selectTagPageSize);
+    tagPageIndex$: Observable<number> = this.store.select(selectTagPageIndex);
+    tagPageSizeOptions = [5, 10, 20, 50, 100];
 
     protected readonly byteConversion = byteConversion;
-    protected readonly dateConversion = dateConversion;
-//    protected readonly dateConversion = dateConversion;
     private routerSubscription: any;
-    // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService, private cdRef: ChangeDetectorRef) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService, private store: Store, private state: State<LambdaFunctionDetailsState>) {
     }
 
     ngOnInit() {
         this.routerSubscription = this.route.params.subscribe(params => {
-            this.functionName = params['functionName'];
+            this.functionArn = params['functionArn'];
+            this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(":"))
             this.loadFunction();
+            this.loadTags();
         });
         this.environmentDataSource.sort = this.environmentSort;
-        //this.cdRef.detectChanges();
+        //this.lambdaTags$.subscribe((data) => console.log(data));
     }
 
     ngOnDestroy() {
@@ -69,28 +74,20 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     refresh() {
         this.loadFunction();
+        this.loadTags();
     }
 
     loadFunction() {
-        this.lambdaService.getFunction(this.functionName).subscribe((data: any) => {
+        this.lambdaService.getFunction(this.functionArn).subscribe((data: any) => {
             this.lastUpdate = new Date();
             this.functionItem = data;
             this.environmentDataSource = this.convertEnvironment(data);
-            this.tagsDataSource = this.convertTags(data);
         });
     }
 
     environmentSortChanged(sortState: Sort) {
         console.log("Sort: ", sortState);
         this.environmentDataSource = this.sortEnvs(this.functionItem.environment, sortState.active, sortState.direction);
-    }
-
-    tagsSortChanged(sortState: Sort) {
-        if (sortState.direction) {
-            //this.environmentDataSource = new MatTableDataSource(this.sortEnvData(this.functionItem.environment, 'name', 'asc'));
-        } else {
-            //this.environmentDataSource = new MatTableDataSource(this.sortEnvData(this.functionItem.environment, 'name', 'desc'));
-        }
     }
 
     uploadCode() {
@@ -113,6 +110,87 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             }
         });
     }
+
+    // ===================================================================================================================
+    // Tags
+    // ===================================================================================================================
+    handleTagPageEvent(e: PageEvent) {
+        this.state.value['lambda-function-details'].tagPageSize = e.pageSize;
+        this.state.value['lambda-function-details'].tagPageIndex = e.pageIndex;
+        this.loadTags();
+    }
+
+    loadTags() {
+        this.store.dispatch(lambdaFunctionDetailsActions.loadTags({
+            lambdaArn: this.functionArn,
+            pageSize: this.state.value['lambda-function-details'].tagPageSize,
+            pageIndex: this.state.value['lambda-function-details'].tagPageIndex,
+            sortColumns: this.state.value['lambda-function-details'].tagSortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    tagSortChange(sortState: Sort) {
+        this.state.value['lambda-function-details'].tagSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['lambda-function-details'].tagSortColumns = [{column: column, sortDirection: direction}];
+        this.loadTags();
+    }
+
+    refreshTags() {
+        this.loadTags();
+    }
+
+    deleteTag(key: string) {
+        /*this.lambdaService.deleteTag(this.functionArn, key)
+            .subscribe(() => {
+                this.loadTags();
+                this.snackBar.open('SQS tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
+            })*/
+        console.log("Key: ", key);
+    }
+
+    editTag(key: string, value: string) {
+        /*    const dialogConfig = new MatDialogConfig();
+
+            dialogConfig.disableClose = true;
+            dialogConfig.autoFocus = true;
+            dialogConfig.data = {queueUrl: this.queueUrl, queueName: this.queueName, key: key, value: value};
+
+            this.dialog.open(SqsTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
+                if (result) {
+                    if (result.key !== key || result.value !== value) {
+                        this.sqsService.addTag(result.queueUrl, result.key, result.value)
+                            .subscribe(() => {
+                                this.loadTags();
+                                this.snackBar.open('SQS tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                            })
+                    } else {
+                        this.snackBar.open('SQS tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                    }
+                }
+            });*/
+        console.log("Key: " + key + " value: " + value);
+    }
+
+    /*addTag() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {queueArn: this.queueArn, queueName: this.queueName, queueUrl: this.queueUrl};
+
+        this.dialog.open(SqsTagAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.sqsService.addTag(result.queueUrl, result.key, result.value)
+                    .subscribe(() => {
+                        this.loadTags();
+                        this.snackBar.open('SQS queue tag added, name: ' + result.key, 'Dismiss', {duration: 5000});
+                    })
+            }
+        });
+    }*/
 
     private convertEnvironment(data: any): MatTableDataSource<Environment> {
         let i = 0;

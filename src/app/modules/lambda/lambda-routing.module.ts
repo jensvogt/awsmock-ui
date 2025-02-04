@@ -10,7 +10,7 @@ const routes: Routes = [
         component: LambdaFunctionListComponent
     },
     {
-        path: 'details/:functionName',
+        path: 'details/:functionArn',
         title: 'LambdaFunctionDetails',
         component: LambdaFunctionDetailsComponent
     }

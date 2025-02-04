@@ -41,13 +41,12 @@ export class LambdaService {
     /**
      * @brief Get a single function counter
      *
-     * @param name function name
+     * @param functionArn function ARN
      */
-    public getFunction(name: string) {
+    public getFunction(functionArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'GetFunctionCounters');
         const body = {
-            region: environment.awsmockRegion,
-            functionName: name
+            functionArn: functionArn
         }
         return this.http.post(this.url, body, {headers: headers});
     }
@@ -86,6 +85,19 @@ export class LambdaService {
     public uploadFunctionCode(functionArn: string, functionCode: string, version: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'upload-function-code');
         return this.http.post(this.url, {FunctionArn: functionArn, FunctionCode: functionCode, Version: version}, {headers: headers});
+    }
+
+    /**
+     * @brief Gets a list of tags for a lambda function
+     *
+     * @param lambdaArn lambda ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listTagCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ListTagCounters');
+        return this.http.post(this.url, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**

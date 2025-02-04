@@ -79,7 +79,7 @@ export const sqsQueueDetailReducer = createReducer(
     on(sqsQueueDetailsActions.loadLambdaTriggersSuccess, (state: SqsQueueDetailsState, {lambdaTriggers}) => ({...state, sqsLambdaTriggers: lambdaTriggers, loading: false})),
     on(sqsQueueDetailsActions.loadLambdaTriggersFailure, (state: SqsQueueDetailsState, {error}) => ({...state, error: error, loading: false})),
 
-    // Topic tags
+    // Queue tags
     on(sqsQueueDetailsActions.loadTags, (state: SqsQueueDetailsState) => ({...state, loading: true})),
     on(sqsQueueDetailsActions.loadTagsSuccess, (state: SqsQueueDetailsState, {tags}) => ({...state, sqsQueueTags: tags, loading: false})),
     on(sqsQueueDetailsActions.loadTagsFailure, (state: SqsQueueDetailsState, {error}) => ({...state, error: error, loading: false})),

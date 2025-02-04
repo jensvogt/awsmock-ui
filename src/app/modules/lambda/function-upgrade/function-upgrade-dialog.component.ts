@@ -8,7 +8,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatList, MatListItem} from "@angular/material/list";
 import {BinaryFileUploadComponent} from "../../../shared/binary-file-upload/binary-file-upload.component";
 import {MatIcon} from "@angular/material/icon";
-import {CdkTrapFocus} from "@angular/cdk/a11y";
 
 interface Runtime {
     value: string;
@@ -31,8 +30,7 @@ interface Runtime {
         MatLabel,
         MatList,
         MatListItem,
-        MatIcon,
-        CdkTrapFocus
+        MatIcon
     ],
     styleUrls: ['./function-upgrade-dialog.component.scss'],
     providers: [BinaryFileUploadComponent]

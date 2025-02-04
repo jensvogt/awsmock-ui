@@ -20,6 +20,18 @@ export class LambdaFunctionDetailsEffects {
         )
     ));
 
+    loadTags$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionDetailsActions.loadTags),
+        mergeMap(action =>
+            this.lambdaService.listTagCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((tags: any) => lambdaFunctionDetailsActions.loadTagsSuccess({tags})),
+                    catchError((error) =>
+                        of(lambdaFunctionDetailsActions.loadTagsFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
+
     constructor(private actions$: Actions, private lambdaService: LambdaService) {
     }
 }

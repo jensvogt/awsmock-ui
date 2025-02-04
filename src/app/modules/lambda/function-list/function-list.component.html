@@ -34,7 +34,7 @@
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
                             <td *matCellDef="let element" mat-cell>
                                 <mat-nav-list>
-                                    <a mat-list-item routerLink="./details/{{ element.functionName }}"> {{ element.functionName }}</a>
+                                    <a mat-list-item routerLink="./details/{{ element.functionArn }}"> {{ element.functionName }}</a>
                                 </mat-nav-list>
                             </td>
                         </ng-container>

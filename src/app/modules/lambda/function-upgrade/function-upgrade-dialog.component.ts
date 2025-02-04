@@ -40,7 +40,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     file: File = {} as File;
     fileName: string | undefined;
     functionArn: string | undefined;
-    version: string | undefined;
+    version: string = "latest";
     uploadDisabled: boolean = true;
     uploadFocus: boolean = false;
     selectedFile: File | null = null;

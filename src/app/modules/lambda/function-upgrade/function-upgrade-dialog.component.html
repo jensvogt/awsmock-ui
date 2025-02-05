@@ -23,6 +23,6 @@
     </mat-list>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="onUpgrade()" disabled="{{uploadDisabled}}" mat-button ngDefaultControl>Upload</button>
+    <button [matTooltipShowDelay]="1000" mat-button mat-dialog-close matTooltip="Cancel the dialog">Cancel</button>
+    <button (click)="onUpgrade()" [matTooltipShowDelay]="1000" disabled="{{uploadDisabled}}" mat-button matTooltip="Upload a new version" ngDefaultControl>Upload</button>
 </mat-dialog-actions>

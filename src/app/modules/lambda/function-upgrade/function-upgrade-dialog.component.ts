@@ -8,6 +8,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatList, MatListItem} from "@angular/material/list";
 import {BinaryFileUploadComponent} from "../../../shared/binary-file-upload/binary-file-upload.component";
 import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
 
 interface Runtime {
     value: string;
@@ -30,7 +31,8 @@ interface Runtime {
         MatLabel,
         MatList,
         MatListItem,
-        MatIcon
+        MatIcon,
+        MatTooltip
     ],
     styleUrls: ['./function-upgrade-dialog.component.scss'],
     providers: [BinaryFileUploadComponent]

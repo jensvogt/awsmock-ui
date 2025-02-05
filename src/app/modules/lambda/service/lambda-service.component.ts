@@ -101,16 +101,51 @@ export class LambdaService {
     }
 
     /**
+     * @brief Deletes a function tag
+     *
+     * @param functionArn function name
+     * @param key tag key
+     * @param value tag value
+     */
+    public addTag(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'add-function-tag');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Update a function tag
+     *
+     * @param functionArn function name
+     * @param key tag key
+     * @param value tag value
+     */
+    public updateTag(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'update-function-tag');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function tag
+     *
+     * @param functionArn function name
+     * @param key tag key
+     */
+    public deleteTag(functionArn: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-function-tag');
+        const body = {FunctionArn: functionArn, Key: key}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a function
      *
      * @param functionName function name
      */
     public deleteFunction(functionName: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-function');
-        const body = {
-            Region: environment.awsmockRegion,
-            FunctionName: functionName
-        }
+        const body = {Region: environment.awsmockRegion, FunctionName: functionName}
         return this.http.post(this.url, body, {headers: headers});
     }
 }

@@ -60,14 +60,13 @@
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button aria-label="List" mat-icon-button matTooltip="Show details of the bucket" routerLink="./details/{{row.bucketName}}">
+                                    <button [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Show details of the bucket" routerLink="./details/{{row.bucketName}}">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="purgeBucket(row.bucketName)" aria-label="PurgeBucket" mat-icon-button
-                                            matTooltip="Delete all objects in the bucket">
+                                    <button (click)="purgeBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="PurgeBucket" mat-icon-button matTooltip="Delete all objects in the bucket">
                                         <mat-icon>folder_delete</mat-icon>
                                     </button>
-                                    <button (click)="deleteBucket(row.bucketName)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket and all objects">
+                                    <button (click)="deleteBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket and all objects">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </td>

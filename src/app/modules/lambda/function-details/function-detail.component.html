@@ -161,9 +161,9 @@
                 </mat-tab>
                 <mat-tab label="Tags">
                     <mat-card-actions class="head-buttons">
-                        <!--button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
+                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>
-                        </button-->
+                        </button>
                         <button (click)="loadTags()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>refresh</mat-icon>
                         </button>
@@ -182,10 +182,10 @@
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editTag(row.key, row.value)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                    <button (click)="editTag(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="deleteTag(row.key)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
+                                    <button (click)="deleteTag(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </td>

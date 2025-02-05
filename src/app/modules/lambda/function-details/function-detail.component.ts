@@ -16,6 +16,8 @@ import {LambdaFunctionDetailsState} from "./state/lambda-function-details.reduce
 import {selectTagPageIndex, selectTagPageSize, selectTags} from "./state/lambda-function-details.selectors";
 import {lambdaFunctionDetailsActions} from "./state/lambda-function-details.actions";
 import {PageEvent} from "@angular/material/paginator";
+import {LambdaTagAddDialog} from "../function-tag-add/function-tag-add.component";
+import {LambdaTagEditDialog} from "../function-tag-edit/function-tag-edit.component";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -138,59 +140,57 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         this.loadTags();
     }
 
-    refreshTags() {
-        this.loadTags();
-    }
-
-    deleteTag(key: string) {
-        /*this.lambdaService.deleteTag(this.functionArn, key)
-            .subscribe(() => {
-                this.loadTags();
-                this.snackBar.open('SQS tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
-            })*/
-        console.log("Key: ", key);
-    }
-
-    editTag(key: string, value: string) {
-        /*    const dialogConfig = new MatDialogConfig();
-
-            dialogConfig.disableClose = true;
-            dialogConfig.autoFocus = true;
-            dialogConfig.data = {queueUrl: this.queueUrl, queueName: this.queueName, key: key, value: value};
-
-            this.dialog.open(SqsTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
-                if (result) {
-                    if (result.key !== key || result.value !== value) {
-                        this.sqsService.addTag(result.queueUrl, result.key, result.value)
-                            .subscribe(() => {
-                                this.loadTags();
-                                this.snackBar.open('SQS tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
-                            })
-                    } else {
-                        this.snackBar.open('SQS tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-                    }
-                }
-            });*/
-        console.log("Key: " + key + " value: " + value);
-    }
-
-    /*addTag() {
+    addTag() {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {queueArn: this.queueArn, queueName: this.queueName, queueUrl: this.queueUrl};
+        dialogConfig.data = {functionArn: this.functionArn};
 
-        this.dialog.open(SqsTagAddDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(LambdaTagAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.sqsService.addTag(result.queueUrl, result.key, result.value)
-                    .subscribe(() => {
-                        this.loadTags();
-                        this.snackBar.open('SQS queue tag added, name: ' + result.key, 'Dismiss', {duration: 5000});
-                    })
+                if (result.Key && result.Value) {
+                    this.lambdaService.addTag(this.functionArn, result.Key, result.Value)
+                        .subscribe(() => {
+                            this.loadTags();
+                            this.snackBar.open('Lambda tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
             }
         });
-    }*/
+    }
+
+    editTag(key: string, value: string) {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.functionArn, key: key, value: value};
+
+        this.dialog.open(LambdaTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.Key !== key || result.Value !== value) {
+                    this.lambdaService.updateTag(this.functionArn, result.Key, result.Value)
+                        .subscribe(() => {
+                            this.loadTags();
+                            this.snackBar.open('Lambda tag updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
+    }
+
+    deleteTag(key: string) {
+        this.lambdaService.deleteTag(this.functionArn, key)
+            .subscribe(() => {
+                this.loadTags();
+                this.snackBar.open('Lambda tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
+            })
+    }
 
     private convertEnvironment(data: any): MatTableDataSource<Environment> {
         let i = 0;

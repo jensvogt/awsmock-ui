@@ -63,13 +63,13 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="uploadCode(row.functionArn)" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
+                                <button (click)="uploadCode(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
                                     <mat-icon>upload</mat-icon>
                                 </button>
-                                <button (click)="resetCounters(row.functionName)" aria-label="Reset counters" mat-icon-button matTooltip="Reset counters">
+                                <button (click)="resetCounters(row.functionName)" [matTooltipShowDelay]="1000" aria-label="Reset counters" mat-icon-button matTooltip="Reset counters">
                                     <mat-icon>history</mat-icon>
                                 </button>
-                                <button (click)="deleteFunction(row.functionName)" aria-label="delete function" mat-icon-button matTooltip="Delete function">
+                                <button (click)="deleteFunction(row.functionName)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-icon-button matTooltip="Delete function">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>

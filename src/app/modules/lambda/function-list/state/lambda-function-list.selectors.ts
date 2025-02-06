@@ -1,6 +1,6 @@
 import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelector} from "@ngrx/store";
 import {lambdaFunctionListFeatureKey, LambdaFunctionListState} from "./lambda-function-list.reducer";
-import {LambdaFunctionCountersResponse} from "../../model/function-item";
+import {LambdaFunctionCountersResponse} from "../../model/lambda-item";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;

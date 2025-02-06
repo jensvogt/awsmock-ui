@@ -114,50 +114,52 @@
                     <mat-card-actions class="head-buttons">
                         <!--button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="loadBucket()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
                         </button-->
+                        <button (click)="loadEnvironment()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
                     </mat-card-actions>
-                    <table (matSortChange)="environmentSortChanged($event)" [dataSource]="environmentDataSource" class="mat-elevation-z8" mat-table matSort>
-                        <ng-container matColumnDef="key">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable name" sortActionDescription="Sort by name">Name</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="value">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable value" sortActionDescription="Sort by value">Value
-                            </th>
-                            <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                            <td *matCellDef="let row" mat-cell>
-                                <!--button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <button (click)="deleteLambdaNotification(row.lambdaArn)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
-                                    <mat-icon>delete</mat-icon>
-                                </button-->
-                            </td>
-                        </ng-container>
-                        <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
-                        <tr *matRowDef="let row; columns: environmentColumns;" mat-row></tr>
-                        <tr *matNoDataRow class="mat-row">
-                            <td [attr.colspan]="environmentColumns.length" class="mat-cell">
-                                No data matching the filter.
-                            </td>
-                        </tr>
-                    </table>
-                    <!--mat-paginator (page)="handleLambdaNotificationPageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="lambdaNotificationLength"
-                                   [pageIndex]="lambdaNotificationPageIndex"
-                                   [pageSizeOptions]="lambdaNotificationPageSizeOptions"
-                                   [pageSize]="lambdaNotificationPageSize"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator-->
+                    <div *ngIf="lambdaEnvironment$ | async as environment" class="row">
+                        <table (matSortChange)="environmentSortChanged($event)" [dataSource]="environment.EnvironmentCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="key">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable name" sortActionDescription="Sort by name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable value" sortActionDescription="Sort by value">Value
+                                </th>
+                                <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <!--button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button (click)="deleteLambdaNotification(row.lambdaArn)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
+                                        <mat-icon>delete</mat-icon>
+                                    </button-->
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: environmentColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="environmentColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleEnvironmentPageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(lambdaEnvironment$ | async)?.Total"
+                                       [pageIndex]="environmentPageIndex$"
+                                       [pageSizeOptions]="environmentPageSizeOptions"
+                                       [pageSize]="environmentPageSize$"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
                 </mat-tab>
                 <mat-tab label="Tags">
                     <mat-card-actions class="head-buttons">

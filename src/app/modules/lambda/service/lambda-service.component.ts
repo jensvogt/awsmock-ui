@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {CreateFunctionRequest} from "../model/function-item";
+import {CreateFunctionRequest} from "../model/lambda-item";
 
 
 @Injectable({providedIn: 'root'})
@@ -85,6 +85,19 @@ export class LambdaService {
     public uploadFunctionCode(functionArn: string, functionCode: string, version: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'upload-function-code');
         return this.http.post(this.url, {FunctionArn: functionArn, FunctionCode: functionCode, Version: version}, {headers: headers});
+    }
+
+    /**
+     * @brief Gets a list of tags for a lambda function
+     *
+     * @param lambdaArn lambda ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listEnvironmentCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ListEnvironmentCounters');
+        return this.http.post(this.url, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**

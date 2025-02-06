@@ -16,6 +16,7 @@ import {selectPageIndex, selectPageSize, selectPrefix} from "../queues-list/stat
 import {selectMessageCounters} from "./state/sqs-message-list.selectors";
 import {sqsMessageListActions} from "./state/sqs-message-list.actions";
 import {SQSMessageListState} from "./state/sqs-message-list.reducer";
+import {byteConversion} from '../../../shared/byte-utils.component';
 
 @Component({
     selector: 'sqs-message-list',
@@ -33,7 +34,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listMessageCountersResponse$: Observable<ListMessageCountersResponse> = this.store.select(selectMessageCounters);
-    columns: any[] = ['messageId', 'retries', 'created', 'modified', 'actions'];
+    columns: any[] = ['messageId', 'size', 'retries', 'created', 'modified', 'actions'];
 
     // Paging
     pageSizeOptions = [5, 10, 20, 50, 100];
@@ -56,6 +57,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     // Sorting, default create descending
     sortColumns: SortColumn[] = [{column: 'created', sortDirection: 1}];
+    protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private state: State<SQSMessageListState>,

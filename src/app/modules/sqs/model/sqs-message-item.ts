@@ -14,9 +14,10 @@ export interface SqsMessageItem {
     receiptHandle: string | undefined;
     md5Sum: string | undefined;
     retries: number | undefined;
+    size: number | undefined;
+    messageAttributes: SqsMessageAttribute[];
     created: BsonDateTime | undefined;
     modified: BsonDateTime | undefined;
-    messageAttributes: SqsMessageAttribute[];
 }
 
 export interface ListMessageCountersResponse {

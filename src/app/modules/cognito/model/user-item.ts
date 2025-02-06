@@ -1,3 +1,5 @@
+import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
+
 export interface UserItem {
     Id: string | undefined;
     Username: string | undefined;
@@ -5,8 +7,8 @@ export interface UserItem {
     Enabled: boolean | undefined;
     UserStatus: string | undefined;
     Password: string | undefined;
-    Created: Date | undefined;
-    Modified: Date | undefined;
+    Created: BsonDateTime;
+    Modified: BsonDateTime;
 }
 
 export interface UserCountersResponse {

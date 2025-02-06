@@ -35,6 +35,7 @@ import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from
 import {ViewMessageComponentDialog} from "./message-list/view-message/view-message.component";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 
 @NgModule({
     declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent, SendMessageComponentDialog, ViewMessageComponentDialog],
@@ -94,6 +95,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
         MatDialogClose,
         MatSlideToggle,
         MatCheckbox,
+        CdkCopyToClipboard,
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

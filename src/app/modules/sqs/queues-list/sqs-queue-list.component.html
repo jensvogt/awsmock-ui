@@ -35,7 +35,7 @@
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                             <td *matCellDef="let element" mat-cell>
                                 <mat-nav-list>
-                                    <a mat-list-item routerLink="./messages/{{ element.queueArn }}"> {{ element.queueName }}</a>
+                                    <a mat-list-item routerLink="./messages/{{ element.queueArn }}" style="width:90%"> {{ element.queueName }}</a>
                                 </mat-nav-list>
                             </td>
                         </ng-container>
@@ -68,7 +68,7 @@
                                 Created
                             </th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.created.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.created ? (element.created.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
@@ -76,7 +76,7 @@
                                 Modified
                             </th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.modified.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">

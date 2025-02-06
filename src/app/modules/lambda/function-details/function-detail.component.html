@@ -88,15 +88,15 @@
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Last invocation:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.lastInvocation.$date | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.lastInvocation ? (functionItem.lastInvocation.$date | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Created:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.created.$date | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.created ? (functionItem.created.$date | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Modified:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.modified.$date | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.modified ? (functionItem.modified.$date | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
                             </mat-list-item>
                         </mat-list>
                     </div>

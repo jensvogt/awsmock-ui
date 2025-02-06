@@ -110,12 +110,12 @@
         </mat-card-header>
         <mat-card-content>
             <mat-tab-group>
-                <mat-tab label="Environment">
+                <mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Lambda function environment variables">
                     <mat-card-actions class="head-buttons">
-                        <!--button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
+                        <button (click)="addEnvironment()" [matTooltipShowDelay]="1000" aria-label="Add environment variable" mat-icon-button matTooltip="Add a new environment variable">
                             <mat-icon>add</mat-icon>
-                        </button-->
-                        <button (click)="loadEnvironment()" aria-label="Refresh" mat-icon-button>
+                        </button>
+                        <button (click)="loadEnvironment()" [matTooltipShowDelay]="1000" aria-label="Refresh environment variable" mat-icon-button matTooltip="Refresh the environment variable list">
                             <mat-icon>refresh</mat-icon>
                         </button>
                     </mat-card-actions>
@@ -133,12 +133,12 @@
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <!--button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                    <button (click)="editEnvironment(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the lambda environment variable">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="deleteLambdaNotification(row.lambdaArn)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
+                                    <button (click)="deleteEnvironment(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda environment variable">
                                         <mat-icon>delete</mat-icon>
-                                    </button-->
+                                    </button>
                                 </td>
                             </ng-container>
                             <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
@@ -161,7 +161,7 @@
                         </mat-paginator>
                     </div>
                 </mat-tab>
-                <mat-tab label="Tags">
+                <mat-tab [matTooltipShowDelay]="1000" label="Tags" matTooltip="Lambfda function tags">
                     <mat-card-actions class="head-buttons">
                         <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>

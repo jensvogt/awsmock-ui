@@ -32,13 +32,13 @@ export const initialState: LambdaFunctionDetailsState = {
 
     // Environment
     lambdaEnvironment: {} as LambdaEnvironmentCountersResponse,
-    environmentPageSize: 10,
+    environmentPageSize: 5,
     environmentPageIndex: 0,
     environmentSortColumns: [{column: 'key', sortDirection: -1}],
 
     // Tags
     lambdaTags: {} as LambdaTagCountersResponse,
-    tagPageSize: 10,
+    tagPageSize: 5,
     tagPageIndex: 0,
     tagSortColumns: [{column: 'key', sortDirection: -1}],
 };

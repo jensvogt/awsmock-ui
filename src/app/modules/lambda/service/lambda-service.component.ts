@@ -101,6 +101,44 @@ export class LambdaService {
     }
 
     /**
+     * @brief Adds an environment variable
+     *
+     * @param functionArn function name
+     * @param key tag key
+     * @param value tag value
+     */
+    public addEnvironment(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'AddFunctionEnvironment');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Update a function environment variable
+     *
+     * @param functionArn function name
+     * @param key environment variable key
+     * @param value environment variable value
+     */
+    public updateEnvironment(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'UpdateFunctionEnvironment');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function environment variable
+     *
+     * @param functionArn function name
+     * @param key environment variable key
+     */
+    public deleteEnvironment(functionArn: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'DeleteFunctionEnvironment');
+        const body = {FunctionArn: functionArn, Key: key}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Gets a list of tags for a lambda function
      *
      * @param lambdaArn lambda ARN

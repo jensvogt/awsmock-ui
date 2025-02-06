@@ -18,6 +18,8 @@ import {PageEvent} from "@angular/material/paginator";
 import {LambdaTagAddDialog} from "../function-tag-add/function-tag-add.component";
 import {LambdaTagEditDialog} from "../function-tag-edit/function-tag-edit.component";
 import {LambdaEnvironmentCountersResponse} from "../model/lambda-environment-item";
+import {LambdaEnvironmentAddDialog} from "../function-environment-add/function-environment-add.component";
+import {LambdaEnvironmentEditDialog} from "../function-environment-edit/function-environment-edit.component";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -214,5 +216,58 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         let direction = sortState.direction === 'asc' ? 1 : -1;
         this.state.value['lambda-function-details'].environmentSortColumns = [{column: column, sortDirection: direction}];
         this.loadEnvironment();
+    }
+
+    addEnvironment() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.functionArn};
+
+        this.dialog.open(LambdaEnvironmentAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.Key && result.Value) {
+                    this.lambdaService.addEnvironment(this.functionArn, result.Key, result.Value)
+                        .subscribe(() => {
+                            this.loadEnvironment();
+                            this.snackBar.open('Lambda environment variable changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('Lambda environment variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
+    }
+
+    editEnvironment(key: string, value: string) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.functionArn, key: key, value: value};
+
+        this.dialog.open(LambdaEnvironmentEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.Key !== key || result.Value !== value) {
+                    this.lambdaService.updateEnvironment(this.functionArn, result.Key, result.Value)
+                        .subscribe(() => {
+                            this.loadTags();
+                            this.snackBar.open('Lambda environment variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('Lambda environment variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
+    }
+
+    deleteEnvironment(key: string) {
+        this.lambdaService.deleteEnvironment(this.functionArn, key)
+            .subscribe(() => {
+                this.loadEnvironment();
+                this.snackBar.open('Lambda environment variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
+            })
     }
 }

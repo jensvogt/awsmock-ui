@@ -33,9 +33,14 @@
                         <ng-container matColumnDef="key" matTooltip="Object key">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object key" sortActionDescription="Sort by key">Name</th>
                             <td *matCellDef="let element" mat-cell>
-                                <mat-nav-list>
-                                    <a (click)="viewObject(element)" mat-list-item> {{ element.key }}</a>
-                                </mat-nav-list>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a (click)="viewObject(element)" mat-list-item> {{ element.key }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="contentType" matTooltip="Object content type">

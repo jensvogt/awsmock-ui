@@ -58,3 +58,14 @@
   color: black;
   padding-top: 15px;
 }
+
+.with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.copy-icon {
+  display: inline-flex;
+  vertical-align: bottom;
+  font-size: 16px !important;
+}

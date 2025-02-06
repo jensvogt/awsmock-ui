@@ -63,7 +63,7 @@ export const lambdaFunctionDetailsReducer = createReducer(
 
     // Lambda environment
     on(lambdaFunctionDetailsActions.loadEnvironment, (state: LambdaFunctionDetailsState) => ({...state, loading: true})),
-    on(lambdaFunctionDetailsActions.loadEnvironmentSuccess, (state: LambdaFunctionDetailsState, {environment}) => ({...state, lambdaEnvironments: environment, loading: false})),
+    on(lambdaFunctionDetailsActions.loadEnvironmentSuccess, (state: LambdaFunctionDetailsState, {environment}) => ({...state, lambdaEnvironment: environment, loading: false})),
     on(lambdaFunctionDetailsActions.loadEnvironmentFailure, (state: LambdaFunctionDetailsState, {error}) => ({...state, error: error, loading: false})),
 
     // Lambda tags

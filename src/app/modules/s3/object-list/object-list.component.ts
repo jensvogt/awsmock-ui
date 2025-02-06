@@ -222,7 +222,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     hasAllowedContentType(contentType: string) {
-        return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html"
+        return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html" || contentType === "text/xml"
             || contentType.startsWith("text/plain") || contentType.startsWith("image/jpg") || contentType.startsWith("image/jpeg")
             || contentType.startsWith("image/png") || contentType.startsWith("image/gif");
     }

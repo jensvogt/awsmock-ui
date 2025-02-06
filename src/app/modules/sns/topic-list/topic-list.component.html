@@ -59,13 +59,13 @@
                                 Created
                             </th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.created.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.created ? (element.created.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Modified</th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.modified.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">

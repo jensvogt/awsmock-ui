@@ -135,6 +135,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
             pageIndex: this.state.value['s3-bucket-list'].pageIndex,
             sortColumns: this.state.value['s3-bucket-list'].sortColumns
         }));
+        this.lastUpdate = new Date();
     }
 
     addBucket() {

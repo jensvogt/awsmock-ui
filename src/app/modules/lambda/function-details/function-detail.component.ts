@@ -1,11 +1,10 @@
-import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
-import {MatSort, Sort} from "@angular/material/sort";
+import {Sort} from "@angular/material/sort";
 import {LambdaService} from "../service/lambda-service.component";
-import {Environment, LambdaFunctionItem, Tag} from "../model/function-item";
+import {LambdaFunctionItem} from "../model/lambda-item";
 import {byteConversion} from "../../../shared/byte-utils.component";
-import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {LambdaFunctionUpgradeDialog} from "../function-upgrade/function-upgrade-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -13,11 +12,12 @@ import {Observable} from "rxjs";
 import {LambdaTagCountersResponse} from "../model/lambda-tag-item";
 import {State, Store} from "@ngrx/store";
 import {LambdaFunctionDetailsState} from "./state/lambda-function-details.reducer";
-import {selectTagPageIndex, selectTagPageSize, selectTags} from "./state/lambda-function-details.selectors";
+import {selectEnvironment, selectEnvironmentPageIndex, selectEnvironmentPageSize, selectTagPageIndex, selectTagPageSize, selectTags} from "./state/lambda-function-details.selectors";
 import {lambdaFunctionDetailsActions} from "./state/lambda-function-details.actions";
 import {PageEvent} from "@angular/material/paginator";
 import {LambdaTagAddDialog} from "../function-tag-add/function-tag-add.component";
 import {LambdaTagEditDialog} from "../function-tag-edit/function-tag-edit.component";
+import {LambdaEnvironmentCountersResponse} from "../model/lambda-environment-item";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -37,10 +37,10 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     // Environment
     environmentColumns: string[] = ['key', 'value', 'actions'];
-    environmentDataSource = new MatTableDataSource<Environment>();
-    environments: Environment[] = [];
-    // @ts-ignore
-    @ViewChild('environmentTable', {read: MatSort, static: true}) environmentSort: MatSort;
+    lambdaEnvironment$: Observable<LambdaEnvironmentCountersResponse> = this.store.select(selectEnvironment);
+    environmentPageSize$: Observable<number> = this.store.select(selectEnvironmentPageSize);
+    environmentPageIndex$: Observable<number> = this.store.select(selectEnvironmentPageIndex);
+    environmentPageSizeOptions = [5, 10, 20, 50, 100];
 
     // Tags Table
     tagColumns: any[] = ['key', 'value', 'actions'];
@@ -60,9 +60,10 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionArn = params['functionArn'];
             this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(":"))
             this.loadFunction();
+            this.loadEnvironment();
             this.loadTags();
         });
-        this.environmentDataSource.sort = this.environmentSort;
+        this.lambdaEnvironment$.subscribe((data) => console.log(data));
         //this.lambdaTags$.subscribe((data) => console.log(data));
     }
 
@@ -76,6 +77,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     refresh() {
         this.loadFunction();
+        this.loadEnvironment();
         this.loadTags();
     }
 
@@ -83,13 +85,8 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         this.lambdaService.getFunction(this.functionArn).subscribe((data: any) => {
             this.lastUpdate = new Date();
             this.functionItem = data;
-            this.environmentDataSource = this.convertEnvironment(data);
+            //this.environmentDataSource = this.convertEnvironment(data);
         });
-    }
-
-    environmentSortChanged(sortState: Sort) {
-        console.log("Sort: ", sortState);
-        this.environmentDataSource = this.sortEnvs(this.functionItem.environment, sortState.active, sortState.direction);
     }
 
     uploadCode() {
@@ -192,35 +189,30 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             })
     }
 
-    private convertEnvironment(data: any): MatTableDataSource<Environment> {
-        let i = 0;
-        this.environments = [];
-        for (let t in data.environment) {
-            this.environments [i++] = {key: t, value: data.environment[t]};
-        }
-        return new MatTableDataSource(this.environments);
+    // ===================================================================================================================
+    // Environment
+    // ===================================================================================================================
+    handleEnvironmentPageEvent(e: PageEvent) {
+        this.state.value['lambda-function-details'].environmentPageSize = e.pageSize;
+        this.state.value['lambda-function-details'].environmentPageIndex = e.pageIndex;
+        this.loadEnvironment();
     }
 
-    private convertTags(data: any): MatTableDataSource<Tag> {
-        let i = 0;
-        let tags: Tag[] = [];
-        for (let t in data.tags) {
-            tags[i++] = {key: t, value: data.tags[t]};
-        }
-        return new MatTableDataSource(tags)
+    loadEnvironment() {
+        this.store.dispatch(lambdaFunctionDetailsActions.loadEnvironment({
+            lambdaArn: this.functionArn,
+            pageSize: this.state.value['lambda-function-details'].environmentPageSize,
+            pageIndex: this.state.value['lambda-function-details'].environmentPageIndex,
+            sortColumns: this.state.value['lambda-function-details'].environmentSortColumns
+        }));
+        this.lastUpdate = new Date();
     }
 
-    private sortEnvs(array: Environment[], attr: string, direction: string): any {
-        if (attr === 'key') {
-            if (direction === 'asc') {
-                array.sort((a: Environment, b: Environment) => a.key.localeCompare(b.key));
-            } else {
-                array.sort((a: { key: string; }, b: { key: string; }) => b.key.localeCompare(b.key));
-            }
-        } else if (attr === 'value') {
-            array.sort((a: { value: string; }, b: { value: string; }) => a.value.localeCompare(b.value));
-        }
-        console.log(array);
-        return this.convertEnvironment(array);
+    environmentSortChanged(sortState: Sort) {
+        this.state.value['lambda-function-details'].environmentSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['lambda-function-details'].environmentSortColumns = [{column: column, sortDirection: direction}];
+        this.loadEnvironment();
     }
 }

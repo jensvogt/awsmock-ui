@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {LambdaFunctionCountersResponse} from "../../model/function-item";
+import {LambdaFunctionCountersResponse} from "../../model/lambda-item";
 
 export const lambdaFunctionListActions = {
     initialize: createAction('[lambda-function-list] initialize'),

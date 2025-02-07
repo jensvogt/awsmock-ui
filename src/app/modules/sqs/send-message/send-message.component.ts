@@ -99,11 +99,11 @@ export class SendMessageComponentDialog implements OnInit {
     convertMessageAttributes(attributes: SqsMessageAttribute[]): any {
         let messageAttr: any = {}
         attributes.forEach((element) => {
-            if (element.DataType === 'string') {
+            if (element.DataType === 'String') {
                 messageAttr[element.Key] = {DataType: 'string', StringValue: element.Value}
-            } else if (element.DataType === 'number') {
+            } else if (element.DataType === 'Number') {
                 messageAttr[element.Key] = {DataType: element.DataType, NumberValue: element.Value}
-            } else if (element.DataType === 'binary') {
+            } else if (element.DataType === 'Binary') {
                 messageAttr[element.Key] = {DataType: element.DataType, BinaryValue: element.Value}
             }
         });

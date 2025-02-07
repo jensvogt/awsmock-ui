@@ -28,6 +28,8 @@ import {S3ObjectListEffects} from "./object-list/state/s3-object-list.effects";
 import {s3ObjectListFeatureKey, s3ObjectListReducer} from "./object-list/state/s3-object-list.reducer";
 import {S3ObjectDetailComponent} from "./object-detail/object-detail.component";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatDivider} from "@angular/material/divider";
 
 @NgModule({
     declarations: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent, S3ObjectDetailComponent],
@@ -78,6 +80,10 @@ import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
         StoreModule.forFeature(s3ObjectListFeatureKey, s3ObjectListReducer),
         EffectsModule.forFeature([S3BucketListEffects, S3ObjectListEffects]),
         CdkCopyToClipboard,
+        MatMenuTrigger,
+        MatDivider,
+        MatMenu,
+        MatMenuItem,
     ],
     exports: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent, S3ObjectDetailComponent],
     providers: [S3Service, AwsMockHttpService],

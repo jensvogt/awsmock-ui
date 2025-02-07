@@ -158,6 +158,18 @@ export class S3Service {
     }
 
     /**
+     * @brief Touched a S3 bucket.
+     *
+     * @param bucket name of the bucket
+     * @param key object key
+     */
+    public touchObject(bucket: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'TouchObject');
+        const body = {region: environment.awsmockRegion, bucket: bucket, key: key}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a S3 bucket. This will delete all objects of that bucket.
      *
      * @param bucketName bucket name

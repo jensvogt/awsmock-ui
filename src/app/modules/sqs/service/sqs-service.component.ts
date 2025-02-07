@@ -200,6 +200,17 @@ export class SqsService {
     }
 
     /**
+     * @brief Resend a SQS message
+     *
+     * @param queueArn SQS queue ARN
+     * @param messageId message ID
+     */
+    public resendMessage(queueArn: string, messageId: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ResendMessage');
+        return this.http.post(this.url, {QueueArn: queueArn, MessageId: messageId}, {headers: headers});
+    }
+
+    /**
      * @brief Update attribute
      *
      * @param messageId SQS message ID

@@ -64,15 +64,28 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="downloadObject(row.bucketName, row.key)" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                <button (click)="downloadObject(row.bucketName, row.key)" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Download object">
                                     <mat-icon>download</mat-icon>
                                 </button>
                                 <button [matTooltipShowDelay]="1000" aria-label="Details" mat-icon-button matTooltip="View object details" routerLink="./details/{{row.oid}}">
                                     <mat-icon>visibility</mat-icon>
                                 </button>
-                                <button (click)="deleteObject(row.key)" [matTooltipShowDelay]="1000" aria-label="DeleteObject" mat-icon-button matTooltip="Delete object">
-                                    <mat-icon>delete</mat-icon>
+                                <button [matMenuTriggerFor]="menu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                                    <mat-icon>more_vert</mat-icon>
                                 </button>
+                                <mat-menu #menu="matMenu" xPosition="before">
+                                    <button mat-menu-item>
+                                        <button (click)="touchObject(row.key)" [matTooltipShowDelay]="1000" aria-label="DeleteObject" mat-menu-item matTooltip="Touch object">
+                                            <mat-icon>touch_app</mat-icon>
+                                            <span>Touch object</span>
+                                        </button>
+                                        <mat-divider/>
+                                        <button (click)="deleteObject(row.key)" [matTooltipShowDelay]="1000" aria-label="DeleteObject" mat-menu-item matTooltip="Delete object">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete object</span>
+                                        </button>
+                                    </button>
+                                </mat-menu>
                             </td>
                         </ng-container>
                         <tr *matHeaderRowDef="columns" mat-header-row></tr>

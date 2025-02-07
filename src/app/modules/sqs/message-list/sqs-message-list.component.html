@@ -49,27 +49,27 @@
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="size">
-                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by size">Size</th>
+                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Message size" sortActionDescription="Sort by size">Size</th>
                             <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
                         </ng-container>
                         <ng-container matColumnDef="retries">
-                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Retries" sortActionDescription="Sort by retries">Retries</th>
+                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of retries" sortActionDescription="Sort by retries">Retries</th>
                             <td *matCellDef="let element" mat-cell> {{ element.retries }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created">
-                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Created"
+                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Created timestamp"
                                 sortActionDescription="Sort by created">Created
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.created ? (element.created.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
-                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Modified"
+                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Modified timestamp"
                                 sortActionDescription="Sort by modified">Modified
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:120px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
                                 <button (click)="resendMessage(row.messageId)" [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" aria-label="Resend message" mat-icon-button matTooltip="Resend the message">
                                     <mat-icon>undo</mat-icon>

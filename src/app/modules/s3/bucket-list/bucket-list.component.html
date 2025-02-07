@@ -63,12 +63,12 @@
                                 <td *matCellDef="let element" mat-cell> {{ element.modified.$date | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
+                                <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
                                     <button [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Show details of the bucket" routerLink="./details/{{row.bucketName}}">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="purgeBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="PurgeBucket" mat-icon-button matTooltip="Delete all objects in the bucket">
+                                    <button (click)="purgeBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="PurgeBucket" mat-icon-button matTooltip="Executes the triggers">
                                         <mat-icon>folder_delete</mat-icon>
                                     </button>
                                     <button (click)="deleteBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket and all objects">

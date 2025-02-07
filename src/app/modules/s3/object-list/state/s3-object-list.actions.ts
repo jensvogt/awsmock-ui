@@ -22,6 +22,11 @@ export const s3ObjectListActions = {
     //addObjectFailure: createAction('[s3-object-list] Add Object Error', props<{ error: string }>()),
 
     // Delete object
+    touchObject: createAction('[s3-object-list] Touch Object', props<{ bucketName: string, key: string }>()),
+    touchObjectSuccess: createAction('[s3-object-list] Touch Object Success'),
+    touchObjectFailure: createAction('[s3-object-list] Touch Object Error', props<{ error: string }>()),
+
+    // Delete object
     deleteObject: createAction('[s3-object-list] Delete Object', props<{ bucketName: string, key: string }>()),
     deleteObjectSuccess: createAction('[s3-object-list] Delete Object Success'),
     deleteObjectFailure: createAction('[s3-object-list] Delete Object Error', props<{ error: string }>()),

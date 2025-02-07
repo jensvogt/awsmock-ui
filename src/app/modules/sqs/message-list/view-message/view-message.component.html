@@ -1,24 +1,34 @@
 <h2 cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" cdkcdkDrag mat-dialog-title>SQS message: {{ messageId }}</h2>
 <div *ngIf="isJson">
     <mat-dialog-actions>
-        <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" labelPosition="before">
+        <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" [matTooltipShowDelay]="1000" labelPosition="before" matTooltip="JSON pretty print">
             Pretty Print:
         </mat-slide-toggle>
     </mat-dialog-actions>
 </div>
 <mat-dialog-content class="mat-typography">
     <mat-tab-group>
-        <mat-tab label="Body">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="Message body">
+                    Body
+                </label>
+            </ng-template>
             <mat-form-field style="width: 100%;height:100%">
                 <mat-label>Message:</mat-label>
                 <textarea [(ngModel)]="body" cdkAutosizeMinRows="20" cdkTextareaAutosize matInput placeholder="Message" readonly style="width:100%; height:100%"></textarea>
             </mat-form-field>
         </mat-tab>
-        <mat-tab label="Attributes">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="Message attributes">
+                    Arttributes
+                </label>
+            </ng-template>
             <mat-card-actions class="head-buttons">
                 <span class="fill-remaining-space">
                 </span>
-                <button (click)="addAttribute()" aria-label="Refresh" mat-icon-button>
+                <button (click)="addAttribute()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Add a new attribute">
                     <mat-icon>add</mat-icon>
                 </button>
             </mat-card-actions>
@@ -38,10 +48,10 @@
                 <ng-container matColumnDef="actions">
                     <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                     <td *matCellDef="let row" mat-cell>
-                        <button (click)="editAttribute(row)" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                        <button (click)="editAttribute(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Edit attribute">
                             <mat-icon>edit</mat-icon>
                         </button>
-                        <button (click)="deleteAttribute(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                        <button (click)="deleteAttribute(row.Key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </td>
@@ -68,5 +78,5 @@
     </mat-tab-group>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Close</button>
+    <button [matTooltipShowDelay]="1000" mat-button mat-dialog-close matTooltip="Save the message and close the dialog">Close</button>
 </mat-dialog-actions>

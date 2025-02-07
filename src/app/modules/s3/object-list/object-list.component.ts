@@ -166,6 +166,13 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         }));
     }
 
+    touchObject(key: string) {
+        this.store.dispatch(s3ObjectListActions.touchObject({
+            bucketName: this.bucketName,
+            key: key,
+        }));
+    }
+
     uploadObject() {
 
         const dialogConfig = new MatDialogConfig();

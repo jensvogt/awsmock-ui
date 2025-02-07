@@ -66,8 +66,11 @@
                             <td *matCellDef="let element" mat-cell> {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
+                                <button (click)="resendMessage(row.messageId)" [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" aria-label="Resend message" mat-icon-button matTooltip="Resend the message">
+                                    <mat-icon>undo</mat-icon>
+                                </button>
                                 <button (click)="deleteMessage(row.receiptHandle)" [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
                                     <mat-icon>delete</mat-icon>
                                 </button>

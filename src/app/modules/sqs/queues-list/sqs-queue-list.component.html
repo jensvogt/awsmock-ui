@@ -69,17 +69,13 @@
                             <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue creation timestamp" sortActionDescription="Sort by created">
-                                Created
-                            </th>
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue creation timestamp" sortActionDescription="Sort by created">Created</th>
                             <td *matCellDef="let element" mat-cell>
                                 {{ element.created ? (element.created.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue modified timestamp" sortActionDescription="Sort by modified">
-                                Modified
-                            </th>
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue modified timestamp" sortActionDescription="Sort by modified">Modified</th>
                             <td *matCellDef="let element" mat-cell>
                                 {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>

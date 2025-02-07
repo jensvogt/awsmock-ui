@@ -196,7 +196,7 @@ export class SqsService {
      */
     public sendMessage(queueUrl: string, message: string, delaySeconds: number, messageAttributes: any) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'SendMessage');
-        return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds, MessageAttributes: messageAttributes}, {headers: headers});
+        return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds, MessageAttributes: attributes}, {headers: headers});
     }
 
     /**

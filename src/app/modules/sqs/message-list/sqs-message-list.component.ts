@@ -189,6 +189,13 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         });
     }
 
+    purgeMessages() {
+        this.sqsService.purgeQueue(this.queueUrl).subscribe(() => {
+            this.loadMessages();
+            this.snackBar.open('SQS messages purged, url: ' + this.queueUrl, 'Done', {duration: 5000})
+        });
+    }
+
     deleteMessage(receiptHandle: string) {
         this.lastUpdate = new Date();
         this.sqsService.deleteMessage(this.queueUrl, receiptHandle).subscribe(() => {

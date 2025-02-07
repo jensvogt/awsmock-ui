@@ -6,11 +6,14 @@
         <span class="fill-remaining-space">
             SQS Messages: {{ queueName }} ({{ (listMessageCountersResponse$ | async)?.Total }})
         </span>
-        <button (click)="sendMessage()" aria-label="Refresh" mat-icon-button>
+        <button (click)="sendMessage()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Send a message to the queue">
             <mat-icon>add</mat-icon>
         </button>
-        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+        <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh message list">
             <mat-icon>refresh</mat-icon>
+        </button>
+        <button (click)="purgeMessages()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Purge messages from queue">
+            <mat-icon>clear_all</mat-icon>
         </button>
     </mat-card-header>
     <mat-card-content>

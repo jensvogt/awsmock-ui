@@ -192,11 +192,22 @@ export class SqsService {
      * @param queueUrl SQS queue URL
      * @param message message body to send
      * @param delaySeconds number of seconds delay
-     * @param attributes message attributes
+     * @param messageAttributes message attributes
      */
-    public sendMessage(queueUrl: string, message: string, delaySeconds: number, attributes: any) {
+    public sendMessage(queueUrl: string, message: string, delaySeconds: number, messageAttributes: any) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'SendMessage');
-        return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds, MessageAttributes: attributes}, {headers: headers});
+        return this.http.post(this.url, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds, MessageAttributes: messageAttributes}, {headers: headers});
+    }
+
+    /**
+     * @brief Resend a SQS message
+     *
+     * @param queueArn SQS queue ARN
+     * @param messageId message ID
+     */
+    public resendMessage(queueArn: string, messageId: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ResendMessage');
+        return this.http.post(this.url, {QueueArn: queueArn, MessageId: messageId}, {headers: headers});
     }
 
     /**

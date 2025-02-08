@@ -88,6 +88,26 @@ export class LambdaService {
     }
 
     /**
+     * @brief Stopps the function by stopping all running docker containers
+     *
+     * @param functionArn lambda function AWS ARN
+     */
+    public startFunction(functionArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'start-function');
+        return this.http.post(this.url, {FunctionArn: functionArn}, {headers: headers});
+    }
+
+    /**
+     * @brief Stopps the function by stopping all running docker containers
+     *
+     * @param functionArn lambda function AWS ARN
+     */
+    public stopFunction(functionArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-function');
+        return this.http.post(this.url, {FunctionArn: functionArn}, {headers: headers});
+    }
+
+    /**
      * @brief Gets a list of tags for a lambda function
      *
      * @param lambdaArn lambda ARN

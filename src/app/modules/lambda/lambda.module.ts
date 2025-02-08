@@ -4,19 +4,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable
-} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatSortHeader, MatSortModule} from "@angular/material/sort";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -36,6 +24,8 @@ import {LambdaService} from "./service/lambda-service.component";
 import {lambdaFunctionDetailsFeatureKey, lambdaFunctionDetailsReducer} from "./function-details/state/lambda-function-details.reducer";
 import {LambdaFunctionDetailsComponent} from "./function-details/function-detail.component";
 import {LambdaFunctionDetailsEffects} from "./function-details/state/lambda-function-details.effects";
+import {MatDivider} from "@angular/material/divider";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 @NgModule({
     declarations: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
@@ -85,6 +75,10 @@ import {LambdaFunctionDetailsEffects} from "./function-details/state/lambda-func
         StoreModule.forFeature(lambdaFunctionListFeatureKey, lambdaFunctionListReducer),
         StoreModule.forFeature(lambdaFunctionDetailsFeatureKey, lambdaFunctionDetailsReducer),
         EffectsModule.forFeature([LambdaFunctionListEffects, LambdaFunctionDetailsEffects]),
+        MatDivider,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
     ],
     exports: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
     providers: [LambdaService],

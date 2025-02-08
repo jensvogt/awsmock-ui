@@ -254,6 +254,36 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         });
     }
 
+    startDisabled(functionArn: string) {
+        const found = this.dataSource.data.find((functionItem) => functionItem.functionArn === functionArn);
+        if (found) {
+            return found.state === "Active";
+        }
+        return true;
+    }
+
+    stopDisabled(functionArn: string) {
+        const found = this.dataSource.data.find((functionItem) => functionItem.functionArn === functionArn);
+        if (found) {
+            return !(found.state === "Active");
+        }
+        return true;
+    }
+
+    startFunction(functionArn: string) {
+        this.lambdaService.startFunction(functionArn).subscribe(() => {
+            this.loadFunctions();
+            this.snackBar.open('Lambda function started, ARN: ' + functionArn, 'Done', {duration: 5000});
+        });
+    }
+
+    stopFunction(functionArn: string) {
+        this.lambdaService.stopFunction(functionArn).subscribe(() => {
+            this.loadFunctions();
+            this.snackBar.open('Lambda function stopped, ARN: ' + functionArn, 'Done', {duration: 5000});
+        });
+    }
+
     private initializeData(functions: LambdaFunctionItem[]): void {
         this.total = 0;
         this.lastUpdate = new Date();

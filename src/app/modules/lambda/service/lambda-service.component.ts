@@ -210,6 +210,17 @@ export class LambdaService {
     }
 
     /**
+     * @brief Deletes a function docker image
+     *
+     * @param functionArn function ARN
+     */
+    public deleteImage(functionArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-image');
+        const body = {FunctionArn: functionArn}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a function
      *
      * @param functionName function name

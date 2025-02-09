@@ -188,6 +188,10 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         this.store.dispatch(lambdaFunctionListActions.deleteFunction({functionName: functionName}));
     }
 
+    deleteImage(functionArn: string) {
+        this.store.dispatch(lambdaFunctionListActions.deleteImage({functionArn: functionArn}));
+    }
+
     resetCounters(functionName: string) {
         this.store.dispatch(lambdaFunctionListActions.resetCounters({functionName: functionName}));
     }

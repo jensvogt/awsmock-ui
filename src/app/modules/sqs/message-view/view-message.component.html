@@ -32,7 +32,7 @@
                     <mat-icon>add</mat-icon>
                 </button>
             </mat-card-actions>
-            <table (matSortChange)="attributeSortChange($event)" [dataSource]="messageAttributes" class="mat-elevation-z8" mat-table matSort>
+            <table (matSortChange)="attributeSortChange($event)" [dataSource]="messageAttributesDatasource" class="mat-elevation-z8" mat-table matSort>
                 <ng-container matColumnDef="key">
                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
                     <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
@@ -56,6 +56,40 @@
                         </button>
                     </td>
                 </ng-container>
+                <tr *matHeaderRowDef="messageAttributeColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: messageAttributeColumns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                    <td [attr.colspan]="messageAttributeColumns.length" class="mat-cell">
+                        No data matching the filter.
+                    </td>
+                </tr>
+            </table>
+            <mat-paginator (page)="handleAttributePageEvent($event)"
+                           [disabled]="false"
+                           [hidePageSize]="false"
+                           [length]="messageAttributeLength"
+                           [pageIndex]="messageAttributePageIndex"
+                           [pageSizeOptions]="messageAttributePageSizeOptions"
+                           [pageSize]="messageAttributePageSize"
+                           [showFirstLastButtons]="true"
+                           aria-label="Select page">
+            </mat-paginator>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="attributes">
+                    Attributes
+                </label>
+            </ng-template>
+            <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributesDatasource" class="mat-elevation-z8" mat-table matSort>
+                <ng-container matColumnDef="key">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                </ng-container>
+                <ng-container matColumnDef="value">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                </ng-container>
                 <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
                 <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
                 <tr *matNoDataRow class="mat-row">
@@ -67,7 +101,7 @@
             <mat-paginator (page)="handleAttributePageEvent($event)"
                            [disabled]="false"
                            [hidePageSize]="false"
-                           [length]="messageAttributeLength"
+                           [length]="attributeLength"
                            [pageIndex]="attributePageIndex"
                            [pageSizeOptions]="attributePageSizeOptions"
                            [pageSize]="attributePageSize"

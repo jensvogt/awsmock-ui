@@ -48,3 +48,12 @@ body {
 .mat-list-span-title {
   color: #555555;
 }
+
+.with-icon {
+  display: flex;
+}
+
+.copy-icon {
+  display: inline-flex;
+  font-size: 16px !important;
+}

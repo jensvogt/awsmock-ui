@@ -22,8 +22,8 @@
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <mat-grid-list cols="3" rowHeight="420px">
-                <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <mat-grid-list cols="5" rowHeight="420px">
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
                             <mat-list-item style="height:80px">
@@ -36,15 +36,27 @@
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Handler: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.handler }}</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.handler }}
+                                    <button [cdkCopyToClipboard]="functionItem.handler" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Role: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.role }}</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.role }}
+                                    <button [cdkCopyToClipboard]="functionItem.role" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>ARN: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionArn }}</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionArn }}
+                                    <button [cdkCopyToClipboard]="functionItem.functionArn" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </p>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -97,6 +109,34 @@
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Modified:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.modified ? (functionItem.modified.$date | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                        <mat-list>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>ZIP file name:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.zipFile }}
+                                    <button [cdkCopyToClipboard]="functionItem.zipFile" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>S3 Bucket Name:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3Bucket }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>S3 Key:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3Key }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>S3 Object Version:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3ObjectVersion }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
                             </mat-list-item>
                         </mat-list>
                     </div>

@@ -35,6 +35,17 @@ export class LambdaFunctionListEffects {
                 )
         )));
 
+    deleteImage$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionListActions.deleteImage),
+        mergeMap(action =>
+            this.lambdaService.deleteImage(action.functionArn)
+                .pipe(map(() => lambdaFunctionListActions.deleteImageSuccess()),
+                    catchError((error) =>
+                        of(lambdaFunctionListActions.deleteImageFailure({error: error.message}))
+                    )
+                )
+        )));
+
     deleteFunction$ = createEffect(() => this.actions$.pipe(
         ofType(lambdaFunctionListActions.deleteFunction),
         mergeMap(action =>

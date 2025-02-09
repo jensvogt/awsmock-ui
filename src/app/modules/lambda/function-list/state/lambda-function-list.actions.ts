@@ -20,6 +20,11 @@ export const lambdaFunctionListActions = {
     resetCountersSuccess: createAction('[lambda-function-list] Reset counters success'),
     resetCountersFailure: createAction('[lambda-function-list] Reset counters error', props<{ error: string }>()),
 
+    // Delete image
+    deleteImage: createAction('[lambda-function-list] Delete function image', props<{ functionArn: string }>()),
+    deleteImageSuccess: createAction('[lambda-function-list] Delete function image success'),
+    deleteImageFailure: createAction('[lambda-function-list] Delete function image error', props<{ error: string }>()),
+
     // Delete function
     deleteFunction: createAction('[lambda-function-list] Delete function', props<{ functionName: string }>()),
     deleteFunctionSuccess: createAction('[lambda-function-list] Delete function success'),

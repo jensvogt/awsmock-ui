@@ -33,9 +33,14 @@
                         <ng-container matColumnDef="name">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
                             <td *matCellDef="let element" mat-cell>
-                                <mat-nav-list>
-                                    <a mat-list-item routerLink="./details/{{ element.functionArn }}"> {{ element.functionName }}</a>
-                                </mat-nav-list>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a mat-list-item routerLink="./details/{{ element.functionArn }}"> {{ element.functionName }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.functionName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="runtime">

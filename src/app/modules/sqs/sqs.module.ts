@@ -32,7 +32,7 @@ import {SendMessageComponentDialog} from "./send-message/send-message.component"
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
-import {ViewMessageComponentDialog} from "./message-list/view-message/view-message.component";
+import {ViewMessageComponentDialog} from "./message-view/view-message.component";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";

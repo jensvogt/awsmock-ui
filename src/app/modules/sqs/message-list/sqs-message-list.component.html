@@ -42,7 +42,7 @@
                                     <mat-nav-list>
                                         <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
                                     </mat-nav-list>
-                                    <button [cdkCopyToClipboard]="element.messageId" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                    <button [cdkCopyToClipboard]="element.messageId" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
                                         <mat-icon class="copy-icon">content_copy</mat-icon>
                                     </button>
                                 </div>

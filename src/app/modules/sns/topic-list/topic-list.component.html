@@ -37,7 +37,7 @@
                                     <mat-nav-list>
                                         <a mat-list-item routerLink="./messages/{{ element.topicArn }}">{{ element.topicName }}</a>
                                     </mat-nav-list>
-                                    <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                    <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
                                         <mat-icon class="copy-icon">content_copy</mat-icon>
                                     </button>
                                 </div>

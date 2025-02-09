@@ -1,14 +1,14 @@
 <h2 cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" cdkcdkDrag mat-dialog-title>SQS message: {{ messageId }}</h2>
-<div *ngIf="isJson">
-    <mat-dialog-actions>
-        <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" [matTooltipShowDelay]="1000" labelPosition="before" matTooltip="JSON pretty print">
-            Pretty Print:
-        </mat-slide-toggle>
-    </mat-dialog-actions>
-</div>
 <mat-dialog-content class="mat-typography">
     <mat-tab-group>
         <mat-tab>
+            <div *ngIf="isJson">
+                <mat-dialog-actions>
+                    <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" [matTooltipShowDelay]="1000" labelPosition="before" matTooltip="JSON pretty print">
+                        Pretty Print:
+                    </mat-slide-toggle>
+                </mat-dialog-actions>
+            </div>
             <ng-template mat-tab-label>
                 <label [matTooltipShowDelay]="1000" matTooltip="Message body">
                     Body

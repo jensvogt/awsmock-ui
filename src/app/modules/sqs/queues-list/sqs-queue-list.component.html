@@ -6,10 +6,10 @@
         <span class="fill-remaining-space">
             SQS Queues ({{ (listQueueCountersResponse$ | async)?.Total }})
         </span>
-        <button (click)="createQueue()" aria-label="Refresh" mat-icon-button>
+        <button (click)="createQueue()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new queue">
             <mat-icon>add</mat-icon>
         </button>
-        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+        <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the queue list">
             <mat-icon>refresh</mat-icon>
         </button>
     </mat-card-header>
@@ -34,69 +34,81 @@
                         <ng-container matColumnDef="queueName">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                             <td *matCellDef="let element" mat-cell>
-                                <mat-nav-list>
-                                    <a mat-list-item routerLink="./messages/{{ element.queueArn }}"> {{ element.queueName }}</a>
-                                </mat-nav-list>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a mat-list-item routerLink="./messages/{{ element.queueArn }}"> {{ element.queueName }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.queueName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="messagesAvailable">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages available"
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages available"
                                 sortActionDescription="Sort by messageAvailable">Available
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.available }}</td>
                         </ng-container>
                         <ng-container matColumnDef="messagesInFlight">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages invisible"
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages invisible"
                                 sortActionDescription="Sort by messagesInFlight">In flight
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.invisible }}</td>
                         </ng-container>
                         <ng-container matColumnDef="messagesDelayed">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Number of messages delayed"
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages delayed"
                                 sortActionDescription="Sort by messagesDelayed">Delayed
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ element.delayed }}</td>
                         </ng-container>
                         <ng-container matColumnDef="size">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Total size of all messages in bytes"
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Total size of all messages in bytes"
                                 sortActionDescription="Sort by size">Size
                             </th>
                             <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue creation timestamp" sortActionDescription="Sort by created">
-                                Created
-                            </th>
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Queue creation timestamp" sortActionDescription="Sort by created">Created</th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.created.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.created ? (element.created.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue modified timestamp" sortActionDescription="Sort by modified">
-                                Modified
-                            </th>
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Queue modified timestamp" sortActionDescription="Sort by modified">Modified</th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.modified.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:240px">Actions</th>
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:160px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="sendMessage(row.queueUrl)" aria-label="Send" mat-icon-button matTooltip="Send a message to the queue">
+                                <button (click)="sendMessage(row.queueUrl)" [matTooltipShowDelay]="1000" aria-label="Send" mat-icon-button matTooltip="Send a message to the queue">
                                     <mat-icon>send</mat-icon>
                                 </button>
-                                <button (click)="redriveMessages(row)" [disabled]="!row.isDlq" aria-label="Send" mat-icon-button matTooltip="Redrive messages. Only available for DQLs.">
-                                    <mat-icon>redo</mat-icon>
-                                </button>
-                                <button aria-label="QueueDetails" mat-icon-button matTooltip="View queue details" routerLink="./details/{{ row.queueArn }}">
+                                <button [matTooltipShowDelay]="1000" aria-label="QueueDetails" mat-icon-button matTooltip="View queue details" routerLink="./details/{{ row.queueArn }}">
                                     <mat-icon>visibility</mat-icon>
                                 </button>
-                                <button (click)="purgeQueue(row.queueUrl)" aria-label="Purge" mat-icon-button matTooltip="Purge queue">
-                                    <mat-icon>clear_all</mat-icon>
+                                <button [matMenuTriggerFor]="menu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                                    <mat-icon>more_vert</mat-icon>
                                 </button>
-                                <button (click)="deleteQueue(row.queueUrl)" aria-label="Purge" mat-icon-button matTooltip="Delete the queue">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
+                                <mat-menu #menu="matMenu" xPosition="before">
+                                    <button mat-menu-item>
+                                        <button (click)="purgeQueue(row.queueUrl)" [matTooltipShowDelay]="1000" aria-label="Purge" mat-menu-item matTooltip="Purge queue">
+                                            <mat-icon>clear_all</mat-icon>
+                                            <span>Purge queue</span>
+                                        </button>
+                                        <button (click)="redriveMessages(row)" [disabled]="!row.isDlq" [matTooltipShowDelay]="1000" aria-label="Send" mat-menu-item matTooltip="Redrive messages. Only available for DQLs.">
+                                            <mat-icon>redo</mat-icon>
+                                            <span>Redrive messages</span>
+                                        </button>
+                                        <mat-divider></mat-divider>
+                                        <button (click)="deleteQueue(row.queueUrl)" [matTooltipShowDelay]="1000" aria-label="Purge" mat-menu-item matTooltip="Delete the queue">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete queue</span>
+                                        </button>
+                                    </button>
+                                </mat-menu>
                             </td>
                         </ng-container>
                         <tr *matHeaderRowDef="columns" mat-header-row></tr>

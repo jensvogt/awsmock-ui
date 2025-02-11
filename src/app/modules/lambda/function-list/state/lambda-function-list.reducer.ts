@@ -1,7 +1,7 @@
 import {createReducer, on} from "@ngrx/store";
 import {lambdaFunctionListActions} from './lambda-function-list.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {LambdaFunctionCountersResponse} from "../../model/function-item";
+import {LambdaFunctionCountersResponse} from "../../model/lambda-item";
 
 export const lambdaFunctionListFeatureKey = 'lambda-function-list';
 

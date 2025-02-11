@@ -18,7 +18,7 @@ export class S3Service {
             secretAccessKey: 'none',
         },
         requestHandler: {
-            requestTimeout: 3_000,
+            requestTimeout: 30000,
             httpsAgent: {maxSockets: 25, keepAlive: false},
         },
     });
@@ -40,7 +40,7 @@ export class S3Service {
         return this.client.send(new CreateBucketCommand(input));
     }
 
-    async putObjects(bucketName: string, key: string, content: Blob) {
+    async putObject(bucketName: string, key: string, content: Blob) {
         const command = {
             Bucket: bucketName,
             Key: key,
@@ -48,6 +48,7 @@ export class S3Service {
         };
         return this.client.send(new PutObjectCommand(command));
     }
+
 
     async getObject(bucketName: string, key: string) {
         const command = {
@@ -129,6 +130,20 @@ export class S3Service {
     }
 
     /**
+     * @brief Get a bucket details
+     *
+     * @param id object OID
+     */
+    public getObjectCounter(id: string) {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'GetObjectCounter');
+        const body = {
+            region: environment.awsmockRegion,
+            id: id
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a S3 bucket. This will delete all objects of that bucket.
      *
      * @param bucketName bucket name
@@ -139,6 +154,18 @@ export class S3Service {
             region: environment.awsmockRegion,
             bucketName: bucketName
         }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Touched a S3 bucket.
+     *
+     * @param bucket name of the bucket
+     * @param key object key
+     */
+    public touchObject(bucket: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'TouchObject');
+        const body = {region: environment.awsmockRegion, bucket: bucket, key: key}
         return this.http.post(this.url, body, {headers: headers});
     }
 

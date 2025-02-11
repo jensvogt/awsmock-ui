@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {S3BucketListComponent} from "./bucket-list/bucket-list.component";
 import {S3BucketDetailComponent} from "./bucket-detail/bucket-detail.component";
 import {S3ObjectListComponent} from "./object-list/object-list.component";
-import {S3ObjectViewDialog} from "./object-list/view/object-view.component";
+import {S3ObjectDetailComponent} from "./object-detail/object-detail.component";
 
 const routes: Routes = [
     {
@@ -20,8 +20,8 @@ const routes: Routes = [
         component: S3ObjectListComponent
     },
     {
-        path: 'objects/details/:id',
-        component: S3ObjectViewDialog
+        path: 'objects/:bucketName/details/:id',
+        component: S3ObjectDetailComponent
     }
 ];
 

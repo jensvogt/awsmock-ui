@@ -33,9 +33,14 @@
                         <ng-container matColumnDef="name">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
                             <td *matCellDef="let element" mat-cell>
-                                <mat-nav-list>
-                                    <a mat-list-item routerLink="./details/{{ element.functionName }}"> {{ element.functionName }}</a>
-                                </mat-nav-list>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a mat-list-item routerLink="./details/{{ element.functionArn }}"> {{ element.functionName }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.functionName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="runtime">
@@ -43,7 +48,7 @@
                             <td *matCellDef="let element" mat-cell> {{ element.runtime }}</td>
                         </ng-container>
                         <ng-container matColumnDef="version">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by version">Version</th>
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Version" sortActionDescription="Sort by version">Version</th>
                             <td *matCellDef="let element" mat-cell> {{ element.version }}</td>
                         </ng-container>
                         <ng-container matColumnDef="status">
@@ -61,17 +66,39 @@
                             <td *matCellDef="let element" mat-cell> {{ element.averageRuntime }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="uploadCode(row.functionArn)" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
+                                <button (click)="uploadCode(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
                                     <mat-icon>upload</mat-icon>
                                 </button>
-                                <button (click)="resetCounters(row.functionName)" aria-label="Reset counters" mat-icon-button matTooltip="Reset counters">
-                                    <mat-icon>history</mat-icon>
+                                <button [matMenuTriggerFor]="lambdaListMenu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                                    <mat-icon>more_vert</mat-icon>
                                 </button>
-                                <button (click)="deleteFunction(row.functionName)" aria-label="delete function" mat-icon-button matTooltip="Delete function">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
+                                <mat-menu #lambdaListMenu="matMenu" xPosition="before">
+                                    <button mat-menu-item>
+                                        <button (click)="startFunction(row.functionArn)" [disabled]="startDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Start lambda function" mat-menu-item matTooltip="Start lambda function">
+                                            <mat-icon>start</mat-icon>
+                                            <span>Start function</span>
+                                        </button>
+                                        <button (click)="stopFunction(row.functionArn)" [disabled]="stopDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Stop lambda function" mat-menu-item matTooltip="Stop lambda function">
+                                            <mat-icon>stop</mat-icon>
+                                            <span>Stop function</span>
+                                        </button>
+                                        <button (click)="resetCounters(row.functionName)" [matTooltipShowDelay]="1000" aria-label="Reset counters" mat-menu-item matTooltip="Reset counters">
+                                            <mat-icon>history</mat-icon>
+                                            <span>Reset counters</span>
+                                        </button>
+                                        <mat-divider/>
+                                        <button (click)="deleteImage(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete image</span>
+                                        </button>
+                                        <button (click)="deleteFunction(row.functionName)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete function</span>
+                                        </button>
+                                    </button>
+                                </mat-menu>
                             </td>
                         </ng-container>
                         <tr *matHeaderRowDef="columns" mat-header-row></tr>

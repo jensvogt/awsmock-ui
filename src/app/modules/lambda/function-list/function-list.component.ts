@@ -10,7 +10,7 @@ import {ActionsSubject, select, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {lambdaFunctionListActions} from "./state/lambda-function-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
-import {Code, CreateFunctionRequest, EphemeralStorage, LambdaEnvironment, LambdaFunctionItem} from "../model/function-item";
+import {Code, CreateFunctionRequest, EphemeralStorage, LambdaEnvironment, LambdaFunctionItem} from "../model/lambda-item";
 import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
 import {LambdaFunctionCreateDialog} from "../function-create/function-create-dialog.component";
@@ -188,6 +188,10 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         this.store.dispatch(lambdaFunctionListActions.deleteFunction({functionName: functionName}));
     }
 
+    deleteImage(functionArn: string) {
+        this.store.dispatch(lambdaFunctionListActions.deleteImage({functionArn: functionArn}));
+    }
+
     resetCounters(functionName: string) {
         this.store.dispatch(lambdaFunctionListActions.resetCounters({functionName: functionName}));
     }
@@ -217,10 +221,14 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 request.EphemeralStorage = {} as EphemeralStorage;
                 request.EphemeralStorage.Size = 10;
                 request.Tags = {};
-                request.Tags.version = "latest";
+                if (result.jsonTags) {
+                    request.Tags.version = "latest";
+                }
                 request.Tags.tag = "latest";
                 request.Environment = {} as LambdaEnvironment;
-                request.Environment = JSON.parse(result.jsonEnvironment);
+                if (result.jsonEnvironment) {
+                    request.Environment = JSON.parse(result.jsonEnvironment);
+                }
                 this.lambdaService.createFunction(request).subscribe(() => {
                     this.loadFunctions();
                     this.snackBar.open('Lambda function creation started, name: ' + request.FunctionName, 'Done', {duration: 5000});
@@ -247,6 +255,36 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                     this.snackBar.open('Lambda function code uploaded, ARN: ' + functionArn, 'Done', {duration: 5000});
                 });
             }
+        });
+    }
+
+    startDisabled(functionArn: string) {
+        const found = this.dataSource.data.find((functionItem) => functionItem.functionArn === functionArn);
+        if (found) {
+            return found.state === "Active";
+        }
+        return true;
+    }
+
+    stopDisabled(functionArn: string) {
+        const found = this.dataSource.data.find((functionItem) => functionItem.functionArn === functionArn);
+        if (found) {
+            return !(found.state === "Active");
+        }
+        return true;
+    }
+
+    startFunction(functionArn: string) {
+        this.lambdaService.startFunction(functionArn).subscribe(() => {
+            this.loadFunctions();
+            this.snackBar.open('Lambda function started, ARN: ' + functionArn, 'Done', {duration: 5000});
+        });
+    }
+
+    stopFunction(functionArn: string) {
+        this.lambdaService.stopFunction(functionArn).subscribe(() => {
+            this.loadFunctions();
+            this.snackBar.open('Lambda function stopped, ARN: ' + functionArn, 'Done', {duration: 5000});
         });
     }
 

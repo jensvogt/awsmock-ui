@@ -20,6 +20,30 @@ export class LambdaFunctionDetailsEffects {
         )
     ));
 
+    loadEnvironment$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionDetailsActions.loadEnvironment),
+        mergeMap(action =>
+            this.lambdaService.listEnvironmentCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((environment: any) => lambdaFunctionDetailsActions.loadEnvironmentSuccess({environment})),
+                    catchError((error) =>
+                        of(lambdaFunctionDetailsActions.loadEnvironmentFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
+
+    loadTags$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionDetailsActions.loadTags),
+        mergeMap(action =>
+            this.lambdaService.listTagCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((tags: any) => lambdaFunctionDetailsActions.loadTagsSuccess({tags})),
+                    catchError((error) =>
+                        of(lambdaFunctionDetailsActions.loadTagsFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
+
     constructor(private actions$: Actions, private lambdaService: LambdaService) {
     }
 }

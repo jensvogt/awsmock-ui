@@ -32,8 +32,9 @@ body {
   width: 50%;
   font-size: x-small;
   color: black;
-  padding-top: 15px;
+  padding-top: 5px;
   padding-left: 10px;
+  padding-bottom: 5px;
 }
 
 .fill-remaining-space {
@@ -46,4 +47,13 @@ body {
 
 .mat-list-span-title {
   color: #555555;
+}
+
+.with-icon {
+  display: flex;
+}
+
+.copy-icon {
+  display: inline-flex;
+  font-size: 16px !important;
 }

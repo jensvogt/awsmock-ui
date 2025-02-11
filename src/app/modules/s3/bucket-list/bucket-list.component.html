@@ -36,9 +36,14 @@
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                                 <td *matCellDef="let element" mat-cell>
-                                    <mat-nav-list>
-                                        <a mat-list-item routerLink="./objects/{{ element.bucketName }}"> {{ element.bucketName }}</a>
-                                    </mat-nav-list>
+                                    <div class="with-icon">
+                                        <mat-nav-list>
+                                            <a mat-list-item routerLink="objects/{{ element.bucketName }}"> {{ element.bucketName }}</a>
+                                        </mat-nav-list>
+                                        <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                            <mat-icon class="copy-icon">content_copy</mat-icon>
+                                        </button>
+                                    </div>
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="keys">
@@ -58,16 +63,15 @@
                                 <td *matCellDef="let element" mat-cell> {{ element.modified.$date | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
+                                <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button aria-label="List" mat-icon-button matTooltip="Show details of the bucket" routerLink="./details/{{row.bucketName}}">
+                                    <button [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Show details of the bucket" routerLink="./details/{{row.bucketName}}">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="purgeBucket(row.bucketName)" aria-label="PurgeBucket" mat-icon-button
-                                            matTooltip="Delete all objects in the bucket">
+                                    <button (click)="purgeBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="PurgeBucket" mat-icon-button matTooltip="Executes the triggers">
                                         <mat-icon>folder_delete</mat-icon>
                                     </button>
-                                    <button (click)="deleteBucket(row.bucketName)" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket and all objects">
+                                    <button (click)="deleteBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket and all objects">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </td>

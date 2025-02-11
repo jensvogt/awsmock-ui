@@ -8,7 +8,7 @@ import {Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {filter, interval, Observable, Subscription} from "rxjs";
 import {ListMessageCountersResponse, SqsMessageDialogResult, SqsMessageItem} from "../model/sqs-message-item";
-import {ViewMessageComponentDialog} from "./view-message/view-message.component";
+import {ViewMessageComponentDialog} from "../message-view/view-message.component";
 import {SendMessageComponentDialog} from "../send-message/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
@@ -16,6 +16,7 @@ import {selectPageIndex, selectPageSize, selectPrefix} from "../queues-list/stat
 import {selectMessageCounters} from "./state/sqs-message-list.selectors";
 import {sqsMessageListActions} from "./state/sqs-message-list.actions";
 import {SQSMessageListState} from "./state/sqs-message-list.reducer";
+import {byteConversion} from '../../../shared/byte-utils.component';
 
 @Component({
     selector: 'sqs-message-list',
@@ -33,7 +34,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listMessageCountersResponse$: Observable<ListMessageCountersResponse> = this.store.select(selectMessageCounters);
-    columns: any[] = ['messageId', 'retries', 'created', 'modified', 'actions'];
+    columns: any[] = ['messageId', 'size', 'retries', 'created', 'modified', 'actions'];
 
     // Paging
     pageSizeOptions = [5, 10, 20, 50, 100];
@@ -56,6 +57,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     // Sorting, default create descending
     sortColumns: SortColumn[] = [{column: 'created', sortDirection: 1}];
+    protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private state: State<SQSMessageListState>,
@@ -176,6 +178,21 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
                     this.snackBar.open('Message send, queueArn: ' + this.queueArn, 'Done', {duration: 5000});
                 });
             }
+        });
+    }
+
+    resendMessage(messageId: string) {
+        this.lastUpdate = new Date();
+        this.sqsService.resendMessage(this.queueArn, messageId).subscribe(() => {
+            this.loadMessages();
+            this.snackBar.open('Message resend, queueUrl: ' + this.queueUrl, 'Done', {duration: 5000});
+        });
+    }
+
+    purgeMessages() {
+        this.sqsService.purgeQueue(this.queueUrl).subscribe(() => {
+            this.loadMessages();
+            this.snackBar.open('SQS messages purged, url: ' + this.queueUrl, 'Done', {duration: 5000})
         });
     }
 

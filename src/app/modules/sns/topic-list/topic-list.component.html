@@ -33,9 +33,14 @@
                         <ng-container matColumnDef="topicName">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Name</th>
                             <td *matCellDef="let element" mat-cell>
-                                <mat-nav-list>
-                                    <a mat-list-item routerLink="./messages/{{ element.topicArn }}">{{ element.topicName }}</a>
-                                </mat-nav-list>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a mat-list-item routerLink="./messages/{{ element.topicArn }}">{{ element.topicName }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="availableMessages">
@@ -59,28 +64,28 @@
                                 Created
                             </th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.created.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.created ? (element.created.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Modified</th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.modified.$date | date:'dd-MM-yyyy HH:mm:ss' }}
+                                {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:200px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="publishMessage(row.topicArn)" aria-label="Send" mat-icon-button matTooltip="Send a message">
+                                <button (click)="publishMessage(row.topicArn)" [matTooltipShowDelay]="1000" aria-label="Send" mat-icon-button matTooltip="Send a message">
                                     <mat-icon>send</mat-icon>
                                 </button>
-                                <button aria-label="Details" mat-icon-button matTooltip="Edit topic" routerLink="./details/{{ row.topicArn }}">
+                                <button [matTooltipShowDelay]="1000" aria-label="Details" mat-icon-button matTooltip="Edit topic" routerLink="./details/{{ row.topicArn }}">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button (click)="purgeTopic(row.topicArn)" aria-label="Purge" mat-icon-button matTooltip="Purge the topic">
+                                <button (click)="purgeTopic(row.topicArn)" [matTooltipShowDelay]="1000" aria-label="Purge" mat-icon-button matTooltip="Purge the topic">
                                     <mat-icon>clear_all</mat-icon>
                                 </button>
-                                <button (click)="deleteTopic(row.topicArn)" aria-label="Delete" mat-icon-button matTooltip="Delete the topic">
+                                <button (click)="deleteTopic(row.topicArn)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the topic">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>

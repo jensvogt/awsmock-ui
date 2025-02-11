@@ -22,7 +22,7 @@ import {SqsService} from "./service/sqs-service.component";
 import {SQSRoutingModule} from "./sqs-routing.module";
 import {SqsQueueDetailComponent} from "./queue-detail/sqs-queue-detail.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
-import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatTab, MatTabGroup, MatTabLabel} from "@angular/material/tabs";
 import {SqsMessageListComponent} from "./message-list/sqs-message-list.component";
 import {SqsQueueDetailEffects} from "./queue-detail/state/sqs-queue-detail.effects";
 import {sqsQueueDetailReducer, sqsQueueDetailsFeatureKey} from "./queue-detail/state/sqs-queue-detail.reducer";
@@ -32,9 +32,12 @@ import {SendMessageComponentDialog} from "./send-message/send-message.component"
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
-import {ViewMessageComponentDialog} from "./message-list/view-message/view-message.component";
+import {ViewMessageComponentDialog} from "./message-view/view-message.component";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatDivider} from "@angular/material/divider";
 
 @NgModule({
     declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent, SendMessageComponentDialog, ViewMessageComponentDialog],
@@ -94,6 +97,12 @@ import {MatCheckbox} from "@angular/material/checkbox";
         MatDialogClose,
         MatSlideToggle,
         MatCheckbox,
+        CdkCopyToClipboard,
+        MatTabLabel,
+        MatMenuItem,
+        MatMenuTrigger,
+        MatMenu,
+        MatDivider,
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

@@ -6,31 +6,35 @@ export interface Tag {
 }
 
 export interface Environment {
-    key: string | undefined;
-    value: string | undefined;
+    key: string;
+    value: string;
 }
 
 export interface LambdaFunctionItem {
     id: string | undefined;
     region: string | undefined;
     functionName: string | undefined;
-    functionArn: string | undefined;
+    functionArn: string | "";
     runtime: string | undefined;
-    handler: string | undefined;
+    handler: string | "";
     state: string | undefined;
     tags: any;
     version: string;
     environment: Environment[];
     user: string | undefined;
-    role: string | undefined;
+    role: string | "";
     size: number | undefined;
+    zipFile: string | "";
+    s3Bucket: string | "";
+    s3Key: string | "";
+    s3ObjectVersion: string | "";
     concurrency: number | undefined;
     invocations: number | undefined;
     averageRuntime: number | undefined;
-    lastStarted: BsonDateTime;
-    lastInvocation: BsonDateTime;
-    created: BsonDateTime;
-    modified: BsonDateTime;
+    lastStarted: BsonDateTime | { $date: undefined };
+    lastInvocation: BsonDateTime | { $date: undefined };
+    created: BsonDateTime | { $date: undefined };
+    modified: BsonDateTime | { $date: undefined };
 }
 
 export interface LambdaFunctionCountersResponse {

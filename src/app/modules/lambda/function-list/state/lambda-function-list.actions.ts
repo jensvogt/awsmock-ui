@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {LambdaFunctionCountersResponse} from "../../model/function-item";
+import {LambdaFunctionCountersResponse} from "../../model/lambda-item";
 
 export const lambdaFunctionListActions = {
     initialize: createAction('[lambda-function-list] initialize'),
@@ -19,6 +19,11 @@ export const lambdaFunctionListActions = {
     resetCounters: createAction('[lambda-function-list] Reset counters', props<{ functionName: string }>()),
     resetCountersSuccess: createAction('[lambda-function-list] Reset counters success'),
     resetCountersFailure: createAction('[lambda-function-list] Reset counters error', props<{ error: string }>()),
+
+    // Delete image
+    deleteImage: createAction('[lambda-function-list] Delete function image', props<{ functionArn: string }>()),
+    deleteImageSuccess: createAction('[lambda-function-list] Delete function image success'),
+    deleteImageFailure: createAction('[lambda-function-list] Delete function image error', props<{ error: string }>()),
 
     // Delete function
     deleteFunction: createAction('[lambda-function-list] Delete function', props<{ functionName: string }>()),

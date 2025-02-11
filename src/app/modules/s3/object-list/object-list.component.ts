@@ -154,14 +154,20 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.dialog.open(S3ObjectDownloadComponent, dialogConfig).afterClosed().subscribe((result: any) => {
             if (result) {
-                this.snackBar.open('Object downloaded, bucket: ' + this.bucketName + ' key: ' + result.key, 'Done', {duration: 5000});
-                this.doUpload(result.content, result.key);
+                this.snackBar.open('Object downloaded, bucket: ' + this.bucketName + ' key: ' + result, 'Done', {duration: 5000});
             }
         });
     }
 
     deleteObject(key: string) {
         this.store.dispatch(s3ObjectListActions.deleteObject({
+            bucketName: this.bucketName,
+            key: key,
+        }));
+    }
+
+    touchObject(key: string) {
+        this.store.dispatch(s3ObjectListActions.touchObject({
             bucketName: this.bucketName,
             key: key,
         }));
@@ -178,8 +184,8 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.dialog.open(ObjectUploadComponent, dialogConfig).afterClosed().subscribe((result: any) => {
             if (result) {
-                this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result.key, 'Done', {duration: 5000});
                 this.doUpload(result.content, result.key);
+                this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result.key, 'Done', {duration: 5000});
             }
         });
     }
@@ -187,7 +193,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     viewObject(object: S3ObjectItem) {
 
         if (object !== undefined) {
-            if (object.size !== undefined && object.size > 1024 * 1024) {
+            if (object.size !== undefined && object.size > 256 * 1024 * 1024) {
                 this.snackBar.open("Object to big, maxSize: 1MB", "Error", {duration: 5000});
                 return;
             }
@@ -214,12 +220,17 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Method to handle file upload
     doUpload(content: Blob, key: string): void {
-        this.s3Service.putObjects(this.bucketName, key, content).then(() =>
+
+        //const fileStream = fs.createReadStream(content.webkitRelativePath + "/" + content.name)
+
+        this.s3Service.putObject(this.bucketName, key, content).then(() =>
             this.loadObjects()
         );
     }
 
     hasAllowedContentType(contentType: string) {
-        return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html" || contentType.startsWith("text/plain");
+        return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html" || contentType === "text/xml"
+            || contentType.startsWith("text/plain") || contentType.startsWith("image/jpg") || contentType.startsWith("image/jpeg")
+            || contentType.startsWith("image/png") || contentType.startsWith("image/gif");
     }
 }

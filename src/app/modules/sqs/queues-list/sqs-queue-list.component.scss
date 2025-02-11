@@ -109,3 +109,14 @@
 .mat-column-actions {
   flex: 0 0 10% !important;
 }
+
+.with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.copy-icon {
+  display: inline-flex;
+  vertical-align: bottom;
+  font-size: 16px !important;
+}

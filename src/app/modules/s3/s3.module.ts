@@ -4,19 +4,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable
-} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatSortHeader, MatSortModule} from "@angular/material/sort";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -38,9 +26,13 @@ import {S3RoutingModule} from "./s3-routing.module";
 import {S3Service} from "./service/s3-service.component";
 import {S3ObjectListEffects} from "./object-list/state/s3-object-list.effects";
 import {s3ObjectListFeatureKey, s3ObjectListReducer} from "./object-list/state/s3-object-list.reducer";
+import {S3ObjectDetailComponent} from "./object-detail/object-detail.component";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatDivider} from "@angular/material/divider";
 
 @NgModule({
-    declarations: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent],
+    declarations: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent, S3ObjectDetailComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -87,8 +79,13 @@ import {s3ObjectListFeatureKey, s3ObjectListReducer} from "./object-list/state/s
         StoreModule.forFeature(s3BucketListFeatureKey, s3BucketListReducer),
         StoreModule.forFeature(s3ObjectListFeatureKey, s3ObjectListReducer),
         EffectsModule.forFeature([S3BucketListEffects, S3ObjectListEffects]),
+        CdkCopyToClipboard,
+        MatMenuTrigger,
+        MatDivider,
+        MatMenu,
+        MatMenuItem,
     ],
-    exports: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent],
+    exports: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent, S3ObjectDetailComponent],
     providers: [S3Service, AwsMockHttpService],
 })
 export class S3Module {

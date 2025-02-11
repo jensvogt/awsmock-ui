@@ -33,6 +33,7 @@ import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 
 @NgModule({
     declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, SnsMessageDetailsDialog, PublishMessageComponentDialog],
@@ -91,6 +92,7 @@ import {MatSlideToggle} from "@angular/material/slide-toggle";
         MatDialogActions,
         MatDialogClose,
         MatSlideToggle,
+        CdkCopyToClipboard,
     ],
     exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, PublishMessageComponentDialog, SnsMessageDetailsDialog],
     providers: [SnsService],

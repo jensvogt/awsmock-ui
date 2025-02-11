@@ -1,27 +1,12 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
-import {LambdaClient} from "@aws-sdk/client-lambda";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {CreateFunctionRequest} from "../model/function-item";
+import {CreateFunctionRequest} from "../model/lambda-item";
 
 
 @Injectable({providedIn: 'root'})
 export class LambdaService {
-
-    // S3 client for AWS calls
-    client = new LambdaClient({
-        region: environment.awsmockRegion,
-        endpoint: environment.gatewayEndpoint,
-        credentials: {
-            accessKeyId: 'none',
-            secretAccessKey: 'none',
-        },
-        requestHandler: {
-            requestTimeout: 3_000,
-            httpsAgent: {maxSockets: 25, keepAlive: false},
-        },
-    });
 
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({
@@ -56,13 +41,12 @@ export class LambdaService {
     /**
      * @brief Get a single function counter
      *
-     * @param name function name
+     * @param functionArn function ARN
      */
-    public getFunction(name: string) {
+    public getFunction(functionArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'GetFunctionCounters');
         const body = {
-            region: environment.awsmockRegion,
-            functionName: name
+            functionArn: functionArn
         }
         return this.http.post(this.url, body, {headers: headers});
     }
@@ -104,12 +88,146 @@ export class LambdaService {
     }
 
     /**
+     * @brief Stopps the function by stopping all running docker containers
+     *
+     * @param functionArn lambda function AWS ARN
+     */
+    public startFunction(functionArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'start-function');
+        return this.http.post(this.url, {FunctionArn: functionArn}, {headers: headers});
+    }
+
+    /**
+     * @brief Stopps the function by stopping all running docker containers
+     *
+     * @param functionArn lambda function AWS ARN
+     */
+    public stopFunction(functionArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-function');
+        return this.http.post(this.url, {FunctionArn: functionArn}, {headers: headers});
+    }
+
+    /**
+     * @brief Gets a list of tags for a lambda function
+     *
+     * @param lambdaArn lambda ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listEnvironmentCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ListEnvironmentCounters');
+        return this.http.post(this.url, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Adds an environment variable
+     *
+     * @param functionArn function name
+     * @param key tag key
+     * @param value tag value
+     */
+    public addEnvironment(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'AddFunctionEnvironment');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Update a function environment variable
+     *
+     * @param functionArn function name
+     * @param key environment variable key
+     * @param value environment variable value
+     */
+    public updateEnvironment(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'UpdateFunctionEnvironment');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function environment variable
+     *
+     * @param functionArn function name
+     * @param key environment variable key
+     */
+    public deleteEnvironment(functionArn: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'DeleteFunctionEnvironment');
+        const body = {FunctionArn: functionArn, Key: key}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Gets a list of tags for a lambda function
+     *
+     * @param lambdaArn lambda ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listTagCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ListTagCounters');
+        return this.http.post(this.url, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function tag
+     *
+     * @param functionArn function name
+     * @param key tag key
+     * @param value tag value
+     */
+    public addTag(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'add-function-tag');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Update a function tag
+     *
+     * @param functionArn function name
+     * @param key tag key
+     * @param value tag value
+     */
+    public updateTag(functionArn: string, key: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'update-function-tag');
+        const body = {FunctionArn: functionArn, Key: key, Value: value}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function tag
+     *
+     * @param functionArn function name
+     * @param key tag key
+     */
+    public deleteTag(functionArn: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-function-tag');
+        const body = {FunctionArn: functionArn, Key: key}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function docker image
+     *
+     * @param functionArn function ARN
+     */
+    public deleteImage(functionArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-image');
+        const body = {FunctionArn: functionArn}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a function
      *
      * @param functionName function name
      */
     public deleteFunction(functionName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-upload');
-        return this.http.post(this.url, {functionName: functionName}, {headers: headers});
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-function');
+        const body = {Region: environment.awsmockRegion, FunctionName: functionName}
+        return this.http.post(this.url, body, {headers: headers});
     }
 }

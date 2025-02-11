@@ -70,6 +70,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
+        //this.s3BucketCountersResponse$.subscribe(()=>{});
     }
 
     ngOnInit(): void {
@@ -134,6 +135,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
             pageIndex: this.state.value['s3-bucket-list'].pageIndex,
             sortColumns: this.state.value['s3-bucket-list'].sortColumns
         }));
+        this.lastUpdate = new Date();
     }
 
     addBucket() {

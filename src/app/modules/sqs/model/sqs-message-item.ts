@@ -6,6 +6,11 @@ export interface SqsMessageAttribute {
     DataType: string
 }
 
+export interface SqsAttribute {
+    Key: string,
+    Value: string,
+}
+
 export interface SqsMessageItem {
     region: string | undefined
     id: string | undefined;
@@ -14,18 +19,16 @@ export interface SqsMessageItem {
     receiptHandle: string | undefined;
     md5Sum: string | undefined;
     retries: number | undefined;
+    size: number | undefined;
+    attributes: SqsAttribute[];
+    messageAttributes: SqsMessageAttribute[];
     created: BsonDateTime | undefined;
     modified: BsonDateTime | undefined;
-    messageAttributes: SqsMessageAttribute[];
 }
 
 export interface ListMessageCountersResponse {
     Total: number;
     Messages: SqsMessageItem[];
-}
-
-export interface ListMessageAttributes {
-    Attributes: SqsMessageAttribute[];
 }
 
 export interface SqsMessageDialogResult {

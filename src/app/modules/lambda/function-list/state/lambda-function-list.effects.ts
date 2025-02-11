@@ -35,13 +35,24 @@ export class LambdaFunctionListEffects {
                 )
         )));
 
+    deleteImage$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionListActions.deleteImage),
+        mergeMap(action =>
+            this.lambdaService.deleteImage(action.functionArn)
+                .pipe(map(() => lambdaFunctionListActions.deleteImageSuccess()),
+                    catchError((error) =>
+                        of(lambdaFunctionListActions.deleteImageFailure({error: error.message}))
+                    )
+                )
+        )));
+
     deleteFunction$ = createEffect(() => this.actions$.pipe(
         ofType(lambdaFunctionListActions.deleteFunction),
         mergeMap(action =>
             this.lambdaService.deleteFunction(action.functionName)
-                .pipe(map(() => lambdaFunctionListActions.resetCountersSuccess()),
+                .pipe(map(() => lambdaFunctionListActions.deleteFunctionSuccess()),
                     catchError((error) =>
-                        of(lambdaFunctionListActions.resetCountersFailure({error: error.message}))
+                        of(lambdaFunctionListActions.deleteFunctionFailure({error: error.message}))
                     )
                 )
         )));

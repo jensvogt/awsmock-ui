@@ -6,6 +6,7 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {saveAs} from "file-saver";
+import {S3Service} from "../../service/s3-service.component";
 
 @Component({
     selector: 'export-file-download',
@@ -29,19 +30,27 @@ export class S3ObjectDownloadComponent {
 
     // Todo: Generate server download URL and send the file from there.
     body: string = '';
-    fileName: string | undefined = '';
+    bucket: string = '';
+    key: string = '';
+    fileName: string = '';
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<S3ObjectDownloadComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.body = data;
+    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<S3ObjectDownloadComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service) {
+        this.bucket = data.bucketName;
+        this.key = data.key;
+        this.fileName = this.key.substring(this.key.lastIndexOf('/') + 1);
     }
 
     // Method to handle file upload
     download(): void {
         if (this.fileName) {
-            const blob = new Blob([this.body], {type: "application/json"});
-            saveAs(blob, this.fileName);
-            this.snackBar.open("S3 object saved to local file: " + this.fileName, 'Done', {duration: 5000});
-            this.dialogRef.close(true);
+
+            this.s3Service.getObject(this.bucket, this.key).then((data: any) => {
+                data.Body.transformToByteArray().then((data: any) => {
+                    const blob = new Blob([data], {type: data.ContentType});
+                    saveAs(blob, this.fileName);
+                    this.dialogRef.close(this.fileName);
+                });
+            });
         }
     }
 }

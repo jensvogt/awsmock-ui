@@ -5,7 +5,7 @@ import {Location} from "@angular/common";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {State, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {TransferService} from "../service/transfer-service.component";
+import {TransferService} from "../service/transfer.service";
 import {TransferServerDetailsResponse} from "../model/transfer-server-details";
 import {TransferServerDetailsState} from "./state/transfer-server-detail.reducer";
 import {selectDetails, selectError, selectUserPageIndex, selectUserPageSize, selectUsers} from "./state/transfer-server-detail.selectors";

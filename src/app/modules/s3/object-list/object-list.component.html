@@ -33,9 +33,14 @@
                         <ng-container matColumnDef="key" matTooltip="Object key">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Object key" sortActionDescription="Sort by key">Name</th>
                             <td *matCellDef="let element" mat-cell>
-                                <mat-nav-list>
-                                    <a (click)="viewObject(element)" mat-list-item> {{ element.key }}</a>
-                                </mat-nav-list>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a (click)="viewObject(element)" mat-list-item> {{ element.key }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="contentType" matTooltip="Object content type">
@@ -50,21 +55,37 @@
                         </ng-container>
                         <ng-container matColumnDef="created" matTooltip="Created">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Create timestamp" sortActionDescription="Sort by created">Created</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.created.$date | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.created ? (element.created.$date | date: 'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="modified" matTooltip="Modified">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified timestamp" sortActionDescription="Sort by modified">Modified</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.modified.$date | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.modified ? (element.modified.$date | date: 'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="downloadObject(row.bucketName, row.key)" aria-label="List" mat-icon-button matTooltip="Lists all objects">
+                                <button (click)="downloadObject(row.bucketName, row.key)" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Download object">
                                     <mat-icon>download</mat-icon>
                                 </button>
-                                <button (click)="deleteObject(row.key)" aria-label="DeleteObject" mat-icon-button matTooltip="Delete object">
-                                    <mat-icon>delete</mat-icon>
+                                <button [matTooltipShowDelay]="1000" aria-label="Details" mat-icon-button matTooltip="View object details" routerLink="./details/{{row.oid}}">
+                                    <mat-icon>visibility</mat-icon>
                                 </button>
+                                <button [matMenuTriggerFor]="menu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="before">
+                                    <button mat-menu-item>
+                                        <button (click)="touchObject(row.key)" [matTooltipShowDelay]="1000" aria-label="DeleteObject" mat-menu-item matTooltip="Touch object">
+                                            <mat-icon>touch_app</mat-icon>
+                                            <span>Touch object</span>
+                                        </button>
+                                        <mat-divider/>
+                                        <button (click)="deleteObject(row.key)" [matTooltipShowDelay]="1000" aria-label="DeleteObject" mat-menu-item matTooltip="Delete object">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete object</span>
+                                        </button>
+                                    </button>
+                                </mat-menu>
                             </td>
                         </ng-container>
                         <tr *matHeaderRowDef="columns" mat-header-row></tr>

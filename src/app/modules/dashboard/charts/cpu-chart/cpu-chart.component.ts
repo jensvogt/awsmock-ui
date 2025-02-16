@@ -1,16 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexDataLabels,
-    ApexGrid,
-    ApexStroke,
-    ApexTitleSubtitle,
-    ApexTooltip,
-    ApexXAxis,
-    ApexYAxis,
-    ChartComponent
-} from "ng-apexcharts";
+import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";

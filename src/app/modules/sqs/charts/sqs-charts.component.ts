@@ -8,6 +8,7 @@ import {interval, Subscription} from "rxjs";
 import {MonitoringService} from "../../../services/monitoring.service";
 import {SqsServiceTimeChartComponent} from "./service-time/service-time-chart.component";
 import {SqsMessageWaitTimeChartComponent} from "./message-wait-time/message-wait-time-chart.component";
+import {SqsServiceCountChartComponent} from "./service-count/service-count-chart.component";
 
 @Component({
     selector: 'sqs-charts-component',
@@ -25,6 +26,7 @@ import {SqsMessageWaitTimeChartComponent} from "./message-wait-time/message-wait
         SqsServiceTimeChartComponent,
         SqsMessageWaitTimeChartComponent,
         SqsServiceTimeChartComponent,
+        SqsServiceCountChartComponent,
     ],
     providers: [MonitoringService],
     styleUrls: ['./sqs-charts.component.scss']
@@ -35,16 +37,17 @@ export class SqsChartsComponent implements OnInit, OnDestroy {
     // Auto-update
     updateSubscription: Subscription | undefined;
     @ViewChild(SqsServiceTimeChartComponent) serviceTimeChart: SqsServiceTimeChartComponent | undefined;
+    @ViewChild(SqsServiceCountChartComponent) serviceCountChart: SqsServiceCountChartComponent | undefined;
+    @ViewChild(SqsMessageWaitTimeChartComponent) messageWaitTimeChart: SqsMessageWaitTimeChartComponent | undefined;
 
     constructor(private location: Location) {
         this.updateSubscription = interval(60000).subscribe(() => {
-            this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-            this.serviceTimeChart?.loadServiceTimeChart();
+            this.refresh();
         });
     }
 
     ngOnInit(): void {
-        this.lastUpdate = new Date().toLocaleTimeString('DE-de');
+        this.refresh();
     }
 
     ngOnDestroy(): void {
@@ -56,6 +59,9 @@ export class SqsChartsComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-
+        this.lastUpdate = new Date().toLocaleTimeString('DE-de');
+        this.serviceTimeChart?.loadServiceTimeChart();
+        this.serviceCountChart?.loadServiceCountChart();
+        this.messageWaitTimeChart?.loadMessageWaitTimeChart()
     }
 }

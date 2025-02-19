@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {filter, interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
@@ -27,7 +27,7 @@ import {S3ObjectViewDialog} from "./view/object-view.component";
     standalone: false,
     providers: [S3Service, AwsMockHttpService]
 })
-export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class S3ObjectListComponent implements OnInit, OnDestroy {
 
     // Last update time
     lastUpdate: Date = new Date();
@@ -83,10 +83,6 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
-    }
-
-    ngAfterViewInit() {
-//        this.objectData.sort = this.sort;
     }
 
     setPrefix() {
@@ -211,7 +207,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
             dialogConfig.panelClass = 'full-screen-modal';
             dialogConfig.width = "80%"
             dialogConfig.minWidth = '280px'
-            dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType};
+            dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType, metadata: object.metadata};
 
             this.dialog.open(S3ObjectViewDialog, dialogConfig).afterClosed().subscribe(() => {
             });

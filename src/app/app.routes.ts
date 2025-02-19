@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from "./modules/not-found/not-found.component";
-import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 import {SnsChartsComponent} from "./modules/sns/charts/sns-charts.component";
 import {S3ChartsComponent} from "./modules/s3/charts/s3-charts.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {LambdaChartsComponent} from "./modules/lambda/charts/lambda-charts.component";
 import {CognitoUserDetailsComponent} from "./modules/cognito/user-detail/user-detail.component";
+import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 
 export const routes: Routes = [
     {

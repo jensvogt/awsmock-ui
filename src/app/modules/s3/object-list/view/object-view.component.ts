@@ -1,9 +1,9 @@
 import {Component, Inject} from '@angular/core';
 import {S3Service} from "../../service/s3-service.component";
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -11,7 +11,15 @@ import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
 import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
 import xmlFormat from 'xml-formatter';
 import {NgIf} from "@angular/common";
-import {DomSanitizer} from "@angular/platform-browser";
+import {MatTab, MatTabGroup, MatTabLabel} from "@angular/material/tabs";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
+import {SortColumn} from "../../../../shared/sorting/sorting.component";
+import {S3ObjectMetadata} from "../../model/s3-object-item";
+import {MatIcon} from "@angular/material/icon";
+import {SqsMessageAttribute} from "../../../sqs/model/sqs-message-item";
 
 @Component({
     selector: 's3-object-view',
@@ -34,7 +42,27 @@ import {DomSanitizer} from "@angular/platform-browser";
         ReactiveFormsModule,
         FormsModule,
         MatSlideToggle,
-        NgIf
+        NgIf,
+        MatTab,
+        MatTabGroup,
+        MatTabLabel,
+        MatTooltip,
+        MatCell,
+        MatCellDef,
+        MatColumnDef,
+        MatHeaderCell,
+        MatHeaderRow,
+        MatHeaderRowDef,
+        MatPaginator,
+        MatRow,
+        MatRowDef,
+        MatSort,
+        MatSortHeader,
+        MatTable,
+        MatHeaderCellDef,
+        MatNoDataRow,
+        MatIcon,
+        MatIconButton
     ]
 })
 export class S3ObjectViewDialog {
@@ -48,10 +76,24 @@ export class S3ObjectViewDialog {
     isImage: boolean = false;
     image: any = '';
 
-    constructor(private dialogRef: MatDialogRef<S3ObjectViewDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service, private sanitizer: DomSanitizer) {
+    // Message attributes table
+    metadataDatasource = new MatTableDataSource<S3ObjectMetadata>();
+    metadataLength: number = 0;
+    metadata: S3ObjectMetadata[] = [];
+    metadataPageSize: number = 10;
+    metadataPageIndex: number = 0;
+    metadataColumns: any[] = ['key', 'value', 'actions'];
+    metadataSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
+    metadataPageSizeOptions = [5, 10, 20, 50, 100];
+
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service) {
         this.bucketName = data.bucketName;
         this.key = data.key;
         this.contentType = data.contentType;
+        this.metadata = data.metadata;
+        this.metadataLength = this.metadata.length;
+        this.metadataDatasource.data = data.metadata;
+        console.log("Data: ", this.metadataDatasource.data);
         this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
             if (!data.ContentType?.startsWith("image")) {
                 data.Body?.transformToString().then((data: string) => {
@@ -96,5 +138,25 @@ export class S3ObjectViewDialog {
 
     isXml() {
         return this.contentType === "application/xml";
+    }
+
+    handleMetadataPageEvent(e: PageEvent) {
+        this.metadataPageSize = e.pageSize;
+        this.metadataPageIndex = e.pageIndex;
+    }
+
+    metadataSortChange(sortState: Sort) {
+        this.metadataSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.metadataSortColumns = [{column: column, sortDirection: direction}];
+    }
+
+    editMetadata(attribute: SqsMessageAttribute) {
+
+    }
+
+    deleteMetadata(attribute: SqsMessageAttribute) {
+
     }
 }

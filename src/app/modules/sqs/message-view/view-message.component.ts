@@ -64,9 +64,9 @@ export class ViewMessageComponentDialog implements OnInit {
                 for (const key in a) {
                     let attribute: SqsMessageAttribute = {Key: a[key].Name, Value: a[key].StringValue, DataType: a[key].DataType};
                     this.messageAttributes.push(attribute);
-                    this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
-                    this.messageAttributeLength = this.messageAttributes.length;
                 }
+                this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
+                this.messageAttributeLength = this.messageAttributes.length;
             });
         }
         if (data.message.attributes) {
@@ -74,9 +74,9 @@ export class ViewMessageComponentDialog implements OnInit {
                 for (const key in a) {
                     let attribute: SqsAttribute = {Key: key, Value: a[key]};
                     this.attributes.push(attribute);
-                    this.attributesDatasource = new MatTableDataSource(this.attributes);
-                    this.attributeLength = this.attributes.length;
                 }
+                this.attributesDatasource = new MatTableDataSource(this.attributes);
+                this.attributeLength = this.attributes.length;
             });
         }
         console.log("Input data: ", data.message);

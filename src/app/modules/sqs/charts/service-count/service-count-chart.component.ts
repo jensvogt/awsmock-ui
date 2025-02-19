@@ -19,8 +19,8 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'sqs-message-wait-time-chart-component',
-    templateUrl: './message-wait-time-chart.component.html',
+    selector: 'sqs-service-count-chart-component',
+    templateUrl: './service-count-chart.component.html',
     standalone: true,
     imports: [
         ChartComponent,
@@ -33,15 +33,15 @@ export type ChartOptions = {
         FormsModule,
     ],
     providers: [MonitoringService],
-    styleUrls: ['./message-wait-time-chart.component.scss']
+    styleUrls: ['./service-count-chart.component.scss']
 })
-export class SqsMessageWaitTimeChartComponent implements OnInit {
+export class SqsServiceCountChartComponent implements OnInit {
 
-    public serviceTimeChartOptions!: Partial<ChartOptions> | any;
+    public serviceCountChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("waitTimeChart") waitTimeChart: ChartComponent | undefined;
+    @ViewChild("serviceCountChart") serviceCountChart: ChartComponent | undefined;
 
     constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
@@ -49,31 +49,31 @@ export class SqsMessageWaitTimeChartComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadMessageWaitTimeChart();
+        this.loadServiceCountChart();
     }
 
-    loadMessageWaitTimeChart() {
+    loadServiceCountChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('sqs_message_wait_time', 'queue', start, end, 5)
+        this.monitoringService.getMultiCounters('sqs_service_counter', 'action', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
                     let functions = Object.getOwnPropertyNames(data);
                     const series: any[] = [];
                     functions.forEach((f) => {
                         series.push({name: f, data: data[f]});
-                    })
-                    this.serviceTimeChartOptions = {
+                    });
+                    this.serviceCountChartOptions = {
                         series: series,
                         chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "SQS Wait Time [s]", align: "center"},
+                        title: {text: "SQS Service Count", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Time [ms]"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Count"}, labels: {offsetX: 10}}
                     };
                 }
             });

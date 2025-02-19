@@ -1,17 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexDataLabels,
-    ApexGrid,
-    ApexStroke,
-    ApexTitleSubtitle,
-    ApexTooltip,
-    ApexXAxis,
-    ApexYAxis,
-    ChartComponent
-} from "ng-apexcharts";
+import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
@@ -67,11 +56,16 @@ export class SqsServiceTimeChartComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('sqs_service_timer', start, end, 5)
+        this.monitoringService.getMultiCounters('sqs_service_timer', 'action', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
+                    let functions = Object.getOwnPropertyNames(data);
+                    const series: any[] = [];
+                    functions.forEach((f) => {
+                        series.push({name: f, data: data[f]});
+                    })
                     this.serviceTimeChartOptions = {
-                        series: [{name: "Service Time", data: data.counters}],
+                        series: series,
                         chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},

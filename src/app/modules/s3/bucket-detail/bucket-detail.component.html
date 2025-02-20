@@ -29,7 +29,7 @@
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Bucket name: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.bucketName }}</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ bucketItem.bucket }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>ARN: </p>
@@ -92,11 +92,11 @@
                            matSort>
                         <ng-container matColumnDef="id">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by ID">ID</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.id }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.Id }}</td>
                         </ng-container>
                         <ng-container matColumnDef="lambdaArn">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ARN" sortActionDescription="Sort by arn">ARN</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.lambdaArn }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.CloudFunction }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>

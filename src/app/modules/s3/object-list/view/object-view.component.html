@@ -1,22 +1,86 @@
 <h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>S3 Object: {{ key }}</h2>
-<mat-dialog-actions *ngIf="!isImage">
-    <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" labelPosition="before">
-        Pretty Print:
-    </mat-slide-toggle>
-</mat-dialog-actions>
 <mat-dialog-content *ngIf="!isImage" class="mat-typography">
-    <mat-form-field style="width: 100%;height:100%">
-        <mat-label>Object</mat-label>
-        <textarea [(ngModel)]="transformedBody" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Invalid object" readonly
-                  style="width:100%; height:100%"></textarea>
-    </mat-form-field>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="Message body">
+                    Content
+                </label>
+            </ng-template>
+            <mat-dialog-actions *ngIf="!isImage">
+                <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" labelPosition="before">
+                    Pretty Print:
+                </mat-slide-toggle>
+            </mat-dialog-actions>
+            <mat-form-field style="width: 100%;height:100%">
+                <mat-label>Object</mat-label>
+                <textarea [(ngModel)]="transformedBody" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Invalid object" readonly style="width:100%; height:100%"></textarea>
+            </mat-form-field>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="Metadata">
+                    Metadata
+                </label>
+            </ng-template>
+            <table (matSortChange)="metadataSortChange($event)" [dataSource]="metadataDatasource" class="mat-elevation-z8" mat-table matSort>
+                <ng-container matColumnDef="key">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Metadata Key" sortActionDescription="Sort by metadata key">Name</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                </ng-container>
+                <ng-container matColumnDef="value">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Metadata value" sortActionDescription="Sort by metadata value">Value</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                    <td *matCellDef="let row" mat-cell>
+                        <button (click)="editMetadata(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Edit attribute">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button (click)="deleteMetadata(row.Key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr *matHeaderRowDef="metadataColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: metadataColumns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                    <td [attr.colspan]="metadataColumns.length" class="mat-cell">
+                        No data matching the filter.
+                    </td>
+                </tr>
+            </table>
+            <mat-paginator (page)="handleMetadataPageEvent($event)"
+                           [disabled]="false"
+                           [hidePageSize]="false"
+                           [length]="metadataLength"
+                           [pageIndex]="metadataPageIndex"
+                           [pageSizeOptions]="metadataPageSizeOptions"
+                           [pageSize]="metadataPageSize"
+                           [showFirstLastButtons]="true"
+                           aria-label="Select page">
+            </mat-paginator>
+        </mat-tab>
+    </mat-tab-group>
 </mat-dialog-content>
 <mat-dialog-content *ngIf="isImage" class="mat-typography">
-    <div class="dialog" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="3vw">
-        <div class="image-cont">
-            <img [src]="image" alt="image"/>
-        </div>
-    </div>
+    <mat-tab-group>
+        <mat-tab>
+            <div class="dialog" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="3vw">
+                <div class="image-cont">
+                    <img [src]="image" alt="image"/>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="Metadata">
+                    Metadata
+                </label>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Close</button>

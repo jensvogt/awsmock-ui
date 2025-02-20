@@ -3,6 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {CreateBucketCommand, DeleteBucketCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {S3ObjectMetadata} from "../model/s3-object-item";
 
 
 @Injectable({providedIn: 'root'})
@@ -166,6 +167,19 @@ export class S3Service {
     public touchObject(bucket: string, key: string) {
         let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'TouchObject');
         const body = {region: environment.awsmockRegion, bucket: bucket, key: key}
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
+     * @brief Update an object in a bucket
+     *
+     * @param bucket name of the bucket
+     * @param key object key
+     * @param metadata list of object metadata
+     */
+    public updateObject(bucket: string, key: string, metadata: S3ObjectMetadata[]) {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'UpdateObject');
+        const body = {region: environment.awsmockRegion, bucket: bucket, key: key, metadata: metadata}
         return this.http.post(this.url, body, {headers: headers});
     }
 

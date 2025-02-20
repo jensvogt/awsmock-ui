@@ -11,7 +11,7 @@ import {Store} from "@ngrx/store";
 import {SQSMessageListState} from "../message-list/state/sqs-message-list.reducer";
 import {sqsMessageListActions} from "../message-list/state/sqs-message-list.actions";
 import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
-import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
+import {S3MetadataEditDialog} from "../../s3/metadata-edit/metadata-edit.component";
 
 @Component({
     selector: 'sqs-edit-message-dialog',
@@ -115,7 +115,7 @@ export class ViewMessageComponentDialog implements OnInit {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {};
 
-        this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 this.messageAttributes.push({Key: result.Key, Value: result.Value, DataType: result.DataType});
                 this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);

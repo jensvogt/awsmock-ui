@@ -1,5 +1,5 @@
 <h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>S3 Object: {{ key }}</h2>
-<mat-dialog-content *ngIf="!isImage" class="mat-typography">
+<mat-dialog-content>
     <mat-tab-group>
         <mat-tab>
             <ng-template mat-tab-label>
@@ -12,10 +12,19 @@
                     Pretty Print:
                 </mat-slide-toggle>
             </mat-dialog-actions>
-            <mat-form-field style="width: 100%;height:100%">
-                <mat-label>Object</mat-label>
-                <textarea [(ngModel)]="transformedBody" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Invalid object" readonly style="width:100%; height:100%"></textarea>
-            </mat-form-field>
+            <div *ngIf="!isImage" class="mat-typography">
+                <mat-form-field style="width: 100%;height:100%">
+                    <mat-label>Object</mat-label>
+                    <textarea [(ngModel)]="transformedBody" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Invalid object" readonly style="width:100%; height:100%"></textarea>
+                </mat-form-field>
+            </div>
+            <div *ngIf="isImage" class="mat-typography">
+                <div class="dialog" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="3vw">
+                    <div class="image-cont">
+                        <img [src]="image" alt="image"/>
+                    </div>
+                </div>
+            </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
@@ -61,24 +70,6 @@
                            [showFirstLastButtons]="true"
                            aria-label="Select page">
             </mat-paginator>
-        </mat-tab>
-    </mat-tab-group>
-</mat-dialog-content>
-<mat-dialog-content *ngIf="isImage" class="mat-typography">
-    <mat-tab-group>
-        <mat-tab>
-            <div class="dialog" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="3vw">
-                <div class="image-cont">
-                    <img [src]="image" alt="image"/>
-                </div>
-            </div>
-        </mat-tab>
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <label [matTooltipShowDelay]="1000" matTooltip="Metadata">
-                    Metadata
-                </label>
-            </ng-template>
         </mat-tab>
     </mat-tab-group>
 </mat-dialog-content>

@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {S3Service} from "../../service/s3-service.component";
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -19,7 +19,10 @@ import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {S3ObjectMetadata} from "../../model/s3-object-item";
 import {MatIcon} from "@angular/material/icon";
-import {SqsMessageAttribute} from "../../../sqs/model/sqs-message-item";
+import {S3MetadataEditDialog} from "../../metadata-edit/metadata-edit.component";
+import {s3ObjectListActions} from "../state/s3-object-list.actions";
+import {Store} from "@ngrx/store";
+import {S3ObjectListState} from "../state/s3-object-list.reducer";
 
 @Component({
     selector: 's3-object-view',
@@ -86,7 +89,7 @@ export class S3ObjectViewDialog {
     metadataSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     metadataPageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service, private dialog: MatDialog, private store: Store<S3ObjectListState>) {
         this.bucketName = data.bucketName;
         this.key = data.key;
         this.contentType = data.contentType;
@@ -152,11 +155,35 @@ export class S3ObjectViewDialog {
         this.metadataSortColumns = [{column: column, sortDirection: direction}];
     }
 
-    editMetadata(attribute: SqsMessageAttribute) {
+    editMetadata(metadata: S3ObjectMetadata) {
+        if (metadata) {
+            const dialogConfig = new MatDialogConfig();
 
+            dialogConfig.disableClose = true;
+            dialogConfig.autoFocus = true;
+            dialogConfig.data = {metadata: metadata};
+
+            this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
+                if (result && result.metadata) {
+                    let index = this.metadata.findIndex(x => x.key === result.metadata.key)
+                    if (index > 0) {
+                        this.metadata[index] = result.metadata
+                        this.metadataDatasource = new MatTableDataSource(this.metadata);
+                        this.metadataLength = this.metadata.length;
+                        this.store.dispatch(s3ObjectListActions.updateObject({bucketName: this.bucketName, key: this.key, metadata: this.metadata}));
+                    }
+                }
+            });
+        }
     }
 
-    deleteMetadata(attribute: SqsMessageAttribute) {
-
+    deleteMetadata(metadata: S3ObjectMetadata) {
+        if (metadata.key) {
+            this.metadata = this.metadata.filter(element => {
+                return element.key !== metadata.key
+            });
+            this.metadataDatasource = new MatTableDataSource(this.metadata);
+            this.store.dispatch(s3ObjectListActions.updateObject({bucketName: this.bucketName, key: this.key, metadata: this.metadata}));
+        }
     }
 }

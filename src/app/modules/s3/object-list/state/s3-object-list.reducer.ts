@@ -36,10 +36,10 @@ export const s3ObjectListReducer = createReducer(
     on(s3ObjectListActions.loadObjectsSuccess, (state: S3ObjectListState, {objects}) => ({...state, s3ObjectCounters: objects, loading: false})),
     on(s3ObjectListActions.loadObjectsFailure, (state: S3ObjectListState, {error}) => ({...state, error: error, loading: false})),
 
-    // Add object
-    //on(s3ObjectListActions.addObject, (state: S3ObjectListState) => ({...state, loading: true})),
-    //on(s3ObjectListActions.addObjectSuccess, (state: S3ObjectListState) => ({...state, loading: false})),
-    //on(s3ObjectListActions.addObjectFailure, (state: S3ObjectListState, {error}) => ({...state, error: error, loading: false})),
+    // Update object
+    on(s3ObjectListActions.updateObject, (state: S3ObjectListState) => ({...state, loading: true})),
+    on(s3ObjectListActions.updateObjectSuccess, (state: S3ObjectListState) => ({...state, loading: false})),
+    on(s3ObjectListActions.updateObjectFailure, (state: S3ObjectListState, {error}) => ({...state, error: error, loading: false})),
 
     // Delete object
     on(s3ObjectListActions.deleteObject, (state: S3ObjectListState) => ({...state, loading: true})),

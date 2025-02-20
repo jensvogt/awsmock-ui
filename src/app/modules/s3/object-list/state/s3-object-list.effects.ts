@@ -39,6 +39,17 @@ export class S3ObjectListEffects {
                 )
         )));
 
+    updateObject$ = createEffect(() => this.actions$.pipe(
+        ofType(s3ObjectListActions.updateObject),
+        mergeMap(action =>
+            this.s3Service.updateObject(action.bucketName, action.key, action.metadata)
+                .pipe(map(() => s3ObjectListActions.updateObjectSuccess()),
+                    catchError((error) =>
+                        of(s3ObjectListActions.updateObjectFailure({error: error.message}))
+                    )
+                )
+        )));
+
     deleteObject$ = createEffect(() => this.actions$.pipe(
         ofType(s3ObjectListActions.deleteObject),
         mergeMap(action =>

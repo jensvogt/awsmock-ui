@@ -1,9 +1,8 @@
-import {Component, inject, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import {S3BucketItem} from "../model/s3-bucket-item";
 import {byteConversion} from "../../../shared/byte-utils.component";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {S3Service} from "../service/s3-service.component";
 import {S3ObjectItem} from "../model/s3-object-item";
 
@@ -24,8 +23,6 @@ export class S3ObjectDetailComponent implements OnInit, OnDestroy {
     //
     protected readonly byteConversion = byteConversion;
     private sub: any;
-    // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
 
     constructor(private location: Location, private route: ActivatedRoute, private s3Service: S3Service) {
     }

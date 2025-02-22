@@ -93,10 +93,11 @@ export class S3ObjectViewDialog {
         this.bucketName = data.bucketName;
         this.key = data.key;
         this.contentType = data.contentType;
-        this.metadata = data.metadata;
-        this.metadataLength = this.metadata.length;
-        this.metadataDatasource.data = data.metadata;
-        console.log("Data: ", this.metadataDatasource.data);
+        if (data.metadata !== undefined) {
+            this.metadata = data.metadata;
+            this.metadataLength = this.metadata.length;
+            this.metadataDatasource.data = data.metadata;
+        }
         this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
             if (!data.ContentType?.startsWith("image")) {
                 data.Body?.transformToString().then((data: string) => {

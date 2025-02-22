@@ -26,10 +26,18 @@ import {S3ObjectMetadata} from "../model/s3-object-item";
 })
 export class S3MetadataEditDialog {
 
+    title: string = 'Add Metadata';
+    keyEditable: boolean = false;
     metadata: S3ObjectMetadata = {} as S3ObjectMetadata;
 
     constructor(private dialogRef: MatDialogRef<S3MetadataEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.metadata = data.metadata;
+        if (data.metadata) {
+            this.metadata = data.metadata;
+            this.title = 'Edit Metadata';
+        } else {
+            this.keyEditable = true;
+            this.title = 'Add Metadata';
+        }
     }
 
     save() {

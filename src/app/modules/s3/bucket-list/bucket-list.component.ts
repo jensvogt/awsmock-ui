@@ -10,11 +10,12 @@ import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3BucketCountersResponse, S3BucketItem} from "../model/s3-bucket-item";
 import {selectBucketCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/s3-bucket-list.selectors";
-import {State, Store} from "@ngrx/store";
+import {ActionsSubject, State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {S3BucketListState} from "./state/s3-bucket-list.reducer";
 import {s3BucketListActions} from "./state/s3-bucket-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
+import {ofType} from "@ngrx/effects";
 
 @Component({
     selector: 's3-bucket-list',
@@ -30,7 +31,6 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
 
     // Table
     loading: boolean = false;
-    noData: S3BucketItem[] = [<S3BucketItem>{}];
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
@@ -41,7 +41,6 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
 
     // Auto-update
     updateSubscription: Subscription = new Subscription();
-    tableSubscription: Subscription = new Subscription();
 
     // Prefix
     prefixSet: boolean = false;
@@ -62,7 +61,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator | undefined;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<S3BucketListState>, private store: Store, private location: Location) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<S3BucketListState>, private store: Store, private location: Location, private actionsSubject$: ActionsSubject) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {
@@ -70,12 +69,20 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.s3BucketCountersResponse$.subscribe(()=>{});
     }
 
     ngOnInit(): void {
         this.loadBuckets();
         this.updateSubscription = interval(60000).subscribe(() => this.loadBuckets());
+        this.actionsSubject$.pipe(ofType(s3BucketListActions.addBucketSuccess)).subscribe(() => {
+            this.loadBuckets();
+        });
+        this.actionsSubject$.pipe(ofType(s3BucketListActions.purgeBucketSuccess)).subscribe(() => {
+            this.loadBuckets();
+        });
+        this.actionsSubject$.pipe(ofType(s3BucketListActions.deleteBucketSuccess)).subscribe(() => {
+            this.loadBuckets();
+        });
     }
 
     ngOnDestroy(): void {

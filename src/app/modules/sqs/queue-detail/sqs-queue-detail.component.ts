@@ -55,7 +55,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     attributeColumns: any[] = ['name', 'value'];
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    // Attributes Table
+    // Lambda notification Table
     lambdaTriggers$: Observable<SqsLambdaTriggerCountersResponse> = this.store.select(selectLambdaTriggers);
     lambdaTriggerPageSize$: Observable<number> = this.store.select(selectLambdaTriggerPageSize);
     lambdaTriggerPageIndex$: Observable<number> = this.store.select(selectLambdaTriggerPageIndex);

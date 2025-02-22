@@ -1,41 +1,82 @@
-<!--h2 mat-dialog-title>Upload Object</h2>
-<mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
-    <mat-form-field style="width: 100%">
-        <mat-label>Key</mat-label>
-        <input [(ngModel)]="key" matInput value="">
-    </mat-form-field>
-    <div (click)="uploadFile.click()">
-        <mat-form-field style="width: 100%">
-            <mat-label>File name</mat-label>
-            <input matInput readonly value="{{fileName}}">
-        </mat-form-field>
-        <button color="primary" mat-raised-button>Choose File</button>
-        <input #uploadFile (change)="upload($event)" style="display:none" type='file'/>
-    </div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="doUpload()" cdkFocusInitial mat-button>Upload</button>
-</mat-dialog-actions-->
-
 <h2 mat-dialog-title>Upload File</h2>
-<mat-dialog-content class="mat-typography" style="width: 500px;height:200px">
-    <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
-        <input #fileInput (change)="onFileChange($event)" accept="" hidden type="file"/>
-        <div (click)="fileInput.click()" class="file-dropper">
-            <mat-icon>upload</mat-icon>
-            <p>Upload file</p>
-        </div>
-    </div>
-    <mat-form-field style="width: 100%">
-        <mat-label>File</mat-label>
-        <input [(ngModel)]="fileName" matInput readonly value="">
-    </mat-form-field>
-    <mat-form-field style="width: 100%">
-        <mat-label>Key</mat-label>
-        <input (change)="onFileNameChange()" [(ngModel)]="key" matInput value="">
-    </mat-form-field>
-    <mat-progress-bar mode="determinate" value="{{progress}}"></mat-progress-bar>
+<mat-dialog-content class="mat-typography">
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="Content">
+                    Content
+                </label>
+            </ng-template>
+            <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
+                <input #fileInput (change)="onFileChange($event)" accept="" hidden type="file"/>
+                <div (click)="fileInput.click()" class="file-dropper">
+                    <mat-icon>upload</mat-icon>
+                    <p>Upload file</p>
+                </div>
+            </div>
+            <mat-form-field style="width: 100%">
+                <mat-label>File</mat-label>
+                <input [(ngModel)]="fileName" matInput readonly value="">
+            </mat-form-field>
+            <mat-form-field style="width: 100%">
+                <mat-label>Key</mat-label>
+                <input (change)="onFileNameChange()" [(ngModel)]="key" matInput value="">
+            </mat-form-field>
+            <mat-progress-bar mode="determinate" value="{{progress}}"></mat-progress-bar>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <label [matTooltipShowDelay]="1000" matTooltip="Metadata">
+                    Metadata
+                </label>
+            </ng-template>
+            <mat-card-actions class="head-buttons">
+                <span class="fill-remaining-space">
+                </span>
+                <button (click)="addMetadata()" aria-label="Refresh" mat-icon-button>
+                    <mat-icon>add</mat-icon>
+                </button>
+            </mat-card-actions>
+            <table (matSortChange)="metadataSortChange($event)" [dataSource]="metadataDatasource" class="mat-elevation-z8" mat-table matSort>
+                <ng-container matColumnDef="key">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Metadata Key" sortActionDescription="Sort by metadata key">Name</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                </ng-container>
+                <ng-container matColumnDef="value">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Metadata value" sortActionDescription="Sort by metadata value">Value</th>
+                    <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                    <td *matCellDef="let row" mat-cell>
+                        <button (click)="editMetadata(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Edit attribute">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button (click)="deleteMetadata(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr *matHeaderRowDef="metadataColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: metadataColumns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                    <td [attr.colspan]="metadataColumns.length" class="mat-cell">
+                        No data matching the filter.
+                    </td>
+                </tr>
+            </table>
+            <mat-paginator (page)="handleMetadataPageEvent($event)"
+                           [disabled]="false"
+                           [hidePageSize]="false"
+                           [length]="metadataLength"
+                           [pageIndex]="metadataPageIndex"
+                           [pageSizeOptions]="metadataPageSizeOptions"
+                           [pageSize]="metadataPageSize"
+                           [showFirstLastButtons]="true"
+                           aria-label="Select page">
+            </mat-paginator>
+        </mat-tab>
+    </mat-tab-group>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>

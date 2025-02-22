@@ -5,7 +5,6 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {S3ObjectMetadata} from "../model/s3-object-item";
 
-
 @Injectable({providedIn: 'root'})
 export class S3Service {
 
@@ -24,6 +23,7 @@ export class S3Service {
         },
     });
 
+
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -41,11 +41,19 @@ export class S3Service {
         return this.client.send(new CreateBucketCommand(input));
     }
 
-    async putObject(bucketName: string, key: string, content: Blob) {
+    async putObject(bucketName: string, key: string, content: Blob, metadata: S3ObjectMetadata[]) {
+        //const meta: any = {};
+        const meta: { [k: string]: any } = {};
+        metadata.forEach((m) => {
+            if (m.key !== undefined) {
+                meta[m["key"]] = m.value;
+            }
+        });
         const command = {
             Bucket: bucketName,
             Key: key,
             Body: content,
+            Metadata: meta
         };
         return this.client.send(new PutObjectCommand(command));
     }

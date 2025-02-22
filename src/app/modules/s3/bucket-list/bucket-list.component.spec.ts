@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {BucketListComponent} from './bucket-list.component';
+import {S3BucketListComponent} from './bucket-list.component';
 
 describe('HomeComponent', () => {
-    let component: BucketListComponent;
-    let fixture: ComponentFixture<BucketListComponent>;
+    let component: S3BucketListComponent;
+    let fixture: ComponentFixture<S3BucketListComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [BucketListComponent]
+            declarations: [S3BucketListComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(BucketListComponent);
+        fixture = TestBed.createComponent(S3BucketListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

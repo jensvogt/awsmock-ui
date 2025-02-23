@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {MonitoringConfig} from "./awsmock-http-config";
 import {HttpClient} from "@angular/common/http";
+import {BackendService} from "./backend-service";
 
 @Injectable()
 export class MonitoringService {
@@ -10,7 +11,8 @@ export class MonitoringService {
     monitoringConfig = new MonitoringConfig;
     url: string = environment.gatewayEndpoint + '/';
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private backendService: BackendService) {
+        this.url = backendService.storeConfig.backendUrl = '/';
     }
 
     /**
@@ -25,6 +27,7 @@ export class MonitoringService {
             end: end.getTime(),
             step: step
         }
+        console.log("BackendURL:", this.url);
         return this.http.post(this.url, body, {headers: headers});
     }
 
@@ -41,6 +44,7 @@ export class MonitoringService {
             end: end.getTime(),
             step: step
         }
+        console.log("BackendURL:", this.url);
         return this.http.post(this.url, body, {headers: headers});
     }
 }

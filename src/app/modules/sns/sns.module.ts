@@ -34,6 +34,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, SnsMessageDetailsDialog, PublishMessageComponentDialog],
@@ -93,6 +94,7 @@ import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
         MatDialogClose,
         MatSlideToggle,
         CdkCopyToClipboard,
+        FooterComponent,
     ],
     exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, PublishMessageComponentDialog, SnsMessageDetailsDialog],
     providers: [SnsService],

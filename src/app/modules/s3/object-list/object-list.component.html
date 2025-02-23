@@ -110,7 +110,5 @@
             </mat-paginator>
         </mat-card>
     </mat-card-content>
-    <div class="footer">
-        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
-    </div>
+    <footer-component [lastUpdate]="lastUpdate"/>
 </mat-card>

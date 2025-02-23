@@ -25,6 +25,7 @@ import {TransferServerListEffects} from "./server-list/state/transfer-server-lis
 import {TransferServerDetailComponent} from "./transfer-details/transfer-server-detail.component";
 import {TransferServerDetailEffects} from "./transfer-details/state/transfer-server-detail.effects";
 import {transferServerDetailReducer, transferServerDetailsFeatureKey} from "./transfer-details/state/transfer-server-detail.reducer";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [TransferServerListComponent, TransferServerDetailComponent],
@@ -74,6 +75,7 @@ import {transferServerDetailReducer, transferServerDetailsFeatureKey} from "./tr
         StoreModule.forFeature(transferServerListFeatureKey, transferServerListReducer),
         StoreModule.forFeature(transferServerDetailsFeatureKey, transferServerDetailReducer),
         EffectsModule.forFeature([TransferServerListEffects, TransferServerDetailEffects]),
+        FooterComponent,
     ],
     exports: [TransferServerListComponent],
     providers: [TransferService],

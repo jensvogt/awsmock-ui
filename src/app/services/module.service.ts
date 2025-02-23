@@ -12,7 +12,7 @@ export class ModuleService {
     managerConfig = new ManagerConfig;
     url: string = environment.gatewayEndpoint + '/';
 
-    constructor(private http: HttpClient, private snackBar: MatSnackBar) {
+    constructor(private readonly http: HttpClient, private readonly snackBar: MatSnackBar) {
     }
 
     /**
@@ -21,7 +21,7 @@ export class ModuleService {
      */
     public getModuleList() {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'list-modules');
-        return this.http.get(this.url, {headers: headers}).pipe(catchError(this.handleError));
+        return this.http.get(<string>localStorage.getItem('backendUrl'), {headers: headers}).pipe(catchError(this.handleError));
     }
 
     /**
@@ -34,7 +34,7 @@ export class ModuleService {
             modules: moduleList
         }
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'export');
-        return this.http.post(this.url, body, {headers: headers}).pipe(catchError(this.handleError));
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers}).pipe(catchError(this.handleError));
     }
 
     /**
@@ -42,22 +42,22 @@ export class ModuleService {
      */
     public importInfrastructure(body: string) {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'import');
-        return this.http.post(this.url, body, {headers: headers}).pipe(catchError(this.handleError));
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers}).pipe(catchError(this.handleError));
     }
 
     public cleanInfrastructure(body: any) {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'clean-objects');
-        return this.http.post(this.url, body, {headers: headers}).pipe(catchError(this.handleError));
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers}).pipe(catchError(this.handleError));
     }
 
     public eraseInfrastructure(body: any) {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'erase-infrastructure');
-        return this.http.post(this.url, body, {headers: headers}).pipe(catchError(this.handleError));
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers}).pipe(catchError(this.handleError));
     }
 
     public getConfig() {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'get-config');
-        return this.http.get(this.url, {headers: headers}).pipe(catchError(this.handleError));
+        return this.http.get(<string>localStorage.getItem('backendUrl'), {headers: headers}).pipe(catchError(this.handleError));
     }
 
     private handleError(error: HttpErrorResponse) {

@@ -24,6 +24,7 @@ import {DynamodbService} from "./service/dynamodb.service";
 import {DynamodbItemListComponent} from "./item-list/item-list.component";
 import {dynamodbItemListFeatureKey, dynamodbItemListReducer} from "./item-list/state/dynamodb-item-list.reducer";
 import {DynamodbItemListEffects} from "./item-list/state/dynamodb-item-list.effects";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [DynamodbTableListComponent, DynamodbItemListComponent],
@@ -73,6 +74,7 @@ import {DynamodbItemListEffects} from "./item-list/state/dynamodb-item-list.effe
         StoreModule.forFeature(dynamodbTableListFeatureKey, dynamodbTableListReducer),
         StoreModule.forFeature(dynamodbItemListFeatureKey, dynamodbItemListReducer),
         EffectsModule.forFeature([DynamodbTableListEffects, DynamodbItemListEffects]),
+        FooterComponent,
     ],
     exports: [DynamodbTableListComponent],
     providers: [DynamodbService],

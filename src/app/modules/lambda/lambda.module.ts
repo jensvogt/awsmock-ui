@@ -27,6 +27,7 @@ import {LambdaFunctionDetailsEffects} from "./function-details/state/lambda-func
 import {MatDivider} from "@angular/material/divider";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
@@ -81,6 +82,7 @@ import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
         MatMenuItem,
         MatMenuTrigger,
         CdkCopyToClipboard,
+        FooterComponent,
     ],
     exports: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
     providers: [LambdaService],

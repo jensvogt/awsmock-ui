@@ -14,7 +14,8 @@ export class AppComponent {
 
     service: string = '';
 
-    constructor(private router: Router, private dialog: MatDialog) {
+    constructor(private readonly router: Router, private readonly dialog: MatDialog) {
+
     }
 
     navigateMenu() {
@@ -52,8 +53,7 @@ export class AppComponent {
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
 
-        this.dialog.open(BackendDialog, dialogConfig).afterClosed().subscribe(() => {
-        });
+        this.dialog.open(BackendDialog, dialogConfig).afterClosed().subscribe(()=> {});
     }
 
     logOut() {

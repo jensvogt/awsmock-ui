@@ -1,6 +1,9 @@
-import {ActionReducer, ActionReducerMap, createReducer} from '@ngrx/store';
+import {ActionReducer, ActionReducerMap, createReducer, on} from '@ngrx/store';
 import {routerReducer, RouterState} from '@ngrx/router-store';
 import {environment} from "../../environments/environment";
+import {lambdaFunctionListActions} from "../modules/lambda/function-list/state/lambda-function-list.actions";
+import {LambdaFunctionListState} from "../modules/lambda/function-list/state/lambda-function-list.reducer";
+import {rootActions} from "./root.actions";
 
 export const rootFeatureName: string = 'root';
 
@@ -19,6 +22,10 @@ export const initialState: RootState = {
 
 export const rootReducer: ActionReducer<RootState> = createReducer(
     initialState,
+
+    on(rootActions.setBackendServer, (state: RootState) => ({...state, loading: true})),
+    on(rootActions.setBackendServerSuccess, (state: RootState, {server}) => ({...state, backendServer: server, loading: false})),
+    on(rootActions.setBackendServerFailure, (state: RootState, {error}) => ({...state, error: error, loading: false})),
 );
 
 export const reducers: ActionReducerMap<GlobalState> = {

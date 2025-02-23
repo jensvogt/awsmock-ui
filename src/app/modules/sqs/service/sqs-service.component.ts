@@ -1,8 +1,11 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {environment} from "../../../../environments/environment";
 import {SqsMessageAttribute} from "../model/sqs-message-item";
+import {Store} from "@ngrx/store";
+import {RootState} from "../../../state/root.reducer";
+import {selectBackendServer} from "../../../state/root.selector";
+import {Observable} from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class SqsService {
@@ -12,9 +15,14 @@ export class SqsService {
         'Content-Type': 'application/json',
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
-    url: string = environment.gatewayEndpoint;
+    url$: Observable<string> = this.store.select(selectBackendServer);
+    url: string = '';
 
-    constructor(private http: HttpClient) {
+    constructor(private readonly http: HttpClient, private readonly store: Store<RootState>) {
+        this.url$.subscribe((data)=> {
+            this.url = data;
+            console.log('SQSService URL changed: ',this.url );
+        });
     }
 
     /**
@@ -54,6 +62,7 @@ export class SqsService {
      * @param sortColumns sorting columns
      */
     public listQueueCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        console.log("SQSListQueueCounters",this.url)
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueCounters');
         return this.http.post(this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }

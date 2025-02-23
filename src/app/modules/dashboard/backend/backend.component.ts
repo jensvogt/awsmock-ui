@@ -6,8 +6,11 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {ModuleService} from "../../../services/module.service";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {environment} from "../../../../environments/environment";
-import {BackendService} from "../../../services/backend-service";
+import {State, Store} from "@ngrx/store";
+import {RootState} from "../../../state/root.reducer";
+import {rootActions} from "../../../state/root.actions";
+import {Observable} from "rxjs";
+import {selectBackendServer} from "../../../state/root.selector";
 
 @Component({
     selector: 'backend-dialog',
@@ -32,9 +35,13 @@ import {BackendService} from "../../../services/backend-service";
 })
 export class BackendDialog implements OnInit {
 
-    backendServer: string = environment.gatewayEndpoint;
+    url$: Observable<string> = this.store.select(selectBackendServer);
+    url: string = '';
 
-    constructor(private dialogRef: MatDialogRef<BackendDialog>, private backendService: BackendService) {
+    constructor(private readonly dialogRef: MatDialogRef<BackendDialog>, private readonly state: State<RootState>, private readonly store: Store<RootState>) {
+        this.url$.subscribe((data)=> {
+            this.url = data;
+        });
     }
 
     ngOnInit() {
@@ -42,7 +49,7 @@ export class BackendDialog implements OnInit {
     }
 
     save() {
-        backendService.setBackendServer = this.backendServer;
-        this.dialogRef.close();
+        this.store.dispatch(rootActions.setBackendServer({server: this.url}));
+        this.dialogRef.close(this.url);
     }
 }

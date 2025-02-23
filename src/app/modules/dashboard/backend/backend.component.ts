@@ -8,9 +8,6 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {State, Store} from "@ngrx/store";
 import {RootState} from "../../../state/root.reducer";
-import {rootActions} from "../../../state/root.actions";
-import {Observable} from "rxjs";
-import {selectBackendServer} from "../../../state/root.selector";
 
 @Component({
     selector: 'backend-dialog',
@@ -35,13 +32,10 @@ import {selectBackendServer} from "../../../state/root.selector";
 })
 export class BackendDialog implements OnInit {
 
-    url$: Observable<string> = this.store.select(selectBackendServer);
-    url: string = '';
+    url: string | null = '';
 
     constructor(private readonly dialogRef: MatDialogRef<BackendDialog>, private readonly state: State<RootState>, private readonly store: Store<RootState>) {
-        this.url$.subscribe((data)=> {
-            this.url = data;
-        });
+        this.url = localStorage.getItem('backendUrl');
     }
 
     ngOnInit() {
@@ -49,7 +43,9 @@ export class BackendDialog implements OnInit {
     }
 
     save() {
-        this.store.dispatch(rootActions.setBackendServer({server: this.url}));
-        this.dialogRef.close(this.url);
+        if(this.url !== null){
+            localStorage.setItem('backendUrl', this.url);
+        }
+        this.dialogRef.close();
     }
 }

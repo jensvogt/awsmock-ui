@@ -30,6 +30,7 @@ import {S3ObjectDetailComponent} from "./object-detail/object-detail.component";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatDivider} from "@angular/material/divider";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent, S3ObjectDetailComponent],
@@ -84,6 +85,7 @@ import {MatDivider} from "@angular/material/divider";
         MatDivider,
         MatMenu,
         MatMenuItem,
+        FooterComponent,
     ],
     exports: [S3BucketListComponent, S3BucketDetailComponent, S3ObjectListComponent, S3ObjectDetailComponent],
     providers: [S3Service, AwsMockHttpService],

@@ -57,9 +57,6 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <!--button (click)="listUsers(row.userPoolId)" aria-label="ListUsers" mat-icon-button matTooltip="Lists all users of that table">
-                                    <mat-icon>group</mat-icon>
-                                </button-->
                                 <button (click)="deleteTable(row.tableName)" aria-label="DeleteTable" mat-icon-button matTooltip="Delete table">
                                     <mat-icon>delete</mat-icon>
                                 </button>
@@ -86,8 +83,6 @@
                            aria-label="Select page" style="width:99%; margin-left:15px">
             </mat-paginator>
         </mat-card>
-        <div class="footer">
-            Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
-        </div>
+        <footer-component [lastUpdate]="lastUpdate"/>
     </mat-card-content>
 </mat-card>

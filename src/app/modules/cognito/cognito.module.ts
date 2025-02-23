@@ -37,6 +37,7 @@ import {CognitoUserListComponent} from "./user-list/user-list.component";
 import {cognitoUserListFeatureKey, cognitoUserListReducer} from "./user-list/state/cognito-user-list.reducer";
 import {CognitoUserListEffects} from "./user-list/state/cognito-user-list.effects";
 import {CognitoUserDetailsComponent} from "./user-detail/user-detail.component";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [CognitoUserPoolListComponent, CognitoUserListComponent, CognitoUserDetailsComponent],
@@ -86,6 +87,7 @@ import {CognitoUserDetailsComponent} from "./user-detail/user-detail.component";
         StoreModule.forFeature(cognitoUserPoolListFeatureKey, cognitoUserPoolListReducer),
         StoreModule.forFeature(cognitoUserListFeatureKey, cognitoUserListReducer),
         EffectsModule.forFeature([CognitoUserPoolListEffects, CognitoUserListEffects]),
+        FooterComponent,
     ],
     exports: [CognitoUserPoolListComponent, CognitoUserListComponent, CognitoUserDetailsComponent],
     providers: [CognitoService],

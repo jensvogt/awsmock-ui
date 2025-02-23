@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {filter, interval, Observable, Subscription} from "rxjs";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -13,12 +13,14 @@ import {S3BucketListState} from "../bucket-list/state/s3-bucket-list.reducer";
 import {Location} from "@angular/common";
 import {s3ObjectListActions} from "./state/s3-object-list.actions";
 import {selectPageIndex, selectPageSize} from "../bucket-list/state/s3-bucket-list.selectors";
-import {S3ObjectCounterResponse, S3ObjectItem} from "../model/s3-object-item";
+import {S3ObjectCounterResponse, S3ObjectItem, S3ObjectMetadata} from "../model/s3-object-item";
 import {selectObjectCounters} from "./state/s3-object-list.selectors";
 import {ObjectUploadComponent} from "../object-upload/object-upload.component";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3ObjectDownloadComponent} from "./download/s3-object-download.component";
 import {S3ObjectViewDialog} from "./view/object-view.component";
+import {ofType} from "@ngrx/effects";
+import {s3BucketListActions} from "../bucket-list/state/s3-bucket-list.actions";
 
 @Component({
     selector: 's3-object-list',
@@ -27,7 +29,7 @@ import {S3ObjectViewDialog} from "./view/object-view.component";
     standalone: false,
     providers: [S3Service, AwsMockHttpService]
 })
-export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class S3ObjectListComponent implements OnInit, OnDestroy {
 
     // Last update time
     lastUpdate: Date = new Date();
@@ -59,17 +61,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     protected routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private state: State<S3BucketListState>, private store: Store,
-                private actionsSubj$: ActionsSubject, private location: Location, private s3Service: S3Service) {
-
-        // Subscribe to action events, reload table when the action got successful executed
-        this.actionsSubj$.pipe(
-            filter((action) =>
-                action.type === s3ObjectListActions.deleteObjectSuccess.type
-            )
-        ).subscribe(() => {
-            this.loadObjects();
-        });
-//        this.s3ObjectCountersResponse$.subscribe((data) => {console.log(data);});
+                private location: Location, private s3Service: S3Service, private actionsSubject$: ActionsSubject) {
     }
 
     ngOnInit(): void {
@@ -79,14 +71,19 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.updateSubscription = interval(60000).subscribe(() => this.loadObjects());
         this.loadObjects();
+        this.actionsSubject$.pipe(ofType(s3BucketListActions.addBucketSuccess)).subscribe(() => {
+            this.loadObjects();
+        });
+        this.actionsSubject$.pipe(ofType(s3BucketListActions.purgeBucketSuccess)).subscribe(() => {
+            this.loadObjects();
+        });
+        this.actionsSubject$.pipe(ofType(s3BucketListActions.deleteBucketSuccess)).subscribe(() => {
+            this.loadObjects();
+        });
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
-    }
-
-    ngAfterViewInit() {
-//        this.objectData.sort = this.sort;
     }
 
     setPrefix() {
@@ -179,12 +176,15 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {bucketName: this.bucketName}
-        dialogConfig.height = "430px"
+        dialogConfig.data = {bucketName: this.bucketName};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.width = "40%"
+        dialogConfig.panelClass = 'full-screen-modal';
 
         this.dialog.open(ObjectUploadComponent, dialogConfig).afterClosed().subscribe((result: any) => {
             if (result) {
-                this.doUpload(result.content, result.key);
+                this.doUpload(result.content, result.key, result.metadata);
                 this.snackBar.open('Object uploaded, bucket: ' + this.bucketName + ' key: ' + result.key, 'Done', {duration: 5000});
             }
         });
@@ -211,7 +211,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
             dialogConfig.panelClass = 'full-screen-modal';
             dialogConfig.width = "80%"
             dialogConfig.minWidth = '280px'
-            dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType};
+            dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType, metadata: object.metadata};
 
             this.dialog.open(S3ObjectViewDialog, dialogConfig).afterClosed().subscribe(() => {
             });
@@ -219,11 +219,8 @@ export class S3ObjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Method to handle file upload
-    doUpload(content: Blob, key: string): void {
-
-        //const fileStream = fs.createReadStream(content.webkitRelativePath + "/" + content.name)
-
-        this.s3Service.putObject(this.bucketName, key, content).then(() =>
+    doUpload(content: Blob, key: string, metadata: S3ObjectMetadata[]): void {
+        this.s3Service.putObject(this.bucketName, key, content, metadata).then(() =>
             this.loadObjects()
         );
     }

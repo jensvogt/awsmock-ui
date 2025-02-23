@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {S3ObjectCounterResponse} from "../../model/s3-object-item";
+import {S3ObjectCounterResponse, S3ObjectMetadata} from "../../model/s3-object-item";
 
 export const s3ObjectListActions = {
     initialize: createAction('[s3-object-list] initialize'),
@@ -16,10 +16,10 @@ export const s3ObjectListActions = {
     loadObjectsSuccess: createAction('[s3-object-list] Load Objects Success', props<{ objects: S3ObjectCounterResponse }>()),
     loadObjectsFailure: createAction('[s3-object-list] Load Objects Error', props<{ error: string }>()),
 
-    // Add object
-    //addObject: createAction('[s3-object-list] Add Object', props<{ objectName: string }>()),
-    //addObjectSuccess: createAction('[s3-object-list] Add Object Success'),
-    //addObjectFailure: createAction('[s3-object-list] Add Object Error', props<{ error: string }>()),
+    // Update object
+    updateObject: createAction('[s3-object-list] Update Object', props<{ bucketName: string, key: string, metadata: S3ObjectMetadata[] }>()),
+    updateObjectSuccess: createAction('[s3-object-list] Update Object Success'),
+    updateObjectFailure: createAction('[s3-object-list] Update Object Error', props<{ error: string }>()),
 
     // Delete object
     touchObject: createAction('[s3-object-list] Touch Object', props<{ bucketName: string, key: string }>()),

@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {LambdaFunctionInvocationsChartComponent} from "./lambda-function-invocation-count-chart.component";
 
-import {VirtMemoryChartComponent} from './virt-memory-chart.component';
 
 describe('HomeComponent', () => {
-    let component: VirtMemoryChartComponent;
-    let fixture: ComponentFixture<VirtMemoryChartComponent>;
+    let component: LambdaFunctionInvocationsChartComponent;
+    let fixture: ComponentFixture<LambdaFunctionInvocationsChartComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [VirtMemoryChartComponent]
+            declarations: [LambdaFunctionInvocationsChartComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(VirtMemoryChartComponent);
+        fixture = TestBed.createComponent(LambdaFunctionInvocationsChartComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

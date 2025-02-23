@@ -11,7 +11,7 @@ import {Store} from "@ngrx/store";
 import {SQSMessageListState} from "../message-list/state/sqs-message-list.reducer";
 import {sqsMessageListActions} from "../message-list/state/sqs-message-list.actions";
 import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
-import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
+import {S3MetadataEditDialog} from "../../s3/metadata-edit/metadata-edit.component";
 
 @Component({
     selector: 'sqs-edit-message-dialog',
@@ -64,9 +64,9 @@ export class ViewMessageComponentDialog implements OnInit {
                 for (const key in a) {
                     let attribute: SqsMessageAttribute = {Key: a[key].Name, Value: a[key].StringValue, DataType: a[key].DataType};
                     this.messageAttributes.push(attribute);
-                    this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
-                    this.messageAttributeLength = this.messageAttributes.length;
                 }
+                this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
+                this.messageAttributeLength = this.messageAttributes.length;
             });
         }
         if (data.message.attributes) {
@@ -74,9 +74,9 @@ export class ViewMessageComponentDialog implements OnInit {
                 for (const key in a) {
                     let attribute: SqsAttribute = {Key: key, Value: a[key]};
                     this.attributes.push(attribute);
-                    this.attributesDatasource = new MatTableDataSource(this.attributes);
-                    this.attributeLength = this.attributes.length;
                 }
+                this.attributesDatasource = new MatTableDataSource(this.attributes);
+                this.attributeLength = this.attributes.length;
             });
         }
         console.log("Input data: ", data.message);
@@ -115,7 +115,7 @@ export class ViewMessageComponentDialog implements OnInit {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {};
 
-        this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 this.messageAttributes.push({Key: result.Key, Value: result.Value, DataType: result.DataType});
                 this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);

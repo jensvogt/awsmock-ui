@@ -14,13 +14,6 @@
                     Body
                 </label>
             </ng-template>
-            <div *ngIf="isJson">
-                <mat-dialog-actions>
-                    <mat-slide-toggle (change)="changePrettyPrint($event)" [checked]="prettyPrint" [matTooltipShowDelay]="1000" labelPosition="before" matTooltip="JSON pretty print">
-                        Pretty Print:
-                    </mat-slide-toggle>
-                </mat-dialog-actions>
-            </div>
             <mat-form-field style="width:100%; height:85%">
                 <mat-label>Message:</mat-label>
                 <textarea [(ngModel)]="body" cdkAutosizeMinRows="20" cdkTextareaAutosize matInput placeholder="Message" readonly></textarea>

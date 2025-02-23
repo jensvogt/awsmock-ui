@@ -1,11 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
+import {MatOption, MatSelect} from "@angular/material/select";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -20,29 +19,29 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'gateway-requests-chart-component',
-    templateUrl: './gateway-requests.component.html',
-    styleUrls: ['./gateway-requests.component.scss'],
+    selector: 'lambda-invocation-time-chart-component',
+    templateUrl: './lambda-function-invocation-time-chart.component.html',
+    standalone: true,
     imports: [
-        MatCardHeader,
+        ChartComponent,
         MatCard,
+        MatCardHeader,
+        MatCardContent,
         MatCardActions,
         MatSelect,
-        FormsModule,
         MatOption,
-        MatCardContent,
-        ChartComponent,
-        NgIf
+        FormsModule,
     ],
-    standalone: true
+    providers: [MonitoringService],
+    styleUrls: ['./lambda-function-invocation-time-chart.component.scss']
 })
-export class GatewayRequestsComponent implements OnInit {
+export class LambdaFunctionInvocationTimeChartComponent implements OnInit {
 
-    public httpTimeChartOptions!: Partial<ChartOptions> | any;
+    public lambdaFunctionCounterChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("httpTimerChart") httpTimerChart: ChartComponent | undefined;
+    @ViewChild("LambdaServiceTimeChart") lambdaServiceTimeChart: ChartComponent | undefined;
 
     constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
@@ -50,38 +49,31 @@ export class GatewayRequestsComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadHttpRequestsChart();
+        this.loadLambdaInvocationTimeChart();
     }
 
-    loadHttpRequestsChart() {
+    loadLambdaInvocationTimeChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('gateway_http_counter', 'method', start, end, 5)
+        this.monitoringService.getMultiCounters('lambda_invocation_timer', 'function_name', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    let types = Object.getOwnPropertyNames(data);
+                    let functions = Object.getOwnPropertyNames(data);
                     const series: any[] = [];
-                    types.forEach((t) => {
-                        series.push({name: t, data: data[t]});
-                    });
-                    this.httpTimeChartOptions = {
+                    functions.forEach((f) => {
+                        series.push({name: f, data: data[f]});
+                    })
+                    this.lambdaFunctionCounterChartOptions = {
                         series: series,
-                        chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
+                        chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
-                        title: {text: "HTTP Requests", align: "center"},
-                        tooltip: {x: {format: "dd/MM HH:mm:ss"}},
+                        tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
+                        title: {text: "Invocation Time", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {
-                            min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "HTTP Requests"}, labels: {
-                                formatter: function (val: number) {
-                                    return val.toFixed(0)
-                                },
-                                offsetX: 10
-                            }
-                        }
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Time [ms]"}, labels: {offsetX: 10}}
                     };
                 }
             });

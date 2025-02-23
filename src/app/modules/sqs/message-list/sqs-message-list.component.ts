@@ -9,7 +9,7 @@ import {Location} from "@angular/common";
 import {filter, interval, Observable, Subscription} from "rxjs";
 import {ListMessageCountersResponse, SqsMessageDialogResult, SqsMessageItem} from "../model/sqs-message-item";
 import {ViewMessageComponentDialog} from "../message-view/view-message.component";
-import {SendMessageComponentDialog} from "../send-message/send-message.component";
+import {SendMessageComponentDialog} from "../message-send/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
 import {selectPageIndex, selectPageSize, selectPrefix} from "../queues-list/state/sqs-queue-list.selectors";

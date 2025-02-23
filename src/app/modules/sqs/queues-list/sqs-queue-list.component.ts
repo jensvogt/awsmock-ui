@@ -6,7 +6,7 @@ import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
 import {SqsService} from "../service/sqs-service.component";
-import {SendMessageComponentDialog} from "../send-message/send-message.component";
+import {SendMessageComponentDialog} from "../message-send/send-message.component";
 import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from "./state/sqs-queue-list.selectors";

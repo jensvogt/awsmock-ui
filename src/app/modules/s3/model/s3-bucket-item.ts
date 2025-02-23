@@ -25,7 +25,7 @@ export interface TopicConfiguration {
 export interface S3BucketItem {
     id: string | undefined;
     region: string | undefined;
-    bucketName: string | undefined;
+    bucket: string | undefined;
     keys: number | undefined;
     size: number | undefined;
     arn: string | undefined;

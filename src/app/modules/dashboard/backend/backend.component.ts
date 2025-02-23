@@ -7,6 +7,7 @@ import {ModuleService} from "../../../services/module.service";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {environment} from "../../../../environments/environment";
+import {BackendService} from "../../../services/backend-service";
 
 @Component({
     selector: 'backend-dialog',
@@ -33,7 +34,7 @@ export class BackendDialog implements OnInit {
 
     backendServer: string = environment.gatewayEndpoint;
 
-    constructor(private dialogRef: MatDialogRef<BackendDialog>) {
+    constructor(private dialogRef: MatDialogRef<BackendDialog>, private backendService: BackendService) {
     }
 
     ngOnInit() {
@@ -41,7 +42,7 @@ export class BackendDialog implements OnInit {
     }
 
     save() {
-        environment.gatewayEndpoint = this.backendServer;
+        backendService.setBackendServer = this.backendServer;
         this.dialogRef.close();
     }
 }

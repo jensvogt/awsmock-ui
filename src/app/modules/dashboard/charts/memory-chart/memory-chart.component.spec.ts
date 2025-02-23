@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {S3BucketListComponent} from './bucket-list.component';
+import {MemoryChartComponent} from './memory-chart.component';
 
 describe('HomeComponent', () => {
-    let component: S3BucketListComponent;
-    let fixture: ComponentFixture<S3BucketListComponent>;
+    let component: MemoryChartComponent;
+    let fixture: ComponentFixture<MemoryChartComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [S3BucketListComponent]
+            declarations: [MemoryChartComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(S3BucketListComponent);
+        fixture = TestBed.createComponent(MemoryChartComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

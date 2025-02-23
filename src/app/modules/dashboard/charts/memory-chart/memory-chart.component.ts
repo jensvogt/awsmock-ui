@@ -20,9 +20,9 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'real-memory-chart-component',
-    templateUrl: './real-memory-chart.component.html',
-    styleUrls: ['./real-memory-chart.component.scss'],
+    selector: 'memory-chart-component',
+    templateUrl: './memory-chart.component.html',
+    styleUrls: ['./memory-chart.component.scss'],
     imports: [
         MatCardActions,
         MatSelect,
@@ -36,7 +36,7 @@ export type ChartOptions = {
     ],
     standalone: true
 })
-export class RealMemoryChartComponent implements OnInit {
+export class MemoryChartComponent implements OnInit {
 
     public memChartOptions!: Partial<ChartOptions> | any;
 
@@ -57,15 +57,20 @@ export class RealMemoryChartComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('real_memory_used', start, end, 5)
+        this.monitoringService.getMultiCounters('memory_usage', "mem_type", start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
+                    let types = Object.getOwnPropertyNames(data);
+                    const series: any[] = [];
+                    types.forEach((t) => {
+                        series.push({name: t, data: data[t]});
+                    });
                     this.memChartOptions = {
-                        series: [{name: "realMemoryChart", data: data.counters}],
+                        series: series,
                         chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
-                        title: {text: "Real Memory", align: "center"},
+                        title: {text: "Memory Usage", align: "center"},
                         tooltip: {x: {format: "dd/MM HH:mm:ss"}},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},

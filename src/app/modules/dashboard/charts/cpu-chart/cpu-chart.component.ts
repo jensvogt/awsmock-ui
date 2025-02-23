@@ -1,16 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexDataLabels,
-    ApexGrid,
-    ApexStroke,
-    ApexTitleSubtitle,
-    ApexTooltip,
-    ApexXAxis,
-    ApexYAxis,
-    ChartComponent
-} from "ng-apexcharts";
+import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
@@ -68,16 +57,21 @@ export class CpuChartComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('total_cpu', start, end, 5)
+        this.monitoringService.getMultiCounters('cpu_usage', 'cpu_type', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
+                    let types = Object.getOwnPropertyNames(data);
+                    const series: any[] = [];
+                    types.forEach((t) => {
+                        series.push({name: t, data: data[t]});
+                    });
                     this.cpuChartOptions = {
-                        series: [{name: "CPU Usage", data: data.counters}],
+                        series: series,
                         chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "CPU", align: "center"},
+                        title: {text: "CPU Usage", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
                         yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}

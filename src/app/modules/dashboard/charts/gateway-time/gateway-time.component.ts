@@ -1,16 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexDataLabels,
-    ApexGrid,
-    ApexStroke,
-    ApexTitleSubtitle,
-    ApexTooltip,
-    ApexXAxis,
-    ApexYAxis,
-    ChartComponent
-} from "ng-apexcharts";
+import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
@@ -68,11 +57,16 @@ export class GatewayTimeComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('gateway_http_timer', start, end, 5)
+        this.monitoringService.getMultiCounters('gateway_http_timer', 'method', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
+                    let types = Object.getOwnPropertyNames(data);
+                    const series: any[] = [];
+                    types.forEach((t) => {
+                        series.push({name: t, data: data[t]});
+                    });
                     this.httpTimeChartOptions = {
-                        series: [{name: "HTTP Response Time", data: data.counters}],
+                        series: series,
                         chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},

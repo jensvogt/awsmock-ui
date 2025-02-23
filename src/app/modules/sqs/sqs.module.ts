@@ -28,7 +28,7 @@ import {SqsQueueDetailEffects} from "./queue-detail/state/sqs-queue-detail.effec
 import {sqsQueueDetailReducer, sqsQueueDetailsFeatureKey} from "./queue-detail/state/sqs-queue-detail.reducer";
 import {sqsMessageListFeatureKey, sqsMessageListReducer} from "./message-list/state/sqs-message-list.reducer";
 import {SqsMessageListEffects} from "./message-list/state/sqs-message-list.effects";
-import {SendMessageComponentDialog} from "./send-message/send-message.component";
+import {SendMessageComponentDialog} from "./message-send/send-message.component";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";

@@ -1,16 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexDataLabels,
-    ApexGrid,
-    ApexStroke,
-    ApexTitleSubtitle,
-    ApexTooltip,
-    ApexXAxis,
-    ApexYAxis,
-    ChartComponent
-} from "ng-apexcharts";
+import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
@@ -80,7 +69,7 @@ export class ThreadsChartComponent implements OnInit {
                         title: {text: "Threads", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Threads"}, labels: {offsetX: 10}}
                     };
                 }
             });

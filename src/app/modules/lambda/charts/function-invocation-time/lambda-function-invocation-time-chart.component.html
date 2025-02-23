@@ -9,7 +9,7 @@
             <div class="flex-container-right">
                 <div class="flex-item">
                     <mat-card-actions>
-                        <mat-select (selectionChange)="loadMessageWaitTimeChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
+                        <mat-select (selectionChange)="loadLambdaInvocationTimeChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
                             @for (range of ranges; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }
@@ -21,15 +21,15 @@
     </mat-card-header>
     <mat-card-content>
         <apx-chart
-                [chart]="serviceTimeChartOptions?.chart"
-                [dataLabels]="serviceTimeChartOptions?.dataLabels"
-                [grid]="serviceTimeChartOptions?.grid"
-                [series]="serviceTimeChartOptions?.series"
-                [stroke]="serviceTimeChartOptions?.stroke"
-                [title]="serviceTimeChartOptions?.title"
-                [tooltip]="serviceTimeChartOptions?.tooltip"
-                [xaxis]="serviceTimeChartOptions?.xaxis"
-                [yaxis]="serviceTimeChartOptions?.yaxis"
+                [chart]="lambdaFunctionCounterChartOptions?.chart"
+                [dataLabels]="lambdaFunctionCounterChartOptions?.dataLabels"
+                [grid]="lambdaFunctionCounterChartOptions?.grid"
+                [series]="lambdaFunctionCounterChartOptions?.series"
+                [stroke]="lambdaFunctionCounterChartOptions?.stroke"
+                [title]="lambdaFunctionCounterChartOptions?.title"
+                [tooltip]="lambdaFunctionCounterChartOptions?.tooltip"
+                [xaxis]="lambdaFunctionCounterChartOptions?.xaxis"
+                [yaxis]="lambdaFunctionCounterChartOptions?.yaxis"
         ></apx-chart>
     </mat-card-content>
 </mat-card>

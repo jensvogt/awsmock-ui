@@ -35,6 +35,8 @@ import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 import {FooterComponent} from "../../shared/footer/footer.component";
+import {MatDivider} from "@angular/material/divider";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 @NgModule({
     declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, SnsMessageDetailsDialog, PublishMessageComponentDialog],
@@ -95,6 +97,10 @@ import {FooterComponent} from "../../shared/footer/footer.component";
         MatSlideToggle,
         CdkCopyToClipboard,
         FooterComponent,
+        MatDivider,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
     ],
     exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, PublishMessageComponentDialog, SnsMessageDetailsDialog],
     providers: [SnsService],

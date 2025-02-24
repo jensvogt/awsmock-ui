@@ -1,5 +1,4 @@
 import {Injectable} from "@angular/core";
-import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SnsMessageAttribute} from "../model/sns-message-item";
@@ -12,7 +11,6 @@ export class SnsService {
         'Content-Type': 'application/json',
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
-    url: string | null = environment.gatewayEndpoint + '/';
 
     constructor(private readonly http: HttpClient) {
     }
@@ -23,9 +21,8 @@ export class SnsService {
      * @param topicName topic name
      */
     createTopic(topicName: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'CreateTopic');
-        return this.http.post(<string>this.url, "Name=" + topicName, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "Name=" + topicName, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -37,9 +34,8 @@ export class SnsService {
      * @param sortColumns sorting columns
      */
     public listTopicCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListTopicCounters');
-        return this.http.post(<string>this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -51,9 +47,8 @@ export class SnsService {
      * @param sortColumns sorting columns
      */
     public listMessageCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListMessageCounters');
-        return this.http.post(<string>this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -62,9 +57,8 @@ export class SnsService {
      * @param topicArn AWS topic ARN
      */
     public purgeTopic(topicArn: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'PurgeTopic');
-        return this.http.post(<string>this.url, {topicArn: topicArn}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn}, {headers: headers});
     }
 
     /**
@@ -75,9 +69,8 @@ export class SnsService {
      * @param protocol subscription protocol
      */
     subscribe(topicArn: string, endpoint: string, protocol: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'Subscribe');
-        return this.http.post(<string>this.url, "TopicArn=" + topicArn + "&Endpoint=" + endpoint + "&Protocol=" + protocol, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "TopicArn=" + topicArn + "&Endpoint=" + endpoint + "&Protocol=" + protocol, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -86,9 +79,8 @@ export class SnsService {
      * @param subscriptionArn subscription ARN
      */
     unsubscribe(subscriptionArn: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'Unsubscribe');
-        return this.http.post(<string>this.url, "SubscriptionArn=" + subscriptionArn, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "SubscriptionArn=" + subscriptionArn, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -100,9 +92,8 @@ export class SnsService {
      * @param protocol subscription protocol
      */
     updateSubscription(topicArn: string, subscriptionArn: string, endpoint: string, protocol: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'UpdateSubscription');
-        return this.http.post(<string>this.url, {topicArn: topicArn, subscriptionArn: subscriptionArn, endpoint: endpoint, protocol: protocol}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, subscriptionArn: subscriptionArn, endpoint: endpoint, protocol: protocol}, {headers: headers});
     }
 
     /**
@@ -113,7 +104,6 @@ export class SnsService {
      * @param attributes message attributes
      */
     publishMessage(topicArn: string, message: string, attributes: SnsMessageAttribute[]) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'Publish');
         let queryString: string = "&TopicArn=" + encodeURI(topicArn) + "&Message=" + encodeURI(message);
         for (let i = 0; i < attributes.length; i++) {
@@ -121,7 +111,7 @@ export class SnsService {
             queryString += "&MessageAttributes.entry." + (i + 1) + ".Value.DataType=" + encodeURI(attributes[i].DataType);
             queryString += "&MessageAttributes.entry." + (i + 1) + ".Value.StringValue=" + encodeURI(attributes[i].Value);
         }
-        return this.http.post(<string>this.url, queryString, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), queryString, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -131,9 +121,8 @@ export class SnsService {
      * @param messageId SNS message ID
      */
     public deleteMessage(topicArn: string, messageId: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'DeleteMessage');
-        return this.http.post(<string>this.url, {topicArn: topicArn, messageId: messageId}, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, messageId: messageId}, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -142,9 +131,8 @@ export class SnsService {
      * @param topicArn AWS topic ARN
      */
     public getTopicDetails(topicArn: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'GetTopicDetails');
-        return this.http.post(<string>this.url, {topicArn: topicArn}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn}, {headers: headers});
     }
 
     /**
@@ -153,9 +141,8 @@ export class SnsService {
      * @param topicArn AWS topic ARN
      */
     deleteTopic(topicArn: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'DeleteTopic');
-        return this.http.post(<string>this.url, "TopicArn=" + topicArn, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "TopicArn=" + topicArn, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -167,9 +154,8 @@ export class SnsService {
      * @param sortColumns sorting columns
      */
     public listSubscriptionsCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListSubscriptionCounters');
-        return this.http.post(<string>this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -180,9 +166,8 @@ export class SnsService {
      * @param value tag value
      */
     addTag(topicArn: string, key: string, value: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'TagResource');
-        return this.http.post(<string>this.url, "ResourceArn=" + topicArn + "&Tags.Tag.1.Key=" + key + "&Tags.Tag.1.Value=" + value, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "ResourceArn=" + topicArn + "&Tags.Tag.1.Key=" + key + "&Tags.Tag.1.Value=" + value, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -194,9 +179,8 @@ export class SnsService {
      * @param sortColumns sorting columns
      */
     public listTagCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListTagCounters');
-        return this.http.post(<string>this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -206,9 +190,8 @@ export class SnsService {
      * @param key tag key
      */
     deleteTag(topicArn: string, key: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'UntagResource');
-        return this.http.post(<string>this.url, "ResourceArn=" + topicArn + "&TagKeys.TagKey.1=" + key, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "ResourceArn=" + topicArn + "&TagKeys.TagKey.1=" + key, {headers: headers, responseType: 'text'});
     }
 
     /**
@@ -220,9 +203,8 @@ export class SnsService {
      * @param sortColumns sorting columns
      */
     public listAttributeCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListAttributeCounters');
-        return this.http.post(<string>this.url, {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -232,8 +214,7 @@ export class SnsService {
      * @param key attribute key
      */
     deleteAttribute(topicArn: string, key: string) {
-        this.url = localStorage.getItem('backendUrl');
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'DeleteAttribute');
-        return this.http.post(<string>this.url, "ResourceArn=" + topicArn + "&AttributeKeys.AttributeKey.1=" + key, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "ResourceArn=" + topicArn + "&AttributeKeys.AttributeKey.1=" + key, {headers: headers, responseType: 'text'});
     }
 }

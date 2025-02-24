@@ -38,6 +38,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatDivider} from "@angular/material/divider";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent, SendMessageComponentDialog, ViewMessageComponentDialog],
@@ -103,6 +104,7 @@ import {MatDivider} from "@angular/material/divider";
         MatMenuTrigger,
         MatMenu,
         MatDivider,
+        FooterComponent,
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

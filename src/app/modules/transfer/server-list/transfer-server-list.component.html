@@ -6,9 +6,6 @@
         <span class="fill-remaining-space">
             Transfer Server
         </span>
-        <!--button (click)="addQueue()" aria-label="Refresh" mat-icon-button>
-            <mat-icon>add</mat-icon>
-        </button-->
         <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
             <mat-icon>refresh</mat-icon>
         </button>
@@ -87,8 +84,6 @@
 
             </mat-paginator>
         </mat-card>
-        <div class="footer">
-            Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
-        </div>
+        <footer-component [lastUpdate]="lastUpdate"/>
     </mat-card-content>
 </mat-card>

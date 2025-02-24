@@ -34,7 +34,7 @@ export class ConfigComponentDialog implements OnInit {
     configuration: any = {}
     uiVersion: string = packageJson.version;
 
-    constructor(private dialogRef: MatDialogRef<ConfigComponentDialog>, private moduleService: ModuleService) {
+    constructor(private readonly dialogRef: MatDialogRef<ConfigComponentDialog>, private readonly moduleService: ModuleService) {
     }
 
     ngOnInit() {

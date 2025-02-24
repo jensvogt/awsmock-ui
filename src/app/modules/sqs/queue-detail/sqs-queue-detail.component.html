@@ -141,9 +141,6 @@
                 </mat-tab>
                 <mat-tab label="Lambda Trigger">
                     <mat-card-actions class="head-buttons">
-                        <!--button (click)="addLambdaTrigger()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </button-->
                         <button (click)="refreshLambdaTriggers()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>refresh</mat-icon>
                         </button>
@@ -190,9 +187,6 @@
                 </mat-tab>
                 <mat-tab label="Dead Letter Queue">
                     <mat-card-actions class="head-buttons">
-                        <!--button (click)="addTag()" aria-label="Add tags" mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </button-->
                         <button (click)="editDql()" aria-label="Refresh tags" mat-icon-button>
                             <mat-icon>edit</mat-icon>
                         </button>
@@ -266,7 +260,5 @@
             </mat-tab-group>
         </mat-card-content>
     </mat-card>
-    <div class="footer">
-        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
-    </div>
+    <footer-component [lastUpdate]="lastUpdate"/>
 </mat-card>

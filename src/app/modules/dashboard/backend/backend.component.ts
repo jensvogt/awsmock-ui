@@ -6,7 +6,8 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {ModuleService} from "../../../services/module.service";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {environment} from "../../../../environments/environment";
+import {State, Store} from "@ngrx/store";
+import {RootState} from "../../../state/root.reducer";
 
 @Component({
     selector: 'backend-dialog',
@@ -31,9 +32,10 @@ import {environment} from "../../../../environments/environment";
 })
 export class BackendDialog implements OnInit {
 
-    backendServer: string = environment.gatewayEndpoint;
+    url: string | null = '';
 
-    constructor(private dialogRef: MatDialogRef<BackendDialog>) {
+    constructor(private readonly dialogRef: MatDialogRef<BackendDialog>, private readonly state: State<RootState>, private readonly store: Store<RootState>) {
+        this.url = localStorage.getItem('backendUrl');
     }
 
     ngOnInit() {
@@ -41,7 +43,9 @@ export class BackendDialog implements OnInit {
     }
 
     save() {
-        environment.gatewayEndpoint = this.backendServer;
+        if(this.url !== null){
+            localStorage.setItem('backendUrl', this.url);
+        }
         this.dialogRef.close();
     }
 }

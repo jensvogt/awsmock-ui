@@ -13,8 +13,10 @@ import {BackendDialog} from "./modules/dashboard/backend/backend.component";
 export class AppComponent {
 
     service: string = '';
+    title: string = 'awsmock.ui';
 
-    constructor(private router: Router, private dialog: MatDialog) {
+    constructor(private readonly router: Router, private readonly dialog: MatDialog) {
+
     }
 
     navigateMenu() {
@@ -37,26 +39,21 @@ export class AppComponent {
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
 
-        this.dialog.open(ConfigComponentDialog, dialogConfig).afterClosed().subscribe(() => {
-        });
+        this.dialog.open(ConfigComponentDialog, dialogConfig);
     }
 
     backend() {
-        const dialogConfig = new MatDialogConfig();
+        const dialogBackend = new MatDialogConfig();
 
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.width = "30%"
-        dialogConfig.minWidth = '200px'
-        dialogConfig.maxWidth = '60vw';
-        dialogConfig.maxHeight = '100vh';
-        dialogConfig.panelClass = 'full-screen-modal';
+        dialogBackend.disableClose = true;
+        dialogBackend.autoFocus = true;
+        dialogBackend.width = "30%"
+        dialogBackend.minWidth = '200px'
+        dialogBackend.maxWidth = '60vw';
+        dialogBackend.maxHeight = '100vh';
+        dialogBackend.panelClass = 'full-screen-modal';
 
-        this.dialog.open(BackendDialog, dialogConfig).afterClosed().subscribe(() => {
-        });
-    }
-
-    logOut() {
+        this.dialog.open(BackendDialog, dialogBackend);
     }
 }
 

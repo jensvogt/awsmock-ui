@@ -8,9 +8,8 @@ import {HttpClient} from "@angular/common/http";
 export class MonitoringService {
 
     monitoringConfig = new MonitoringConfig;
-    url: string = environment.gatewayEndpoint + '/';
 
-    constructor(private http: HttpClient) {
+    constructor(private readonly http: HttpClient) {
     }
 
     /**
@@ -19,13 +18,13 @@ export class MonitoringService {
     public getCounters(name: string, start: Date, end: Date, step: number) {
         let headers = this.monitoringConfig.monitoringHttpOptions.headers.set('x-awsmock-target', "monitoring").set('x-awsmock-action', "get-counters");
         const body = {
-            region: environment.awsmockRegion,
-            name: name,
-            start: start.getTime(),
-            end: end.getTime(),
-            step: step
+            "region": environment.awsmockRegion,
+            "name": name,
+            "start": start.getTime(),
+            "end": end.getTime(),
+            "step": step
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     /**
@@ -41,6 +40,6 @@ export class MonitoringService {
             end: end.getTime(),
             step: step
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 }

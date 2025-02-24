@@ -68,7 +68,7 @@
                                     <button [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Show details of the bucket" routerLink="./details/{{row.bucketName}}">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="purgeBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="PurgeBucket" mat-icon-button matTooltip="Purge the bucket">
+                                    <button (click)="purgeBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="PurgeBucket" mat-icon-button matTooltip="Purge bucket content">
                                         <mat-icon>folder_delete</mat-icon>
                                     </button>
                                     <button (click)="deleteBucket(row.bucketName)" [matTooltipShowDelay]="1000" aria-label="DeleteBucket" mat-icon-button matTooltip="Delete the bucket and all objects">

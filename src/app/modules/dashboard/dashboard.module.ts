@@ -28,6 +28,7 @@ import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component
 import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {GatewayRequestsComponent} from "./charts/gateway-requests/gateway-requests.component";
+import {FooterComponent} from "../../shared/footer/footer.component";
 
 @NgModule({
     declarations: [DashboardComponent],
@@ -61,6 +62,7 @@ import {GatewayRequestsComponent} from "./charts/gateway-requests/gateway-reques
         MatGridList,
         MatGridTile,
         GatewayRequestsComponent,
+        FooterComponent,
     ],
     exports: [DashboardComponent],
     providers: [MonitoringService, ModuleService],

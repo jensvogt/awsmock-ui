@@ -73,7 +73,7 @@ export class GatewayTimeComponent implements OnInit {
                         title: {text: "HTTP Response Time", align: "center"},
                         tooltip: {x: {format: "dd/MM HH:mm:ss"}},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
-                        xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
+                        xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: true}, min: start.getTime(), max: end.getTime()},
                         yaxis: {
                             min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "HTTP Response Time [ms]"}, labels: {
                                 formatter: function (val: number) {

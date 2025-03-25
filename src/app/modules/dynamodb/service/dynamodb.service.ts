@@ -14,7 +14,6 @@ export class DynamodbService {
         'Content-Type': 'application/json',
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/dynamodb/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
-    url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
     }
@@ -28,7 +27,7 @@ export class DynamodbService {
             PageIndex: pageIndex,
             SortColumns: sortColumns
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     public deleteTable(tableName: string) {
@@ -37,12 +36,12 @@ export class DynamodbService {
             Region: environment.awsmockRegion,
             TableName: tableName
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     public createTable(request: CreateTableRequest) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "CreateTable");
-        return this.http.post(this.url, request, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
     }
 
     public getTable(tableId: string, userName: string) {
@@ -52,7 +51,7 @@ export class DynamodbService {
             Username: userName,
             TableId: tableId
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     public listItemCounters(tableName: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
@@ -65,12 +64,12 @@ export class DynamodbService {
             pageIndex: pageIndex,
             sortColumns: sortColumns
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     public putItem(request: PutItemRequest) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "PutItem");
-        return this.http.post(this.url, request, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
     }
 
     public getItem(tableName: string) {
@@ -79,7 +78,7 @@ export class DynamodbService {
             Region: environment.awsmockRegion,
             PoolName: tableName
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     public deleteItem(tableName: string, keys: Attribute[] | undefined) {
@@ -89,6 +88,6 @@ export class DynamodbService {
             TableName: tableName,
             Key: keys
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 }

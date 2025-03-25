@@ -11,7 +11,6 @@ export class TransferService {
         'Content-Type': 'application/json',
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/transfer/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
-    url: string = environment.gatewayEndpoint + '/';
 
     constructor(private http: HttpClient) {
     }
@@ -26,7 +25,7 @@ export class TransferService {
      */
     public listTransferServer(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.ListServerCounters');
-        return this.http.post(this.url, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -36,7 +35,7 @@ export class TransferService {
      */
     public loadTransferServerDetails(serverId: string) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.GetServerDetails');
-        return this.http.post(this.url, {region: environment.awsmockRegion, serverId: serverId}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {region: environment.awsmockRegion, serverId: serverId}, {headers: headers});
     }
 
     /**
@@ -49,7 +48,7 @@ export class TransferService {
      */
     public listTransferServerUser(serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.ListUserCounters');
-        return this.http.post(this.url, {return: environment.awsmockRegion, serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {return: environment.awsmockRegion, serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -59,7 +58,7 @@ export class TransferService {
      */
     public deleteServer(serverId: string) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteServer');
-        return this.http.post(this.url, {Region: environment.awsmockRegion, ServerId: serverId}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId}, {headers: headers});
     }
 
     /**
@@ -70,6 +69,6 @@ export class TransferService {
      */
     public deleteUser(serverId: string, userName: string) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteUser');
-        return this.http.post(this.url, {Region: environment.awsmockRegion, ServerId: serverId, UserName: userName}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, UserName: userName}, {headers: headers});
     }
 }

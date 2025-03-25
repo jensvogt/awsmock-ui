@@ -53,7 +53,7 @@ export class ModuleSelectionComponentDialog implements OnInit {
 
     title: string | undefined = "";
 
-    allSelected: boolean = true;
+    allSelected: boolean = false;
     includeObjects: boolean = false;
     includeObjectsVisible: boolean = false
     onlyObjects: boolean = true;
@@ -75,7 +75,7 @@ export class ModuleSelectionComponentDialog implements OnInit {
         } else if (this.mode === 'erase') {
             this.onlyObjectsVisible = false;
         }
-        this.setAll();
+        this.setSome();
     }
 
     ngOnInit(): void {
@@ -91,6 +91,12 @@ export class ModuleSelectionComponentDialog implements OnInit {
     setAll() {
         this.allModules?.forEach((item) => {
             item.selected = this.allSelected;
+        });
+    }
+
+    setSome() {
+        this.allModules.forEach((item) => {
+            item.selected = item.name === 'sqs' || item.name === 'sns' || item.name === 's3';
         });
     }
 

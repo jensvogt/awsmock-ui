@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ModuleService} from "../../services/module.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {CpuChartComponent} from "./charts/cpu-chart/cpu-chart.component";
+import {CpuChartAwsmockComponent} from "./charts/cpu-chart-awsmock/cpu-chart-awsmock.component";
 import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
 import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component";
-import {MemoryChartComponent} from "./charts/memory-chart/memory-chart.component";
+import {MemoryChartAwsmockComponent} from "./charts/memory-chart-awsmock/memory-chart-awsmock.component";
 import {interval, Subscription} from "rxjs";
 import {ModuleSelectionComponentDialog} from "../infrastructure/selection/module-selection.component";
 import {ExportInfrastructureComponentDialog} from "../infrastructure/export/export-infrastructure.component";
@@ -24,8 +24,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // Auto-update
     updateSubscription: Subscription | undefined;
-    @ViewChild(CpuChartComponent) cpuChart: CpuChartComponent | undefined;
-    @ViewChild(MemoryChartComponent) memoryChart: MemoryChartComponent | undefined;
+    @ViewChild(CpuChartAwsmockComponent) cpuChart: CpuChartAwsmockComponent | undefined;
+    @ViewChild(MemoryChartAwsmockComponent) memoryChart: MemoryChartAwsmockComponent | undefined;
     @ViewChild(GatewayTimeComponent) gatewayTimeChart: GatewayTimeComponent | undefined;
     @ViewChild(ThreadsChartComponent) threadsChart: ThreadsChartComponent | undefined;
 

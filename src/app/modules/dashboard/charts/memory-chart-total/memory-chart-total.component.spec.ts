@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {CpuChartComponent} from './cpu-chart.component';
+import {MemoryChartTotalComponent} from './memory-chart-total.component';
 
 describe('HomeComponent', () => {
-    let component: CpuChartComponent;
-    let fixture: ComponentFixture<CpuChartComponent>;
+    let component: MemoryChartTotalComponent;
+    let fixture: ComponentFixture<MemoryChartTotalComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CpuChartComponent]
+            declarations: [MemoryChartTotalComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(CpuChartComponent);
+        fixture = TestBed.createComponent(MemoryChartTotalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

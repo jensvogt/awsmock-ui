@@ -16,19 +16,21 @@ import {MatInputModule} from "@angular/material/input";
 import {DashboardComponent} from "./dashboard.component";
 import {dashboardFeatureKey, dashboardReducer} from "./state/dashboard.reducer";
 import {DashboardEffects} from "./state/dashboard.effects";
-import {CpuChartComponent} from "./charts/cpu-chart/cpu-chart.component";
+import {CpuChartAwsmockComponent} from "./charts/cpu-chart-awsmock/cpu-chart-awsmock.component";
 import {MatSelectModule} from "@angular/material/select";
 import {ChartComponent} from "ng-apexcharts";
 import {MatOptionModule} from "@angular/material/core";
 import {DashboardRoutingModule} from "./dashboard-routing.module";
 import {MonitoringService} from "../../services/monitoring.service";
 import {ModuleService} from "../../services/module.service";
-import {MemoryChartComponent} from "./charts/memory-chart/memory-chart.component";
 import {GatewayTimeComponent} from "./charts/gateway-time/gateway-time.component";
 import {ThreadsChartComponent} from "./charts/thread-chart/threads-chart.component";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {GatewayRequestsComponent} from "./charts/gateway-requests/gateway-requests.component";
 import {FooterComponent} from "../../shared/footer/footer.component";
+import {CpuChartTotalComponent} from "./charts/cpu-chart-total/cpu-chart-total.component";
+import {MemoryChartTotalComponent} from "./charts/memory-chart-total/memory-chart-total.component";
+import {MemoryChartAwsmockComponent} from "./charts/memory-chart-awsmock/memory-chart-awsmock.component";
 
 @NgModule({
     declarations: [DashboardComponent],
@@ -53,8 +55,8 @@ import {FooterComponent} from "../../shared/footer/footer.component";
         AsyncPipe,
         ChartComponent,
         DashboardRoutingModule,
-        CpuChartComponent,
-        MemoryChartComponent,
+        CpuChartAwsmockComponent,
+        MemoryChartTotalComponent,
         GatewayTimeComponent,
         ThreadsChartComponent,
         StoreModule.forFeature(dashboardFeatureKey, dashboardReducer),
@@ -63,6 +65,12 @@ import {FooterComponent} from "../../shared/footer/footer.component";
         MatGridTile,
         GatewayRequestsComponent,
         FooterComponent,
+        CpuChartTotalComponent,
+        MemoryChartTotalComponent,
+        MemoryChartTotalComponent,
+        MemoryChartTotalComponent,
+        MemoryChartTotalComponent,
+        MemoryChartAwsmockComponent,
     ],
     exports: [DashboardComponent],
     providers: [MonitoringService, ModuleService],

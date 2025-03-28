@@ -4,8 +4,8 @@ import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -20,29 +20,29 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'memory-chart-component',
-    templateUrl: './memory-chart.component.html',
-    styleUrls: ['./memory-chart.component.scss'],
+    selector: 'cpu-chart-awsmock-component',
+    templateUrl: './cpu-chart-awsmock.component.html',
+    styleUrls: ['./cpu-chart-awsmock.component.scss'],
     imports: [
+        MatCard,
+        MatCardHeader,
         MatCardActions,
         MatSelect,
-        MatCardHeader,
-        MatCard,
+        FormsModule,
+        MatOption,
         MatCardContent,
         ChartComponent,
-        NgIf,
-        FormsModule,
-        MatOption
+        NgIf
     ],
     standalone: true
 })
-export class MemoryChartComponent implements OnInit {
+export class CpuChartAwsmockComponent implements OnInit {
 
-    public memChartOptions!: Partial<ChartOptions> | any;
+    public cpuChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("memoryChart") memoryChart: ChartComponent | undefined;
+    @ViewChild("cpuChart") cpuChart: ChartComponent = new ChartComponent();
 
     constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
@@ -50,14 +50,14 @@ export class MemoryChartComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadMemoryChart();
+        this.loadCpuChart();
     }
 
-    loadMemoryChart() {
+    loadCpuChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('memory_usage', "mem_type", start, end, 5)
+        this.monitoringService.getMultiCounters('cpu_usage_total', 'cpu_type', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
                     let types = Object.getOwnPropertyNames(data);
@@ -65,24 +65,16 @@ export class MemoryChartComponent implements OnInit {
                     types.forEach((t) => {
                         series.push({name: t, data: data[t]});
                     });
-                    this.memChartOptions = {
+                    this.cpuChartOptions = {
                         series: series,
                         chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
-                        title: {text: "Memory Usage", align: "center"},
-                        tooltip: {x: {format: "dd/MM HH:mm:ss"}},
+                        tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
+                        title: {text: "CPU Usage Total", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: true}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {
-                            min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "Memory [MB]"}, labels: {
-                                formatter: function (val: number) {
-                                    val /= 1024 * 1024;
-                                    return val.toFixed(0);
-                                },
-                                offsetX: 10
-                            }
-                        }
+                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
                     };
                 }
             });

@@ -8,6 +8,8 @@ import {LambdaConfiguration, QueueConfiguration, S3BucketItem, TopicConfiguratio
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {S3Service} from "../service/s3-service.component";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {BucketNotificationEditDialog} from "../bucket-notification-edit/bucket-notification-edit.component";
 
 @Component({
     selector: 'bucket-detail-component',
@@ -55,7 +57,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     // Sorting
     private _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private location: Location, private route: ActivatedRoute, private s3Service: S3Service) {
+    constructor(private location: Location, private route: ActivatedRoute, private s3Service: S3Service, private dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -75,10 +77,6 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
 
     refresh() {
         this.loadBucket();
-    }
-
-    lastUpdateTime() {
-        return new Date().toLocaleTimeString('DE-de');
     }
 
     // ===================================================================================================================
@@ -120,6 +118,27 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
 
     handleLambdaNotificationPageEvent(e: PageEvent) {
 
+    }
+
+    editLambdaNotification(lambdaNotificationArn: string) {
+        let notification = this.bucketItem.lambdaConfigurations?.filter((ele) => ele.CloudFunction === lambdaNotificationArn);
+        if (notification) {
+            const dialogConfig = new MatDialogConfig();
+
+            dialogConfig.disableClose = true;
+            dialogConfig.autoFocus = true;
+            dialogConfig.data = {bucketName: this.bucketItem.bucket, notification: notification};
+            dialogConfig.maxWidth = '100vw';
+            dialogConfig.maxHeight = '100vh';
+            dialogConfig.panelClass = 'full-screen-modal';
+            dialogConfig.width = "40%"
+
+            this.dialog.open(BucketNotificationEditDialog, dialogConfig).afterClosed().subscribe(result => {
+                if (result) {
+                    console.log("Result Bucket notification: " + result);
+                }
+            });
+        }
     }
 
     deleteLambdaNotification(lambdaNotificationArn: string) {

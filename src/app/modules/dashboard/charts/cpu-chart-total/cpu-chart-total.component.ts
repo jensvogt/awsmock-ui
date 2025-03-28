@@ -20,9 +20,9 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'cpu-chart-component',
-    templateUrl: './cpu-chart.component.html',
-    styleUrls: ['./cpu-chart.component.scss'],
+    selector: 'cpu-chart-total-component',
+    templateUrl: './cpu-chart-total.component.html',
+    styleUrls: ['./cpu-chart-total.component.scss'],
     imports: [
         MatCard,
         MatCardHeader,
@@ -36,7 +36,7 @@ export type ChartOptions = {
     ],
     standalone: true
 })
-export class CpuChartComponent implements OnInit {
+export class CpuChartTotalComponent implements OnInit {
 
     public cpuChartOptions!: Partial<ChartOptions> | any;
 
@@ -57,7 +57,7 @@ export class CpuChartComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('cpu_usage', 'cpu_type', start, end, 5)
+        this.monitoringService.getMultiCounters('cpu_usage_awsmock', 'cpu_type', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
                     let types = Object.getOwnPropertyNames(data);
@@ -71,7 +71,7 @@ export class CpuChartComponent implements OnInit {
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "CPU Usage", align: "center"},
+                        title: {text: "CPU Usage AwsMock", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: true}, min: start.getTime(), max: end.getTime()},
                         yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}

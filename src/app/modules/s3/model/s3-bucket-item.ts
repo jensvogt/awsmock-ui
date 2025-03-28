@@ -4,10 +4,16 @@ export interface NotificationEvents {
     name: string,
 }
 
+export interface FilterRule {
+    Name: string,
+    Value: string
+}
+
 export interface LambdaConfiguration {
     Id: string,
     CloudFunction: string,
     Event: NotificationEvents[],
+    FilterRules: FilterRule[]
 }
 
 export interface QueueConfiguration {

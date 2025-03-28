@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {MemoryChartComponent} from './memory-chart.component';
+import {MemoryChartAwsmockComponent} from './memory-chart-awsmock.component';
 
 describe('HomeComponent', () => {
-    let component: MemoryChartComponent;
-    let fixture: ComponentFixture<MemoryChartComponent>;
+    let component: MemoryChartAwsmockComponent;
+    let fixture: ComponentFixture<MemoryChartAwsmockComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MemoryChartComponent]
+            declarations: [MemoryChartAwsmockComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(MemoryChartComponent);
+        fixture = TestBed.createComponent(MemoryChartAwsmockComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

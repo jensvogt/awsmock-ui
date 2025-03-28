@@ -101,9 +101,9 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <!--button (click)="editSubscription(row.subscriptionArn)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                <button (click)="editLambdaNotification(row)" aria-label="Edit" mat-icon-button matTooltip="Edit the lambda notification">
                                     <mat-icon>edit</mat-icon>
-                                </button-->
+                                </button>
                                 <button (click)="deleteLambdaNotification(row.lambdaArn)" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
                                     <mat-icon>delete</mat-icon>
                                 </button>

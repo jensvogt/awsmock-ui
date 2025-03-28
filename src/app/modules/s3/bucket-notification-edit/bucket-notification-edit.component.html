@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Edit Lambda notification</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-form-field style="width: 100%">
+        <mat-label>Bucket Name</mat-label>
+        <input [(ngModel)]="bucketName" matInput readonly value="">
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Event</mat-label>
+        <mat-select [(ngModel)]="selectedEvent">
+            @for (range of events; track range) {
+                <mat-option [value]="range">{{ range }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Lambda Function</mat-label>
+        <mat-select [(ngModel)]="selectedFunction">
+            @for (range of functionArns; track range) {
+                <mat-option [value]="range">{{ range }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Filter Rule Type</mat-label>
+        <mat-select [(ngModel)]="selectedFilterRuleType">
+            @for (range of filterRuleTypes; track range) {
+                <mat-option [value]="range">{{ range }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Filter Rule Value</mat-label>
+        <input [(ngModel)]="filterRuleValue" matInput value="">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+</mat-dialog-actions>

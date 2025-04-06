@@ -95,7 +95,12 @@
                             </ng-container>
                             <ng-container matColumnDef="password">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User password" sortActionDescription="Sort by user password">Password</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Password }}</td>
+                                <td *matCellDef="let element" mat-cell>
+                                    {{ element.Password }}
+                                    <button [cdkCopyToClipboard]="element.Password" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:40px">Actions</th>

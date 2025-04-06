@@ -29,3 +29,12 @@
 .mat-list-span-title {
   color: #555555;
 }
+
+.copy-icon {
+  display: inline-flex;
+  font-size: 16px !important;
+  align-content: flex-end;
+  align-items: baseline;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}

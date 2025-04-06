@@ -26,6 +26,7 @@ import {TransferServerDetailComponent} from "./transfer-details/transfer-server-
 import {TransferServerDetailEffects} from "./transfer-details/state/transfer-server-detail.effects";
 import {transferServerDetailReducer, transferServerDetailsFeatureKey} from "./transfer-details/state/transfer-server-detail.reducer";
 import {FooterComponent} from "../../shared/footer/footer.component";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 
 @NgModule({
     declarations: [TransferServerListComponent, TransferServerDetailComponent],
@@ -76,6 +77,7 @@ import {FooterComponent} from "../../shared/footer/footer.component";
         StoreModule.forFeature(transferServerDetailsFeatureKey, transferServerDetailReducer),
         EffectsModule.forFeature([TransferServerListEffects, TransferServerDetailEffects]),
         FooterComponent,
+        CdkCopyToClipboard,
     ],
     exports: [TransferServerListComponent],
     providers: [TransferService],

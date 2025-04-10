@@ -74,7 +74,7 @@ export class SendMessageComponentDialog implements OnInit {
     deleteAttribute(key: string) {
         if (key) {
             this.attributes = this.attributes.filter(element => {
-                return element.Key !== key
+                return element.name !== key
             });
             this.messageAttributes = new MatTableDataSource(this.attributes);
         }
@@ -89,7 +89,7 @@ export class SendMessageComponentDialog implements OnInit {
 
         this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.attributes.push({Key: result.Key, Value: result.Value, DataType: result.DataType});
+                this.attributes.push({name: result.Key, Value: result.Value, DataType: result.DataType});
                 this.messageAttributes = new MatTableDataSource(this.attributes);
                 this.messageAttributeLength = this.attributes.length;
             }
@@ -100,11 +100,11 @@ export class SendMessageComponentDialog implements OnInit {
         let messageAttr: any = {}
         attributes.forEach((element) => {
             if (element.DataType === 'String') {
-                messageAttr[element.Key] = {DataType: 'string', StringValue: element.Value}
+                messageAttr[element.name] = {DataType: 'string', StringValue: element.Value}
             } else if (element.DataType === 'Number') {
-                messageAttr[element.Key] = {DataType: element.DataType, NumberValue: element.Value}
+                messageAttr[element.name] = {DataType: element.DataType, NumberValue: element.Value}
             } else if (element.DataType === 'Binary') {
-                messageAttr[element.Key] = {DataType: element.DataType, BinaryValue: element.Value}
+                messageAttr[element.name] = {DataType: element.DataType, BinaryValue: element.Value}
             }
         });
         return messageAttr;

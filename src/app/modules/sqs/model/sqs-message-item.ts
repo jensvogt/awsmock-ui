@@ -1,7 +1,7 @@
 import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
 
 export interface SqsMessageAttribute {
-    Key: string,
+    name: string,
     Value: string,
     DataType: string
 }

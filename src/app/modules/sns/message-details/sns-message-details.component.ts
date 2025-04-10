@@ -6,7 +6,6 @@ import {isJson} from "../../../shared/format/message-format-component";
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {SqsMessageAttribute} from "../../sqs/model/sqs-message-item";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {Store} from "@ngrx/store";
 import {SNSMessageListState} from "../message-list/state/sns-message-list.reducer";
@@ -30,7 +29,7 @@ export class SnsMessageDetailsDialog implements OnInit {
     // Attributes Table
     messageAttributes = new MatTableDataSource<SnsMessageAttribute>();
     messageAttributeLength: number = 0;
-    attributes: SqsMessageAttribute[] = [];
+    attributes: SnsMessageAttribute[] = [];
     attributePageSize: number = 10;
     attributePageIndex: number = 0;
     attributeColumns: any[] = ['key', 'value', 'type', 'actions'];
@@ -52,7 +51,7 @@ export class SnsMessageDetailsDialog implements OnInit {
         if (data.message.messageAttributes) {
             data.message.messageAttributes.forEach((a: any) => {
                 for (const key in a) {
-                    let attribute: SqsMessageAttribute = {Key: a[key].Name, Value: a[key].StringValue, DataType: a[key].DataType};
+                    let attribute: SnsMessageAttribute = {Key: a[key].Name, Value: a[key].StringValue, DataType: a[key].DataType};
                     this.attributes.push(attribute);
                     this.messageAttributes = new MatTableDataSource(this.attributes);
                     this.messageAttributeLength = this.attributes.length;

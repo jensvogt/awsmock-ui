@@ -62,7 +62,7 @@ export class ViewMessageComponentDialog implements OnInit {
         if (data.message.messageAttributes) {
             data.message.messageAttributes.forEach((a: any) => {
                 for (const key in a) {
-                    let attribute: SqsMessageAttribute = {Key: a[key].Name, Value: a[key].StringValue, DataType: a[key].DataType};
+                    let attribute: SqsMessageAttribute = {name: a[key].name, Value: a[key].StringValue, DataType: a[key].DataType};
                     this.messageAttributes.push(attribute);
                 }
                 this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
@@ -117,7 +117,7 @@ export class ViewMessageComponentDialog implements OnInit {
 
         this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.messageAttributes.push({Key: result.Key, Value: result.Value, DataType: result.DataType});
+                this.messageAttributes.push({name: result.Key, Value: result.Value, DataType: result.DataType});
                 this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
                 this.messageAttributeLength = this.messageAttributes.length;
             }
@@ -134,7 +134,7 @@ export class ViewMessageComponentDialog implements OnInit {
 
             this.dialog.open(SqsMessageAttributeEditDialog, dialogConfig).afterClosed().subscribe(result => {
                 if (result && result.attribute) {
-                    let index = this.messageAttributes.findIndex(x => x.Key === result.attribute.Key)
+                    let index = this.messageAttributes.findIndex(x => x.name === result.attribute.Key)
                     if (index > 0) {
                         this.messageAttributes[index] = result.attribute
                         this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
@@ -149,7 +149,7 @@ export class ViewMessageComponentDialog implements OnInit {
     deleteAttribute(key: string): void {
         if (key) {
             this.messageAttributes = this.messageAttributes.filter(element => {
-                return element.Key !== key
+                return element.name !== key
             });
             this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
             this.store.dispatch(sqsMessageListActions.updateMessage({messageId: this.messageId, messageAttributes: this.messageAttributes}));

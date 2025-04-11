@@ -3,6 +3,7 @@ import {transferServerDetailActions} from './transfer-server-detail.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {TransferServerDetailsResponse} from "../../model/transfer-server-details";
 import {TransferServerUsersResponse} from "../../model/transfer-server-users";
+import {TransferServerProtocolsResponse} from "../../model/transfer-server-protocols";
 
 export const transferServerDetailsFeatureKey = 'transfer-server-details';
 
@@ -16,6 +17,12 @@ export interface TransferServerDetailsState {
     userPageSize: number;
     userPageIndex: number;
     userSortColumns: SortColumn[];
+
+    // Protocols
+    protocols: TransferServerProtocolsResponse;
+    protocolPageSize: number;
+    protocolPageIndex: number;
+    protocolSortColumns: SortColumn[];
 
     loading: boolean;
     error: unknown;
@@ -31,6 +38,12 @@ export const initialState: TransferServerDetailsState = {
     userPageSize: 10,
     userPageIndex: 0,
     userSortColumns: [{column: 'name', sortDirection: -1}],
+
+    // Protocols
+    protocols: {} as TransferServerProtocolsResponse,
+    protocolPageSize: 10,
+    protocolPageIndex: 0,
+    protocolSortColumns: [{column: 'name', sortDirection: -1}],
 
     loading: false,
     error: {}
@@ -59,6 +72,15 @@ export const transferServerDetailReducer = createReducer(
         loading: false
     })),
     on(transferServerDetailActions.loadUsersFailure, (state: TransferServerDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Transfer server protocol list
+    on(transferServerDetailActions.loadProtocols, (state: TransferServerDetailsState) => ({...state, loading: true})),
+    on(transferServerDetailActions.loadProtocolsSuccess, (state: TransferServerDetailsState, {protocols}) => ({
+        ...state,
+        protocols: protocols,
+        loading: false
+    })),
+    on(transferServerDetailActions.loadProtocolsFailure, (state: TransferServerDetailsState, {error}) => ({...state, error: error, loading: false})),
 
     // Delete transfer server
     // on(transferServerDetailActions.deleteTransferServer, (state: TransferServerDetailsState) => ({...state, loading: true})),

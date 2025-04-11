@@ -36,13 +36,17 @@ export class TransferServerDetailEffects {
         ),
     ));
 
-    // @ts-ignore
-    // deleteQueue$ = createEffect(() => this.actions$.pipe(
-    //     ofType(transferServerDetailActions.deleteTransferServer),
-    //     mergeMap(action =>
-    //         this.transferService.deleteServer(action.serverId)
-    //             .then(() => transferServerDetailActions.deleteTransferServerSuccess()))
-    // ));
+    loadTransferServerProtocols$ = createEffect(() => this.actions$.pipe(
+        ofType(transferServerDetailActions.loadProtocols),
+        mergeMap(action =>
+            this.transferService.listTransferServerProtocols(action.serverId, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((protocols: any) => transferServerDetailActions.loadProtocolsSuccess({protocols})),
+                    catchError((error) =>
+                        of(transferServerDetailActions.loadProtocolsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
 
     constructor(private actions$: Actions, private transferService: TransferService) {
     }

@@ -2,6 +2,7 @@ import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelec
 import {transferServerDetailsFeatureKey, TransferServerDetailsState} from "./transfer-server-detail.reducer";
 import {TransferServerDetailsResponse} from "../../model/transfer-server-details";
 import {TransferServerUsersResponse} from "../../model/transfer-server-users";
+import {TransferServerProtocolsResponse} from "../../model/transfer-server-protocols";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
@@ -32,6 +33,21 @@ export const selectUserPageSize: SelectorType<number> = createSelector(
 export const selectUserPageIndex: SelectorType<number> = createSelector(
     selectTransferServerDetailsFeature,
     (state: TransferServerDetailsState) => state?.userPageIndex
+);
+
+export const selectProtocols: SelectorType<TransferServerProtocolsResponse> = createSelector(
+    selectTransferServerDetailsFeature,
+    (state: TransferServerDetailsState) => state?.protocols
+);
+
+export const selectProtocolPageSize: SelectorType<number> = createSelector(
+    selectTransferServerDetailsFeature,
+    (state: TransferServerDetailsState) => state?.protocolPageSize
+);
+
+export const selectProtocolPageIndex: SelectorType<number> = createSelector(
+    selectTransferServerDetailsFeature,
+    (state: TransferServerDetailsState) => state?.protocolPageIndex
 );
 
 export const selectError: SelectorType<any> = createSelector(

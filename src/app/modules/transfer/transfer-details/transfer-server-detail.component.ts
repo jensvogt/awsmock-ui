@@ -1,4 +1,4 @@
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
@@ -8,12 +8,15 @@ import {Observable} from "rxjs";
 import {TransferService} from "../service/transfer.service";
 import {TransferServerDetailsResponse} from "../model/transfer-server-details";
 import {TransferServerDetailsState} from "./state/transfer-server-detail.reducer";
-import {selectDetails, selectError, selectUserPageIndex, selectUserPageSize, selectUsers} from "./state/transfer-server-detail.selectors";
+import {selectDetails, selectError, selectProtocolPageIndex, selectProtocolPageSize, selectProtocols, selectUserPageIndex, selectUserPageSize, selectUsers} from "./state/transfer-server-detail.selectors";
 import {transferServerDetailActions} from "./state/transfer-server-detail.actions";
 import {TransferServerUsersResponse} from "../model/transfer-server-users";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatTabChangeEvent} from "@angular/material/tabs";
+import {TransferServerProtocolsResponse} from "../model/transfer-server-protocols";
+import {UserAddComponentDialog} from "./user-add/user-add-component";
+import {ProtocolAddComponentDialog} from "./protocol-add/protocol-add-component";
 
 @Component({
     selector: 'transfer-server-detail-component',
@@ -39,6 +42,13 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
     userColumns: any[] = ['name', 'password', 'actions'];
     userPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Protocol table
+    protocols$: Observable<TransferServerProtocolsResponse> = this.store.select(selectProtocols);
+    protocolPageSize$: Observable<number> = this.store.select(selectProtocolPageSize);
+    protocolPageIndex$: Observable<number> = this.store.select(selectProtocolPageIndex);
+    protocolColumns: any[] = ['name', 'port', 'actions'];
+    protocolPageSizeOptions = [5, 10, 20, 50, 100];
+
     private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private transferService: TransferService, private route: ActivatedRoute, private dialog: MatDialog,
@@ -50,14 +60,16 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
             this.serverId = params['serverId'];
             this.loadTransferServerDetails();
             this.loadUsers();
+            this.loadProtocols();
         });
         this.serverDetailsError$.subscribe((msg: string) => {
             if (msg && msg.length) {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
-        // this.serverDetails$.subscribe((data) => console.log("Data: ", data));
+        //this.serverDetails$.subscribe((data) => console.log("Data: ", data));
         //this.users$.subscribe((data) => console.log("Data: ", data));
+        //this.protocols$.subscribe((data) => console.log("Protocols: ", data));
     }
 
     ngOnDestroy() {
@@ -86,8 +98,12 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
         this.lastUpdate = new Date();
     }
 
+    getPorts() {
+        return "2121, 2222";
+    }
+
     // ===================================================================================================================
-    // Tags
+    // Users
     // ===================================================================================================================
     handleUserPageEvent(e: PageEvent) {
         this.state.value['transfer-server-details'].tagPageSize = e.pageSize;
@@ -113,8 +129,27 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
         this.loadUsers();
     }
 
+    addUser() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+
+        this.dialog.open(UserAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.transferService.addUser(this.serverId, result.username, result.password).subscribe(() => {
+                    this.loadUsers();
+                    this.snackBar.open('User added, username: ' + result.username, 'Done', {duration: 5000})
+                });
+            }
+        });
+
+    }
+
     refreshUsers() {
         this.loadUsers();
+        this.loadProtocols();
     }
 
     deleteUser(name: string) {
@@ -122,6 +157,62 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this.loadUsers();
                 this.snackBar.open('Transfer user deleted, name: ' + name, 'Dismiss', {duration: 5000});
+            });
+    }
+
+    // ===================================================================================================================
+    // Protocols
+    // ===================================================================================================================
+    handleProtocolPageEvent(e: PageEvent) {
+        this.state.value['transfer-server-details'].tagPageSize = e.pageSize;
+        this.state.value['transfer-server-details'].tagPageIndex = e.pageIndex;
+        this.loadProtocols();
+    }
+
+    loadProtocols() {
+        this.store.dispatch(transferServerDetailActions.loadProtocols({
+            serverId: this.serverId,
+            pageSize: this.state.value['transfer-server-details'].protocolPageSize,
+            pageIndex: this.state.value['transfer-server-details'].protocolPageIndex,
+            sortColumns: this.state.value['transfer-server-details'].sortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    protocolSortChange(sortState: Sort) {
+        this.state.value['transfer-server-details'].sortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['transfer-server-details'].sortColumns = [{column: column, sortDirection: direction}];
+        this.loadProtocols();
+    }
+
+    refreshProtocols() {
+        this.loadProtocols();
+    }
+
+    addProtocol() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+
+        this.dialog.open(ProtocolAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                console.log("Result: ", result);
+                this.transferService.addProtocol(this.serverId, result.protocol, result.port).subscribe(() => {
+                    this.loadProtocols();
+                    this.snackBar.open('Protocol added, protocol: ' + result.protocol, 'Done', {duration: 5000})
+                });
+            }
+        });
+    }
+
+    deleteProtocol(protocol: string) {
+        this.transferService.deleteProtocol(this.serverId, protocol)
+            .subscribe(() => {
+                this.loadProtocols();
+                this.snackBar.open('Transfer protocol deleted, protocol: ' + protocol, 'Dismiss', {duration: 5000});
             });
     }
 }

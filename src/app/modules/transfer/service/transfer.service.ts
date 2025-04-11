@@ -52,6 +52,19 @@ export class TransferService {
     }
 
     /**
+     * @brief List all transfer server protocols
+     *
+     * @param serverId server ID
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listTransferServerProtocols(serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.ListProtocolCounters');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {return: environment.awsmockRegion, serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
      * @brief Delete a server
      *
      * @param serverId server ID
@@ -59,6 +72,30 @@ export class TransferService {
     public deleteServer(serverId: string) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteServer');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId}, {headers: headers});
+    }
+
+    /**
+     * @brief Adds a user to a server
+     *
+     * @param serverId server ID
+     * @param userName user name
+     * @param password user password
+     */
+    public addUser(serverId: string, userName: string, password: string) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.CreateUser');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, UserName: userName, Password: password}, {headers: headers});
+    }
+
+    /**
+     * @brief Adds a protocol to a server
+     *
+     * @param serverId server ID
+     * @param protocol protocol name
+     * @param port protocol port
+     */
+    public addProtocol(serverId: string, protocol: string, port: number) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.CreateProtocol');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, Protocol: protocol, Port: port}, {headers: headers});
     }
 
     /**
@@ -70,5 +107,16 @@ export class TransferService {
     public deleteUser(serverId: string, userName: string) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteUser');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, UserName: userName}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a protocol from a server
+     *
+     * @param serverId server ID
+     * @param protocol protocol name
+     */
+    public deleteProtocol(serverId: string, protocol: string) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteProtocol');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, Protocol: protocol}, {headers: headers});
     }
 }

@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Add Protocol</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px">
+    <mat-form-field style="width: 100%">
+        <mat-label>Protocol</mat-label>
+        <mat-select [(ngModel)]="selectedProtocolType" name="protocolType">
+            @for (protocolType of protocolTypes; track protocolType) {
+                <mat-option [value]="protocolType.value">{{ protocolType.viewValue }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Port</mat-label>
+        <input [(ngModel)]="port" matInput value="">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+</mat-dialog-actions>

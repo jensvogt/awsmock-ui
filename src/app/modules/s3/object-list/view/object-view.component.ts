@@ -99,24 +99,27 @@ export class S3ObjectViewDialog {
             this.metadataDatasource.data = data.metadata;
         }
         //this.body = this.s3Service.download();
-
-        this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
-            if (!data.ContentType?.startsWith("image")) {
-                data.Body?.transformToString().then((data: string) => {
-                    this.body = data;
-                    if (this.prettyPrint) {
-                        this.transformedBody = this.transform(this.body);
-                    }
-                });
-            } else {
-                this.isImage = true;
-                data.Body?.transformToByteArray().then((data) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => this.image = e.target?.result;
-                    reader.readAsDataURL(new Blob([data]));
-                })
-            }
-        });
+        if (data.downloadFlag) {
+            this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
+                if (!data.ContentType?.startsWith("image")) {
+                    data.Body?.transformToString().then((data: string) => {
+                        this.body = data;
+                        if (this.prettyPrint) {
+                            this.transformedBody = this.transform(this.body);
+                        }
+                    });
+                } else {
+                    this.isImage = true;
+                    data.Body?.transformToByteArray().then((data) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => this.image = e.target?.result;
+                        reader.readAsDataURL(new Blob([data]));
+                    })
+                }
+            });
+        } else {
+            this.transformedBody = "File too big or invalid content. Not downloaded"
+        }
     }
 
     changePrettyPrint(event: MatSlideToggleChange) {

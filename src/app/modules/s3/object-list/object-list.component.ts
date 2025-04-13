@@ -192,14 +192,15 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
 
     viewObject(object: S3ObjectItem) {
 
+        let downloadFlag = true;
         if (object !== undefined) {
             if (object.size !== undefined && object.size > 1024 * 1024) {
                 this.snackBar.open("Object to big, maxSize: 1MB", "Error", {duration: 5000});
-                return;
+                downloadFlag = false;
             }
             if (object.contentType !== undefined && !this.hasAllowedContentType(object.contentType)) {
                 this.snackBar.open("Invalid content type: " + object.contentType, "Error", {duration: 5000});
-                return;
+                downloadFlag = false;
             }
 
             const dialogConfig = new MatDialogConfig();
@@ -211,7 +212,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
             dialogConfig.panelClass = 'full-screen-modal';
             dialogConfig.width = "80%"
             dialogConfig.minWidth = '280px'
-            dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType, metadata: object.metadata};
+            dialogConfig.data = {bucketName: this.bucketName, key: object.key, contentType: object.contentType, metadata: object.metadata, downloadFlag: downloadFlag};
 
             this.dialog.open(S3ObjectViewDialog, dialogConfig).afterClosed().subscribe(() => {
             });

@@ -49,10 +49,13 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
     protocolColumns: any[] = ['name', 'port', 'actions'];
     protocolPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // SFTP client
+    client: any;
     private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private transferService: TransferService, private route: ActivatedRoute, private dialog: MatDialog,
                 private location: Location, private store: Store, private state: State<TransferServerDetailsState>) {
+        // this.client = new SftpClient();
     }
 
     ngOnInit() {
@@ -101,6 +104,39 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
     getPorts() {
         return "2121, 2222";
     }
+
+    async upload() {
+
+        /*  await this.connect({host: "localhost", port: 2222, username: "ftpuser1", password: ""});
+          let fileObjects;
+          try {
+              fileObjects = await this.client.list("/tmp");
+          } catch (err) {
+              console.log('Listing failed:', err);
+          }
+
+          const fileNames = [];
+
+          for (const file of fileObjects) {
+              if (file.type === 'd') {
+                  console.log(`${new Date(file.modifyTime).toISOString()} PRE ${file.name}`);
+              } else {
+                  console.log(`${new Date(file.modifyTime).toISOString()} ${file.size} ${file.name}`);
+              }
+
+              fileNames.push(file.name);
+          }*/
+    }
+
+    //
+    // async connect(options: { host: any; port: any; username: any; password: any }) {
+    //     console.log(`Connecting to ${options.host}:${options.port}`);
+    //     try {
+    //         await this.client.connect(options);
+    //     } catch (err) {
+    //         console.log('Failed to connect:', err);
+    //     }
+    // }
 
     // ===================================================================================================================
     // Users

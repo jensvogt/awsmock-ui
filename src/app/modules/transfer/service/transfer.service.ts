@@ -2,6 +2,16 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {S3} from "@aws-sdk/client-s3";
+import {ManagedDownloader} from "@aws/s3-managed-downloader";
+
+const s3: S3 = new S3();
+const options: any = {
+    maxPartSize: 10 * 1024 * 1024,
+    maxConcurrency: 5
+};
+// @ts-ignore
+const managedDownloader: ManagedDownloader = new ManagedDownloader(s3, options);
 
 @Injectable({providedIn: 'root'})
 export class TransferService {
@@ -119,4 +129,5 @@ export class TransferService {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteProtocol');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, Protocol: protocol}, {headers: headers});
     }
+
 }

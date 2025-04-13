@@ -6,11 +6,14 @@
             </button>
         </span>
         <span class="fill-remaining-space">
-            Topic Details: {{ (serverDetails$ | async)?.server?.ServerId }}
+            Transfer Server Details: {{ (serverDetails$ | async)?.server?.ServerId }}
         </span>
         <span>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
+            </button>
+            <button (click)="upload()" aria-label="Refresh" mat-icon-button>
+                <mat-icon>upload</mat-icon>
             </button>
         </span>
     </mat-card-header>

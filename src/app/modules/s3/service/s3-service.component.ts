@@ -4,6 +4,12 @@ import {CreateBucketCommand, DeleteBucketCommand, DeleteObjectCommand, GetObject
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {S3ObjectMetadata} from "../model/s3-object-item";
+//
+// const s3: S3 = new S3();
+// const options: any = {
+//     maxPartSize: 10 * 1024 * 1024,
+//     maxConcurrency: 5
+// };
 
 @Injectable({providedIn: 'root'})
 export class S3Service {
@@ -23,7 +29,6 @@ export class S3Service {
         },
     });
 
-
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -31,7 +36,11 @@ export class S3Service {
     });
     url: string = environment.gatewayEndpoint + '/';
 
+//    private managedDownloader: any;
+
     constructor(private http: HttpClient) {
+        // @ts-ignore
+        //   this.managedDownloader = new ManagedDownloader(s3, options);
     }
 
     createBucket(bucketName: string) {
@@ -60,11 +69,11 @@ export class S3Service {
 
 
     async getObject(bucketName: string, key: string) {
-        const command = {
+        const s3command = {
             Bucket: bucketName,
             Key: key
         };
-        return this.client.send(new GetObjectCommand(command));
+        return this.client.send(new GetObjectCommand(s3command));
     }
 
     deleteObject(bucketName: string, key: string) {
@@ -204,4 +213,23 @@ export class S3Service {
         }
         return this.http.post(this.url, body, {headers: headers});
     }
+
+    /*
+        public download(): string {
+            // create a write stream for a file
+            const params: GetObjectStreamInput = {
+                Bucket: 'file-delivery',
+                Key: 'ftpuser1/Onix21_13042025141953185.xml'
+            };
+            const chunks: any[] = [];
+            this.managedDownloader.getObjectStream(params)
+                .then(async (stream: any) => {
+                    for await (const chunk of stream) {
+                        chunks.push(Buffer.from(chunk));
+                    }
+                }, (err: any) => {
+                    console.error(err);
+                });
+            return Buffer.concat(chunks).toString("utf-8");
+        }*/
 }

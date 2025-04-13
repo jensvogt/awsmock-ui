@@ -7,7 +7,6 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
 import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
 import xmlFormat from 'xml-formatter';
 import {NgIf} from "@angular/common";
@@ -23,6 +22,7 @@ import {S3MetadataEditDialog} from "../../metadata-edit/metadata-edit.component"
 import {s3ObjectListActions} from "../state/s3-object-list.actions";
 import {Store} from "@ngrx/store";
 import {S3ObjectListState} from "../state/s3-object-list.reducer";
+import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
 
 @Component({
     selector: 's3-object-view',
@@ -98,6 +98,8 @@ export class S3ObjectViewDialog {
             this.metadataLength = this.metadata.length;
             this.metadataDatasource.data = data.metadata;
         }
+        //this.body = this.s3Service.download();
+
         this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
             if (!data.ContentType?.startsWith("image")) {
                 data.Body?.transformToString().then((data: string) => {

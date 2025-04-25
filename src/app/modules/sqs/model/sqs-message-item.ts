@@ -2,13 +2,14 @@ import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
 
 export interface SqsMessageAttribute {
     name: string,
-    Value: string,
-    DataType: string
+    stringValue: string,
+    numberValue: string,
+    type: string
 }
 
 export interface SqsAttribute {
-    Key: string,
-    Value: string,
+    key: string,
+    value: string,
 }
 
 export interface SqsMessageItem {
@@ -27,8 +28,8 @@ export interface SqsMessageItem {
 }
 
 export interface ListMessageCountersResponse {
-    Total: number;
-    Messages: SqsMessageItem[];
+    total: number;
+    messageCounters: SqsMessageItem[];
 }
 
 export interface SqsMessageDialogResult {

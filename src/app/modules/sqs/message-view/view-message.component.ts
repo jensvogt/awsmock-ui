@@ -59,25 +59,25 @@ export class ViewMessageComponentDialog implements OnInit {
             }
         }
         this.messageId = this.message?.messageId!;
-        if (data.message.messageAttributes) {
-            data.message.messageAttributes.forEach((a: any) => {
-                for (const key in a) {
-                    let attribute: SqsMessageAttribute = {name: a[key].name, Value: a[key].StringValue, DataType: a[key].DataType};
-                    this.messageAttributes.push(attribute);
-                }
-                this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
-                this.messageAttributeLength = this.messageAttributes.length;
-            });
+        for (let key in data.message.messageAttributes) {
+            let attribute: SqsMessageAttribute = {
+                name: data.message.messageAttributes[key].name,
+                stringValue: data.message.messageAttributes[key].stringValue,
+                numberValue: data.message.messageAttributes[key].numberValue,
+                type: data.message.messageAttributes[key].type
+            };
+            this.messageAttributes.push(attribute);
         }
+        this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
+        this.messageAttributeLength = this.messageAttributes.length;
         if (data.message.attributes) {
-            data.message.attributes.forEach((a: any) => {
-                for (const key in a) {
-                    let attribute: SqsAttribute = {Key: key, Value: a[key]};
-                    this.attributes.push(attribute);
-                }
-                this.attributesDatasource = new MatTableDataSource(this.attributes);
-                this.attributeLength = this.attributes.length;
-            });
+            for (let key in data.message.attributes) {
+                let attribute: SqsAttribute = {key: key, value: data.message.attributes[key]};
+                this.attributes.push(attribute);
+
+            }
+            this.attributesDatasource = new MatTableDataSource(this.attributes);
+            this.attributeLength = this.attributes.length;
         }
         console.log("Input data: ", data.message);
     }
@@ -117,7 +117,7 @@ export class ViewMessageComponentDialog implements OnInit {
 
         this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.messageAttributes.push({name: result.Key, Value: result.Value, DataType: result.DataType});
+                this.messageAttributes.push({name: result.name, stringValue: result.stringValue, numberValue: result.numberValue, type: result.type});
                 this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
                 this.messageAttributeLength = this.messageAttributes.length;
             }
@@ -134,7 +134,7 @@ export class ViewMessageComponentDialog implements OnInit {
 
             this.dialog.open(SqsMessageAttributeEditDialog, dialogConfig).afterClosed().subscribe(result => {
                 if (result && result.attribute) {
-                    let index = this.messageAttributes.findIndex(x => x.name === result.attribute.Key)
+                    let index = this.messageAttributes.findIndex(x => x.name === result.attribute.name)
                     if (index > 0) {
                         this.messageAttributes[index] = result.attribute
                         this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);

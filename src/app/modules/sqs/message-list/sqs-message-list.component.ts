@@ -67,9 +67,8 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
                 action.type === sqsMessageListActions.addMessageSuccess.type
             )
         ).subscribe(() => {
-                this.loadMessages();
-            }
-        );
+            this.loadMessages();
+        });
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data && data.length) {

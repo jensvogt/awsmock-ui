@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            SQS Messages: {{ queueName }} ({{ (listMessageCountersResponse$ | async)?.Total }})
+            SQS Messages: {{ queueName }} ({{ (listMessageCountersResponse$ | async)?.total }})
         </span>
         <button (click)="sendMessage()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Send a message to the queue">
             <mat-icon>add</mat-icon>
@@ -31,8 +31,8 @@
                 </mat-form-field>
             </mat-card-actions>
             <div class="table-container">
-                <div *ngIf="listMessageCountersResponse$ | async as messageCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.Messages" class="mat-elevation-z8 queue-table" mat-table matSort>
+                <div *ngIf="listMessageCountersResponse$ | async as response" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="response.messageCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="messageId">
                             <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Message ID"
                                 sortActionDescription="Sort by id">Message ID
@@ -92,7 +92,7 @@
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
-                           [length]="(listMessageCountersResponse$ | async)?.Total"
+                           [length]="(listMessageCountersResponse$ | async)?.total"
                            [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
                            [pageSize]="(pageSize$ | async)??false"

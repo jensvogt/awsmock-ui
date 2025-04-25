@@ -39,11 +39,11 @@
                 </ng-container>
                 <ng-container matColumnDef="value">
                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
-                    <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                    <td *matCellDef="let element" mat-cell> {{ element.stringValue }}</td>
                 </ng-container>
                 <ng-container matColumnDef="type">
                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute type">Type</th>
-                    <td *matCellDef="let element" mat-cell> {{ element.DataType }}</td>
+                    <td *matCellDef="let element" mat-cell> {{ element.type }}</td>
                 </ng-container>
                 <ng-container matColumnDef="actions">
                     <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
@@ -84,11 +84,11 @@
             <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributesDatasource" class="mat-elevation-z8" mat-table matSort>
                 <ng-container matColumnDef="key">
                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
-                    <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                    <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
                 </ng-container>
                 <ng-container matColumnDef="value">
                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
-                    <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                    <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
                 </ng-container>
                 <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
                 <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>

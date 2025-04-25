@@ -25,6 +25,7 @@ import {FileExportComponent} from "./file-export/file-export.component";
         CdkDrag,
         CdkDragHandle,
         CdkTextareaAutosize,
+
     ],
     providers: [],
     styleUrls: ['./export-infrastructure.component.scss']

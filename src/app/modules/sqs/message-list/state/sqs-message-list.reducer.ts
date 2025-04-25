@@ -16,7 +16,7 @@ export interface SQSMessageListState {
 }
 
 export const initialState: SQSMessageListState = {
-    listMessageCountersResponse: {Total: 0, Messages: []},
+    listMessageCountersResponse: {total: 0, messageCounters: []},
     prefix: '',
     pageSize: 10,
     pageIndex: 0,

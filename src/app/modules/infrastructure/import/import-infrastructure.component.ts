@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from "@angular/core";
+import {ChangeDetectionStrategy, Component, Inject, ViewChild} from "@angular/core";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
@@ -9,6 +9,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FileImportComponent} from "./file-import/file-import.component";
 import {ModuleService} from "../../../services/module.service";
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
     selector: 'export-infrastructure-component',
@@ -27,16 +28,19 @@ import {ModuleService} from "../../../services/module.service";
         CdkDrag,
         CdkDragHandle,
         CdkTextareaAutosize,
+        MatCheckbox,
     ],
     providers: [ModuleService],
-    styleUrls: ['./import-infrastructure.component.scss']
+    styleUrls: ['./import-infrastructure.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportInfrastructureComponentDialog {
 
     body: string | undefined = '';
+    cleanFirst = false;
+    includeObjects = false;
     loadDisabled: boolean = true;
     @ViewChild('importButton') importButton: MatInput | undefined;
-    protected readonly onchange = onchange;
 
     constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar,
                 private dialog: MatDialog, private moduleService: ModuleService) {
@@ -47,7 +51,7 @@ export class ImportInfrastructureComponentDialog {
             this.snackBar.open('Empty infrastructure JSON', 'Done', {duration: 5000});
             return;
         }
-        this.moduleService.importInfrastructure(this.body).subscribe(() => {
+        this.moduleService.importInfrastructure(this.body as any, this.cleanFirst, this.includeObjects).subscribe(() => {
             this.snackBar.open('Infrastructure imported', 'Done', {duration: 5000})
             this.dialogRef.close(true);
         });

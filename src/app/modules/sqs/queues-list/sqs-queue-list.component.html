@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            SQS Queues ({{ (listQueueCountersResponse$ | async)?.Total }})
+            SQS Queues ({{ (listQueueCountersResponse$ | async)?.total }})
         </span>
         <button (click)="createQueue()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new queue">
             <mat-icon>add</mat-icon>
@@ -29,7 +29,7 @@
             </mat-card-actions>
             <div class="table-container">
                 <div *ngIf="listQueueCountersResponse$ | async as queueCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="queueCounters.QueueCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
+                    <table (matSortChange)="sortChange($event)" [dataSource]="queueCounters.queueCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="queueName">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Queue name" sortActionDescription="Sort by queueUrl">Name</th>
                             <td *matCellDef="let element" mat-cell>
@@ -123,7 +123,7 @@
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
-                           [length]="(listQueueCountersResponse$ | async)?.Total"
+                           [length]="(listQueueCountersResponse$ | async)?.total"
                            [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
                            [pageSize]="(pageSize$ | async)??false"

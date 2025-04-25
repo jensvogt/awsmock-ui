@@ -9,6 +9,6 @@ export interface SqsQueueItem {
 }
 
 export interface ListQueueCountersResponse {
-    Total: number;
-    QueueCounters: SqsQueueItem[];
+    total: number;
+    queueCounters: SqsQueueItem[];
 }

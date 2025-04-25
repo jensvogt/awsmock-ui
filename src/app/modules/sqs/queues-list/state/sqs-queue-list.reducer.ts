@@ -17,7 +17,7 @@ export interface SQSQueueListState {
 }
 
 export const initialState: SQSQueueListState = {
-    listQueueResponse: {Total: 0, QueueCounters: []},
+    listQueueResponse: {total: 0, queueCounters: []},
     prefix: '',
     pageSize: 10,
     pageIndex: 0,

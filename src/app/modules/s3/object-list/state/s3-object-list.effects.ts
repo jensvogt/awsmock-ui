@@ -15,7 +15,7 @@ export class S3ObjectListEffects {
         ofType(s3ObjectListActions.loadObjects),
         mergeMap(action =>
             this.s3Service.listObjectsCounters(
-                action.bucketName,
+                action.bucket,
                 action.prefix,
                 action.pageSize,
                 action.pageIndex,

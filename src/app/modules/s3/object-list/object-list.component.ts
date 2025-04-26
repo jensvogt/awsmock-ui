@@ -111,7 +111,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
         this.state.value['s3-object-list'].pageSize = e.pageSize;
         this.state.value['s3-object-list'].pageIndex = e.pageIndex;
         this.store.dispatch(s3ObjectListActions.loadObjects({
-            bucketName: this.bucketName,
+            bucket: this.bucketName,
             prefix: this.state.value['s3-object-list'].prefix,
             pageSize: this.state.value['s3-object-list'].pageSize,
             pageIndex: this.state.value['s3-object-list'].pageIndex,
@@ -133,7 +133,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
     loadObjects() {
         this.lastUpdate = new Date();
         this.store.dispatch(s3ObjectListActions.loadObjects({
-            bucketName: this.bucketName,
+            bucket: this.bucketName,
             prefix: this.state.value['s3-object-list'].prefix,
             pageSize: this.state.value['s3-object-list'].pageSize,
             pageIndex: this.state.value['s3-object-list'].pageIndex,

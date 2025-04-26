@@ -7,7 +7,7 @@ export const s3ObjectListActions = {
 
     // Load objects
     loadObjects: createAction('[s3-object-list] Load Objects', props<{
-        bucketName: string,
+        bucket: string,
         prefix: string,
         pageSize: number,
         pageIndex: number,

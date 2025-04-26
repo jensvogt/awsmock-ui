@@ -79,7 +79,8 @@ export class ViewMessageComponentDialog implements OnInit {
             this.attributesDatasource = new MatTableDataSource(this.attributes);
             this.attributeLength = this.attributes.length;
         }
-        console.log("Input data: ", data.message);
+        console.log("Message attributes: ", this.messageAttributes);
+        // console.log("Input data: ", data.message);
     }
 
     ngOnInit() {

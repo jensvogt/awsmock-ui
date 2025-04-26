@@ -105,7 +105,7 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="queueAttributes$ | async as attributes" class="row">
-                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.AttributeCounters" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.attributeCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
                                 <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
@@ -131,7 +131,7 @@
                     <mat-paginator (page)="handleAttributePageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(queueAttributes$ | async)?.Total"
+                                   [length]="(queueAttributes$ | async)?.total"
                                    [pageIndex]="(attributePageIndex$ | async)"
                                    [pageSizeOptions]="attributePageSizeOptions"
                                    [pageSize]="(attributePageSize$ | async)"

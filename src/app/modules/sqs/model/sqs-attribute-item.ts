@@ -5,6 +5,6 @@ export interface SqsAttributeItem {
 }
 
 export interface SqsAttributeCountersResponse {
-    Total: number;
-    AttributeCounters: SqsAttributeItem[];
+    total: number;
+    attributeCounters: SqsAttributeItem[];
 }

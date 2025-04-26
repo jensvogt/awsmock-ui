@@ -76,7 +76,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        this.listMessageCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        this.listMessageCountersResponse$.subscribe((data) => console.log("Message Data: ", data));
     }
 
     ngOnInit(): void {

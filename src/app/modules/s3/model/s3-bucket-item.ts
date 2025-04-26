@@ -1,5 +1,3 @@
-import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
-
 export interface NotificationEvents {
     name: string,
 }
@@ -37,8 +35,8 @@ export interface S3BucketItem {
     arn: string | undefined;
     owner: string | undefined;
     versionStatus: string | undefined;
-    created: BsonDateTime;
-    modified: BsonDateTime;
+    created: Date;
+    modified: Date;
     lambdaConfigurations: LambdaConfiguration[] | undefined;
     queueConfigurations: QueueConfiguration[] | undefined;
     topicConfigurations: TopicConfiguration[] | undefined;

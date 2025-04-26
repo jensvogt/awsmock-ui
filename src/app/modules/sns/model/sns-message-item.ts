@@ -5,20 +5,21 @@ export interface SnsMessageAttribute {
 }
 
 export interface SnsMessageItem {
-    Id: string | undefined;
-    Region: string | undefined
-    TopicArn: string | undefined
-    TargetArn: string | undefined
-    MessageId: string | undefined;
-    Message: string | undefined;
-    Status: string | undefined;
-    LastSend: Date | undefined;
-    Created: Date | undefined;
-    Modified: Date | undefined;
+    id: string | undefined;
+    region: string | undefined
+    topicArn: string | undefined
+    targetArn: string | undefined
+    messageId: string | undefined;
+    message: string | undefined;
+    size: number;
+    messageStatus: string | undefined;
+    lastSend: Date | undefined;
+    created: Date | undefined;
+    modified: Date | undefined;
     messageAttributes: SnsMessageAttribute[];
 }
 
 export interface SnsMessageCountersResponse {
-    Total: number;
-    Messages: SnsMessageItem[];
+    total: number;
+    messages: SnsMessageItem[];
 }

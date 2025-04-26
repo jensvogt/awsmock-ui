@@ -6,7 +6,7 @@ export const snsMessageListActions = {
     initialize: createAction('[sns-message-list] initialize'),
 
     // Load topic
-    loadMessages: createAction('[sns-message-list] Load messages', props<{ topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadMessages: createAction('[sns-message-list] Load messages', props<{ topicArn: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     loadMessagesSuccess: createAction('[sns-message-list] Load messages success', props<{ messages: SnsMessageCountersResponse }>()),
     loadMessagesFailure: createAction('[sns-message-list] Load messages failure', props<{ error: string }>()),
 

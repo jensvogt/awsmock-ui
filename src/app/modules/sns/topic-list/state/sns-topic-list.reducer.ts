@@ -16,7 +16,7 @@ export interface SNSTopicListState {
 }
 
 export const initialState: SNSTopicListState = {
-    listTopicResponse: {Total: 0, TopicCounters: []},
+    listTopicResponse: {total: 0, topicCounters: []},
     prefix: '',
     pageSize: 10,
     pageIndex: 0,

@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            SNS Messages: {{ topicName }} ({{ (listMessageCountersResponse$ | async)?.Total }})
+            SNS Messages: {{ topicName }} ({{ (listMessageCountersResponse$ | async)?.total }})
         </span>
         <button (click)="publishMessage()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
@@ -29,13 +29,13 @@
             </mat-card-actions>
             <div class="table-container">
                 <div *ngIf="listMessageCountersResponse$ | async as messageCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.Messages" class="mat-elevation-z8 queue-table" mat-table matSort>
+                    <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.messages" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="messageId">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
                             <td *matCellDef="let element" mat-cell>
                                 <div class="with-icon">
                                     <mat-nav-list>
-                                        <a (click)="editMessage(element)" mat-list-item> {{ element.MessageId }}</a>
+                                        <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
                                     </mat-nav-list>
                                     <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
                                         <mat-icon class="copy-icon">content_copy</mat-icon>
@@ -43,17 +43,21 @@
                                 </div>
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="region">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Region" sortActionDescription="Sort by region">Region</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.Region }}</td>
+                        <ng-container matColumnDef="size">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by message size">Size</th>
+                            <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by message status">Status</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.messageStatus }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by created">Created</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.Created.$date | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.created | date:'dd-MM-yyyy HH:mm:ss' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.Modified.$date | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.modified | date:'dd-MM-yyyy HH:mm:ss' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
@@ -76,7 +80,7 @@
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
-                           [length]="(listMessageCountersResponse$ | async)?.Total"
+                           [length]="(listMessageCountersResponse$ | async)?.total"
                            [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
                            [pageSize]="(pageSize$ | async)"

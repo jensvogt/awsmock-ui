@@ -6,6 +6,8 @@ export interface SqsQueueItem {
     messagesAvailable: number | undefined;
     messagesInFlight: number | undefined;
     messagesDelayed: number | undefined;
+    created: Date | undefined;
+    modified: Date | undefined;
 }
 
 export interface ListQueueCountersResponse {

@@ -14,6 +14,7 @@ import {snsMessageListActions} from "./state/sns-message-list.actions";
 import {selectMessageCounters, selectPageIndex, selectPageSize} from "./state/sns-message-list.selectors";
 import {SnsMessageDetailsDialog} from "../message-details/sns-message-details.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {byteConversion} from "../../../shared/byte-utils.component";
 
 @Component({
     selector: 'sns-message-list-component',
@@ -32,7 +33,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     listMessageCountersResponse$: Observable<SnsMessageCountersResponse> = this.store.select(selectMessageCounters);
-    columns: any[] = ['messageId', 'region', 'created', 'modified', 'actions'];
+    columns: any[] = ['messageId', 'size', 'status', 'created', 'modified', 'actions'];
 
     // Paging
     pageSizeOptions = [5, 10, 20, 50, 100];
@@ -47,7 +48,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     // Prefix
     prefixSet: boolean = false;
     prefixValue: string = '';
-
+    protected readonly byteConversion = byteConversion;
     // Auto-update
     private updateSubscription: Subscription | undefined;
     private routerSubscription: Subscription | undefined;
@@ -63,6 +64,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         });
         this.state.value['sns-message-list'].sortColumns = [{column: 'created', sortDirection: -1}];
         this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
+        // this.listMessageCountersResponse$.subscribe((data) => console.log("Data: ", data));
         this.loadMessages();
     }
 
@@ -118,6 +120,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     loadMessages() {
         this.store.dispatch(snsMessageListActions.loadMessages({
             topicArn: this.topicArn,
+            prefix: this.state.value['sns-message-list'].prefix,
             pageSize: this.state.value['sns-message-list'].pageSize,
             pageIndex: this.state.value['sns-message-list'].pageIndex,
             sortColumns: this.state.value['sns-message-list'].sortColumns

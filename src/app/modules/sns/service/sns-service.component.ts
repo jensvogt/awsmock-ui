@@ -42,13 +42,14 @@ export class SnsService {
      * @brief Purges a topic, this will delete all the messages in the SNS topic.
      *
      * @param topicArn topic ARN
+     * @param prefix message prefix
      * @param pageSize page size
      * @param pageIndex page index
      * @param sortColumns sorting columns
      */
-    public listMessageCounters(topicArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+    public listMessageCounters(topicArn: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListMessageCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**

@@ -38,12 +38,12 @@ export class SnsMessageDetailsDialog implements OnInit {
 
     constructor(private dialogRef: MatDialogRef<SnsMessageDetailsDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SNSMessageListState>) {
         this.message = data.message;
-        this.rawMessage = this.message?.Message;
-        this.messageId = this.message?.MessageId;
-        if (this.message?.Message?.length) {
+        this.rawMessage = this.message?.message;
+        this.messageId = this.message?.messageId;
+        if (this.message?.message?.length) {
             this.isJson = isJson(this.rawMessage);
             if (this.isJson && this.prettyPrint) {
-                this.body = JSON.stringify(JSON.parse(this.data.message.Message), null, 2);
+                this.body = JSON.stringify(JSON.parse(this.data.message.message), null, 2);
             } else {
                 this.body = data.message.Message;
             }
@@ -65,11 +65,11 @@ export class SnsMessageDetailsDialog implements OnInit {
     }
 
     changePrettyPrint(event: MatSlideToggleChange) {
-        if (this.message?.Message !== undefined) {
+        if (this.message?.message !== undefined) {
             if (event.checked) {
-                this.body = JSON.stringify(JSON.parse(this.message?.Message), null, 2);
+                this.body = JSON.stringify(JSON.parse(this.message?.message), null, 2);
             } else {
-                this.body = this.message?.Message;
+                this.body = this.message?.message;
             }
         }
     }

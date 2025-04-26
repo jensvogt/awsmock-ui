@@ -15,6 +15,7 @@ export class SnsMessageListEffects {
         mergeMap(action =>
             this.snsService.listMessageCounters(
                 action.topicArn,
+                action.prefix,
                 action.pageSize,
                 action.pageIndex,
                 action.sortColumns)

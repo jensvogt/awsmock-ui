@@ -7,6 +7,7 @@ export const snsMessageListFeatureKey = 'sns-message-list';
 
 export interface SNSMessageListState {
     snsMessageCountersResponse: SnsMessageCountersResponse;
+    prefix: string;
     pageSize: number;
     pageIndex: number;
     loading: boolean;
@@ -15,7 +16,8 @@ export interface SNSMessageListState {
 }
 
 export const initialState: SNSMessageListState = {
-    snsMessageCountersResponse: {Total: 0, Messages: []},
+    snsMessageCountersResponse: {total: 0, messages: []},
+    prefix: '',
     pageSize: 10,
     pageIndex: 0,
     loading: false,

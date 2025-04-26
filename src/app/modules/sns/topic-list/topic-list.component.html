@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            SNS Topics ({{ (listTopicCountersResponse$ | async)?.Total }})
+            SNS Topics ({{ (listTopicCountersResponse$ | async)?.total }})
         </span>
         <button (click)="addTopic()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>
@@ -29,7 +29,7 @@
             </mat-card-actions>
             <div class="table-container">
                 <div *ngIf="listTopicCountersResponse$ | async as topicCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="topicCounters.TopicCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
+                    <table (matSortChange)="sortChange($event)" [dataSource]="topicCounters.topicCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="topicName">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Name</th>
                             <td *matCellDef="let element" mat-cell>
@@ -64,13 +64,13 @@
                                 Created
                             </th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.created ? (element.created.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                                {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Modified</th>
                             <td *matCellDef="let element" mat-cell>
-                                {{ element.modified ? (element.modified.$date | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                                {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
@@ -114,7 +114,7 @@
             <mat-paginator (page)="handlePageEvent($event)"
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
-                           [length]="(listTopicCountersResponse$ | async)?.Total"
+                           [length]="(listTopicCountersResponse$ | async)?.total"
                            [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
                            [pageSize]="(pageSize$ | async)"

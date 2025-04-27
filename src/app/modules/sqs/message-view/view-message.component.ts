@@ -61,10 +61,10 @@ export class ViewMessageComponentDialog implements OnInit {
         this.messageId = this.message?.messageId!;
         for (let key in data.message.messageAttributes) {
             let attribute: SqsMessageAttribute = {
-                name: data.message.messageAttributes[key].name,
+                name: key,
                 stringValue: data.message.messageAttributes[key].stringValue,
-                numberValue: data.message.messageAttributes[key].numberValue,
-                type: data.message.messageAttributes[key].type
+                dataType: data.message.messageAttributes[key].dataType,
+                stringListValues: []
             };
             this.messageAttributes.push(attribute);
         }
@@ -79,7 +79,7 @@ export class ViewMessageComponentDialog implements OnInit {
             this.attributesDatasource = new MatTableDataSource(this.attributes);
             this.attributeLength = this.attributes.length;
         }
-        console.log("Message attributes: ", this.messageAttributes);
+        //console.log("Message attributes: ", this.messageAttributes);
         // console.log("Input data: ", data.message);
     }
 
@@ -118,7 +118,7 @@ export class ViewMessageComponentDialog implements OnInit {
 
         this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.messageAttributes.push({name: result.name, stringValue: result.stringValue, numberValue: result.numberValue, type: result.type});
+                this.messageAttributes.push({stringListValues: [], name: result.name, stringValue: result.stringValue, dataType: result.dataType});
                 this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
                 this.messageAttributeLength = this.messageAttributes.length;
             }

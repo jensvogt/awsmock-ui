@@ -89,7 +89,7 @@ export class SendMessageComponentDialog implements OnInit {
 
         this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.attributes.push({name: result.name, stringValue: result.stringValue, numberValue: "", type: result.type});
+                this.attributes.push({name: result.name, stringValue: result.stringValue, dataType: result.type, stringListValues: []});
                 this.messageAttributes = new MatTableDataSource(this.attributes);
                 this.messageAttributeLength = this.attributes.length;
             }
@@ -99,12 +99,10 @@ export class SendMessageComponentDialog implements OnInit {
     convertMessageAttributes(attributes: SqsMessageAttribute[]): any {
         let messageAttr: any = {}
         attributes.forEach((element) => {
-            if (element.type === 'String') {
-                messageAttr[element.name] = {dataType: 'string', stringValue: element.stringValue}
-            } else if (element.type === 'Number') {
-                messageAttr[element.name] = {DataType: element.type, NumberValue: element.numberValue}
-            } else if (element.type === 'Binary') {
-                messageAttr[element.name] = {DataType: element.type, BinaryValue: element.stringValue}
+            if (element.dataType === 'String' || element.dataType === 'Number') {
+                messageAttr[element.name] = {DataType: element.dataType, StringValue: element.stringValue}
+            } else if (element.dataType === 'Binary') {
+                messageAttr[element.name] = {DataType: element.dataType, BinaryValue: element.stringValue}
             }
         });
         return messageAttr;

@@ -1,8 +1,8 @@
 export interface SqsMessageAttribute {
     name: string,
     stringValue: string,
-    numberValue: string,
-    type: string
+    stringListValues: string[],
+    dataType: string
 }
 
 export interface SqsAttribute {

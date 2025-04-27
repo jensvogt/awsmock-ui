@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -39,21 +39,24 @@ export class SqsMessageAttributeEditDialog {
     // @ts-ignore
     form: FormGroup;
     attribute: SqsMessageAttribute;
-    key: string = '';
+    name: string = '';
     value: string = '';
 
     dataTypes: DataType[] = [
         {value: 'String', viewValue: 'String'},
-        {value: 'Number', viewValue: 'Number'},
+        {value: 'StringList', viewValue: 'StringList'},
         {value: 'Binary', viewValue: 'Binary'},
+        {value: 'BinaryList', viewValue: 'BinaryList'},
     ];
     selectedDataType: string = 'String';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SqsMessageAttributeEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private dialogRef: MatDialogRef<SqsMessageAttributeEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.attribute = data.attribute;
-        this.key = data.attribute.Key;
-        this.value = data.attribute.Value;
-        this.selectedDataType = data.attribute.DataType;
+        this.name = data.attribute.name;
+        this.selectedDataType = data.attribute.dataType;
+        if (data.attribute.dataType === "String") {
+            this.value = data.attribute.stringValue;
+        }
     }
 
     save() {

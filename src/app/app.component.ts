@@ -16,7 +16,7 @@ export class AppComponent {
     title: string = 'awsmock.ui';
 
     constructor(private readonly router: Router, private readonly dialog: MatDialog) {
-
+        localStorage.setItem('backendUrl', "http://localhost:4566");
     }
 
     navigateMenu() {

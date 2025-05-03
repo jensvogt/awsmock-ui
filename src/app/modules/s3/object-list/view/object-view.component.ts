@@ -94,18 +94,25 @@ export class S3ObjectViewDialog {
         this.key = data.key;
         this.contentType = data.contentType;
         if (data.metadata !== undefined) {
-            this.metadata = data.metadata;
+            for (let key in data.metadata) {
+                let meta: S3ObjectMetadata = {
+                    key: key,
+                    value: data.metadata[key]
+                }
+                this.metadata.push(meta);
+            }
             this.metadataLength = this.metadata.length;
-            this.metadataDatasource.data = data.metadata;
+            this.metadataDatasource.data = this.metadata;
         }
-        //this.body = this.s3Service.download();
         if (data.downloadFlag) {
             this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
                 if (!data.ContentType?.startsWith("image")) {
                     data.Body?.transformToString().then((data: string) => {
                         this.body = data;
                         if (this.prettyPrint) {
-                            this.transformedBody = this.transform(this.body);
+                            this.transformedBody = this.transform(data, this.key);
+                        } else {
+                            this.transformedBody = data;
                         }
                     });
                 } else {
@@ -125,28 +132,28 @@ export class S3ObjectViewDialog {
     changePrettyPrint(event: MatSlideToggleChange) {
         if (this.body !== undefined) {
             if (event.checked) {
-                this.transformedBody = this.transform(this.body);
+                this.transformedBody = this.transform(this.body, this.key);
             } else {
                 this.transformedBody = this.body;
             }
         }
     }
 
-    transform(body: string): string {
-        if (this.isJson()) {
+    transform(body: string, key: string): string {
+        if (this.isJson(key)) {
             return JSON.stringify(JSON.parse(body), null, 2);
-        } else if (this.isXml()) {
+        } else if (this.isXml(key)) {
             return xmlFormat(body);
         }
         return body;
     }
 
-    isJson() {
-        return this.contentType === "application/json" || this.contentType.startsWith("text/plain");
+    isJson(key: string) {
+        return this.contentType === "application/json" || key.endsWith("json");
     }
 
-    isXml() {
-        return this.contentType === "application/xml";
+    isXml(key: string) {
+        return this.contentType === "application/xml" || key.endsWith("xml");
     }
 
     handleMetadataPageEvent(e: PageEvent) {

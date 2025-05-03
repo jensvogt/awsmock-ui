@@ -42,7 +42,7 @@ export class CpuChartAwsmockComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("cpuChart") cpuChart: ChartComponent = new ChartComponent();
+    @ViewChild("cpuChartAwsmock") cpuChartAwsmock: ChartComponent = new ChartComponent();
 
     constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
     }
@@ -57,8 +57,9 @@ export class CpuChartAwsmockComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('cpu_usage_total', 'cpu_type', start, end, 5)
+        this.monitoringService.getMultiCounters('cpu_usage_awsmock', 'cpu_type', start, end, 5)
             .subscribe((data: any) => {
+                console.log("Awsmock CPU Data: ", data);
                 if (data) {
                     let types = Object.getOwnPropertyNames(data);
                     const series: any[] = [];
@@ -71,7 +72,7 @@ export class CpuChartAwsmockComponent implements OnInit {
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "CPU Usage Total", align: "center"},
+                        title: {text: "CPU Usage AwsMock", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: true}, min: start.getTime(), max: end.getTime()},
                         yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}

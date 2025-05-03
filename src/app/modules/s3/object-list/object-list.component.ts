@@ -198,10 +198,10 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
                 this.snackBar.open("Object to big, maxSize: 1MB", "Error", {duration: 5000});
                 downloadFlag = false;
             }
-            if (object.contentType !== undefined && !this.hasAllowedContentType(object.contentType)) {
-                this.snackBar.open("Invalid content type: " + object.contentType, "Error", {duration: 5000});
-                downloadFlag = false;
-            }
+            // if (object.contentType !== undefined && !this.hasAllowedContentType(object.contentType,object.key)) {
+            //     this.snackBar.open("Invalid content type: " + object.contentType, "Error", {duration: 5000});
+            //     downloadFlag = false;
+            // }
 
             const dialogConfig = new MatDialogConfig();
 
@@ -226,7 +226,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
         );
     }
 
-    hasAllowedContentType(contentType: string) {
+    hasAllowedContentType(contentType: string, key: string) {
         return contentType === "application/xml" || contentType === "application/json" || contentType === "text/html" || contentType === "text/xml"
             || contentType.startsWith("text/plain") || contentType.startsWith("image/jpg") || contentType.startsWith("image/jpeg")
             || contentType.startsWith("image/png") || contentType.startsWith("image/gif");

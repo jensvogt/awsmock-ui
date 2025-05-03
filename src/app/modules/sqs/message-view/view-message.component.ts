@@ -62,8 +62,8 @@ export class ViewMessageComponentDialog implements OnInit {
         for (let key in data.message.messageAttributes) {
             let attribute: SqsMessageAttribute = {
                 name: key,
-                stringValue: data.message.messageAttributes[key].stringValue,
-                dataType: data.message.messageAttributes[key].dataType,
+                stringValue: data.message.messageAttributes[key].StringValue,
+                dataType: data.message.messageAttributes[key].DataType,
                 stringListValues: []
             };
             this.messageAttributes.push(attribute);

@@ -34,20 +34,20 @@
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Item ID" sortActionDescription="Sort by item ID">ID</th>
                             <td *matCellDef="let element" mat-cell>
                                 <mat-nav-list>
-                                    <a (click)="editItem(element)" mat-list-item>{{ element.oid }}</a>
+                                    <a (click)="editItem(element)" mat-list-item>{{ element.id }}</a>
                                 </mat-nav-list>
                         </ng-container>
                         <ng-container matColumnDef="size" matTooltip="Total size of item">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="SItem size" sortActionDescription="Sort by size">Size</th>
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Item size" sortActionDescription="Sort by size">Size</th>
                             <td *matCellDef="let element" mat-cell> {{ byteConversion(getSize(element)) }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created" matTooltip="Created">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Create timestamp" sortActionDescription="Sort by created">Created</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.created ? (element.created.$date | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.created ? (element.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="modified" matTooltip="Modified">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified timestamp" sortActionDescription="Sort by modified">Modified</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.modified ? (element.modified.$date | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</td>
+                            <td *matCellDef="let element" mat-cell> {{ element.modified ? (element.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>

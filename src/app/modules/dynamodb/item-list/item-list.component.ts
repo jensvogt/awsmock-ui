@@ -68,7 +68,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {
@@ -156,7 +156,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     }
 
     getSize(element: ItemItem) {
-        return JSON.stringify(element.attributes).length;
+        return 0;//JSON.stringify(element.attributes).length;
     }
 
     editItem(item: ItemItem) {

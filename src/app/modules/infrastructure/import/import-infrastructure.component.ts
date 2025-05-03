@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Inject, ViewChild} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewChild} from "@angular/core";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
@@ -43,7 +43,7 @@ export class ImportInfrastructureComponentDialog {
     @ViewChild('importButton') importButton: MatInput | undefined;
 
     constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar,
-                private dialog: MatDialog, private moduleService: ModuleService) {
+                private dialog: MatDialog, private moduleService: ModuleService, private cdr: ChangeDetectorRef) {
     }
 
     importInfrastructure() {
@@ -73,13 +73,14 @@ export class ImportInfrastructureComponentDialog {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {extensions: ['.json', '.bson']}
+        dialogConfig.data = {extensions: ['.json']}
 
         this.dialog.open(FileImportComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 this.loadDisabled = false;
                 this.body = result;
                 this.importButton?.focus();
+                this.cdr.detectChanges();
             }
         });
     }

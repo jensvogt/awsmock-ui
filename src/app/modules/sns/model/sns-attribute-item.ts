@@ -1,9 +1,9 @@
 export interface SnsAttributeItem {
-    name: string | undefined;
-    value: string | undefined;
+    attributeKey: string | undefined;
+    attributeValue: string | undefined;
 }
 
 export interface SnsAttributeCountersResponse {
-    Total: number;
-    AttributeCounters: SnsAttributeItem[];
+    total: number;
+    attributeCounters: SnsAttributeItem[];
 }

@@ -1,9 +1,9 @@
 export interface SnsTagItem {
-    name: string | undefined;
-    value: string | undefined;
+    tagKey: string | undefined;
+    tagValue: string | undefined;
 }
 
 export interface SnsTagCountersResponse {
-    Total: number;
-    TagCounters: SnsTagItem[];
+    total: number;
+    tagCounters: SnsTagItem[];
 }

@@ -30,8 +30,8 @@
                                     <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicArn }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>URL: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicUrl }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Owner: </p>
+                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.owner }}</p>
                                 </mat-list-item>
                             </mat-list>
                         </div>
@@ -40,16 +40,14 @@
                         <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Owner: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.owner }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
                                     <p class="mat-list-span-title" matListItemTitle>Messages: </p>
                                     <p class="map-list-span-value" matListItemLine>{{ topicDetails.messageCount }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
                                     <p class="mat-list-span-title" matListItemTitle>Size (kB): </p>
                                     <p class="map-list-span-value" matListItemLine>{{ topicDetails.size }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
                                 </mat-list-item>
                             </mat-list>
                         </div>
@@ -87,14 +85,14 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="topicAttributes$ | async as attributes" class="row">
-                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.AttributeCounters" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.attributeCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.attributeKey }}</td>
                             </ng-container>
                             <ng-container matColumnDef="value">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.attributeValue }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
@@ -113,7 +111,7 @@
                     <mat-paginator (page)="handleAttributePageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(topicAttributes$ | async)?.Total"
+                                   [length]="(topicAttributes$ | async)?.total"
                                    [pageIndex]="(attributePageIndex$ | async)"
                                    [pageSizeOptions]="attributePageSizeOptions"
                                    [pageSize]="(attributePageSize$ | async)"
@@ -131,22 +129,22 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="topicTags$ | async as tags" class="row">
-                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.TagCounters" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.tagKey }}</td>
                             </ng-container>
                             <ng-container matColumnDef="value">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by tag value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.tagValue }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editTag(row.Key, row.Value)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
+                                    <button (click)="editTag(row.tagKey, row.tagValue)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="deleteTag(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
+                                    <button (click)="deleteTag(row.tagKey)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </td>
@@ -163,7 +161,7 @@
                     <mat-paginator (page)="handleTagPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(topicTags$ | async)?.Total"
+                                   [length]="(topicTags$ | async)?.total"
                                    [pageIndex]="(tagPageIndex$ | async)"
                                    [pageSizeOptions]="tagPageSizeOptions"
                                    [pageSize]="(tagPageSize$ | async)"
@@ -181,7 +179,7 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="topicSubscriptions$ | async as subscriptions" class="row">
-                        <table (matSortChange)="subscriptionSortChange($event)" [dataSource]="subscriptions.SubscriptionCounters" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="subscriptionSortChange($event)" [dataSource]="subscriptions.subscriptionCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="id">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by subscriptionArn">ID</th>
                                 <td *matCellDef="let element" mat-cell> {{ element.id }}</td>
@@ -221,7 +219,7 @@
                     <mat-paginator (page)="handleSubscriptionPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(topicSubscriptions$ | async)?.Total"
+                                   [length]="(topicSubscriptions$ | async)?.total"
                                    [pageIndex]="(subscriptionPageIndex$ | async)"
                                    [pageSizeOptions]="subscriptionPageSizeOptions"
                                    [pageSize]="(subscriptionPageSize$ | async)"

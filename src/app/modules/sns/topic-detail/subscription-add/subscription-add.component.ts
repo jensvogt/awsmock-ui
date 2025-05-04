@@ -1,12 +1,13 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {SqsService} from "../../../sqs/service/sqs-service.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 export const Protocols: string[] = [
     'http',
@@ -53,17 +54,12 @@ export class SubscriptionAddComponentDialog implements OnInit {
     queueArnData: Array<string> = [];
     protected readonly Protocols = Protocols;
 
-    constructor(private sqsService: SqsService, private fb: FormBuilder, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicName;
     }
 
     ngOnInit() {
-        this.form = this.fb.group({
-            topicArn: [""],
-            endpoint: [""],
-            protocol: [""],
-        });
         this.loadQueueArns();
     }
 
@@ -71,6 +67,9 @@ export class SubscriptionAddComponentDialog implements OnInit {
         this.queueArnData = [];
         if (this.protocol == 'sqs') {
             this.loadQueueArns();
+        } else if (this.protocol == 'http' || this.protocol == 'https') {
+        } else {
+            this.snackBar.open('Protocol not supported yet, name: ' + this.protocol, 'Dismiss', {duration: 5000});
         }
     }
 
@@ -83,9 +82,5 @@ export class SubscriptionAddComponentDialog implements OnInit {
 
     save() {
         this.dialogRef.close({topicArn: this.topicArn, endpoint: this.endpoint, protocol: this.protocol});
-    }
-
-    close() {
-        this.dialogRef.close(false);
     }
 }

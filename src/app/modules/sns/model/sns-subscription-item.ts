@@ -8,6 +8,6 @@ export interface SnsSubscriptionItem {
 }
 
 export interface SnsSubscriptionCountersResponse {
-    Total: number;
-    SubscriptionCounters: SnsSubscriptionItem[];
+    total: number;
+    subscriptionCounters: SnsSubscriptionItem[];
 }

@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -31,25 +31,21 @@ export class TagEditComponentDialog implements OnInit {
     form: FormGroup;
     topicArn: string = '';
     topicName: string = '';
-    key: string = '';
-    value: string = '';
+    tagKey: string = '';
+    tagValue: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<TagEditComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private dialogRef: MatDialogRef<TagEditComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicName;
-        this.key = data.key;
-        this.value = data.value;
+        this.tagKey = data.tagKey;
+        this.tagValue = data.tagValue;
     }
 
     ngOnInit() {
-        this.form = this.fb.group({
-            key: [""],
-            value: [""]
-        });
     }
 
     save() {
-        this.dialogRef.close({topicArn: this.topicArn, key: this.key, value: this.value});
+        this.dialogRef.close({topicArn: this.topicArn, tagKey: this.tagKey, tagValue: this.tagValue});
     }
 
     close() {

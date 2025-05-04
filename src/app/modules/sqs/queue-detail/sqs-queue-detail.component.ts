@@ -23,13 +23,13 @@ import {SqsAttributeCountersResponse} from "../model/sqs-attribute-item";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {SqsQueueDetailsState} from "./state/sqs-queue-detail.reducer";
-import {SnsTagCountersResponse} from "../../sns/model/sns-tag-item";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {SqsService} from "../service/sqs-service.component";
 import {SqsTagAddDialog} from "./tag-add/tag-add.component";
 import {SqsTagEditDialog} from "./tag-edit/tag-edit.component";
 import {SqsLambdaTriggerCountersResponse} from "../model/sqs-lambda-trigger-item";
 import {SqsDqlEditDialog} from "./dlq-edit/dlq-edit.component";
+import {SqsTagCountersResponse} from "../model/sqs-tag-item";
 
 @Component({
     selector: 'sqs-queue-detail-component',
@@ -63,7 +63,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     lambdaTriggerPageSizeOptions = [5, 10, 20, 50, 100];
 
     // Tags Table
-    queueTags$: Observable<SnsTagCountersResponse> = this.store.select(selectTags);
+    queueTags$: Observable<SqsTagCountersResponse> = this.store.select(selectTags);
     tagPageSize$: Observable<number> = this.store.select(selectTagPageSize);
     tagPageIndex$: Observable<number> = this.store.select(selectTagPageIndex);
     tagColumns: any[] = ['name', 'value', 'actions'];
@@ -243,23 +243,23 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    editTag(key: string, value: string) {
+    editTag(tagKey: string, tagValue: string) {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {queueUrl: this.queueUrl, queueName: this.queueName, key: key, value: value};
+        dialogConfig.data = {queueUrl: this.queueUrl, queueName: this.queueName, tagKey: tagKey, tagValue: tagValue};
 
         this.dialog.open(SqsTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                if (result.key !== key || result.value !== value) {
-                    this.sqsService.addTag(result.queueUrl, result.key, result.value)
+                if (result.tagKey !== tagKey || result.tagValue !== tagValue) {
+                    this.sqsService.addTag(result.queueUrl, result.tagKey, result.tagValue)
                         .subscribe(() => {
                             this.loadTags();
-                            this.snackBar.open('SQS tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                            this.snackBar.open('SQS tag changed, name: ' + result.tagKey, 'Dismiss', {duration: 5000});
                         })
                 } else {
-                    this.snackBar.open('SQS tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                    this.snackBar.open('SQS tag unchanged, name: ' + result.tagKey, 'Dismiss', {duration: 5000});
                 }
             }
         });

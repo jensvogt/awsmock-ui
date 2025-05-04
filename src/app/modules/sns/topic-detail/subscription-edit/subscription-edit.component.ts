@@ -7,6 +7,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {SqsService} from "../../../sqs/service/sqs-service.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 export const Protocols: string[] = [
     'http',
@@ -53,7 +54,7 @@ export class SubscriptionEditComponentDialog implements OnInit {
     queueArnData: Array<string> = [];
     protected readonly Protocols = Protocols;
 
-    constructor(private sqsService: SqsService, private fb: FormBuilder, private dialogRef: MatDialogRef<SubscriptionEditComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private fb: FormBuilder, private dialogRef: MatDialogRef<SubscriptionEditComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.subscriptionArn = data.subscriptionArn;
         this.endpoint = data.endpoint;
@@ -73,6 +74,9 @@ export class SubscriptionEditComponentDialog implements OnInit {
         this.queueArnData = [];
         if (this.protocol == 'sqs') {
             this.loadQueueArns();
+        } else if (this.protocol == 'http' || this.protocol == 'https') {
+        } else {
+            this.snackBar.open('Protocol not supported yet, name: ' + this.protocol, 'Dismiss', {duration: 5000});
         }
     }
 

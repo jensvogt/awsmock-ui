@@ -90,6 +90,9 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
+        //this.topicSubscriptions$.subscribe((data) => console.log("SNS subscriptions: ", data));
+        //this.topicAttributes$.subscribe((data) => console.log("SNS attributes: ", data));
+        this.topicTags$.subscribe((data) => console.log("SNS tags: ", data));
     }
 
     ngOnDestroy() {
@@ -227,23 +230,23 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             })
     }
 
-    editTag(key: string, value: string) {
+    editTag(tagKey: string, tagValue: string) {
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName, key: key, value: value};
+        dialogConfig.data = {topicArn: this.topicArn, topicName: this.topicName, tagKey: tagKey, tagValue: tagValue};
 
         this.dialog.open(TagEditComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                if (result.key !== key || result.value !== value) {
-                    this.snsService.addTag(result.topicArn, result.key, result.value)
+                if (result.tagKey !== tagKey || result.tagValue !== tagValue) {
+                    this.snsService.addTag(result.topicArn, result.tagKey, result.tagValue)
                         .subscribe(() => {
                             this.loadTags();
-                            this.snackBar.open('SNS tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                            this.snackBar.open('SNS tag changed, name: ' + result.tagKey, 'Dismiss', {duration: 5000});
                         })
                 } else {
-                    this.snackBar.open('SNS tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                    this.snackBar.open('SNS tag unchanged, name: ' + result.tagKey, 'Dismiss', {duration: 5000});
                 }
             }
         });

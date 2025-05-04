@@ -4,6 +4,6 @@ export interface SqsTagItem {
 }
 
 export interface SqsTagCountersResponse {
-    Total: number;
-    TagCounters: SqsTagItem[];
+    total: number;
+    tagCounters: SqsTagItem[];
 }

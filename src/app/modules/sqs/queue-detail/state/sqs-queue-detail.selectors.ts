@@ -2,8 +2,8 @@ import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelec
 import {sqsQueueDetailsFeatureKey, SqsQueueDetailsState} from "./sqs-queue-detail.reducer";
 import {SqsQueueDetails} from "../../model/sqs-queue-details";
 import {SqsAttributeCountersResponse} from "../../model/sqs-attribute-item";
-import {SnsTagCountersResponse} from "../../../sns/model/sns-tag-item";
 import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
+import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
@@ -46,7 +46,7 @@ export const selectLambdaTriggerPageIndex: SelectorType<number> = createSelector
     (state: SqsQueueDetailsState) => state?.lambdaTriggerPageIndex
 );
 
-export const selectTags: SelectorType<SnsTagCountersResponse> = createSelector(
+export const selectTags: SelectorType<SqsTagCountersResponse> = createSelector(
     selectQueueDetailsFeature,
     (state: SqsQueueDetailsState) => state?.sqsQueueTags
 );

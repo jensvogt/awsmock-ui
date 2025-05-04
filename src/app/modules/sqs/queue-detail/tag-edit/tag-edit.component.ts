@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {SqsService} from "../../../sqs/service/sqs-service.component";
+import {SqsService} from "../../service/sqs-service.component";
 
 @Component({
     selector: 'tag-edit-dialog',
@@ -31,14 +31,14 @@ export class SqsTagEditDialog implements OnInit {
     form: FormGroup;
     queueUrl: string = '';
     queueName: string = '';
-    key: string = '';
-    value: string = '';
+    tagKey: string = '';
+    tagValue: string = '';
 
     constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SqsTagEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.queueUrl = data.queueUrl;
         this.queueName = data.queueName;
-        this.key = data.key;
-        this.value = data.value;
+        this.tagKey = data.tagKey;
+        this.tagValue = data.tagValue;
     }
 
     ngOnInit() {
@@ -49,7 +49,7 @@ export class SqsTagEditDialog implements OnInit {
     }
 
     save() {
-        this.dialogRef.close({queueUrl: this.queueUrl, key: this.key, value: this.value});
+        this.dialogRef.close({queueUrl: this.queueUrl, tagKey: this.tagKey, tagValue: this.tagValue});
     }
 
     close() {

@@ -168,7 +168,7 @@ export class SnsService {
      */
     addTag(topicArn: string, key: string, value: string) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'TagResource');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), "ResourceArn=" + topicArn + "&Tags.Tag.1.Key=" + key + "&Tags.Tag.1.Value=" + value, {headers: headers, responseType: 'text'});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), "ResourceArn=" + topicArn + "&Tags.member.1.Key=" + key + "&Tags.member.1.Value=" + value, {headers: headers, responseType: 'text'});
     }
 
     /**

@@ -216,7 +216,7 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="queueTags$ | async as tags;else tagsNotFound" class="row">
-                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.TagCounters" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
                                 <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
@@ -247,7 +247,7 @@
                         <mat-paginator (page)="handleTagPageEvent($event)"
                                        [disabled]="false"
                                        [hidePageSize]="false"
-                                       [length]="(queueTags$ | async)?.Total"
+                                       [length]="(queueTags$ | async)?.total"
                                        [pageIndex]="(tagPageIndex$ | async)"
                                        [pageSizeOptions]="tagPageSizeOptions"
                                        [pageSize]="(tagPageSize$ | async)"

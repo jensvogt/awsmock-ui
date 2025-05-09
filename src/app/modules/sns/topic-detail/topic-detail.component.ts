@@ -31,6 +31,7 @@ import {TagAddComponentDialog} from "./tag-add/tag-add.component";
 import {SnsAttributeCountersResponse} from "../model/sns-attribute-item";
 import {TagEditComponentDialog} from "./tag-edit/tag-edit.component";
 import {SubscriptionEditComponentDialog} from "./subscription-edit/subscription-edit.component";
+import {byteConversion} from "../../../shared/byte-utils.component";
 
 @Component({
     selector: 'sns-topic-detail-component',
@@ -69,7 +70,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     attributePageIndex$: Observable<number> = this.store.select(selectAttributePageIndex);
     attributeColumns: any[] = ['name', 'value'];
     attributePageSizeOptions = [5, 10, 20, 50, 100];
-
+    protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
     constructor(private snackBar: MatSnackBar, private snsService: SnsService, private route: ActivatedRoute, private dialog: MatDialog,
@@ -91,8 +92,9 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             }
         });
         //this.topicSubscriptions$.subscribe((data) => console.log("SNS subscriptions: ", data));
+        //this.topicSubscriptions$.subscribe((data) => console.log("SNS subscriptions: ", data));
         //this.topicAttributes$.subscribe((data) => console.log("SNS attributes: ", data));
-        this.topicTags$.subscribe((data) => console.log("SNS tags: ", data));
+        this.topicDetails$.subscribe((data) => console.log("SNS topic details: ", data));
     }
 
     ngOnDestroy() {
@@ -103,21 +105,23 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         this.location.back();
     }
 
+    // ===================================================================================================================
+    // Details
+
     refresh() {
         this.loadTopicDetails();
         this.loadSubscriptions();
     }
 
     // ===================================================================================================================
-    // Details
+    // Subscriptions
+
     // ===================================================================================================================
     loadTopicDetails() {
         this.store.dispatch(snsTopicDetailsActions.loadDetails({topicArn: this.topicArn}));
         this.lastUpdate = new Date();
     }
 
-    // ===================================================================================================================
-    // Subscriptions
     // ===================================================================================================================
     handleSubscriptionPageEvent(e: PageEvent) {
         this.state.value['sns-topic-details'].subscriptionPageSize = e.pageSize;
@@ -173,6 +177,9 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         });
     }
 
+    // ===================================================================================================================
+    // Tags
+
     addSubscription() {
         const dialogConfig = new MatDialogConfig();
 
@@ -191,8 +198,6 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    // ===================================================================================================================
-    // Tags
     // ===================================================================================================================
     handleTagPageEvent(e: PageEvent) {
         this.state.value['sns-topic-details'].tagPageSize = e.pageSize;
@@ -252,6 +257,9 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         });
     }
 
+    // ===================================================================================================================
+    // Attributes
+
     addTag() {
         const dialogConfig = new MatDialogConfig();
 
@@ -270,8 +278,6 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    // ===================================================================================================================
-    // Attributes
     // ===================================================================================================================
     handleAttributePageEvent(e: PageEvent) {
         this.state.value['sns-topic-details'].attributePageSize = e.pageSize;

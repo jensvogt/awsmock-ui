@@ -1,5 +1,3 @@
-import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
-
 export interface SqsQueueDetails {
     region: string;
     queueName: string;
@@ -16,6 +14,16 @@ export interface SqsQueueDetails {
     delayed: number;
     dlqArn: string;
     dlqMaxReceive: number;
-    created: BsonDateTime;
-    modified: BsonDateTime;
+    created: Date;
+    modified: Date;
+}
+
+export interface SqsQueueAttributeItem {
+    attributeKey: string | undefined;
+    attributeValue: string | undefined;
+}
+
+export interface SqsQueueAttributeCountersResponse {
+    total: number;
+    attributeCounters: SqsQueueAttributeItem[];
 }

@@ -73,9 +73,9 @@ export class MemoryChartTotalComponent implements OnInit {
                         title: {text: "Memory Usage Total", align: "center"},
                         tooltip: {x: {format: "dd/MM HH:mm:ss"}},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
-                        xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: true}, min: start.getTime(), max: end.getTime()},
+                        xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
                         yaxis: {
-                            min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "Memory [MB]"}, labels: {offsetX: 10}
+                            min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "Memory [%]"}, labels: {offsetX: 10}
                         }
                     };
                 }

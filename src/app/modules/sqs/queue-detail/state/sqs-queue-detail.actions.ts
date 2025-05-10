@@ -1,7 +1,6 @@
 import {createAction, props} from '@ngrx/store';
-import {SqsQueueDetails} from "../../model/sqs-queue-details";
+import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../../model/sqs-queue-details";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {SqsAttributeCountersResponse} from "../../model/sqs-attribute-item";
 import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
 import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
 
@@ -15,7 +14,7 @@ export const sqsQueueDetailsActions = {
 
     // Load attributes
     loadAttributes: createAction('[sqs-queue-details] Load queue attributes', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
-    loadAttributesSuccess: createAction('[sqs-queue-details] Load queue attributes success', props<{ attributes: SqsAttributeCountersResponse }>()),
+    loadAttributesSuccess: createAction('[sqs-queue-details] Load queue attributes success', props<{ attributes: SqsQueueAttributeCountersResponse }>()),
     loadAttributesFailure: createAction('[sqs-queue-details] Load queue attributes error', props<{ error: string }>()),
 
     // Load lambda triggers

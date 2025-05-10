@@ -1,8 +1,7 @@
 import {createReducer, on} from "@ngrx/store";
 import {sqsQueueDetailsActions} from './sqs-queue-detail.actions';
-import {SqsQueueDetails} from "../../model/sqs-queue-details";
+import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../../model/sqs-queue-details";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {SqsAttributeCountersResponse} from "../../model/sqs-attribute-item";
 import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
 import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
 
@@ -12,7 +11,7 @@ export interface SqsQueueDetailsState {
     sqsQueueDetails: SqsQueueDetails;
 
     // Attributes
-    sqsQueueAttributes: SqsAttributeCountersResponse;
+    sqsQueueAttributes: SqsQueueAttributeCountersResponse;
     attributePageSize: number,
     attributePageIndex: number,
     attributeSortColumns: SortColumn[],
@@ -37,7 +36,7 @@ export const initialState: SqsQueueDetailsState = {
     sqsQueueDetails: {} as SqsQueueDetails,
 
     // Attributes
-    sqsQueueAttributes: {} as SqsAttributeCountersResponse,
+    sqsQueueAttributes: {} as SqsQueueAttributeCountersResponse,
     attributePageSize: 10,
     attributePageIndex: 0,
     attributeSortColumns: [{column: 'endpoint', sortDirection: -1}],

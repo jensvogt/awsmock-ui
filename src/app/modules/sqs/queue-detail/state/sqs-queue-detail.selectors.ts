@@ -1,7 +1,6 @@
 import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelector} from "@ngrx/store";
 import {sqsQueueDetailsFeatureKey, SqsQueueDetailsState} from "./sqs-queue-detail.reducer";
-import {SqsQueueDetails} from "../../model/sqs-queue-details";
-import {SqsAttributeCountersResponse} from "../../model/sqs-attribute-item";
+import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../../model/sqs-queue-details";
 import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
 import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
 
@@ -16,7 +15,7 @@ export const selectDetails: SelectorType<SqsQueueDetails> = createSelector(
     (state: SqsQueueDetailsState) => state?.sqsQueueDetails
 );
 
-export const selectAttributes: SelectorType<SqsAttributeCountersResponse> = createSelector(
+export const selectAttributes: SelectorType<SqsQueueAttributeCountersResponse> = createSelector(
     selectQueueDetailsFeature,
     (state: SqsQueueDetailsState) => state?.sqsQueueAttributes
 );

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SqsQueueDetails} from "../model/sqs-queue-details";
+import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../model/sqs-queue-details";
 import {Location} from "@angular/common";
 import {State, Store} from "@ngrx/store";
 import {sqsQueueDetailsActions} from "./state/sqs-queue-detail.actions";
@@ -19,7 +19,6 @@ import {
     selectTagPageSize,
     selectTags
 } from "./state/sqs-queue-detail.selectors";
-import {SqsAttributeCountersResponse} from "../model/sqs-attribute-item";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {SqsQueueDetailsState} from "./state/sqs-queue-detail.reducer";
@@ -49,7 +48,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     queueDetailsError$: Observable<string> = this.store.select(selectError);
 
     // Attributes Table
-    queueAttributes$: Observable<SqsAttributeCountersResponse> = this.store.select(selectAttributes);
+    queueAttributes$: Observable<SqsQueueAttributeCountersResponse> = this.store.select(selectAttributes);
     attributePageSize$: Observable<number> = this.store.select(selectAttributePageSize);
     attributePageIndex$: Observable<number> = this.store.select(selectAttributePageIndex);
     attributeColumns: any[] = ['name', 'value'];
@@ -93,7 +92,9 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             this.targetArn = data.dlqArn;
             this.retries = data.dlqMaxReceive;
         });
-        //this.queueAttributes$.subscribe((data: any) => console.log("Data: ", data));
+
+        //this.queueDetails$.subscribe((data: any) => console.log("QeueuDetails: ", data));
+        //this.queueAttributes$.subscribe((data: any) => console.log("Attributes: ", data));
         //this.queueTags$.subscribe((data: any) => console.log("Data: ", data));
         //this.lambdaTriggers$.subscribe((data: any) => console.log("Data: ", data));
     }

@@ -59,7 +59,6 @@ export class CpuChartAwsmockComponent implements OnInit {
         let end = this.chartService.getEndTime();
         this.monitoringService.getMultiCounters('cpu_usage_awsmock', 'cpu_type', start, end, 5)
             .subscribe((data: any) => {
-                console.log("Awsmock CPU Data: ", data);
                 if (data) {
                     let types = Object.getOwnPropertyNames(data);
                     const series: any[] = [];
@@ -74,7 +73,7 @@ export class CpuChartAwsmockComponent implements OnInit {
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
                         title: {text: "CPU Usage AwsMock", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
-                        xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: true}, min: start.getTime(), max: end.getTime()},
+                        xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
                         yaxis: {min: 0, decimalsInFloat: 3, title: {text: "CPU [%]"}, labels: {offsetX: 10}}
                     };
                 }

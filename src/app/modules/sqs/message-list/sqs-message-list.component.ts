@@ -34,7 +34,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listMessageCountersResponse$: Observable<ListMessageCountersResponse> = this.store.select(selectMessageCounters);
-    columns: any[] = ['messageId', 'size', 'retries', 'created', 'modified', 'actions'];
+    columns: any[] = ['messageId', 'contentType', 'size', 'retries', 'created', 'modified', 'actions'];
 
     // Paging
     pageSizeOptions = [5, 10, 20, 50, 100];

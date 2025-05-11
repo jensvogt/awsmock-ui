@@ -15,6 +15,7 @@ export interface SqsMessageItem {
     id: string | undefined;
     messageId: string | undefined;
     body: string | undefined;
+    contentType: string | undefined;
     receiptHandle: string | undefined;
     md5Sum: string | undefined;
     retries: number | undefined;

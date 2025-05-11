@@ -43,6 +43,10 @@
                                 </div>
                             </td>
                         </ng-container>
+                        <ng-container matColumnDef="contentType">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Content type" sortActionDescription="Sort by content type">Content Type</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.contentType }}</td>
+                        </ng-container>
                         <ng-container matColumnDef="size">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by message size">Size</th>
                             <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
@@ -59,10 +63,14 @@
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
                             <td *matCellDef="let element" mat-cell> {{ element.modified | date:'dd-MM-yyyy HH:mm:ss' }}</td>
                         </ng-container>
+                        <ng-container matColumnDef="lastSend">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Last sent" sortActionDescription="Sort by last send">Last Send</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.lastSend | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                        </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="deleteMessage(row.MessageId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
+                                <button (click)="deleteMessage(row.messageId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>

@@ -33,7 +33,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     listMessageCountersResponse$: Observable<SnsMessageCountersResponse> = this.store.select(selectMessageCounters);
-    columns: any[] = ['messageId', 'size', 'status', 'created', 'modified', 'actions'];
+    columns: any[] = ['messageId', 'contentType', 'size', 'status', 'created', 'modified', 'lastSend', 'actions'];
 
     // Paging
     pageSizeOptions = [5, 10, 20, 50, 100];

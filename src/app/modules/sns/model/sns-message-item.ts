@@ -12,6 +12,7 @@ export interface SnsMessageItem {
     messageId: string | undefined;
     message: string | undefined;
     size: number;
+    contentType: string | undefined;
     messageStatus: string | undefined;
     lastSend: Date | undefined;
     created: Date | undefined;

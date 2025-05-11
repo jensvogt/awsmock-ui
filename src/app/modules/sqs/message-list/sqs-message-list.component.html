@@ -48,6 +48,10 @@
                                 </div>
                             </td>
                         </ng-container>
+                        <ng-container matColumnDef="contentType">
+                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Message content type" sortActionDescription="Sort by content type">Content Type</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.contentType }}</td>
+                        </ng-container>
                         <ng-container matColumnDef="size">
                             <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Message size" sortActionDescription="Sort by size">Size</th>
                             <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>

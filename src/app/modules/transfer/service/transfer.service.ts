@@ -65,6 +65,19 @@ export class TransferService {
     }
 
     /**
+     * @brief List all transfer servers
+     *
+     * @param serverId server ID
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listTransferServerTag(serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.ListTagCounters');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {return: environment.awsmockRegion, serverId: serverId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
      * @brief Delete a server
      *
      * @param serverId server ID
@@ -118,6 +131,17 @@ export class TransferService {
     public deleteProtocol(serverId: string, protocol: string) {
         let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteProtocol');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, Protocol: protocol}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a tag from a server
+     *
+     * @param serverId server ID
+     * @param key tag key
+     */
+    public deleteTag(serverId: string, key: string) {
+        let headers = this.headers.set('X-Amz-Target', 'TransferService.DeleteTag');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {Region: environment.awsmockRegion, ServerId: serverId, Key: key}, {headers: headers});
     }
 
 }

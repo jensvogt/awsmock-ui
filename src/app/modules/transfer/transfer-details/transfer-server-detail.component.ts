@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 import {TransferService} from "../service/transfer.service";
 import {TransferServerDetailsResponse} from "../model/transfer-server-details";
 import {TransferServerDetailsState} from "./state/transfer-server-detail.reducer";
-import {selectDetails, selectError, selectProtocolPageIndex, selectProtocolPageSize, selectProtocols, selectUserPageIndex, selectUserPageSize, selectUsers} from "./state/transfer-server-detail.selectors";
+import {selectDetails, selectError, selectProtocolPageIndex, selectProtocolPageSize, selectProtocols, selectTagPageIndex, selectTagPageSize, selectTags, selectUserPageIndex, selectUserPageSize, selectUsers} from "./state/transfer-server-detail.selectors";
 import {transferServerDetailActions} from "./state/transfer-server-detail.actions";
 import {TransferServerUsersResponse} from "../model/transfer-server-users";
 import {PageEvent} from "@angular/material/paginator";
@@ -17,6 +17,7 @@ import {MatTabChangeEvent} from "@angular/material/tabs";
 import {TransferServerProtocolsResponse} from "../model/transfer-server-protocols";
 import {UserAddComponentDialog} from "./user-add/user-add-component";
 import {ProtocolAddComponentDialog} from "./protocol-add/protocol-add-component";
+import {TransferServerTagsResponse} from "../model/transfer-server-tags";
 
 @Component({
     selector: 'transfer-server-detail-component',
@@ -49,6 +50,13 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
     protocolColumns: any[] = ['name', 'port', 'actions'];
     protocolPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Tag table
+    tags$: Observable<TransferServerTagsResponse> = this.store.select(selectTags);
+    tagPageSize$: Observable<number> = this.store.select(selectTagPageSize);
+    tagPageIndex$: Observable<number> = this.store.select(selectTagPageIndex);
+    tagColumns: any[] = ['key', 'value', 'actions'];
+    tagPageSizeOptions = [5, 10, 20, 50, 100];
+
     // SFTP client
     client: any;
     private routerSubscription: any;
@@ -64,16 +72,17 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
             this.loadTransferServerDetails();
             this.loadUsers();
             this.loadProtocols();
+            this.loadTags();
         });
         this.serverDetailsError$.subscribe((msg: string) => {
             if (msg && msg.length) {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
-        //this.serverDetails$.subscribe((data) => console.log("Data: ", data));
+        this.serverDetails$.subscribe((data) => console.log("Data: ", data));
         //this.users$.subscribe((data) => console.log("Data: ", data));
-        this.protocols$.subscribe((data) => console.log("Protocols: ", data));
-        //this.tag$.subscribe((data) => console.log("Protocols: ", data));
+        //this.protocols$.subscribe((data) => console.log("Protocols: ", data));
+        //this.tags$.subscribe((data) => console.log("Tags data: ", data));
     }
 
     ngOnDestroy() {
@@ -250,6 +259,64 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this.loadProtocols();
                 this.snackBar.open('Transfer protocol deleted, protocol: ' + protocol, 'Dismiss', {duration: 5000});
+            });
+    }
+
+    // ===================================================================================================================
+    // Tags
+    // ===================================================================================================================
+    handleTagPageEvent(e: PageEvent) {
+        this.state.value['transfer-server-details'].tagPageSize = e.pageSize;
+        this.state.value['transfer-server-details'].tagPageIndex = e.pageIndex;
+        this.loadTags();
+    }
+
+    loadTags() {
+        this.store.dispatch(transferServerDetailActions.loadTags({
+            serverId: this.serverId,
+            pageSize: this.state.value['transfer-server-details'].tagPageSize,
+            pageIndex: this.state.value['transfer-server-details'].tagPageIndex,
+            sortColumns: this.state.value['transfer-server-details'].sortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    tagSortChange(sortState: Sort) {
+        this.state.value['transfer-server-details'].sortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['transfer-server-details'].sortColumns = [{column: column, sortDirection: direction}];
+        this.loadTags();
+    }
+
+    /*addTag() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+
+        this.dialog.open(TagAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.transferService.addTag(this.serverId, result.tagname, result.password).subscribe(() => {
+                    this.loadTags();
+                    this.snackBar.open('Tag added, tagname: ' + result.tagname, 'Done', {duration: 5000})
+                });
+            }
+        });
+
+    }
+
+    refreshTags() {
+        this.loadTags();
+        this.loadProtocols();
+    }*/
+
+    deleteTag(name: string) {
+        this.transferService.deleteTag(this.serverId, name)
+            .subscribe(() => {
+                this.loadTags();
+                this.snackBar.open('Transfer tag deleted, name: ' + name, 'Dismiss', {duration: 5000});
             });
     }
 }

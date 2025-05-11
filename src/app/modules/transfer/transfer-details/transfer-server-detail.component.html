@@ -184,30 +184,30 @@
                     </mat-paginator>
                 </mat-tab>
                 <mat-tab label="Tags">
-                    <!--mat-card-actions class="head-buttons">
-                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
+                    <mat-card-actions class="head-buttons">
+                        <!--button (click)="addTag()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>
                         </button>
                         <button (click)="refreshTags()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>refresh</mat-icon>
-                        </button>
+                        </button-->
                     </mat-card-actions>
-                    <div *ngIf="topicTags$ | async as tags" class="row">
-                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.TagCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="name">
+                    <div *ngIf="tags$ | async as tags" class="row">
+                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="key">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
                             </ng-container>
                             <ng-container matColumnDef="value">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by tag value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editTag(row.Key, row.Value)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
+                                    <!--button (click)="editTag(row.Key, row.Value)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
                                         <mat-icon>edit</mat-icon>
-                                    </button>
+                                    </button-->
                                     <button (click)="deleteTag(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
                                         <mat-icon>delete</mat-icon>
                                     </button>
@@ -225,13 +225,13 @@
                     <mat-paginator (page)="handleTagPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(topicTags$ | async)?.Total"
+                                   [length]="(tags$ | async)?.total"
                                    [pageIndex]="(tagPageIndex$ | async)"
                                    [pageSizeOptions]="tagPageSizeOptions"
                                    [pageSize]="(tagPageSize$ | async)"
                                    [showFirstLastButtons]="true"
                                    aria-label="Select page">
-                    </mat-paginator-->
+                    </mat-paginator>
                 </mat-tab>
             </mat-tab-group>
         </mat-card-content>

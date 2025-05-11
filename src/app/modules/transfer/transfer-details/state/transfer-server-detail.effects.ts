@@ -48,6 +48,18 @@ export class TransferServerDetailEffects {
         ),
     ));
 
+    loadTransferServerTags$ = createEffect(() => this.actions$.pipe(
+        ofType(transferServerDetailActions.loadTags),
+        mergeMap(action =>
+            this.transferService.listTransferServerTag(action.serverId, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((tags: any) => transferServerDetailActions.loadTagsSuccess({tags})),
+                    catchError((error) =>
+                        of(transferServerDetailActions.loadTagsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     constructor(private actions$: Actions, private transferService: TransferService) {
     }
 }

@@ -4,6 +4,7 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {TransferServerDetailsResponse} from "../../model/transfer-server-details";
 import {TransferServerUsersResponse} from "../../model/transfer-server-users";
 import {TransferServerProtocolsResponse} from "../../model/transfer-server-protocols";
+import {TransferServerTagsResponse} from "../../model/transfer-server-tags";
 
 export const transferServerDetailsFeatureKey = 'transfer-server-details';
 
@@ -23,6 +24,12 @@ export interface TransferServerDetailsState {
     protocolPageSize: number;
     protocolPageIndex: number;
     protocolSortColumns: SortColumn[];
+
+    // Tags
+    tags: TransferServerTagsResponse;
+    tagPageSize: number;
+    tagPageIndex: number;
+    tagSortColumns: SortColumn[];
 
     loading: boolean;
     error: unknown;
@@ -44,6 +51,12 @@ export const initialState: TransferServerDetailsState = {
     protocolPageSize: 10,
     protocolPageIndex: 0,
     protocolSortColumns: [{column: 'name', sortDirection: -1}],
+
+    // Tags
+    tags: {} as TransferServerTagsResponse,
+    tagPageSize: 10,
+    tagPageIndex: 0,
+    tagSortColumns: [{column: 'name', sortDirection: -1}],
 
     loading: false,
     error: {}
@@ -81,6 +94,15 @@ export const transferServerDetailReducer = createReducer(
         loading: false
     })),
     on(transferServerDetailActions.loadProtocolsFailure, (state: TransferServerDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Transfer server tag list
+    on(transferServerDetailActions.loadTags, (state: TransferServerDetailsState) => ({...state, loading: true})),
+    on(transferServerDetailActions.loadTagsSuccess, (state: TransferServerDetailsState, {tags}) => ({
+        ...state,
+        tags: tags,
+        loading: false
+    })),
+    on(transferServerDetailActions.loadTagsFailure, (state: TransferServerDetailsState, {error}) => ({...state, error: error, loading: false})),
 
     // Delete transfer server
     // on(transferServerDetailActions.deleteTransferServer, (state: TransferServerDetailsState) => ({...state, loading: true})),

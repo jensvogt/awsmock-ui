@@ -3,6 +3,7 @@ import {transferServerDetailsFeatureKey, TransferServerDetailsState} from "./tra
 import {TransferServerDetailsResponse} from "../../model/transfer-server-details";
 import {TransferServerUsersResponse} from "../../model/transfer-server-users";
 import {TransferServerProtocolsResponse} from "../../model/transfer-server-protocols";
+import {TransferServerTagsResponse} from "../../model/transfer-server-tags";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
@@ -48,6 +49,21 @@ export const selectProtocolPageSize: SelectorType<number> = createSelector(
 export const selectProtocolPageIndex: SelectorType<number> = createSelector(
     selectTransferServerDetailsFeature,
     (state: TransferServerDetailsState) => state?.protocolPageIndex
+);
+
+export const selectTags: SelectorType<TransferServerTagsResponse> = createSelector(
+    selectTransferServerDetailsFeature,
+    (state: TransferServerDetailsState) => state?.tags
+);
+
+export const selectTagPageSize: SelectorType<number> = createSelector(
+    selectTransferServerDetailsFeature,
+    (state: TransferServerDetailsState) => state?.tagPageSize
+);
+
+export const selectTagPageIndex: SelectorType<number> = createSelector(
+    selectTransferServerDetailsFeature,
+    (state: TransferServerDetailsState) => state?.tagPageIndex
 );
 
 export const selectError: SelectorType<any> = createSelector(

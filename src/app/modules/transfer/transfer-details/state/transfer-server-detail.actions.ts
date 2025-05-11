@@ -3,6 +3,7 @@ import {TransferServerDetailsResponse} from "../../model/transfer-server-details
 import {TransferServerUsersResponse} from "../../model/transfer-server-users";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {TransferServerProtocolsResponse} from "../../model/transfer-server-protocols";
+import {TransferServerTagsResponse} from "../../model/transfer-server-tags";
 
 export const transferServerDetailActions = {
     initialize: createAction('[transfer-server-details] initialize'),
@@ -26,6 +27,11 @@ export const transferServerDetailActions = {
     loadProtocols: createAction('[transfer-server-details] Load transfer server protocols', props<{ serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     loadProtocolsSuccess: createAction('[transfer-server-details] Load transfer server protocols success', props<{ protocols: TransferServerProtocolsResponse }>()),
     loadProtocolsFailure: createAction('[transfer-server-details] Load transfer server protocols error', props<{ error: string }>()),
+
+    // Load tags
+    loadTags: createAction('[transfer-server-details] Load transfer server tags', props<{ serverId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadTagsSuccess: createAction('[transfer-server-details] Load transfer server tags success', props<{ tags: TransferServerTagsResponse }>()),
+    loadTagsFailure: createAction('[transfer-server-details] Load transfer server tags error', props<{ error: string }>()),
 
     // Delete transfer server
     // deleteTransferServer: createAction('[transfer-server-list] Delete transfer server', props<{ serverId: string }>()),

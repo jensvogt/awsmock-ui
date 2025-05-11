@@ -94,15 +94,8 @@ export class S3ObjectViewDialog {
         this.key = data.key;
         this.contentType = data.contentType;
         if (data.metadata !== undefined) {
-            for (let key in data.metadata) {
-                let meta: S3ObjectMetadata = {
-                    key: key,
-                    value: data.metadata[key]
-                }
-                this.metadata.push(meta);
-            }
-            this.metadataLength = this.metadata.length;
-            this.metadataDatasource.data = this.metadata;
+            this.metadataLength = data.metadata.length;
+            this.metadataDatasource.data = data.metadata;
         }
         if (data.downloadFlag) {
             this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {

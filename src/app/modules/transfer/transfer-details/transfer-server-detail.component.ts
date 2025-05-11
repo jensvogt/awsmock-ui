@@ -72,7 +72,8 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
         });
         //this.serverDetails$.subscribe((data) => console.log("Data: ", data));
         //this.users$.subscribe((data) => console.log("Data: ", data));
-        //this.protocols$.subscribe((data) => console.log("Protocols: ", data));
+        this.protocols$.subscribe((data) => console.log("Protocols: ", data));
+        //this.tag$.subscribe((data) => console.log("Protocols: ", data));
     }
 
     ngOnDestroy() {

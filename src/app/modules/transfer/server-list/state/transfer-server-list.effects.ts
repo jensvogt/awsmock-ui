@@ -28,8 +28,7 @@ export class TransferServerListEffects {
         ),
     ));
 
-    // @ts-ignore
-    deleteQueue$ = createEffect(() => this.actions$.pipe(
+    deleteServer$ = createEffect(() => this.actions$.pipe(
         ofType(transferServerListActions.deleteTransferServer),
         mergeMap(action =>
             this.transferService.deleteServer(action.serverId)

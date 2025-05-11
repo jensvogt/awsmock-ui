@@ -6,7 +6,7 @@ export interface TransferServerUser {
 }
 
 export interface TransferServerUsersResponse {
-    UserCounters: TransferServerUser[];
-    Total: number;
+    userCounters: TransferServerUser[];
+    total: number;
 }
 

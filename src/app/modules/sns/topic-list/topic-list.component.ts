@@ -59,7 +59,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loadTopics();
         this.updateSubscription = interval(60000).subscribe(() => this.loadTopics());
-//        this.listTopicCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        this.listTopicCountersResponse$.subscribe((data) => console.log("Topic list data: ", data));
     }
 
     ngOnDestroy(): void {

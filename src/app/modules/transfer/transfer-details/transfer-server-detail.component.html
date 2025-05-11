@@ -94,7 +94,7 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="users$ | async as users" class="row">
-                        <table (matSortChange)="userSortChange($event)" [dataSource]="users.UserCounters" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="userSortChange($event)" [dataSource]="users.userCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User name" sortActionDescription="Sort by user name">Name</th>
                                 <td *matCellDef="let element" mat-cell> {{ element.UserName }}</td>
@@ -128,7 +128,7 @@
                     <mat-paginator (page)="handleUserPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(users$ | async)?.Total"
+                                   [length]="(users$ | async)?.total"
                                    [pageIndex]="(userPageIndex$ | async)"
                                    [pageSizeOptions]="userPageSizeOptions"
                                    [pageSize]="(userPageSize$ | async)"
@@ -146,22 +146,19 @@
                         </button>
                     </mat-card-actions>
                     <div *ngIf="protocols$ | async as protocols" class="row">
-                        <table (matSortChange)="protocolSortChange($event)" [dataSource]="protocols.ProtocolCounters" class="mat-elevation-z8" mat-table matSort>
+                        <table (matSortChange)="protocolSortChange($event)" [dataSource]="protocols.protocolCounters" class="mat-elevation-z8" mat-table matSort>
                             <ng-container matColumnDef="name">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Protocol name" sortActionDescription="Sort by protocol name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Protocol }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.protocol }}</td>
                             </ng-container>
                             <ng-container matColumnDef="port">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Protocol port" sortActionDescription="Sort by protocol port">Port</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Port }}</td>
+                                <td *matCellDef="let element" mat-cell> {{ element.port }}</td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <!--button (click)="editProtocol(row.Key, row.Value)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
-                                        <mat-icon>edit</mat-icon>
-                                    </button-->
-                                    <button (click)="deleteProtocol(row.Protocol)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
+                                    <button (click)="deleteProtocol(row.protocol)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </td>
@@ -178,7 +175,7 @@
                     <mat-paginator (page)="handleProtocolPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(protocols$ | async)?.Total"
+                                   [length]="(protocols$ | async)?.total"
                                    [pageIndex]="(protocolPageIndex$ | async)"
                                    [pageSizeOptions]="protocolPageSizeOptions"
                                    [pageSize]="(protocolPageSize$ | async)"

@@ -51,7 +51,7 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.listTransferServerCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        //this.listTransferServerCountersResponse$.subscribe((data) => console.log("Transfer server data: ", data));
     }
 
     ngOnInit(): void {
@@ -93,13 +93,8 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
 
     sortChange(sortState: Sort) {
         this.state.value['transfer-server-list'].sortColumns = [];
+        let column = sortState.active;
         let direction;
-        let column = 'attributes.approximateNumberOfMessages';
-        if (sortState.active === 'messagesInFlight') {
-            column = 'attributes.approximateNumberOfMessagesNotVisible'
-        } else if (sortState.active === 'messagesDelayed') {
-            column = 'attributes.approximateNumberOfMessagesDelayed';
-        }
         if (sortState.direction === 'asc') {
             direction = 1;
         } else {

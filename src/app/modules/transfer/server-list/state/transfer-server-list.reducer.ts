@@ -16,7 +16,7 @@ export interface TransferServerListState {
 }
 
 export const initialState: TransferServerListState = {
-    listTransferServerCountersResponse: {Total: 0, TransferServerCounters: []},
+    listTransferServerCountersResponse: {total: 0, transferServers: []},
     prefix: '',
     pageSize: 10,
     pageIndex: 0,

@@ -6,35 +6,35 @@ import {ListTransferServerCountersResponse} from "../../model/transfer-server-it
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
 
-const selectQueueListFeature: SelectorFeatureType<TransferServerListState> =
+const selectServerListFeature: SelectorFeatureType<TransferServerListState> =
     createFeatureSelector<TransferServerListState>(transferServerListFeatureKey);
 
 export const selectIsLoading: SelectorType<boolean> = createSelector(
-    selectQueueListFeature,
+    selectServerListFeature,
     (state: TransferServerListState) => state.loading
 );
 
 export const selectPrefix: SelectorType<string> = createSelector(
-    selectQueueListFeature,
+    selectServerListFeature,
     (state: TransferServerListState) => state?.prefix
 );
 
 export const selectPageSize: SelectorType<number> = createSelector(
-    selectQueueListFeature,
+    selectServerListFeature,
     (state: TransferServerListState) => state?.pageSize
 );
 
 export const selectPageIndex: SelectorType<number> = createSelector(
-    selectQueueListFeature,
+    selectServerListFeature,
     (state: TransferServerListState) => state?.pageIndex
 );
 
 export const selectSortColumns: SelectorType<SortColumn[]> = createSelector(
-    selectQueueListFeature,
+    selectServerListFeature,
     (state: TransferServerListState) => state?.sortColumns
 );
 
 export const selectTransferServerCounters: SelectorType<ListTransferServerCountersResponse> = createSelector(
-    selectQueueListFeature,
+    selectServerListFeature,
     (state: TransferServerListState) => state?.listTransferServerCountersResponse
 );

@@ -6,6 +6,6 @@ export interface TransferServerItem {
 }
 
 export interface ListTransferServerCountersResponse {
-    Total: number;
-    TransferServerCounters: TransferServerItem[];
+    total: number;
+    transferServers: TransferServerItem[];
 }

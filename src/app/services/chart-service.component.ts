@@ -34,7 +34,11 @@ export class ChartService {
     }
 
     getStartTime(choice: string): Date {
-        let startTime = new Date();
+        let date = new Date();
+        let now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+            date.getUTCDate(), date.getUTCHours(),
+            date.getUTCMinutes(), date.getUTCSeconds());
+        let startTime = new Date(now_utc)
         if (choice == 'Today') {
             startTime.setHours(0, 0, 0, 0);
         } else if (choice == 'LastHour') {

@@ -51,7 +51,7 @@ export class ImportInfrastructureComponentDialog {
             this.snackBar.open('Empty infrastructure JSON', 'Done', {duration: 5000});
             return;
         }
-        this.moduleService.importInfrastructure(this.body as any, this.cleanFirst, this.includeObjects).subscribe(() => {
+        this.moduleService.importInfrastructure(this.body).subscribe(() => {
             this.snackBar.open('Infrastructure imported', 'Done', {duration: 5000})
             this.dialogRef.close(true);
         });

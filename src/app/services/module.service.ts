@@ -40,9 +40,9 @@ export class ModuleService {
     /**
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
-    public importInfrastructure(infrastructure: any, cleanFirst: boolean, includeObjects: boolean) {
+    public importInfrastructure(body: string) {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'import');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {infrastructure: infrastructure, cleanFirst: cleanFirst, includeObjects: includeObjects}, {headers: headers}).pipe(catchError(this.handleError));
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers}).pipe(catchError(this.handleError));
     }
 
     public cleanInfrastructure(body: any) {

@@ -40,8 +40,7 @@ export class DynamodbViewItemDialog {
     constructor(private dialogRef: MatDialogRef<DynamodbViewItemDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.item = data.item;
         this.tableName = data.tableName;
-        this.oid = this.item?.oid;
-        this.itemJson = JSON.stringify(this.item?.attributes, null, 2);
+        this.itemJson = JSON.stringify(this.item.attributes, null, 2);
     }
 
     updateItem() {

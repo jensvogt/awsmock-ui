@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.6.1](https://github.com/jensvogt/awsmock-ui/compare/v1.6.0...v1.6.1) (2025-05-17)
+
+
+### Bug Fixes
+
+* **1181-dynamodb tableitems not showing:** add content type to SNS/SQS messages ([7a44eca](https://github.com/jensvogt/awsmock-ui/commit/7a44ecaf3788eebd4f5fca09710ae8ca1dc1214d))
+* **1181-dynamodb tableitems not showing:** add content type to SNS/SQS messages ([26a6f62](https://github.com/jensvogt/awsmock-ui/commit/26a6f621cc28306ed6002252128d91986db15fe3))
+* **1181-dynamodb tableitems not showing:** add content type to SNS/SQS messages ([87c8d92](https://github.com/jensvogt/awsmock-ui/commit/87c8d92020aeeb7e90472558785369ad7e58fd71))
+* **1181-dynamodb tableitems not showing:** add content type to SNS/SQS messages ([8d0d5e7](https://github.com/jensvogt/awsmock-ui/commit/8d0d5e7ce6ee6dcfd996c85663e81b9ea1926651))
+* **1181-dynamodb tableitems not showing:** add content type to SNS/SQS messages ([5503fe9](https://github.com/jensvogt/awsmock-ui/commit/5503fe9ba179adcd3f5948906fcdc723d7004496))
+* **1181-dynamodb tableitems not showing:** add content type to SNS/SQS messages ([f5b937c](https://github.com/jensvogt/awsmock-ui/commit/f5b937c8ab974d0ce0b4ffaa6004175a166b98e2))
+* **1181-dynamodb tableitems not showing:** add content type to SNS/SQS messages ([3b4b1ec](https://github.com/jensvogt/awsmock-ui/commit/3b4b1ec914030e7875f30cbc8aa464ce80033761))
+* **1181-dynamodb tableitems not showing:** fix dynamodb pages ([f026fed](https://github.com/jensvogt/awsmock-ui/commit/f026fed735b64c33246777e6fa786ec67a008449))
+* **1181-dynamodb tableitems not showing:** fix SNS topic subscription page ([e68bc96](https://github.com/jensvogt/awsmock-ui/commit/e68bc96728b5abe1fdc0b4c8b27b8c8f2b0f974c))
+* **1181-dynamodb tableitems not showing:** fix SNS topic subscription page ([6fc7464](https://github.com/jensvogt/awsmock-ui/commit/6fc74646815b237c95682cdf8190693c89b609b5))
+* **1181-dynamodb tableitems not showing:** fix SQS details page, graphs and monitoring ([028dd46](https://github.com/jensvogt/awsmock-ui/commit/028dd467b7389133c1e6be159dfc0f3971375e08))
+* **1181-dynamodb tableitems not showing:** fix SQS details page, graphs and monitoring ([d766987](https://github.com/jensvogt/awsmock-ui/commit/d7669873741a52a2ae0eabe16af1b1e0639be67f))
+* **123-backend-service:** Add backend service ([93c8587](https://github.com/jensvogt/awsmock-ui/commit/93c8587ed483f75fd0efcbdbae344a066ca7421c))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add counters, fix redrive policy. ([895245d](https://github.com/jensvogt/awsmock-ui/commit/895245df805f5e68ff68b6847ae0013301c352c4))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add more charts ([ce23cba](https://github.com/jensvogt/awsmock-ui/commit/ce23cba7571023793d27aa8ec11ee74fd78f7030))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([88aa5a1](https://github.com/jensvogt/awsmock-ui/commit/88aa5a12d42d2d2b384bc2c1e4206ddfbf62994b))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([16eb497](https://github.com/jensvogt/awsmock-ui/commit/16eb497d814388994d31bdbbe558c31af95fc18d))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([31589c9](https://github.com/jensvogt/awsmock-ui/commit/31589c9f7a28832a7af1f8b95d49f67675ba43b7))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([0427ed2](https://github.com/jensvogt/awsmock-ui/commit/0427ed2e36442973abf4937e222bf8b5cc9cd15c))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** add queue/topic notifications to S3 bucket details ([dd81826](https://github.com/jensvogt/awsmock-ui/commit/dd818264443fca3c8f68ad930fda7e651e26c49e))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix DQL subscription edit. ([3c3b323](https://github.com/jensvogt/awsmock-ui/commit/3c3b32388e1ac7824525c0836132e58f1049e74b))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix DQL subscription edit. ([620232c](https://github.com/jensvogt/awsmock-ui/commit/620232c4372bb72c94fd5e725b713dcefcae1bda))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** Fix Lambda delete issues ([0a613e9](https://github.com/jensvogt/awsmock-ui/commit/0a613e98955854f247067e0a60f8d3d77d02fd58))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** Fix Lambda upload dialog ([dba172f](https://github.com/jensvogt/awsmock-ui/commit/dba172f630f3e02c256c481f6ea627b2c876b78b))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** Fix S3 object details page ([0d714c6](https://github.com/jensvogt/awsmock-ui/commit/0d714c6c4e2b60f067da20e60e88aad0f4ef370e))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** Fix S3 upload/download ([993a6bd](https://github.com/jensvogt/awsmock-ui/commit/993a6bde82cbc8a16d58364fdd06109d061c1484))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** Fix S3 upload/download ([da8590c](https://github.com/jensvogt/awsmock-ui/commit/da8590c3b38529f0db1c1c562c3d28802bb205fd))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix SQS attribute edit ([2e89768](https://github.com/jensvogt/awsmock-ui/commit/2e897688c5f3848cea0d7c5de22249768f27957b))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix SQS attribute edit ([b052ff1](https://github.com/jensvogt/awsmock-ui/commit/b052ff110471ad5d431a6071f573ef774fc8c9ed))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix SQS attribute edit ([ae4465e](https://github.com/jensvogt/awsmock-ui/commit/ae4465e136e7052f373991f85486b2a7ef177709))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix SQS attribute edit ([95bf75d](https://github.com/jensvogt/awsmock-ui/commit/95bf75dbe3c212b6c21a42baa26029ea0607edc2))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix SQS attribute edit ([96d6a39](https://github.com/jensvogt/awsmock-ui/commit/96d6a399f893aced38e8041839c07d8d0a36f7e5))
+* **125-ui-does-not-show-s3-sqs-event-notifications:** fix SQS queue sort columns ([3a8d9ae](https://github.com/jensvogt/awsmock-ui/commit/3a8d9ae6e41080df111d841cc8bf20413d05cbf2))
+* **175-upload-into-s3-bucket-needs-metadata:** set default backend URL ([9c7ca41](https://github.com/jensvogt/awsmock-ui/commit/9c7ca41f7a2a7dba053a03ce6592817f2f6df78c))
+* **175-upload-into-s3-bucket-needs-metadata:** set default backend URL ([2ffa2c5](https://github.com/jensvogt/awsmock-ui/commit/2ffa2c5e6d6708a1b8a56bb721345ce99175cc80))
+
 ## [1.6.0](https://github.com/jensvogt/awsmock-ui/compare/v1.5.0...v1.6.0) (2025-01-24)
 
 

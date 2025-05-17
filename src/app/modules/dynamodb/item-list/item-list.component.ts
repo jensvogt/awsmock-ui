@@ -68,7 +68,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        //this.listItemCountersResponse$.subscribe((data) => console.log("Data: ", data));
     }
 
     ngOnInit(): void {

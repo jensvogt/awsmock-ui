@@ -228,4 +228,13 @@ export class LambdaService {
         const body = {Region: environment.awsmockRegion, FunctionName: functionName}
         return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
+
+    /**
+     * @brief List all lambda ARNs
+     */
+    public listLambdaArns() {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-arns');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {}, {headers: headers});
+    }
+
 }

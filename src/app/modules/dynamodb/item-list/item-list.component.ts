@@ -155,10 +155,6 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
         });
     }
 
-    getSize(element: ItemItem) {
-        return 0;//JSON.stringify(element.attributes).length;
-    }
-
     editItem(item: ItemItem) {
 
         const dialogConfig = new MatDialogConfig();
@@ -185,7 +181,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     deleteItem(item: ItemItem) {
         this.dynamodbService.deleteItem(this.tableName, item.keys)
             .subscribe(() => {
-                this.snackBar.open('Item deleted, ID: ' + item.oid, 'Done', {duration: 5000});
+                this.snackBar.open('Item deleted, ID: ' + item.id, 'Done', {duration: 5000});
                 this.loadItems();
             });
     }

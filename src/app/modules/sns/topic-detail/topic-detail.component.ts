@@ -94,7 +94,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         //this.topicSubscriptions$.subscribe((data) => console.log("SNS subscriptions: ", data));
         //this.topicSubscriptions$.subscribe((data) => console.log("SNS subscriptions: ", data));
         //this.topicAttributes$.subscribe((data) => console.log("SNS attributes: ", data));
-        this.topicDetails$.subscribe((data) => console.log("SNS topic details: ", data));
+        //this.topicDetails$.subscribe((data) => console.log("SNS topic details: ", data));
     }
 
     ngOnDestroy() {

@@ -1,9 +1,9 @@
 export interface Attribute {
-    
+
 }
 
 export interface ItemItem {
-    oid: string | undefined;
+    id: string | undefined;
     attributes: Attribute[] | undefined;
     keys: Attribute[] | undefined;
     size: number;

@@ -8,6 +8,7 @@ import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {SqsService} from "../../../sqs/service/sqs-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {LambdaService} from "../../../lambda/service/lambda-service.component";
 
 export const Protocols: string[] = [
     'http',
@@ -51,16 +52,23 @@ export class SubscriptionAddComponentDialog implements OnInit {
     topicName: string = '';
     endpoint: string = '';
     protocol: string = 'sqs';
+    queueSelection = '';
+    lambdaSelection = '';
     queueArnData: Array<string> = [];
+    lambdaArnData: Array<string> = [];
     protected readonly Protocols = Protocols;
 
-    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private lambdaService: LambdaService, private dialogRef: MatDialogRef<SubscriptionAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicName;
     }
 
     ngOnInit() {
-        this.loadQueueArns();
+        if (this.protocol === 'sqs') {
+            this.loadQueueArns();
+        } else if (this.protocol === 'lambda') {
+            this.loadLambdaArns();
+        }
     }
 
     protocolSelectionChanged() {
@@ -68,6 +76,8 @@ export class SubscriptionAddComponentDialog implements OnInit {
         if (this.protocol == 'sqs') {
             this.loadQueueArns();
         } else if (this.protocol == 'http' || this.protocol == 'https') {
+        } else if (this.protocol == 'lambda') {
+            this.loadLambdaArns();
         } else {
             this.snackBar.open('Protocol not supported yet, name: ' + this.protocol, 'Dismiss', {duration: 5000});
         }
@@ -77,6 +87,15 @@ export class SubscriptionAddComponentDialog implements OnInit {
         this.sqsService.listQueueArns()
             .subscribe((data: any) => {
                 this.queueArnData = data.QueueArns;
+                this.queueSelection = this.queueArnData[0];
+            });
+    }
+
+    loadLambdaArns() {
+        this.lambdaService.listLambdaArns()
+            .subscribe((data: any) => {
+                this.lambdaArnData = data.lambdaArns;
+                this.lambdaSelection = this.lambdaArnData[0];
             });
     }
 

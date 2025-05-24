@@ -237,4 +237,27 @@ export class LambdaService {
         return this.http.post(<string>localStorage.getItem('backendUrl'), {}, {headers: headers});
     }
 
+    /**
+     * @brief List all lambda result counters
+     */
+    public listLambdaResultCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-lambda-result-counters');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a lambda resul counter
+     */
+    public deleteLambdaResultCounter(oid: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-lambda-result-counter');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {oid: oid}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a lambda resul counter
+     */
+    public deleteLambdaResultCounters(lambdaArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-lambda-result-counters');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn}, {headers: headers});
+    }
 }

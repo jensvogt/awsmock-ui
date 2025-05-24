@@ -15,6 +15,7 @@ import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
 import {LambdaFunctionCreateDialog} from "../function-create/function-create-dialog.component";
 import {LambdaFunctionUpgradeDialog} from "../function-upgrade/function-upgrade-dialog.component";
+import {LambdaResultDialog} from "../function-result/function-result-dialog.component";
 
 @Component({
     selector: 'lambda-function-list',
@@ -254,6 +255,23 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                     this.loadFunctions();
                     this.snackBar.open('Lambda function code uploaded, ARN: ' + functionArn, 'Done', {duration: 5000});
                 });
+            }
+        });
+    }
+
+    loadLambdaLogs(functionArn: string) {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {lambdaArn: functionArn};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+
+        this.dialog.open(LambdaResultDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
             }
         });
     }

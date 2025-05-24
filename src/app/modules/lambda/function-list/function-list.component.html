@@ -66,8 +66,11 @@
                             <td *matCellDef="let element" mat-cell> {{ element.averageRuntime }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
+                                <button (click)="loadLambdaLogs(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
+                                    <mat-icon>assignment</mat-icon>
+                                </button>
                                 <button (click)="uploadCode(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
                                     <mat-icon>upload</mat-icon>
                                 </button>

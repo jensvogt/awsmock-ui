@@ -83,7 +83,6 @@ export class BucketNotificationEditDialog implements OnInit {
     }
 
     ngOnInit() {
-        console.log("OnInit");
         this.loadFunctions();
     }
 
@@ -97,7 +96,6 @@ export class BucketNotificationEditDialog implements OnInit {
     loadFunctions() {
         this.lambdaService.listFunctionCounters('', 10, 0, [{column: 'functionName', sortDirection: 1}])
             .subscribe((data: any) => {
-                console.log(data);
                 data.functionCounters.forEach((f: LambdaFunctionItem) => this.functionArns.push(f.functionArn));
                 if (this.functionArns.length > 0) {
                     this.selectedFunction = this.functionArns[0];

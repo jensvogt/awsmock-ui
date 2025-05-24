@@ -245,7 +245,6 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
 
         this.dialog.open(ProtocolAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                console.log("Result: ", result);
                 this.transferService.addProtocol(this.serverId, result.protocol, result.port).subscribe(() => {
                     this.loadProtocols();
                     this.snackBar.open('Protocol added, protocol: ' + result.protocol, 'Done', {duration: 5000})

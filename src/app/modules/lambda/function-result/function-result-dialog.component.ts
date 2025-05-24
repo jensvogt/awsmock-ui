@@ -115,7 +115,6 @@ export class LambdaResultDialog implements OnInit {
 
     loadLambdaResults() {
         this.lambdaService.listLambdaResultCounters(this.lambdaArn, this.pageSize, this.pageIndex, this.sortColumns).subscribe((data: any) => {
-            console.log("Lambda results: ", data);
             this.lambdaResultData = data.lambdaResultCounters;
             this.lambdaResultDataSource.data = this.lambdaResultData;
             this.total = data.total;
@@ -133,14 +132,12 @@ export class LambdaResultDialog implements OnInit {
 
     deleteResult(oid: string) {
         this.lambdaService.deleteLambdaResultCounter(oid).subscribe(() => {
-            console.log("Lambda results deleted: ", oid);
             this.loadLambdaResults();
         });
     }
 
     deleteAll() {
         this.lambdaService.deleteLambdaResultCounters(this.lambdaArn).subscribe(() => {
-            console.log("Lambda results deleted: ", this.lambdaArn);
             this.loadLambdaResults();
         });
     }

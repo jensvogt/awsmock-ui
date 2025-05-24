@@ -1,7 +1,6 @@
 import {DatePipe} from "@angular/common";
 
 export function dateConversion(bsonDate: any): string | null {
-    console.log("Dat: ", bsonDate);
     if (bsonDate === undefined || bsonDate.$date === undefined) {
         return "-";
     }

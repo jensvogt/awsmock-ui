@@ -135,7 +135,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
 
             this.dialog.open(BucketNotificationEditDialog, dialogConfig).afterClosed().subscribe(result => {
                 if (result) {
-                    console.log("Result Bucket notification: " + result);
+                    //console.log("Result Bucket notification: " + result);
                 }
             });
         }

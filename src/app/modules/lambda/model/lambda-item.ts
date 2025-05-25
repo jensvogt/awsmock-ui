@@ -28,9 +28,10 @@ export interface LambdaFunctionItem {
     s3Bucket: string | "";
     s3Key: string | "";
     s3ObjectVersion: string | "";
-    concurrency: number | undefined;
-    invocations: number | undefined;
-    averageRuntime: number | undefined;
+    concurrency: number | 0;
+    invocations: number | 0;
+    averageRuntime: number | 0;
+    instances: number | 0;
     lastStarted: BsonDateTime | { $date: undefined };
     lastInvocation: BsonDateTime | { $date: undefined };
     created: BsonDateTime | { $date: undefined };

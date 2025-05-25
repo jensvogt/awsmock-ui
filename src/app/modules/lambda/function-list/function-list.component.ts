@@ -35,7 +35,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
-    columns: any[] = ['name', 'runtime', 'version', 'status', 'invocations', 'averageRuntime', 'actions'];
+    columns: any[] = ['name', 'runtime', 'version', 'status', 'instances', 'invocations', 'averageRuntime', 'actions'];
     dataSource: MatTableDataSource<LambdaFunctionItem> = new MatTableDataSource();
     defaultSort: Sort = {active: "name", direction: "asc"};
     filterSubject = new Subject<string>();

@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatButton, MatIconButton} from "@angular/material/button";
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatIcon} from "@angular/material/icon";
@@ -17,11 +17,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {RouterLink} from "@angular/router";
 import {FooterComponent} from "../../../shared/footer/footer.component";
-
-interface Runtime {
-    value: string;
-    viewValue: string;
-}
+import {LambdaResultDetail} from "./function-result-view/function-result-detail.component";
 
 @Component({
     selector: 'function-result-dialog',
@@ -86,7 +82,7 @@ export class LambdaResultDialog implements OnInit {
     showFirstLastButtons = true;
     disabled = false;
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaResultDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private lambdaService: LambdaService) {
+    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private dialogRef: MatDialogRef<LambdaResultDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private lambdaService: LambdaService) {
         this.lambdaArn = data.lambdaArn;
     }
 
@@ -128,6 +124,19 @@ export class LambdaResultDialog implements OnInit {
 
     viewResult(id: string) {
 
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {lambdaArn: this.lambdaArn, resultOid: id};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+
+        this.dialog.open(LambdaResultDetail, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+            }
+        });
     }
 
     deleteResult(oid: string) {

@@ -91,6 +91,10 @@
                                             <mat-icon>stop</mat-icon>
                                             <span>Stop function</span>
                                         </button>
+                                        <button (click)="clearResults(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Delete results" mat-menu-item matTooltip="Delete results">
+                                            <mat-icon>history</mat-icon>
+                                            <span>Clear results</span>
+                                        </button>
                                         <button (click)="resetCounters(row.functionName)" [matTooltipShowDelay]="1000" aria-label="Reset counters" mat-menu-item matTooltip="Reset counters">
                                             <mat-icon>history</mat-icon>
                                             <span>Reset counters</span>

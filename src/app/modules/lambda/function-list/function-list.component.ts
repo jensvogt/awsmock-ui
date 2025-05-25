@@ -306,6 +306,12 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         });
     }
 
+    clearResults(lambdaArn: string) {
+        this.lambdaService.deleteLambdaResultCounters(lambdaArn).subscribe(() => {
+            this.loadFunctions();
+        });
+    }
+
     private initializeData(functions: LambdaFunctionItem[]): void {
         this.total = 0;
         this.lastUpdate = new Date();

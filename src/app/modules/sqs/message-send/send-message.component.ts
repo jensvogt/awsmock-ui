@@ -89,7 +89,8 @@ export class SendMessageComponentDialog implements OnInit {
 
         this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.attributes.push({name: result.name, stringValue: result.stringValue, dataType: result.type, stringListValues: []});
+                console.log("Result: ", result);
+                this.attributes.push({name: result.Key, stringValue: result.Value, dataType: result.DataType, stringListValues: []});
                 this.messageAttributes = new MatTableDataSource(this.attributes);
                 this.messageAttributeLength = this.attributes.length;
             }

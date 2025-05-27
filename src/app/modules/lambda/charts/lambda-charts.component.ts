@@ -11,6 +11,7 @@ import {MatAccordion, MatExpansionPanel, MatExpansionPanelDescription, MatExpans
 import {LambdaFunctionCounterChartComponent} from "./function-counter/lambda-function-counter-chart.component";
 import {LambdaFunctionInvocationCountChartComponent} from "./function-invocation-count/lambda-function-invocation-count-chart.component";
 import {LambdaFunctionInvocationTimeChartComponent} from "./function-invocation-time/lambda-function-invocation-time-chart.component";
+import {LambdaInstanceCounterChartComponent} from "./function-instance-counter/lambda-instance-counter-chart.component";
 
 @Component({
     selector: 'lambda-chart-component',
@@ -32,6 +33,7 @@ import {LambdaFunctionInvocationTimeChartComponent} from "./function-invocation-
         LambdaServiceTimeChartComponent,
         LambdaFunctionInvocationTimeChartComponent,
         LambdaFunctionInvocationCountChartComponent,
+        LambdaInstanceCounterChartComponent,
     ],
     providers: [MonitoringService],
     styleUrls: ['./lambda-charts.component.scss']

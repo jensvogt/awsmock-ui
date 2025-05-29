@@ -9,18 +9,56 @@
             </button>
         </mat-card-header>
         <mat-card-content>
-            <mat-form-field style="width: 100%;height:100%">
-                <mat-label>Request:</mat-label>
-                <textarea [(ngModel)]="requestBody" cdkAutosizeMinRows="16" cdkTextareaAutosize matInput placeholder="Request" readonly style="width:100%; height:100%">
-                    {{requestBody}}
-                </textarea>
-            </mat-form-field>
-            <mat-form-field style="width: 100%;height:100%">
-                <mat-label>Response:</mat-label>
-                <textarea [(ngModel)]="responseBody" cdkAutosizeMinRows="16" cdkTextareaAutosize matInput placeholder="Response" readonly style="width:100%; height:100%">
-                    {{responseBody}}
-                </textarea>
-            </mat-form-field>
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel expanded>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Request</mat-panel-title>
+                        <mat-panel-description>
+                            Lambda invocation request
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="wrapper">
+                        <mat-form-field style="width: 100%;height:100%">
+                            <mat-label>Request:</mat-label>
+                            <textarea [(ngModel)]="requestBody" cdkAutosizeMinRows="16" cdkTextareaAutosize matInput placeholder="Request" readonly style="width:100%; height:100%">
+                                {{requestBody}}
+                            </textarea>
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Response</mat-panel-title>
+                        <mat-panel-description>
+                            Lambda invocation response
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="wrapper">
+                        <mat-form-field style="width: 100%;height:100%">
+                            <mat-label>Response:</mat-label>
+                            <textarea [(ngModel)]="responseBody" cdkAutosizeMinRows="16" cdkTextareaAutosize matInput placeholder="Response" readonly style="width:100%; height:100%">
+                                {{responseBody}}
+                            </textarea>
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Log messages</mat-panel-title>
+                        <mat-panel-description>
+                            Lambda invocation log messages
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="wrapper">
+                        <mat-form-field style="width: 100%;height:100%">
+                            <mat-label>Logs:</mat-label>
+                            <textarea [(ngModel)]="logMessages" cdkAutosizeMinRows="16" cdkTextareaAutosize matInput placeholder="Log messages" readonly style="width:100%; height:100%">
+                                {{responseBody}}
+                            </textarea>
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </mat-card-content>
     </mat-card>
     <footer-component [lastUpdate]="lastUpdate"/>

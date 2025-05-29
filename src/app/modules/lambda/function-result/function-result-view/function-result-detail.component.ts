@@ -10,6 +10,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatIcon} from "@angular/material/icon";
+import {MatAccordion, MatExpansionPanel, MatExpansionPanelDescription, MatExpansionPanelHeader, MatExpansionPanelTitle} from "@angular/material/expansion";
 
 @Component({
     selector: 'function-result-detail',
@@ -30,7 +31,12 @@ import {MatIcon} from "@angular/material/icon";
         MatLabel,
         MatCardHeader,
         MatIcon,
-        MatIconButton
+        MatIconButton,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelDescription,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle
     ],
     styleUrls: ['./function-result-detail.component.scss']
 })
@@ -43,6 +49,7 @@ export class LambdaResultDetail implements OnInit {
     resultOid: string = '';
     requestBody: string = '';
     responseBody: string = '';
+    logMessages: string = '';
 
     constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaResultDetail>, @Inject(MAT_DIALOG_DATA) public data: any, private lambdaService: LambdaService) {
         this.lambdaArn = data.lambdaArn;
@@ -63,9 +70,9 @@ export class LambdaResultDetail implements OnInit {
             console.log("Result details: ", data);
             this.requestBody = data.lambdaResultCounter.requestBody;
             this.responseBody = data.lambdaResultCounter.responseBody;
+            this.logMessages = data.lambdaResultCounter.logMessages;
             this.lastUpdate = new Date();
         });
     }
-
 }
 

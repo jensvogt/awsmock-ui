@@ -33,6 +33,10 @@
                         <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Name" sortActionDescription="Sort by name">Name</th>
                         <td *matCellDef="let element" mat-cell> {{ element.lambdaName }}</td>
                     </ng-container>
+                    <ng-container matColumnDef="containerId">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by name">Container</th>
+                        <td *matCellDef="let element" mat-cell> {{ element.containerId.substring(0, 12) }}</td>
+                    </ng-container>
                     <ng-container matColumnDef="status">
                         <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
                         <td *matCellDef="let element" mat-cell> {{ element.lambdaStatus }}</td>

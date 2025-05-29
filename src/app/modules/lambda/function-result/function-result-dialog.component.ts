@@ -73,7 +73,7 @@ export class LambdaResultDialog implements OnInit {
     sortColumns: SortColumn[] = [{column: "timestamp", sortDirection: -1}]
 
     // Lambda result table
-    lambdaResultColumns: any[] = ['name', 'status', 'timestamp', 'actions'];
+    lambdaResultColumns: any[] = ['name', 'containerId', 'status', 'timestamp', 'actions'];
     lambdaResultData: LambdaResultItem[] = [];
     lambdaResultDataSource = new MatTableDataSource(this.lambdaResultData);
     lambdaResultPageSizeOptions = [5, 10, 20, 50, 100];
@@ -115,6 +115,7 @@ export class LambdaResultDialog implements OnInit {
             this.lambdaResultDataSource.data = this.lambdaResultData;
             this.total = data.total;
             this.lastUpdate = new Date();
+            console.log("Lambda results: ", data);
         });
     }
 

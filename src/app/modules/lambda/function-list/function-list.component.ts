@@ -318,6 +318,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         if (functions.length && functions.length > 0) {
             this.dataSource = new MatTableDataSource(functions);
             this.total = this.dataSource.data.length;
+            console.log("Function list: ", functions);
         }
     }
 }

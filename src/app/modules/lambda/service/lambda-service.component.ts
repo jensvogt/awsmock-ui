@@ -254,14 +254,6 @@ export class LambdaService {
     }
 
     /**
-     * @brief List all lambda result counters
-     */
-    public tailLambdaLogs(resultOid: string) {
-        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'tail-function');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {oid: resultOid}, {headers: headers});
-    }
-
-    /**
      * @brief Delete a lambda resul counter
      */
     public deleteLambdaResultCounter(oid: string) {

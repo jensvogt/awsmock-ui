@@ -4,6 +4,6 @@ export interface LambdaTagItem {
 }
 
 export interface LambdaTagCountersResponse {
-    Total: number;
-    TagCounters: LambdaTagItem[];
+    total: number;
+    tagCounters: LambdaTagItem[];
 }

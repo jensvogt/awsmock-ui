@@ -65,8 +65,8 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.loadEnvironment();
             this.loadTags();
         });
-        this.lambdaEnvironment$.subscribe((data) => console.log(data));
-        //this.lambdaTags$.subscribe((data) => console.log(data));
+        //this.lambdaEnvironment$.subscribe((data) => console.log(data));
+        this.lambdaTags$.subscribe((data) => console.log(data));
     }
 
     ngOnDestroy() {
@@ -87,7 +87,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         this.lambdaService.getFunction(this.functionArn).subscribe((data: any) => {
             this.lastUpdate = new Date();
             this.functionItem = data;
-            //this.environmentDataSource = this.convertEnvironment(data);
         });
     }
 

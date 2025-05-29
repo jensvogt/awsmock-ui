@@ -1,5 +1,3 @@
-import {BsonDateTime} from "../../../shared/format/bson-datetime.component";
-
 export interface Tag {
     key: string | undefined;
     value: string | undefined;
@@ -32,10 +30,10 @@ export interface LambdaFunctionItem {
     invocations: number | 0;
     averageRuntime: number | 0;
     instances: number | 0;
-    lastStarted: BsonDateTime | { $date: undefined };
-    lastInvocation: BsonDateTime | { $date: undefined };
-    created: BsonDateTime | { $date: undefined };
-    modified: BsonDateTime | { $date: undefined };
+    lastStarted: Date;
+    lastInvocation: Date;
+    created: Date;
+    modified: Date;
 }
 
 export interface LambdaFunctionCountersResponse {

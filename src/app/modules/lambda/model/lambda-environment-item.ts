@@ -4,6 +4,6 @@ export interface LambdaEnvironmentItem {
 }
 
 export interface LambdaEnvironmentCountersResponse {
-    Total: number;
-    EnvironmentCounters: LambdaEnvironmentItem[];
+    total: number;
+    environmentCounters: LambdaEnvironmentItem[];
 }

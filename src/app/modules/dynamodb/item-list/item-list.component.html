@@ -4,7 +4,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            DynamodDB Items: {{ tableName }}
+            DynamodDB Items: {{ tableName }} ({{ (listItemCountersResponse$ | async)?.total }})
         </span>
         <button (click)="addItem()" aria-label="Refresh" mat-icon-button>
             <mat-icon>add</mat-icon>

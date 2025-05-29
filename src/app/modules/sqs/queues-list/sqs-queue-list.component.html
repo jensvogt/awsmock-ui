@@ -12,6 +12,11 @@
         <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the queue list">
             <mat-icon>refresh</mat-icon>
         </button>
+        <button [matTooltipShowDelay]="1000" [routerLink]="['/sqs-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
+            <mat-icon>
+                <span class="material-symbols-outlined">monitoring</span>
+            </mat-icon>
+        </button>
     </mat-card-header>
     <mat-card-content>
         <mat-card appearance="outlined" style="margin: -10px;">

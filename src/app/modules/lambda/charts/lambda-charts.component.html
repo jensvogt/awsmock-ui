@@ -1,38 +1,40 @@
-<mat-card-header>
-    <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
-        <mat-icon>arrow_back</mat-icon>
-    </button>
-    <span class="fill-remaining-space">
-            <h4>Lambda Monitoring</h4>
+<mat-card appearance="outlined" style="margin: 3px">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
+            Lambda Monitoring
         </span>
-    <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
-        <mat-icon>refresh</mat-icon>
-    </button>
-</mat-card-header>
-<mat-card-content>
-    <mat-card class="mat-elevation-z4">
-        <mat-card-content>
-            <mat-accordion class="example-headers-align" multi>
-                <mat-expansion-panel expanded>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>General</mat-panel-title>
-                        <mat-panel-description>
-                            General lambda performance counter
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <div class="wrapper">
-                        <lambda-service-time-chart-component></lambda-service-time-chart-component>
-                        <lambda-invocation-count-chart-component></lambda-invocation-count-chart-component>
-                        <lambda-invocation-time-chart-component></lambda-invocation-time-chart-component>
-                        <lambda-instance-counter-chart-component></lambda-instance-counter-chart-component>
-                        <lambda-function-counter-chart-component></lambda-function-counter-chart-component>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <div class="footer">
-                Last update: {{ lastUpdate }}
-            </div>
-        </mat-card-content>
+        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card class="mat-elevation-z4">
+            <mat-card-content>
+                <mat-accordion class="example-headers-align" multi>
+                    <mat-expansion-panel expanded>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>General</mat-panel-title>
+                            <mat-panel-description>
+                                General lambda performance counter
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="wrapper">
+                            <lambda-service-time-chart-component></lambda-service-time-chart-component>
+                            <lambda-invocation-count-chart-component></lambda-invocation-count-chart-component>
+                            <lambda-invocation-time-chart-component></lambda-invocation-time-chart-component>
+                            <lambda-instance-counter-chart-component></lambda-instance-counter-chart-component>
+                            <lambda-function-counter-chart-component></lambda-function-counter-chart-component>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <div class="footer">
+                    Last update: {{ lastUpdate }}
+                </div>
+            </mat-card-content>
 
-    </mat-card>
-</mat-card-content>
+        </mat-card>
+    </mat-card-content>
+</mat-card>

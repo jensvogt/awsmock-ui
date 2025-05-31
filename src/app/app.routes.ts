@@ -112,6 +112,13 @@ export const routes: Routes = [
                 loadChildren: () => import('./modules/transfer/transfer.module').then(module => module.TransferModule),
             },
             //=========================================================================
+            // Secrets manager
+            //=========================================================================
+            {
+                path: 'secret-list',
+                loadChildren: () => import('./modules/secretsmanager/secretsmanager.module').then(module => module.SecretsmanagerModule),
+            },
+            //=========================================================================
             // Not found
             //=========================================================================
             {

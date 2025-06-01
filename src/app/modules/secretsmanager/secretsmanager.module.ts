@@ -31,9 +31,12 @@ import {secretListFeatureKey, secretListReducer} from "./secret-list/state/secre
 import {SecretListComponent} from "./secret-list/secret-list.component";
 import {EffectsModule} from "@ngrx/effects";
 import {SecretListEffects} from "./secret-list/state/secret-list.effects";
+import {SecretDetailComponent} from "./secret-detail/secret-detail.component";
+import {secretDetailReducer, secretDetailsFeatureKey} from "./secret-detail/state/secret-detail.reducer";
+import {SecretDetailEffects} from "./secret-detail/state/secret-detail.effects";
 
 @NgModule({
-    declarations: [SecretListComponent],
+    declarations: [SecretListComponent, SecretDetailComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -78,7 +81,8 @@ import {SecretListEffects} from "./secret-list/state/secret-list.effects";
         AsyncPipe,
         SecretsmanagerRoutingModule,
         StoreModule.forFeature(secretListFeatureKey, secretListReducer),
-        EffectsModule.forFeature([SecretListEffects]),
+        StoreModule.forFeature(secretDetailsFeatureKey, secretDetailReducer),
+        EffectsModule.forFeature([SecretListEffects, SecretDetailEffects]),
         CdkTextareaAutosize,
         CdkDrag,
         CdkDragHandle,
@@ -96,7 +100,7 @@ import {SecretListEffects} from "./secret-list/state/secret-list.effects";
         MatDivider,
         FooterComponent,
     ],
-    exports: [SecretListComponent],
+    exports: [SecretListComponent, SecretDetailComponent],
     providers: [SecretsmanagerService],
 })
 export class SecretsmanagerModule {

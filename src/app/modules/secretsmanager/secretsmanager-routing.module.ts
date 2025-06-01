@@ -1,23 +1,19 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SecretListComponent} from "./secret-list/secret-list.component";
+import {SecretDetailComponent} from "./secret-detail/secret-detail.component";
 
 const routes: Routes = [
     {
         path: '',
-        title: 'SQSQueueList',
+        title: 'SecretList',
         component: SecretListComponent
     },
-    /*{
-        path: 'details/:queueArn',
-        title: 'SQSQueueDetails',
-        component: SqsQueueDetailComponent
-    },
     {
-        path: 'messages/:queueArn',
-        title: 'SQSQueueMessages',
-        component: SqsMessageListComponent
-    }*/
+        path: 'details/:secretId',
+        title: 'SecretDetails',
+        component: SecretDetailComponent
+    }
 ];
 
 @NgModule({

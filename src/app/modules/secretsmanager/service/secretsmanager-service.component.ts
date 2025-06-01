@@ -42,4 +42,20 @@ export class SecretsmanagerService {
         let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'DeleteSecret');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {SecretId: secretId}, {headers: headers});
     }
+
+    /**
+     * @brief Get the details of a secret
+     */
+    public getSecretDetails(secretId: string) {
+        let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'GetSecretDetails');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {SecretId: secretId}, {headers: headers});
+    }
+
+    /**
+     * @brief List all secret versions
+     */
+    public listSecretVersionCounters(secretId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'ListSecretVersionCounters');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {secretId: secretId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
 }

@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {ListSecretCountersResponse} from "../../model/sqs-queue-item";
+import {ListSecretCountersResponse} from "../../model/secret-item";
 
 export const secretListActions = {
     initialize: createAction('[secret-list] initialize'),

@@ -1,7 +1,7 @@
 import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelector} from "@ngrx/store";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {secretListFeatureKey, SecretListState} from "./secret-list.reducer";
-import {ListSecretCountersResponse} from "../../model/sqs-queue-item";
+import {ListSecretCountersResponse} from "../../model/secret-item";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;

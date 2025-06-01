@@ -1,7 +1,7 @@
 import {createReducer, on} from "@ngrx/store";
 import {secretListActions} from './secret-list.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {ListSecretCountersResponse} from "../../model/sqs-queue-item";
+import {ListSecretCountersResponse} from "../../model/secret-item";
 
 export const secretListFeatureKey = 'secret-list';
 

@@ -11,7 +11,7 @@ import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SecretListState} from "./state/secret-list.reducer";
 import {SecretsmanagerService} from "../service/secretsmanager-service.component";
-import {ListSecretCountersResponse} from "../model/sqs-queue-item";
+import {ListSecretCountersResponse} from "../model/secret-item";
 import {SecretAddDialogComponent} from "../secret-add/secret-add-component";
 
 @Component({

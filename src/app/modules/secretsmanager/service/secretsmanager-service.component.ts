@@ -55,7 +55,7 @@ export class SecretsmanagerService {
      * @brief List all secret versions
      */
     public listSecretVersionCounters(secretId: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'ListSecretVersionCounters');
+        let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'ListSecretVersions');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {secretId: secretId, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 }

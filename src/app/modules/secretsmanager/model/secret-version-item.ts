@@ -5,5 +5,5 @@ export interface SecretVersionItem {
 
 export interface SecretVersionCountersResponse {
     total: number;
-    versionCounters: SecretVersionItem[];
+    secretVersionCounters: SecretVersionItem[];
 }

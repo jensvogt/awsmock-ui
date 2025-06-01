@@ -34,7 +34,7 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
     secretVersions$: Observable<SecretVersionCountersResponse> = this.store.select(selectVersions);
     versionPageSize$: Observable<number> = this.store.select(selectVersionPageSize);
     versionPageIndex$: Observable<number> = this.store.select(selectVersionPageIndex);
-    versionColumns: any[] = ['name', 'value', 'actions'];
+    versionColumns: any[] = ['id', 'stages', 'actions'];
     versionPageSizeOptions = [5, 10, 20, 50, 100];
 
     // Tags Table
@@ -68,7 +68,7 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
         });
 
         //this.secretDetails$.subscribe((data: any) => console.log("QeueuDetails: ", data));
-        //this.secretAttributes$.subscribe((data: any) => console.log("Attributes: ", data));
+        this.secretVersions$.subscribe((data: any) => console.log("Versions: ", data));
         //this.secretTags$.subscribe((data: any) => console.log("Data: ", data));
         //this.lambdaTriggers$.subscribe((data: any) => console.log("Data: ", data));
     }
@@ -120,6 +120,10 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
         let column = sortState.active;
         let direction = sortState.direction === 'asc' ? 1 : -1;
         this.state.value['secret-details'].versionSortColumns = [{column: column, sortDirection: direction}];
+        this.loadVersions();
+    }
+
+    deleteVersions(versionId: string) {
         this.loadVersions();
     }
 

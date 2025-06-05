@@ -28,8 +28,8 @@
                 </mat-form-field>
             </mat-card-actions>
             <div class="table-container">
-                <div *ngIf="listUserPoolCountersResponse$ | async as userPoolCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="userPoolCounters.userPools" class="mat-elevation-z8 queue-table" mat-table matSort>
+                <div *ngIf="listUserPoolCountersResponse$ | async as response" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="response.userPoolCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="id" matTooltip="User PoolId">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="User Pool ID" sortActionDescription="Sort by userPoolId">ID</th>
                             <td *matCellDef="let element" mat-cell>

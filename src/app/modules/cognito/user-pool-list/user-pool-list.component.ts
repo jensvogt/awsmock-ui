@@ -60,6 +60,7 @@ export class CognitoUserPoolListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
+        this.listUserPoolCountersResponse$.subscribe((data) => console.log("UserPoolsResponse:", data));
     }
 
     ngOnInit(): void {

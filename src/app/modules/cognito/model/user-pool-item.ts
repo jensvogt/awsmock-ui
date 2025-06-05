@@ -9,5 +9,5 @@ export interface UserPoolItem {
 
 export interface UserPoolCountersResponse {
     total: number | undefined;
-    userPools: UserPoolItem[];
+    userPoolCounters: UserPoolItem[];
 }

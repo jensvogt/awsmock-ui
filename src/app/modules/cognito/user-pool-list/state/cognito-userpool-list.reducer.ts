@@ -16,7 +16,7 @@ export interface CognitoUserPoolListState {
 }
 
 export const initialState: CognitoUserPoolListState = {
-    listUserPoolResponse: {total: 0, userPools: []},
+    listUserPoolResponse: {total: 0, userPoolCounters: []},
     prefix: '',
     pageSize: 10,
     pageIndex: 0,

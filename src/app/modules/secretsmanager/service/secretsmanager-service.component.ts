@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Store} from "@ngrx/store";
 import {RootState} from "../../../state/root.reducer";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {RotateSecretRequest, SecretDetails} from "../model/secret-detail-item";
 
 @Injectable({providedIn: 'root'})
 export class SecretsmanagerService {
@@ -28,7 +29,7 @@ export class SecretsmanagerService {
     }
 
     /**
-     * @brief List all secret ARNs
+     * @brief List all secret counters
      */
     public listSecretCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'ListSecretCounters');
@@ -36,7 +37,23 @@ export class SecretsmanagerService {
     }
 
     /**
-     * @brief List all secret ARNs
+     * @brief Update a secret
+     */
+    public updateSecretDetails(secretDetails: SecretDetails) {
+        let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'UpdateDetailsSecret');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {secretDetails: secretDetails}, {headers: headers});
+    }
+
+    /**
+     * @brief Rotate a secret
+     */
+    public rotateSecret(rotateSecretRequest: RotateSecretRequest) {
+        let headers = this.headers.set('X-Amz-Target', 'secretsmanager.RotateSecret');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), rotateSecretRequest, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a secret
      */
     public deleteSecret(secretId: string) {
         let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'DeleteSecret');

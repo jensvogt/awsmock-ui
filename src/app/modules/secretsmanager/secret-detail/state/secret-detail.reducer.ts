@@ -1,13 +1,14 @@
 import {createReducer, on} from "@ngrx/store";
 import {secretDetailsActions} from './secret-detail.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {SecretDetails} from "../../model/secret-detail-item";
+import {LoadLambdaArnsResponse, SecretDetails} from "../../model/secret-detail-item";
 import {SqsTagCountersResponse} from "../../../sqs/model/sqs-tag-item";
 import {SecretVersionCountersResponse} from "../../model/secret-version-item";
 
 export const secretDetailsFeatureKey = 'secret-details';
 
 export interface SecretDetailsState {
+
     secretDetails: SecretDetails;
 
     // Versions
@@ -21,6 +22,9 @@ export interface SecretDetailsState {
     tagPageSize: number,
     tagPageIndex: number,
     tagSortColumns: SortColumn[],
+
+    // Rotation lambda
+    rotationLambdaARNs: LoadLambdaArnsResponse;
 
     loading: boolean;
     error: unknown;
@@ -41,6 +45,9 @@ export const initialState: SecretDetailsState = {
     tagPageIndex: 0,
     tagSortColumns: [{column: 'endpoint', sortDirection: -1}],
 
+    // Rotation lambdas
+    rotationLambdaARNs: {} as LoadLambdaArnsResponse,
+
     loading: false,
     error: {}
 };
@@ -60,6 +67,11 @@ export const secretDetailReducer = createReducer(
     on(secretDetailsActions.loadVersions, (state: SecretDetailsState) => ({...state, loading: true})),
     on(secretDetailsActions.loadVersionsSuccess, (state: SecretDetailsState, {secretVersions}) => ({...state, secretVersions: secretVersions, loading: false})),
     on(secretDetailsActions.loadVersionsFailure, (state: SecretDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Load lambda ARNs
+    on(secretDetailsActions.loadLambdasARNs, (state: SecretDetailsState) => ({...state, loading: true})),
+    on(secretDetailsActions.loadLambdasARNsSuccess, (state: SecretDetailsState, {loadLambdaArnsResponse}) => ({...state, rotationLambdaARNs: loadLambdaArnsResponse, loading: false})),
+    on(secretDetailsActions.loadLambdasARNsFailure, (state: SecretDetailsState, {error}) => ({...state, error: error, loading: false})),
 
     // Secret tags
     // on(secretDetailsActions.loadTags, (state: SecretDetailsState) => ({...state, loading: true})),

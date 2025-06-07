@@ -1,5 +1,5 @@
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -23,14 +23,11 @@ import {MatInput} from "@angular/material/input";
     ],
     styleUrls: ['./bucket-add.component.scss']
 })
-export class BucketAddComponentDialog implements OnInit {
+export class BucketAddComponentDialog {
 
     bucketName: string = '';
 
-    constructor(private dialogRef: MatDialogRef<BucketAddComponentDialog>) {
-    }
-
-    ngOnInit() {
+    constructor(private readonly dialogRef: MatDialogRef<BucketAddComponentDialog>) {
     }
 
     save() {

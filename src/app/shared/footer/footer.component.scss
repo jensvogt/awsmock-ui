@@ -6,6 +6,7 @@
 }
 
 .lastUpdate {
+  padding-left: 10px;
   grid-column: 1;
   overflow: hidden;
   font-size: x-small;
@@ -13,7 +14,8 @@
 }
 
 .backendUrl {
-  padding-top: 15px;
+  padding-top: 10px;
+  padding-right: 15px;
   grid-column: 2;
   overflow: hidden;
   justify-self: end;

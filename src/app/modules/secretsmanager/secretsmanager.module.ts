@@ -11,7 +11,7 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTooltip} from "@angular/material/tooltip";
 import {RouterLink} from "@angular/router";
-import {MatList, MatListItem, MatNavList} from "@angular/material/list";
+import {MatList, MatListItem, MatListItemLine, MatNavList} from "@angular/material/list";
 import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {SecretsmanagerRoutingModule} from "./secretsmanager-routing.module";
@@ -34,6 +34,8 @@ import {SecretListEffects} from "./secret-list/state/secret-list.effects";
 import {SecretDetailComponent} from "./secret-detail/secret-detail.component";
 import {secretDetailReducer, secretDetailsFeatureKey} from "./secret-detail/state/secret-detail.reducer";
 import {SecretDetailEffects} from "./secret-detail/state/secret-detail.effects";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
 
 @NgModule({
     declarations: [SecretListComponent, SecretDetailComponent],
@@ -99,6 +101,9 @@ import {SecretDetailEffects} from "./secret-detail/state/secret-detail.effects";
         MatMenu,
         MatDivider,
         FooterComponent,
+        MatOption,
+        MatSelect,
+        MatListItemLine,
     ],
     exports: [SecretListComponent, SecretDetailComponent],
     providers: [SecretsmanagerService],

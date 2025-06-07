@@ -48,7 +48,7 @@ export class ViewMessageComponentDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(private dialogRef: MatDialogRef<ViewMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SQSMessageListState>, private dialog: MatDialog) {
+    constructor(private readonly dialogRef: MatDialogRef<ViewMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly store: Store<SQSMessageListState>, private readonly dialog: MatDialog) {
         this.message = data.message;
         if (this.message.body?.length) {
             this.isJson = isJson(this.message.body);
@@ -134,7 +134,7 @@ export class ViewMessageComponentDialog implements OnInit {
             dialogConfig.data = {attribute: attribute};
 
             this.dialog.open(SqsMessageAttributeEditDialog, dialogConfig).afterClosed().subscribe(result => {
-                if (result && result.attribute) {
+                if (result?.attribute) {
                     let index = this.messageAttributes.findIndex(x => x.name === result.attribute.name)
                     if (index > 0) {
                         this.messageAttributes[index] = result.attribute

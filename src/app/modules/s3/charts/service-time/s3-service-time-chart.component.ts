@@ -1,17 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexDataLabels,
-    ApexGrid,
-    ApexStroke,
-    ApexTitleSubtitle,
-    ApexTooltip,
-    ApexXAxis,
-    ApexYAxis,
-    ChartComponent
-} from "ng-apexcharts";
+import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
@@ -48,13 +37,13 @@ export type ChartOptions = {
 })
 export class S3ServiceTimeChartComponent implements OnInit {
 
-    public s3ServiceTimeChartOptions!: Partial<ChartOptions> | any;
+    public s3ServiceTimeChartOptions!: Partial<ChartOptions> | {};
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
     @ViewChild("s3ServiceTimeChart") s3ServiceTimeChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {

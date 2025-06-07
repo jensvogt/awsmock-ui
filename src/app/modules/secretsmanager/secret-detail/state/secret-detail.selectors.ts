@@ -1,6 +1,6 @@
 import {createFeatureSelector, createSelector, DefaultProjectorFn, MemoizedSelector} from "@ngrx/store";
 import {secretDetailsFeatureKey, SecretDetailsState} from "./secret-detail.reducer";
-import {SecretDetails} from "../../model/secret-detail-item";
+import {LoadLambdaArnsResponse, SecretDetails} from "../../model/secret-detail-item";
 import {SecretTagCountersResponse} from "../../model/secret-tag-item";
 import {SecretVersionCountersResponse} from "../../model/secret-version-item";
 
@@ -18,6 +18,11 @@ export const selectDetails: SelectorType<SecretDetails> = createSelector(
 export const selectVersions: SelectorType<SecretVersionCountersResponse> = createSelector(
     selectSecretDetailsFeature,
     (state: SecretDetailsState) => state?.secretVersions
+);
+
+export const selectRotationLambdaARNs: SelectorType<LoadLambdaArnsResponse> = createSelector(
+    selectSecretDetailsFeature,
+    (state: SecretDetailsState) => state?.rotationLambdaARNs
 );
 
 export const selectVersionPageSize: SelectorType<number> = createSelector(

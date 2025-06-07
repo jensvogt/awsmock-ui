@@ -4,15 +4,21 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Location} from "@angular/common";
 import {State, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {selectDetails, selectError, selectTagPageIndex, selectTagPageSize, selectTags, selectVersionPageIndex, selectVersionPageSize, selectVersions} from "./state/secret-detail.selectors";
+import {selectDetails, selectError, selectRotationLambdaARNs, selectTagPageIndex, selectTagPageSize, selectTags, selectVersionPageIndex, selectVersionPageSize, selectVersions} from "./state/secret-detail.selectors";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatDialogConfig} from "@angular/material/dialog";
-import {SecretDetails} from "../model/secret-detail-item";
+import {LoadLambdaArnsResponse, RotateSecretRequest, SecretDetails} from "../model/secret-detail-item";
 import {SecretTagCountersResponse} from "../model/secret-tag-item";
 import {SecretDetailsState} from "./state/secret-detail.reducer";
 import {secretDetailsActions} from "./state/secret-detail.actions";
 import {SecretVersionCountersResponse} from "../model/secret-version-item";
+import * as uuid from 'uuid';
+
+interface LambdaSelect {
+    value: string;
+    label: string;
+}
 
 @Component({
     selector: 'sqs-secret-detail-component',
@@ -27,6 +33,7 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
     secretUrl: string = '';
     secretName: string = '';
     secretId: string = '';
+    secret: SecretDetails = {} as SecretDetails;
     secretDetails$: Observable<SecretDetails> = this.store.select(selectDetails);
     secretDetailsError$: Observable<string> = this.store.select(selectError);
 
@@ -37,6 +44,11 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
     versionColumns: any[] = ['id', 'stages', 'actions'];
     versionPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Rotation lambdas
+    rotationLambdaARNs$: Observable<LoadLambdaArnsResponse> = this.store.select(selectRotationLambdaARNs);
+    rotationLambdaSelect: LambdaSelect[] = [];
+    rotationLambdaSelection: string | undefined = "";
+
     // Tags Table
     secretTags$: Observable<SecretTagCountersResponse> = this.store.select(selectTags);
     tagPageSize$: Observable<number> = this.store.select(selectTagPageSize);
@@ -46,12 +58,13 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
 
     private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private route: ActivatedRoute, private location: Location, private store: Store, private state: State<SecretDetailsState>) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly route: ActivatedRoute, private readonly location: Location, private readonly store: Store, private readonly state: State<SecretDetailsState>) {
     }
 
     ngOnInit() {
         this.routerSubscription = this.route.params.subscribe(params => {
             this.secretId = params['secretId'];
+            this.loadLambdas();
             this.loadDetails();
             this.loadVersions();
             this.loadTags();
@@ -65,10 +78,19 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
             this.secretUrl = data.secretUrl;
             this.secretName = data.secretName;
             this.secretId = data.secretId;
+            this.secret = data;
+            this.rotationLambdaSelection = this.secret?.rotationLambdaARN;
         });
 
-        //this.secretDetails$.subscribe((data: any) => console.log("QeueuDetails: ", data));
-        this.secretVersions$.subscribe((data: any) => console.log("Versions: ", data));
+        this.rotationLambdaARNs$.subscribe((data: any) => {
+            console.log("Lambda ARNs", data);
+            this.rotationLambdaSelect = [];
+            data.lambdaArns.forEach((d: string) => {
+                this.rotationLambdaSelect.push({value: d, label: d});
+            });
+        });
+        //this.secretDetails$.subscribe((data: any) => console.log("SecretDetails: ", data));
+        //this.secretVersions$.subscribe((data: any) => console.log("Versions: ", data));
         //this.secretTags$.subscribe((data: any) => console.log("Data: ", data));
         //this.lambdaTriggers$.subscribe((data: any) => console.log("Data: ", data));
     }
@@ -78,6 +100,7 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
+        this.loadLambdas();
         this.loadDetails();
         this.loadVersions();
         this.loadTags();
@@ -129,6 +152,36 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
 
     refreshVersions() {
         this.loadVersions();
+        this.loadLambdas();
+    }
+
+    // ===================================================================================================================
+    // Rotation rule
+    // ===================================================================================================================
+
+    loadLambdas() {
+        this.store.dispatch(secretDetailsActions.loadLambdasARNs());
+        this.lastUpdate = new Date();
+    }
+
+    rotateSecret() {
+        let rotateSecretRequest: RotateSecretRequest = {SecretId: this.secret.secretId, RotateImmediately: true, RotationRules: this.secret.rotationRules, RotationLambdaARN: this.secret.rotationLambdaARN, ClientRequestToken: uuid.v4()};
+        this.store.dispatch(secretDetailsActions.rotateSecret({rotateSecretRequest: rotateSecretRequest}));
+        this.lastUpdate = new Date();
+    }
+
+    rotationLambdaArnChanged(event: any): void {
+        if (event.isUserInput) {
+            console.log(event.source.value, event.source.selected);
+            if (event.source.selected) {
+                this.secret.rotationLambdaARN = event.source.value;
+            }
+        }
+    }
+
+    saveRotationRules() {
+        this.store.dispatch(secretDetailsActions.updateDetails({secretDetails: this.secret}));
+        this.lastUpdate = new Date();
     }
 
     // ===================================================================================================================

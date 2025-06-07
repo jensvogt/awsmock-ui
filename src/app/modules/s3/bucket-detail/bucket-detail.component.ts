@@ -55,9 +55,9 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private sub: any;
     // Sorting
-    private _liveAnnouncer = inject(LiveAnnouncer);
+    private readonly _liveAnnouncer = inject(LiveAnnouncer);
 
-    constructor(private location: Location, private route: ActivatedRoute, private s3Service: S3Service, private dialog: MatDialog) {
+    constructor(private readonly location: Location, private readonly route: ActivatedRoute, private readonly s3Service: S3Service, private readonly dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -117,7 +117,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     }
 
     handleLambdaNotificationPageEvent(e: PageEvent) {
-
+        // Intentionally left empty
     }
 
     editLambdaNotification(lambdaNotificationArn: string) {
@@ -154,15 +154,17 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     // ===================================================================================================================
     queueNotificationSortChange(sortState: Sort) {
         if (sortState.direction) {
-            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`).then(r => {
+            });
         } else {
-            this._liveAnnouncer.announce('Sorting cleared');
+            this._liveAnnouncer.announce('Sorting cleared').then(r => {
+            });
         }
         this.loadBucket();
     }
 
     handleQueueNotificationPageEvent(e: PageEvent) {
-
+        // Intentionally left empty
     }
 
     deleteQueueNotification(queueNotificationArn: string) {
@@ -186,7 +188,7 @@ export class S3BucketDetailComponent implements OnInit, OnDestroy {
     }
 
     handleTopicNotificationPageEvent(e: PageEvent) {
-
+        // Intentionally left empty
     }
 
     deleteTopicNotification(topicNotificationArn: string) {

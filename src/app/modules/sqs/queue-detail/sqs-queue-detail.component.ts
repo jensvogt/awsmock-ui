@@ -54,7 +54,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     attributeColumns: any[] = ['name', 'value'];
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    // Lambda notification Table
+    // Lambda notification table
     lambdaTriggers$: Observable<SqsLambdaTriggerCountersResponse> = this.store.select(selectLambdaTriggers);
     lambdaTriggerPageSize$: Observable<number> = this.store.select(selectLambdaTriggerPageSize);
     lambdaTriggerPageIndex$: Observable<number> = this.store.select(selectLambdaTriggerPageIndex);
@@ -70,7 +70,7 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
 
     private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private location: Location, private store: Store, private state: State<SqsQueueDetailsState>) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly sqsService: SqsService, private readonly route: ActivatedRoute, private readonly dialog: MatDialog, private readonly location: Location, private readonly store: Store, private readonly state: State<SqsQueueDetailsState>) {
     }
 
     ngOnInit() {

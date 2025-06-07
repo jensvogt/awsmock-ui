@@ -6,13 +6,14 @@ import {catchError, map} from 'rxjs/operators';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {secretDetailsActions} from "./secret-detail.actions";
 import {SecretsmanagerService} from "../../service/secretsmanager-service.component";
+import {LambdaService} from "../../../lambda/service/lambda-service.component";
 
 @Injectable()
 export class SecretDetailEffects {
 
     sortColumns: SortColumn[] = [];
 
-    loadQueuesDetails$ = createEffect(() => this.actions$.pipe(
+    loadSecretDetails$ = createEffect(() => this.actions$.pipe(
         ofType(secretDetailsActions.loadDetails),
         mergeMap(action =>
             this.secretsmanagerService.getSecretDetails(action.secretId)
@@ -20,6 +21,32 @@ export class SecretDetailEffects {
                         secretDetailsActions.loadDetailsSuccess({secretDetails: details})),
                     catchError((error) =>
                         of(secretDetailsActions.loadDetailsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    updateSecretDetails$ = createEffect(() => this.actions$.pipe(
+        ofType(secretDetailsActions.updateDetails),
+        mergeMap(action =>
+            this.secretsmanagerService.updateSecretDetails(action.secretDetails)
+                .pipe(map((details: any) =>
+                        secretDetailsActions.updateDetailsSuccess({secretDetails: details})),
+                    catchError((error) =>
+                        of(secretDetailsActions.updateDetailsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    rotateSecretDetails$ = createEffect(() => this.actions$.pipe(
+        ofType(secretDetailsActions.rotateSecret),
+        mergeMap(action =>
+            this.secretsmanagerService.rotateSecret(action.rotateSecretRequest)
+                .pipe(map((details: any) =>
+                        secretDetailsActions.rotateSecretSuccess({secretDetails: details})),
+                    catchError((error) =>
+                        of(secretDetailsActions.rotateSecretFailure({error: error.message}))
                     )
                 )
         ),
@@ -38,21 +65,19 @@ export class SecretDetailEffects {
         ),
     ));
 
-    /*
+    loadRotationLambdaARNs$ = createEffect(() => this.actions$.pipe(
+        ofType(secretDetailsActions.loadLambdasARNs),
+        mergeMap(action =>
+            this.lambdaService.listLambdaArns()
+                .pipe(map((loadLambdaArnsResponse: any) =>
+                        secretDetailsActions.loadLambdasARNsSuccess({loadLambdaArnsResponse})),
+                    catchError((error) =>
+                        of(secretDetailsActions.loadLambdasARNsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
 
-            loadQueueTags$ = createEffect(() => this.actions$.pipe(
-                ofType(secretDetailsActions.loadTags),
-                mergeMap(action =>
-                    this.sqsService.listTagCounters(action.queueArn, action.pageSize, action.pageIndex, action.sortColumns)
-                        .pipe(map((tags: any) =>
-                                secretDetailsActions.loadTagsSuccess({tags})),
-                            catchError((error) =>
-                                of(secretDetailsActions.loadTagsFailure({error: error.message}))
-                            )
-                        )
-                ),
-            ));
-        */
-    constructor(private actions$: Actions, private secretsmanagerService: SecretsmanagerService) {
+    constructor(private readonly actions$: Actions, private readonly secretsmanagerService: SecretsmanagerService, private readonly lambdaService: LambdaService) {
     }
 }

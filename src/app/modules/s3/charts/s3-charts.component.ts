@@ -31,7 +31,7 @@ export class S3ChartsComponent implements OnInit, OnDestroy {
     updateSubscription: Subscription | undefined;
     @ViewChild(S3ServiceTimeChartComponent) s3ServiceTimeChart: S3ServiceTimeChartComponent | undefined;
 
-    constructor(private location: Location) {
+    constructor(private readonly location: Location) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
             this.s3ServiceTimeChart?.loadS3ServiceTimeChart();

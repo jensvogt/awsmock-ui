@@ -37,7 +37,7 @@ export type ChartOptions = {
 })
 export class S3ServiceTimeChartComponent implements OnInit {
 
-    public s3ServiceTimeChartOptions!: Partial<ChartOptions> | {};
+    public s3ServiceTimeChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';

@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {FooterComponent} from "../../../../shared/footer/footer.component";
 import {LambdaService} from "../../service/lambda-service.component";
@@ -51,7 +50,7 @@ export class LambdaResultDetail implements OnInit {
     responseBody: string = '';
     logMessages: string = '';
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaResultDetail>, @Inject(MAT_DIALOG_DATA) public data: any, private lambdaService: LambdaService) {
+    constructor(private readonly dialogRef: MatDialogRef<LambdaResultDetail>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly lambdaService: LambdaService) {
         this.lambdaArn = data.lambdaArn;
         this.resultOid = data.resultOid;
     }
@@ -67,7 +66,6 @@ export class LambdaResultDetail implements OnInit {
 
     loadLambdaResults() {
         this.lambdaService.getLambdaResultCounter(this.resultOid).subscribe((data: any) => {
-            console.log("Result details: ", data);
             this.requestBody = data.lambdaResultCounter.requestBody;
             this.responseBody = data.lambdaResultCounter.responseBody;
             this.logMessages = data.lambdaResultCounter.logMessages;

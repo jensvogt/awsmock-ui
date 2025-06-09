@@ -208,6 +208,30 @@ export class LambdaService {
     }
 
     /**
+     * @brief Gets a list of instances for a lambda function
+     *
+     * @param lambdaArn lambda ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listInstanceCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-instance-counters');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function docker container instance
+     *
+     * @param functionArn function ARN
+     * @param instanceId instance ID
+     */
+    public deleteInstance(functionArn: string, instanceId: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-instance');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {functionArn: functionArn, instanceId: instanceId}, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a function docker image
      *
      * @param functionArn function ARN

@@ -23,7 +23,6 @@ export class SecretsmanagerService {
      * @param request secrets create request
      */
     public createSecret(request: any) {
-        console.log("Create secret request", request);
         let headers = this.headers.set('x-awsmock-target', 'secretsmanager').set('x-awsmock-action', 'CreateSecret');
         return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
     }

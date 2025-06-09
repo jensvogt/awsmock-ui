@@ -115,7 +115,6 @@ export class LambdaResultDialog implements OnInit {
             this.lambdaResultDataSource.data = this.lambdaResultData;
             this.total = data.total;
             this.lastUpdate = new Date();
-            console.log("Lambda results: ", data);
         });
     }
 

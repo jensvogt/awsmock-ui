@@ -147,9 +147,6 @@
         </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined" style="margin-top: 5px;">
-        <mat-card-header>
-            <mat-card-title>Info</mat-card-title>
-        </mat-card-header>
         <mat-card-content>
             <mat-tab-group>
                 <mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Lambda function environment variables">
@@ -226,10 +223,10 @@
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editTag(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                                    <button (click)="editTag(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="deleteTag(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda notification">
+                                    <button (click)="deleteTag(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda tag">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </td>
@@ -249,6 +246,54 @@
                                        [pageIndex]="tagPageIndex$"
                                        [pageSizeOptions]="tagPageSizeOptions"
                                        [pageSize]="tagPageSize$"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
+                </mat-tab>
+                <mat-tab [matTooltipShowDelay]="1000" label="Instances" matTooltip="Lambfda function instances">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="refreshInstances()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="lambdaInstances$ | async as instances" class="row">
+                        <table (matSortChange)="instanceSortChange($event)" [dataSource]="instances.instanceCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="instanceId">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Instance ID" sortActionDescription="Sort by instance ID">Instance ID</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.instanceId }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="containerId">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by container ID">Container ID</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.containerId }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.status }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="deleteInstance(row.instanceId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda instance">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="instanceColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: instanceColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="instanceColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleInstancePageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(lambdaInstances$ | async)?.total"
+                                       [pageIndex]="instancePageIndex$"
+                                       [pageSizeOptions]="instancePageSizeOptions"
+                                       [pageSize]="instancePageSize$"
                                        [showFirstLastButtons]="true"
                                        aria-label="Select page">
                         </mat-paginator>

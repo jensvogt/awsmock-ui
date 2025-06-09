@@ -83,7 +83,6 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
         });
 
         this.rotationLambdaARNs$.subscribe((data: any) => {
-            console.log("Lambda ARNs", data);
             this.rotationLambdaSelect = [];
             data.lambdaArns.forEach((d: string) => {
                 this.rotationLambdaSelect.push({value: d, label: d});
@@ -172,7 +171,6 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
 
     rotationLambdaArnChanged(event: any): void {
         if (event.isUserInput) {
-            console.log(event.source.value, event.source.selected);
             if (event.source.selected) {
                 this.secret.rotationLambdaARN = event.source.value;
             }

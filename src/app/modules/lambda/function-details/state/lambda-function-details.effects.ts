@@ -44,6 +44,18 @@ export class LambdaFunctionDetailsEffects {
         )
     ));
 
+    loadInstances$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionDetailsActions.loadInstances),
+        mergeMap(action =>
+            this.lambdaService.listInstanceCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((instances: any) => lambdaFunctionDetailsActions.loadInstancesSuccess({instances})),
+                    catchError((error) =>
+                        of(lambdaFunctionDetailsActions.loadInstancesFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
+
     constructor(private actions$: Actions, private lambdaService: LambdaService) {
     }
 }

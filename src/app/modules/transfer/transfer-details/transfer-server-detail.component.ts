@@ -79,7 +79,7 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
-        this.serverDetails$.subscribe((data) => console.log("Data: ", data));
+        //this.serverDetails$.subscribe((data) => console.log("Data: ", data));
         //this.users$.subscribe((data) => console.log("Data: ", data));
         //this.protocols$.subscribe((data) => console.log("Protocols: ", data));
         //this.tags$.subscribe((data) => console.log("Tags data: ", data));

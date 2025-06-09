@@ -4,6 +4,7 @@ import {LambdaFunctionItem} from "../../model/lambda-item";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {LambdaTagCountersResponse} from "../../model/lambda-tag-item";
 import {LambdaEnvironmentCountersResponse} from "../../model/lambda-environment-item";
+import {LambdaInstanceCountersResponse} from "../../model/lambda-instance-item";
 
 export const lambdaFunctionDetailsFeatureKey = 'lambda-function-details';
 
@@ -23,6 +24,12 @@ export interface LambdaFunctionDetailsState {
     tagPageSize: number,
     tagPageIndex: number,
     tagSortColumns: SortColumn[],
+
+    // Instances
+    lambdaInstances: LambdaInstanceCountersResponse;
+    instancePageSize: number,
+    instancePageIndex: number,
+    instanceSortColumns: SortColumn[],
 }
 
 export const initialState: LambdaFunctionDetailsState = {
@@ -41,6 +48,12 @@ export const initialState: LambdaFunctionDetailsState = {
     tagPageSize: 5,
     tagPageIndex: 0,
     tagSortColumns: [{column: 'key', sortDirection: -1}],
+
+    // Instances
+    lambdaInstances: {} as LambdaInstanceCountersResponse,
+    instancePageSize: 5,
+    instancePageIndex: 0,
+    instanceSortColumns: [{column: 'key', sortDirection: -1}],
 };
 
 export const lambdaFunctionDetailsReducer = createReducer(
@@ -70,4 +83,9 @@ export const lambdaFunctionDetailsReducer = createReducer(
     on(lambdaFunctionDetailsActions.loadTags, (state: LambdaFunctionDetailsState) => ({...state, loading: true})),
     on(lambdaFunctionDetailsActions.loadTagsSuccess, (state: LambdaFunctionDetailsState, {tags}) => ({...state, lambdaTags: tags, loading: false})),
     on(lambdaFunctionDetailsActions.loadTagsFailure, (state: LambdaFunctionDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Lambda instances
+    on(lambdaFunctionDetailsActions.loadInstances, (state: LambdaFunctionDetailsState) => ({...state, loading: true})),
+    on(lambdaFunctionDetailsActions.loadInstancesSuccess, (state: LambdaFunctionDetailsState, {instances}) => ({...state, lambdaInstances: instances, loading: false})),
+    on(lambdaFunctionDetailsActions.loadInstancesFailure, (state: LambdaFunctionDetailsState, {error}) => ({...state, error: error, loading: false})),
 );

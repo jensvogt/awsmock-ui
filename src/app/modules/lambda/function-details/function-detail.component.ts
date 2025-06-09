@@ -12,7 +12,7 @@ import {Observable} from "rxjs";
 import {LambdaTagCountersResponse} from "../model/lambda-tag-item";
 import {State, Store} from "@ngrx/store";
 import {LambdaFunctionDetailsState} from "./state/lambda-function-details.reducer";
-import {selectEnvironment, selectEnvironmentPageIndex, selectEnvironmentPageSize, selectTagPageIndex, selectTagPageSize, selectTags} from "./state/lambda-function-details.selectors";
+import {selectEnvironment, selectEnvironmentPageIndex, selectEnvironmentPageSize, selectInstancePageIndex, selectInstancePageSize, selectInstances, selectTagPageIndex, selectTagPageSize, selectTags} from "./state/lambda-function-details.selectors";
 import {lambdaFunctionDetailsActions} from "./state/lambda-function-details.actions";
 import {PageEvent} from "@angular/material/paginator";
 import {LambdaTagAddDialog} from "../function-tag-add/function-tag-add.component";
@@ -20,6 +20,7 @@ import {LambdaTagEditDialog} from "../function-tag-edit/function-tag-edit.compon
 import {LambdaEnvironmentCountersResponse} from "../model/lambda-environment-item";
 import {LambdaEnvironmentAddDialog} from "../function-environment-add/function-environment-add.component";
 import {LambdaEnvironmentEditDialog} from "../function-environment-edit/function-environment-edit.component";
+import {LambdaInstanceCountersResponse} from "../model/lambda-instance-item";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -51,10 +52,18 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     tagPageIndex$: Observable<number> = this.store.select(selectTagPageIndex);
     tagPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Instances Table
+    instanceColumns: any[] = ['instanceId', 'containerId', 'status', 'actions'];
+    lambdaInstances$: Observable<LambdaInstanceCountersResponse> = this.store.select(selectInstances);
+    instancePageSize$: Observable<number> = this.store.select(selectInstancePageSize);
+    instancePageIndex$: Observable<number> = this.store.select(selectInstancePageIndex);
+    instancePageSizeOptions = [5, 10, 20, 50, 100];
+
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private route: ActivatedRoute, private lambdaService: LambdaService, private store: Store, private state: State<LambdaFunctionDetailsState>) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly route: ActivatedRoute, private readonly lambdaService: LambdaService,
+                private readonly store: Store, private readonly state: State<LambdaFunctionDetailsState>) {
     }
 
     ngOnInit() {
@@ -64,9 +73,11 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.loadFunction();
             this.loadEnvironment();
             this.loadTags();
+            this.loadInstances();
         });
         //this.lambdaEnvironment$.subscribe((data) => console.log(data));
-        this.lambdaTags$.subscribe((data) => console.log(data));
+        //this.lambdaTags$.subscribe((data) => console.log(data));
+        //this.lambdaInstances$.subscribe((data) => console.log("Lambda instances: ", data));
     }
 
     ngOnDestroy() {
@@ -81,6 +92,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         this.loadFunction();
         this.loadEnvironment();
         this.loadTags();
+        this.loadInstances();
     }
 
     loadFunction() {
@@ -187,6 +199,45 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this.loadTags();
                 this.snackBar.open('Lambda tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
+            })
+    }
+
+    // ===================================================================================================================
+    // Instances
+    // ===================================================================================================================
+    handleInstancePageEvent(e: PageEvent) {
+        this.state.value['lambda-function-details'].instancePageSize = e.pageSize;
+        this.state.value['lambda-function-details'].instancePageIndex = e.pageIndex;
+        this.loadInstances();
+    }
+
+    loadInstances() {
+        this.store.dispatch(lambdaFunctionDetailsActions.loadInstances({
+            lambdaArn: this.functionArn,
+            pageSize: this.state.value['lambda-function-details'].instancePageSize,
+            pageIndex: this.state.value['lambda-function-details'].instancePageIndex,
+            sortColumns: this.state.value['lambda-function-details'].instanceSortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    instanceSortChange(sortState: Sort) {
+        this.state.value['lambda-function-details'].instanceSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['lambda-function-details'].instanceSortColumns = [{column: column, sortDirection: direction}];
+        this.loadInstances();
+    }
+
+    refreshInstances() {
+        this.loadInstances();
+    }
+
+    deleteInstance(instanceId: string) {
+        this.lambdaService.deleteInstance(this.functionArn, instanceId)
+            .subscribe(() => {
+                this.loadInstances();
+                this.snackBar.open('Lambda instance deleted, instanceId: ' + instanceId, 'Dismiss', {duration: 5000});
             })
     }
 

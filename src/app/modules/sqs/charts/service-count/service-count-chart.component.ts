@@ -3,7 +3,7 @@ import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/m
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MonitoringService} from "../../../../services/monitoring.service";
-import {ChartService, TimeRange} from "../../../../services/chart-service.component";
+import {ChartService, TimeRange, Topx} from "../../../../services/chart-service.component";
 import {FormsModule} from "@angular/forms";
 
 export type ChartOptions = {
@@ -41,14 +41,18 @@ export class SqsServiceCountChartComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("serviceCountChart") serviceCountChart: ChartComponent | undefined;
+    topx: Topx[] = [];
+    selectedTopx: number = -1;
+    @ViewChild(`sqs-service-count-chart-component`) serviceCountChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
+        this.topx = this.chartService.getTopxs();
+        this.selectedTopx = this.chartService.getDefaultTopx();
         this.loadServiceCountChart();
     }
 
@@ -56,7 +60,7 @@ export class SqsServiceCountChartComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('sqs_service_counter', 'action', start, end, 5)
+        this.monitoringService.getMultiCounters('sqs_service_counter', 'action', start, end, 5, this.selectedTopx)
             .subscribe((data: any) => {
                 if (data) {
                     let functions = Object.getOwnPropertyNames(data);
@@ -68,6 +72,7 @@ export class SqsServiceCountChartComponent implements OnInit {
                         series: series,
                         chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
+                        legend: {showForSingleSeries: true},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
                         title: {text: "SQS Service Count", align: "center"},

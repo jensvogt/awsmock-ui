@@ -21,12 +21,11 @@ import {SqsServiceCountChartComponent} from "./service-count/service-count-chart
         MatIcon,
         FormsModule,
         MatIconButton,
-        SqsServiceTimeChartComponent,
-        SqsServiceTimeChartComponent,
-        SqsServiceTimeChartComponent,
+        SqsServiceCountChartComponent,
         SqsMessageWaitTimeChartComponent,
         SqsServiceTimeChartComponent,
-        SqsServiceCountChartComponent,
+
+
     ],
     providers: [MonitoringService],
     styleUrls: ['./sqs-charts.component.scss']
@@ -40,7 +39,7 @@ export class SqsChartsComponent implements OnInit, OnDestroy {
     @ViewChild(SqsServiceCountChartComponent) serviceCountChart: SqsServiceCountChartComponent | undefined;
     @ViewChild(SqsMessageWaitTimeChartComponent) messageWaitTimeChart: SqsMessageWaitTimeChartComponent | undefined;
 
-    constructor(private location: Location) {
+    constructor(private readonly location: Location) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.refresh();
         });

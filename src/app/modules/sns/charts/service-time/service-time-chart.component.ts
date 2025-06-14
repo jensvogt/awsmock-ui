@@ -1,20 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexDataLabels,
-    ApexGrid,
-    ApexStroke,
-    ApexTitleSubtitle,
-    ApexTooltip,
-    ApexXAxis,
-    ApexYAxis,
-    ChartComponent
-} from "ng-apexcharts";
+import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MonitoringService} from "../../../../services/monitoring.service";
-import {ChartService, TimeRange} from "../../../../services/chart-service.component";
+import {ChartService, TimeRange, Topx} from "../../../../services/chart-service.component";
 import {FormsModule} from "@angular/forms";
 
 export type ChartOptions = {
@@ -52,14 +41,18 @@ export class SnsServiceTimeChartComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("serviceTimeChart") serviceTimeChart: ChartComponent | undefined;
+    topx: Topx[] = [];
+    selectedTopx: number = -1;
+    @ViewChild(`sns-service-time-chart-component`) serviceTimeChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
+        this.topx = this.chartService.getTopxs();
+        this.selectedTopx = this.chartService.getDefaultTopx();
         this.loadServiceTimeChart();
     }
 
@@ -67,12 +60,18 @@ export class SnsServiceTimeChartComponent implements OnInit {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('sns_service_timer', start, end, 5)
+        this.monitoringService.getMultiCounters('sns_service_timer', 'action', start, end, 5, this.selectedTopx)
             .subscribe((data: any) => {
                 if (data) {
+                    let functions = Object.getOwnPropertyNames(data);
+                    const series: any[] = [];
+                    functions.forEach((f) => {
+                        series.push({name: f, data: data[f]});
+                    });
                     this.serviceTimeChartOptions = {
-                        series: [{name: "Service Time", data: data.counters}],
+                        series: series,
                         chart: {height: 350, type: "line"},
+                        legend: {showForSingleSeries: true},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},

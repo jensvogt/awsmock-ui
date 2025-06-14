@@ -3,14 +3,18 @@
         <div class="container">
             <div class="flex-container-left">
                 <div class="flex-item">
-                    <!--mat-card-title class="one">Performance</mat-card-title-->
                 </div>
             </div>
             <div class="flex-container-right">
                 <div class="flex-item">
                     <mat-card-actions>
-                        <mat-select (selectionChange)="loadMessageCountChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
+                        <mat-select (selectionChange)="loadMessageCountChart()" [(ngModel)]="selectedTimeRange" style="width:200px;margin-right:10px">
                             @for (range of ranges; track range) {
+                                <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                        <mat-select (selectionChange)="loadMessageCountChart()" [(ngModel)]="selectedTopx" style="width:200px">
+                            @for (range of topx; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }
                         </mat-select>
@@ -24,6 +28,7 @@
                 [chart]="messageCountChartOptions?.chart"
                 [dataLabels]="messageCountChartOptions?.dataLabels"
                 [grid]="messageCountChartOptions?.grid"
+                [legend]="messageCountChartOptions?.legend"
                 [series]="messageCountChartOptions?.series"
                 [stroke]="messageCountChartOptions?.stroke"
                 [title]="messageCountChartOptions?.title"

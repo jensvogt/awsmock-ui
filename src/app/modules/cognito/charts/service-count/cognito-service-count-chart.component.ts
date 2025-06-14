@@ -19,8 +19,8 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'sns-message-count-chart-component',
-    templateUrl: './message-count-chart.component.html',
+    selector: 'cognito-service-count-chart-component',
+    templateUrl: './cognito-service-count-chart.component.html',
     standalone: true,
     imports: [
         ChartComponent,
@@ -33,17 +33,17 @@ export type ChartOptions = {
         FormsModule,
     ],
     providers: [MonitoringService],
-    styleUrls: ['./message-count-chart.component.scss']
+    styleUrls: ['./cognito-service-count-chart.component.scss']
 })
-export class SnsMessageCountChartComponent implements OnInit {
+export class SqsServiceCountChartComponent implements OnInit {
 
-    public messageCountChartOptions!: Partial<ChartOptions> | any;
+    public serviceCountChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
     topx: Topx[] = [];
     selectedTopx: number = -1;
-    @ViewChild(`sns-message-count-chart-component`) messageCountChart: ChartComponent | undefined;
+    @ViewChild(`cognito-service-count-chart-component`) serviceCountChart: ChartComponent | undefined;
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
@@ -53,14 +53,14 @@ export class SnsMessageCountChartComponent implements OnInit {
         this.selectedTimeRange = this.chartService.getDefaultRange();
         this.topx = this.chartService.getTopxs();
         this.selectedTopx = this.chartService.getDefaultTopx();
-        this.loadMessageCountChart();
+        this.loadServiceCountChart();
     }
 
-    loadMessageCountChart() {
+    loadServiceCountChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('sns_message_counter', 'action', start, end, 5, this.selectedTopx)
+        this.monitoringService.getMultiCounters('cognito_service_counter', 'action', start, end, 5, this.selectedTopx)
             .subscribe((data: any) => {
                 if (data) {
                     let functions = Object.getOwnPropertyNames(data);
@@ -68,17 +68,17 @@ export class SnsMessageCountChartComponent implements OnInit {
                     functions.forEach((f) => {
                         series.push({name: f, data: data[f]});
                     });
-                    this.messageCountChartOptions = {
+                    this.serviceCountChartOptions = {
                         series: series,
                         chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
                         legend: {showForSingleSeries: true},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "SNS Message Count", align: "center"},
+                        title: {text: "Cognito Service Count", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Message Count"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Count"}, labels: {offsetX: 10}}
                     };
                 }
             });

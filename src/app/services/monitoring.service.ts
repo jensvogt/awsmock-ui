@@ -30,15 +30,17 @@ export class MonitoringService {
     /**
      * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
      */
-    public getMultiCounters(name: string, labelName: string, start: Date, end: Date, step: number) {
+    public getMultiCounters(name: string, labelName: string, start: Date, end: Date, step: number, limit?: number) {
         let headers = this.monitoringConfig.monitoringHttpOptions.headers.set('x-awsmock-target', "monitoring").set('x-awsmock-action', "get-multi-counters");
+        limit ??= -1;
         const body = {
             region: environment.awsmockRegion,
             name: name,
             labelName: labelName,
             start: start.getTime(),
             end: end.getTime(),
-            step: step
+            step: step,
+            limit: limit
         }
         return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }

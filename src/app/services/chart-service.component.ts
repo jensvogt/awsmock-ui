@@ -13,6 +13,17 @@ const TimeRanges: Array<TimeRange> = [
     {value: 'Last12Hours', viewValue: 'Last 12 Hours'},
 ];
 
+export interface Topx {
+    value: number;
+    viewValue: string;
+}
+
+const TopXs: Array<Topx> = [
+    {value: 5, viewValue: 'Top 5'},
+    {value: 10, viewValue: 'Top 10'},
+    {value: -1, viewValue: 'All'},
+];
+
 @Injectable({
     providedIn: 'root'
 })
@@ -26,11 +37,19 @@ export class ChartService {
     }
 
     getRanges(): TimeRange[] {
-        return TimeRanges as TimeRange[];
+        return TimeRanges;
     }
 
     getDefaultRange(): string {
         return TimeRanges[0].value;
+    }
+
+    getTopxs(): Topx[] {
+        return TopXs;
+    }
+
+    getDefaultTopx(): number {
+        return TopXs[0].value;
     }
 
     getStartTime(choice: string): Date {

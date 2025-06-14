@@ -1,0 +1,35 @@
+<mat-card class="mat-elevation-z4">
+    <mat-card-header>
+        <div class="container">
+            <div class="flex-container-left">
+                <div class="flex-item">
+                    <!--mat-card-title class="one">Performance</mat-card-title-->
+                </div>
+            </div>
+            <div class="flex-container-right">
+                <div class="flex-item">
+                    <mat-card-actions>
+                        <mat-select (selectionChange)="loadCognitoServiceTimeChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
+                            @for (range of ranges; track range) {
+                                <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-card-actions>
+                </div>
+            </div>
+        </div>
+    </mat-card-header>
+    <mat-card-content>
+        <apx-chart
+                [chart]="cognitoServiceTimeChartOptions?.chart"
+                [dataLabels]="cognitoServiceTimeChartOptions?.dataLabels"
+                [grid]="cognitoServiceTimeChartOptions?.grid"
+                [series]="cognitoServiceTimeChartOptions?.series"
+                [stroke]="cognitoServiceTimeChartOptions?.stroke"
+                [title]="cognitoServiceTimeChartOptions?.title"
+                [tooltip]="cognitoServiceTimeChartOptions?.tooltip"
+                [xaxis]="cognitoServiceTimeChartOptions?.xaxis"
+                [yaxis]="cognitoServiceTimeChartOptions?.yaxis"
+        ></apx-chart>
+    </mat-card-content>
+</mat-card>

@@ -7,6 +7,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {LambdaChartsComponent} from "./modules/lambda/charts/lambda-charts.component";
 import {CognitoUserDetailsComponent} from "./modules/cognito/user-detail/user-detail.component";
 import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
+import {CognitoChartsComponent} from "./modules/cognito/charts/cognito-charts.component";
 
 export const routes: Routes = [
     {
@@ -76,6 +77,10 @@ export const routes: Routes = [
             {
                 path: 'cognito',
                 loadChildren: () => import('./modules/cognito/cognito.module').then(module => module.CognitoModule),
+            },
+            {
+                path: 'cognito-charts',
+                component: CognitoChartsComponent,
             },
             {
                 path: 'cognito-user/details/:userPoolId/:userName',

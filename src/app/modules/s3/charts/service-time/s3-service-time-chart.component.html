@@ -9,8 +9,13 @@
             <div class="flex-container-right">
                 <div class="flex-item">
                     <mat-card-actions>
-                        <mat-select (selectionChange)="loadS3ServiceTimeChart()" [(ngModel)]="selectedTimeRange" style="width:200px">
+                        <mat-select (selectionChange)="loadS3ServiceTimeChart()" [(ngModel)]="selectedTimeRange" style="width:200px; margin-right:10px">
                             @for (range of ranges; track range) {
+                                <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                        <mat-select (selectionChange)="loadS3ServiceTimeChart()" [(ngModel)]="selectedTopx" style="width:200px">
+                            @for (range of topx; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }
                         </mat-select>
@@ -24,6 +29,7 @@
                 [chart]="s3ServiceTimeChartOptions?.chart"
                 [dataLabels]="s3ServiceTimeChartOptions?.dataLabels"
                 [grid]="s3ServiceTimeChartOptions?.grid"
+                [legend]="s3ServiceTimeChartOptions?.legend"
                 [series]="s3ServiceTimeChartOptions?.series"
                 [stroke]="s3ServiceTimeChartOptions?.stroke"
                 [title]="s3ServiceTimeChartOptions?.title"

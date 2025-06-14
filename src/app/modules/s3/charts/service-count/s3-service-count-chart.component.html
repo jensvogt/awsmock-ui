@@ -3,18 +3,17 @@
         <div class="container">
             <div class="flex-container-left">
                 <div class="flex-item">
-                    <!--mat-card-title class="one">Performance</mat-card-title-->
                 </div>
             </div>
             <div class="flex-container-right">
                 <div class="flex-item">
                     <mat-card-actions>
-                        <mat-select (selectionChange)="loadMessageWaitTimeChart()" [(ngModel)]="selectedTimeRange" style="width:200px;margin-right: 10px">
+                        <mat-select (selectionChange)="loadServiceCountChart()" [(ngModel)]="selectedTimeRange" style="width:200px; margin-right:10px">
                             @for (range of ranges; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }
                         </mat-select>
-                        <mat-select (selectionChange)="loadMessageWaitTimeChart()" [(ngModel)]="selectedTopx" style="width:200px">
+                        <mat-select (selectionChange)="loadServiceCountChart()" [(ngModel)]="selectedTopx" style="width:200px">
                             @for (range of topx; track range) {
                                 <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
                             }
@@ -26,16 +25,15 @@
     </mat-card-header>
     <mat-card-content>
         <apx-chart
-                [chart]="serviceTimeChartOptions?.chart"
-                [dataLabels]="serviceTimeChartOptions?.dataLabels"
-                [grid]="serviceTimeChartOptions?.grid"
-                [legend]="serviceTimeChartOptions?.legend"
-                [series]="serviceTimeChartOptions?.series"
-                [stroke]="serviceTimeChartOptions?.stroke"
-                [title]="serviceTimeChartOptions?.title"
-                [tooltip]="serviceTimeChartOptions?.tooltip"
-                [xaxis]="serviceTimeChartOptions?.xaxis"
-                [yaxis]="serviceTimeChartOptions?.yaxis"
+                [chart]="serviceCountChartOptions?.chart"
+                [dataLabels]="serviceCountChartOptions?.dataLabels"
+                [grid]="serviceCountChartOptions?.grid"
+                [series]="serviceCountChartOptions?.series"
+                [stroke]="serviceCountChartOptions?.stroke"
+                [title]="serviceCountChartOptions?.title"
+                [tooltip]="serviceCountChartOptions?.tooltip"
+                [xaxis]="serviceCountChartOptions?.xaxis"
+                [yaxis]="serviceCountChartOptions?.yaxis"
         ></apx-chart>
     </mat-card-content>
 </mat-card>

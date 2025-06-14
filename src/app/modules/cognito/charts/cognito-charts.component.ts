@@ -6,12 +6,14 @@ import {MatIcon} from "@angular/material/icon";
 import {FormsModule} from "@angular/forms";
 import {interval, Subscription} from "rxjs";
 import {MonitoringService} from "../../../services/monitoring.service";
-import {S3ServiceTimeChartComponent} from "./service-time/s3-service-time-chart.component";
-import {SqsServiceCountChartComponent} from "./service-count/s3-service-count-chart.component";
+import {CognitoServiceTimeChartComponent} from "./service-time/cognito-service-time-chart.component";
+import {CognitoUserPoolsCounterChartComponent} from "./user-pools-counter/cognito-user-pools-counter-chart.component";
+import {CognitoUsersCounterChartComponent} from "./users-counter/cognito-users-counter-chart.component";
+import {SqsServiceCountChartComponent} from "./service-count/cognito-service-count-chart.component";
 
 @Component({
     selector: 's3-chart-component',
-    templateUrl: './s3-charts.component.html',
+    templateUrl: './cognito-charts.component.html',
     standalone: true,
     imports: [
         MatCard,
@@ -20,23 +22,26 @@ import {SqsServiceCountChartComponent} from "./service-count/s3-service-count-ch
         MatIcon,
         FormsModule,
         MatIconButton,
-        S3ServiceTimeChartComponent,
+        CognitoServiceTimeChartComponent,
+        CognitoUserPoolsCounterChartComponent,
+        CognitoUsersCounterChartComponent,
         SqsServiceCountChartComponent,
+
     ],
     providers: [MonitoringService],
-    styleUrls: ['./s3-charts.component.scss']
+    styleUrls: ['./cognito-charts.component.scss']
 })
-export class S3ChartsComponent implements OnInit, OnDestroy {
+export class CognitoChartsComponent implements OnInit, OnDestroy {
     lastUpdate: string = '';
 
     // Auto-update
     updateSubscription: Subscription | undefined;
-    @ViewChild(S3ServiceTimeChartComponent) s3ServiceTimeChart: S3ServiceTimeChartComponent | undefined;
+    @ViewChild(CognitoServiceTimeChartComponent) cognitoServiceTimeChart: CognitoServiceTimeChartComponent | undefined;
 
     constructor(private readonly location: Location) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date().toLocaleTimeString('DE-de');
-            this.s3ServiceTimeChart?.loadS3ServiceTimeChart();
+            this.cognitoServiceTimeChart?.loadCognitoServiceTimeChart();
         });
     }
 
@@ -53,5 +58,6 @@ export class S3ChartsComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
+        this.cognitoServiceTimeChart?.loadCognitoServiceTimeChart();
     }
 }

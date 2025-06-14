@@ -3,7 +3,7 @@ import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/m
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MonitoringService} from "../../../../services/monitoring.service";
-import {ChartService, TimeRange, Topx} from "../../../../services/chart-service.component";
+import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {FormsModule} from "@angular/forms";
 
 export type ChartOptions = {
@@ -19,8 +19,8 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'sns-message-count-chart-component',
-    templateUrl: './message-count-chart.component.html',
+    selector: 'cognito-user-pools-counter-chart-component',
+    templateUrl: './cognito-user-pools-counter-chart.component.html',
     standalone: true,
     imports: [
         ChartComponent,
@@ -33,17 +33,15 @@ export type ChartOptions = {
         FormsModule,
     ],
     providers: [MonitoringService],
-    styleUrls: ['./message-count-chart.component.scss']
+    styleUrls: ['./cognito-user-pools-counter-chart.component.scss']
 })
-export class SnsMessageCountChartComponent implements OnInit {
+export class CognitoUserPoolsCounterChartComponent implements OnInit {
 
-    public messageCountChartOptions!: Partial<ChartOptions> | any;
+    public cognitoServiceTimeChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    topx: Topx[] = [];
-    selectedTopx: number = -1;
-    @ViewChild(`sns-message-count-chart-component`) messageCountChart: ChartComponent | undefined;
+    @ViewChild("cognitoServiceTimeChart") cognitoServiceTimeChart: ChartComponent | undefined;
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
@@ -51,34 +49,26 @@ export class SnsMessageCountChartComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.topx = this.chartService.getTopxs();
-        this.selectedTopx = this.chartService.getDefaultTopx();
-        this.loadMessageCountChart();
+        this.loadCognitoServiceTimeChart();
     }
 
-    loadMessageCountChart() {
+    loadCognitoServiceTimeChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('sns_message_counter', 'action', start, end, 5, this.selectedTopx)
+        this.monitoringService.getCounters('cognito_userpool_counter', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    let functions = Object.getOwnPropertyNames(data);
-                    const series: any[] = [];
-                    functions.forEach((f) => {
-                        series.push({name: f, data: data[f]});
-                    });
-                    this.messageCountChartOptions = {
-                        series: series,
+                    this.cognitoServiceTimeChartOptions = {
+                        series: [{name: "User Pools", data: data.counters}],
                         chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
-                        legend: {showForSingleSeries: true},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "SNS Message Count", align: "center"},
+                        title: {text: "User Pools", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Message Count"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Time [ms]"}, labels: {offsetX: 10}}
                     };
                 }
             });

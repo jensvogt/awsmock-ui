@@ -177,7 +177,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     }
 
     redriveMessages(queue: SqsQueueItem) {
-        if (queue && queue.queueArn) {
+        if (queue?.queueArn) {
             this.sqsService.redriveMessages(queue.queueArn).subscribe(() => {
                 this.loadQueues()
                 this.snackBar.open('SQS queue redrive executed, queueArn: ' + queue.queueArn, 'Done', {duration: 5000})

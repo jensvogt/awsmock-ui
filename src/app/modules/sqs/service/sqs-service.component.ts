@@ -207,7 +207,7 @@ export class SqsService {
      */
     public resendMessage(queueArn: string, messageId: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ResendMessage');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueArn: queueArn, MessageId: messageId}, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn, messageId: messageId}, {headers: headers});
     }
 
     /**

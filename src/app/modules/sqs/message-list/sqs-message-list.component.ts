@@ -184,7 +184,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         this.lastUpdate = new Date();
         this.sqsService.resendMessage(this.queueArn, messageId).subscribe(() => {
             this.loadMessages();
-            this.snackBar.open('Message resend, queueUrl: ' + this.queueUrl, 'Done', {duration: 5000});
+            this.snackBar.open('Message resend, queueArn: ' + this.queueArn, 'Done', {duration: 5000});
         });
     }
 

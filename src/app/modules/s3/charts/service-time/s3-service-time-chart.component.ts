@@ -43,7 +43,7 @@ export class S3ServiceTimeChartComponent implements OnInit {
     selectedTimeRange: string = '';
     topx: Topx[] = [];
     selectedTopx: number = -1;
-    @ViewChild("s3ServiceTimeChart") s3ServiceTimeChart: ChartComponent | undefined;
+    @ViewChild(`s3-service-time-chart-component`) s3ServiceTimeChart: ChartComponent | undefined;
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }

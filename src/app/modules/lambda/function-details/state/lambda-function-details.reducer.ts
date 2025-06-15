@@ -5,6 +5,7 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {LambdaTagCountersResponse} from "../../model/lambda-tag-item";
 import {LambdaEnvironmentCountersResponse} from "../../model/lambda-environment-item";
 import {LambdaInstanceCountersResponse} from "../../model/lambda-instance-item";
+import {LambdaEventSourceCountersResponse} from "../../model/lambda-event-source-item";
 
 export const lambdaFunctionDetailsFeatureKey = 'lambda-function-details';
 
@@ -18,6 +19,12 @@ export interface LambdaFunctionDetailsState {
     environmentPageSize: number,
     environmentPageIndex: number,
     environmentSortColumns: SortColumn[],
+
+    // EventSource
+    lambdaEventSource: LambdaEventSourceCountersResponse;
+    eventSourcePageSize: number,
+    eventSourcePageIndex: number,
+    eventSourceSortColumns: SortColumn[],
 
     // Tags
     lambdaTags: LambdaTagCountersResponse;
@@ -42,6 +49,12 @@ export const initialState: LambdaFunctionDetailsState = {
     environmentPageSize: 5,
     environmentPageIndex: 0,
     environmentSortColumns: [{column: 'key', sortDirection: -1}],
+
+    // EventSource
+    lambdaEventSource: {} as LambdaEventSourceCountersResponse,
+    eventSourcePageSize: 5,
+    eventSourcePageIndex: 0,
+    eventSourceSortColumns: [{column: 'key', sortDirection: -1}],
 
     // Tags
     lambdaTags: {} as LambdaTagCountersResponse,
@@ -88,4 +101,9 @@ export const lambdaFunctionDetailsReducer = createReducer(
     on(lambdaFunctionDetailsActions.loadInstances, (state: LambdaFunctionDetailsState) => ({...state, loading: true})),
     on(lambdaFunctionDetailsActions.loadInstancesSuccess, (state: LambdaFunctionDetailsState, {instances}) => ({...state, lambdaInstances: instances, loading: false})),
     on(lambdaFunctionDetailsActions.loadInstancesFailure, (state: LambdaFunctionDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Lambda eventSource
+    on(lambdaFunctionDetailsActions.loadEventSource, (state: LambdaFunctionDetailsState) => ({...state, loading: true})),
+    on(lambdaFunctionDetailsActions.loadEventSourceSuccess, (state: LambdaFunctionDetailsState, {eventSource}) => ({...state, lambdaEventSource: eventSource, loading: false})),
+    on(lambdaFunctionDetailsActions.loadEventSourceFailure, (state: LambdaFunctionDetailsState, {error}) => ({...state, error: error, loading: false})),
 );

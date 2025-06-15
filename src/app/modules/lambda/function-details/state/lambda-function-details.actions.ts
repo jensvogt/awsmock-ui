@@ -4,6 +4,7 @@ import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {LambdaTagCountersResponse} from "../../model/lambda-tag-item";
 import {LambdaEnvironmentCountersResponse} from "../../model/lambda-environment-item";
 import {LambdaInstanceCountersResponse} from "../../model/lambda-instance-item";
+import {LambdaEventSourceCountersResponse} from "../../model/lambda-event-source-item";
 
 export const lambdaFunctionDetailsActions = {
     initialize: createAction('[lambda-function-details] initialize'),
@@ -28,4 +29,8 @@ export const lambdaFunctionDetailsActions = {
     loadInstancesSuccess: createAction('[lambda-function-details] Load lambda instances success', props<{ instances: LambdaInstanceCountersResponse }>()),
     loadInstancesFailure: createAction('[lambda-function-details] Load lambda instances error', props<{ error: string }>()),
 
+    // Load event souirces
+    loadEventSource: createAction('[lambda-function-details] Load lambda event sources', props<{ lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadEventSourceSuccess: createAction('[lambda-function-details] Load lambda event sources success', props<{ eventSource: LambdaEventSourceCountersResponse }>()),
+    loadEventSourceFailure: createAction('[lambda-function-details] Load lambda event sources error', props<{ error: string }>()),
 }

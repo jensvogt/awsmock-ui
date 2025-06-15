@@ -3,6 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {CreateFunctionRequest} from "../model/lambda-item";
+import * as uuid from "uuid";
 
 @Injectable({providedIn: 'root'})
 export class LambdaService {
@@ -13,7 +14,7 @@ export class LambdaService {
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
 
-    constructor(private http: HttpClient) {
+    constructor(private readonly http: HttpClient) {
     }
 
     /**
@@ -164,9 +165,49 @@ export class LambdaService {
      * @param pageIndex page index
      * @param sortColumns sorting columns
      */
+    public listEventSourceCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-event-source-counters');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Adds an event source mapping
+     *
+     * @param functionArn function name
+     * @param type notification type
+     * @param eventSourceArn event source ARN
+     * @param batchSize batch size
+     * @param maximumBatchingWindowInSeconds max batch in window
+     */
+    public addEventSource(functionArn: string, type: string, eventSourceArn: string, batchSize: number, maximumBatchingWindowInSeconds: number) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'add-event-source-counter');
+        const body = {FunctionArn: functionArn, UUID: uuid.v4(), Type: type, EventSourceArn: eventSourceArn, BatchSize: batchSize, MaximumBatchingWindowInSeconds: maximumBatchingWindowInSeconds}
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+    }
+
+    /**
+     * @brief Gets a list of tags for a lambda function
+     *
+     * @param lambdaArn lambda ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
     public listTagCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ListTagCounters');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes an event source mapping
+     *
+     * @param functionArn function name
+     * @param eventSourceArn event source ARN
+     */
+    public deleteEventSource(functionArn: string, eventSourceArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-event-source-counter');
+        const body = {FunctionArn: functionArn, EventSourceArn: eventSourceArn}
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     /**

@@ -4,6 +4,7 @@ import {LambdaFunctionItem} from "../../model/lambda-item";
 import {LambdaTagCountersResponse} from "../../model/lambda-tag-item";
 import {LambdaEnvironmentCountersResponse} from "../../model/lambda-environment-item";
 import {LambdaInstanceCountersResponse} from "../../model/lambda-instance-item";
+import {LambdaEventSourceCountersResponse} from "../../model/lambda-event-source-item";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
@@ -49,6 +50,21 @@ export const selectEnvironmentPageSize: SelectorType<number> = createSelector(
 export const selectEnvironmentPageIndex: SelectorType<number> = createSelector(
     selectFunctionDetailsFeature,
     (state: LambdaFunctionDetailsState) => state?.environmentPageIndex
+);
+
+export const selectEventSource: SelectorType<LambdaEventSourceCountersResponse> = createSelector(
+    selectFunctionDetailsFeature,
+    (state: LambdaFunctionDetailsState) => state?.lambdaEventSource
+);
+
+export const selectEventSourcePageSize: SelectorType<number> = createSelector(
+    selectFunctionDetailsFeature,
+    (state: LambdaFunctionDetailsState) => state?.eventSourcePageSize
+);
+
+export const selectEventSourcePageIndex: SelectorType<number> = createSelector(
+    selectFunctionDetailsFeature,
+    (state: LambdaFunctionDetailsState) => state?.eventSourcePageIndex
 );
 
 export const selectError: SelectorType<any> = createSelector(

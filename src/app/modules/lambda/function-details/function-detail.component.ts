@@ -12,7 +12,20 @@ import {Observable} from "rxjs";
 import {LambdaTagCountersResponse} from "../model/lambda-tag-item";
 import {State, Store} from "@ngrx/store";
 import {LambdaFunctionDetailsState} from "./state/lambda-function-details.reducer";
-import {selectEnvironment, selectEnvironmentPageIndex, selectEnvironmentPageSize, selectInstancePageIndex, selectInstancePageSize, selectInstances, selectTagPageIndex, selectTagPageSize, selectTags} from "./state/lambda-function-details.selectors";
+import {
+    selectEnvironment,
+    selectEnvironmentPageIndex,
+    selectEnvironmentPageSize,
+    selectEventSource,
+    selectEventSourcePageIndex,
+    selectEventSourcePageSize,
+    selectInstancePageIndex,
+    selectInstancePageSize,
+    selectInstances,
+    selectTagPageIndex,
+    selectTagPageSize,
+    selectTags
+} from "./state/lambda-function-details.selectors";
 import {lambdaFunctionDetailsActions} from "./state/lambda-function-details.actions";
 import {PageEvent} from "@angular/material/paginator";
 import {LambdaTagAddDialog} from "../function-tag-add/function-tag-add.component";
@@ -21,6 +34,8 @@ import {LambdaEnvironmentCountersResponse} from "../model/lambda-environment-ite
 import {LambdaEnvironmentAddDialog} from "../function-environment-add/function-environment-add.component";
 import {LambdaEnvironmentEditDialog} from "../function-environment-edit/function-environment-edit.component";
 import {LambdaInstanceCountersResponse} from "../model/lambda-instance-item";
+import {LambdaEventSourceCountersResponse} from "../model/lambda-event-source-item";
+import {LambdaEventSourceAddDialog} from "../function-event-source-add/function-event-source-add.component";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -45,6 +60,13 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     environmentPageIndex$: Observable<number> = this.store.select(selectEnvironmentPageIndex);
     environmentPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Event sources
+    eventSourceColumns: string[] = ['uuid', 'arn', 'type', 'actions'];
+    lambdaEventSource$: Observable<LambdaEventSourceCountersResponse> = this.store.select(selectEventSource);
+    eventSourcePageSize$: Observable<number> = this.store.select(selectEventSourcePageSize);
+    eventSourcePageIndex$: Observable<number> = this.store.select(selectEventSourcePageIndex);
+    eventSourcePageSizeOptions = [5, 10, 20, 50, 100];
+
     // Tags Table
     tagColumns: any[] = ['key', 'value', 'actions'];
     lambdaTags$: Observable<LambdaTagCountersResponse> = this.store.select(selectTags);
@@ -59,6 +81,10 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     instancePageIndex$: Observable<number> = this.store.select(selectInstancePageIndex);
     instancePageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Tab
+    selectedTabIndex: string | undefined;
+    tabNames: string[] = ['environments', 'eventSources', 'tags', 'instances'];
+
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
@@ -72,8 +98,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(":"))
             this.loadFunction();
             this.loadEnvironment();
-            this.loadTags();
-            this.loadInstances();
         });
         //this.lambdaEnvironment$.subscribe((data) => console.log(data));
         //this.lambdaTags$.subscribe((data) => console.log(data));
@@ -91,8 +115,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     refresh() {
         this.loadFunction();
         this.loadEnvironment();
-        this.loadTags();
-        this.loadInstances();
     }
 
     loadFunction() {
@@ -121,6 +143,25 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    tabChanged($event: any) {
+        let clickedIndex = $event.index;
+        console.log(this.tabNames[clickedIndex]);
+        switch (this.tabNames[clickedIndex]) {
+            case 'environments':
+                this.loadEnvironment();
+                break;
+            case 'eventSources':
+                this.loadEventSource();
+                break;
+            case 'tags':
+                this.loadTags();
+                break;
+            case 'instances':
+                this.loadInstances();
+                break;
+        }
     }
 
     // ===================================================================================================================
@@ -319,5 +360,85 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
                 this.loadEnvironment();
                 this.snackBar.open('Lambda environment variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
             })
+    }
+
+    // ===================================================================================================================
+    // EventSource
+    // ===================================================================================================================
+    handleEventSourcePageEvent(e: PageEvent) {
+        this.state.value['lambda-function-details'].eventSourcePageSize = e.pageSize;
+        this.state.value['lambda-function-details'].eventSourcePageIndex = e.pageIndex;
+        this.loadEventSource();
+    }
+
+    loadEventSource() {
+        this.store.dispatch(lambdaFunctionDetailsActions.loadEventSource({
+            lambdaArn: this.functionArn,
+            pageSize: this.state.value['lambda-function-details'].eventSourcePageSize,
+            pageIndex: this.state.value['lambda-function-details'].eventSourcePageIndex,
+            sortColumns: this.state.value['lambda-function-details'].eventSourceSortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    eventSourceSortChanged(sortState: Sort) {
+        this.state.value['lambda-function-details'].eventSourceSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['lambda-function-details'].eventSourceSortColumns = [{column: column, sortDirection: direction}];
+        this.loadEventSource();
+    }
+
+    addEventSource() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.functionArn};
+
+        this.dialog.open(LambdaEventSourceAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            console.log("Event source result: ", result);
+            if (result.eventSourceArn) {
+                console.log("Event source result: ", result);
+                this.lambdaService.addEventSource(this.functionArn, result.type, result.eventSourceArn, result.batchSize, result.maximumBatchingWindowInSeconds)
+                    .subscribe(() => {
+                        this.loadEventSource();
+                        this.snackBar.open('Lambda event source added, eventSourceArn: ' + result.eventSourceArn, 'Dismiss', {duration: 5000});
+                    })
+            } else {
+                this.snackBar.open('Lambda event source unchanged, eventSourceArn: ' + result.eventSourceArn, 'Dismiss', {duration: 5000});
+            }
+        });
+    }
+
+    editEventSource(key: string, value: string) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.functionArn, key: key, value: value};
+
+        /*this.dialog.open(LambdaEventSourceEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.Key !== key || result.Value !== value) {
+                    this.lambdaService.updateEventSource(this.functionArn, result.Key, result.Value)
+                        .subscribe(() => {
+                            this.loadTags();
+                            this.snackBar.open('Lambda eventSource variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('Lambda eventSource variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });*/
+    }
+
+    deleteEventSource(eventSourceArn: string) {
+        this.lambdaService.deleteEventSource(this.functionArn, eventSourceArn)
+            .subscribe(() => {
+                this.loadEventSource();
+                this.snackBar.open('Lambda event source deleted, eventSourceArn: ' + eventSourceArn, 'Dismiss', {duration: 5000});
+            });
     }
 }

@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Add Event Source: {{ functionName }}</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px">
+    <mat-form-field style="width: 100%">
+        <mat-label>Type</mat-label>
+        <mat-select (selectionChange)="loadTypeObjects($event)" [(ngModel)]="selectedType" style="width:100%; margin-right:10px">
+            @for (type of EventTypes; track type) {
+                <mat-option [value]="type.value">{{ type.viewValue }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedType === 'SQS'" style="width: 100%">
+        <mat-label>SQS Queue ARN</mat-label>
+        <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedQueueArn" style="width:100%; margin-right:10px">
+            @for (arn of queueArns; track arn) {
+                <mat-option [value]="arn">{{ arn }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="selectedType === 'SNS'" style="width: 100%">
+        <mat-label>SNS Topic ARN</mat-label>
+        <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedTopicArn" style="width:100%; margin-right:10px">
+            @for (arn of topicArns; track arn) {
+                <mat-option [value]="arn">{{ arn }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Batch Size</mat-label>
+        <input [(ngModel)]="batchSize" matInput value="">
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Max batch in Window</mat-label>
+        <input [(ngModel)]="maximumBatchingWindowInSeconds" matInput value="">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+</mat-dialog-actions>

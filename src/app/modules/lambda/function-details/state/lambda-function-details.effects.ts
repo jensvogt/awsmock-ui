@@ -56,6 +56,18 @@ export class LambdaFunctionDetailsEffects {
         )
     ));
 
-    constructor(private actions$: Actions, private lambdaService: LambdaService) {
+    loadEventSource$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionDetailsActions.loadEventSource),
+        mergeMap(action =>
+            this.lambdaService.listEventSourceCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((eventSource: any) => lambdaFunctionDetailsActions.loadEventSourceSuccess({eventSource})),
+                    catchError((error) =>
+                        of(lambdaFunctionDetailsActions.loadEventSourceFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
+
+    constructor(private readonly actions$: Actions, private readonly lambdaService: LambdaService) {
     }
 }

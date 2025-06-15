@@ -148,7 +148,7 @@
     </mat-card>
     <mat-card appearance="outlined" style="margin-top: 5px;">
         <mat-card-content>
-            <mat-tab-group>
+            <mat-tab-group (selectedTabChange)="tabChanged($event);" [(selectedIndex)]="selectedTabIndex">
                 <mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Lambda function environment variables">
                     <mat-card-actions class="head-buttons">
                         <button (click)="addEnvironment()" [matTooltipShowDelay]="1000" aria-label="Add environment variable" mat-icon-button matTooltip="Add a new environment variable">
@@ -200,7 +200,61 @@
                         </mat-paginator>
                     </div>
                 </mat-tab>
-                <mat-tab [matTooltipShowDelay]="1000" label="Tags" matTooltip="Lambfda function tags">
+                <mat-tab [matTooltipShowDelay]="1000" label="Event Sources" matTooltip="Lambda function event sources">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="addEventSource()" [matTooltipShowDelay]="1000" aria-label="Add eventSource variable" mat-icon-button matTooltip="Add a new event source">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button (click)="loadEventSource()" [matTooltipShowDelay]="1000" aria-label="Refresh eventSource variable" mat-icon-button matTooltip="Refresh the event source list">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="lambdaEventSource$ | async as eventSource" class="row">
+                        <table (matSortChange)="eventSourceSortChanged($event)" [dataSource]="eventSource.eventSourceCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="uuid">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source uuid" sortActionDescription="Sort by uuid">UUID</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.UUID }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="arn">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source ARN" sortActionDescription="Sort by ARN">ARN</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.EventSourceArn }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="type">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source type" sortActionDescription="Sort by type">Type</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Type }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="editEventSource(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the event source">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button (click)="deleteEventSource(row.EventSourceArn)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete event source">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="eventSourceColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: eventSourceColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="eventSourceColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleEventSourcePageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(lambdaEventSource$ | async)?.total"
+                                       [pageIndex]="eventSourcePageIndex$"
+                                       [pageSizeOptions]="eventSourcePageSizeOptions"
+                                       [pageSize]="eventSourcePageSize$"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
+                </mat-tab>
+                <mat-tab [matTooltipShowDelay]="1000" label="Tags" matTooltip="Lambda function tags">
                     <mat-card-actions class="head-buttons">
                         <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>add</mat-icon>

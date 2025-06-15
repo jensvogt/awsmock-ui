@@ -3,7 +3,7 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SnsMessageAttribute} from "../model/sns-message-item";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class SnsService {
 
     // Default headers for AwsMock HTTP requests
@@ -50,6 +50,14 @@ export class SnsService {
     public listMessageCounters(topicArn: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'ListMessageCounters');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {topicArn: topicArn, prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief List all topic ARNs
+     */
+    public listTopicArns() {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'list-topic-arns');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {}, {headers: headers});
     }
 
     /**

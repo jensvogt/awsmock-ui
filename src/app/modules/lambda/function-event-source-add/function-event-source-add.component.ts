@@ -9,6 +9,11 @@ import {MatSelect} from "@angular/material/select";
 import {SqsService} from "../../sqs/service/sqs-service.component";
 import {SnsService} from "../../sns/service/sns-service.component";
 import {MatInput} from "@angular/material/input";
+import {FilterRuleTypes, NotificationEvents} from "../../s3/model/s3-notification-event";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {AddEventSourceRequest} from "../model/lambda-event-source-item";
+import * as uuid from "uuid";
+import {S3Service} from "../../s3/service/s3-service.component";
 
 export interface EventType {
     value: string;
@@ -38,7 +43,8 @@ const EventTypes: Array<EventType> = [
         MatOption,
         MatSelect,
         NgIf,
-        MatInput
+        MatInput,
+        MatSlideToggle
     ],
     styleUrls: ['./function-event-source-add.component.scss'],
 })
@@ -49,6 +55,7 @@ export class LambdaEventSourceAddDialog {
     functionArn: string = '';
     functionName: string = '';
     eventSourceArn: string = '';
+    enabled: boolean = true;
     batchSize: number = 10;
     maximumBatchingWindowInSeconds: number = 5;
 
@@ -60,10 +67,21 @@ export class LambdaEventSourceAddDialog {
     topicArns: string[] = [];
     selectedTopicArn: string = '';
 
+    // S3 Events
+    bucketArns: string[] = [];
+    selectedBucketArn: string[] = [];
+    selectedEvent: string = '';
+
+    // S3 Filter
+    selectedFilterRuleType: string = '';
+    filterRuleValue: string = '';
+
     protected readonly EventTypes = EventTypes;
+    protected readonly events = NotificationEvents;
+    protected readonly filterRuleTypes = FilterRuleTypes;
 
     constructor(private readonly dialogRef: MatDialogRef<LambdaEventSourceAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
-                private readonly sqsService: SqsService, private readonly snsService: SnsService) {
+                private readonly sqsService: SqsService, private readonly snsService: SnsService, private readonly s3Service: S3Service) {
         this.functionArn = data.functionArn;
         this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(':') + 1);
     }
@@ -73,6 +91,8 @@ export class LambdaEventSourceAddDialog {
             this.loadSqsArns();
         } else if (event.value === 'SNS') {
             this.loadSnsArns();
+        } else if (event.value === 'S3') {
+            this.loadS3Arns();
         }
     }
 
@@ -88,11 +108,29 @@ export class LambdaEventSourceAddDialog {
         });
     }
 
+    loadS3Arns() {
+        this.s3Service.listBucketArns().subscribe((data: any) => {
+            this.bucketArns = data.bucketArns;
+        });
+    }
+
     arnSelectionChanged(event: any) {
         this.eventSourceArn = event.value;
     }
 
     save() {
-        this.dialogRef.close({type: this.selectedType, eventSourceArn: this.eventSourceArn, batchSize: this.batchSize, maximumBatchingWindowInSeconds: this.maximumBatchingWindowInSeconds});
+        let addEventSourceRequest: AddEventSourceRequest = {
+            Type: this.selectedType,
+            EventSourceArn: this.eventSourceArn,
+            FunctionArn: this.functionArn,
+            Events: this.selectedEvent,
+            FilterRuleType: this.selectedFilterRuleType,
+            FilterRuleValue: this.filterRuleValue,
+            UUID: uuid.v4(),
+            Enabled: this.enabled,
+            BatchSize: this.batchSize,
+            MaximumBatchingWindowInSeconds: this.maximumBatchingWindowInSeconds
+        };
+        this.dialogRef.close(addEventSourceRequest);
     }
 }

@@ -112,6 +112,14 @@ export class S3Service {
     }
 
     /**
+     * @brief List all buckets ARNs
+     */
+    public listBucketArns() {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'ListBucketArns');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), {}, {headers: headers});
+    }
+
+    /**
      * @brief List all object counters
      *
      * @param bucket bucket name

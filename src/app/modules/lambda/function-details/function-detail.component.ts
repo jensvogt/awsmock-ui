@@ -34,7 +34,7 @@ import {LambdaEnvironmentCountersResponse} from "../model/lambda-environment-ite
 import {LambdaEnvironmentAddDialog} from "../function-environment-add/function-environment-add.component";
 import {LambdaEnvironmentEditDialog} from "../function-environment-edit/function-environment-edit.component";
 import {LambdaInstanceCountersResponse} from "../model/lambda-instance-item";
-import {LambdaEventSourceCountersResponse} from "../model/lambda-event-source-item";
+import {AddEventSourceRequest, LambdaEventSourceCountersResponse} from "../model/lambda-event-source-item";
 import {LambdaEventSourceAddDialog} from "../function-event-source-add/function-event-source-add.component";
 
 @Component({
@@ -95,7 +95,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routerSubscription = this.route.params.subscribe(params => {
             this.functionArn = params['functionArn'];
-            this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(":"))
+            this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(":") + 1)
             this.loadFunction();
             this.loadEnvironment();
         });
@@ -396,17 +396,16 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {functionArn: this.functionArn};
 
-        this.dialog.open(LambdaEventSourceAddDialog, dialogConfig).afterClosed().subscribe(result => {
-            console.log("Event source result: ", result);
-            if (result.eventSourceArn) {
+        this.dialog.open(LambdaEventSourceAddDialog, dialogConfig).afterClosed().subscribe((result: AddEventSourceRequest) => {
+            if (result.EventSourceArn) {
                 console.log("Event source result: ", result);
-                this.lambdaService.addEventSource(this.functionArn, result.type, result.eventSourceArn, result.batchSize, result.maximumBatchingWindowInSeconds)
+                this.lambdaService.addEventSource(result)
                     .subscribe(() => {
                         this.loadEventSource();
-                        this.snackBar.open('Lambda event source added, eventSourceArn: ' + result.eventSourceArn, 'Dismiss', {duration: 5000});
+                        this.snackBar.open('Lambda event source added, ARN: ' + result.EventSourceArn, 'Dismiss', {duration: 5000});
                     })
             } else {
-                this.snackBar.open('Lambda event source unchanged, eventSourceArn: ' + result.eventSourceArn, 'Dismiss', {duration: 5000});
+                this.snackBar.open('Lambda event source unchanged, ARN: ' + result.EventSourceArn, 'Dismiss', {duration: 5000});
             }
         });
     }

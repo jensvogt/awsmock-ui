@@ -3,7 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {CreateFunctionRequest} from "../model/lambda-item";
-import * as uuid from "uuid";
+import {AddEventSourceRequest} from "../model/lambda-event-source-item";
 
 @Injectable({providedIn: 'root'})
 export class LambdaService {
@@ -173,16 +173,11 @@ export class LambdaService {
     /**
      * @brief Adds an event source mapping
      *
-     * @param functionArn function name
-     * @param type notification type
-     * @param eventSourceArn event source ARN
-     * @param batchSize batch size
-     * @param maximumBatchingWindowInSeconds max batch in window
+     * @param request add event source request
      */
-    public addEventSource(functionArn: string, type: string, eventSourceArn: string, batchSize: number, maximumBatchingWindowInSeconds: number) {
+    public addEventSource(request: AddEventSourceRequest) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'add-event-source-counter');
-        const body = {FunctionArn: functionArn, UUID: uuid.v4(), Type: type, EventSourceArn: eventSourceArn, BatchSize: batchSize, MaximumBatchingWindowInSeconds: maximumBatchingWindowInSeconds}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
     }
 
     /**

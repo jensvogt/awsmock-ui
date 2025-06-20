@@ -226,7 +226,7 @@
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editEventSource(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the event source">
+                                    <button (click)="editEventSource(row.EventSourceArn, row.Type)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the event source">
                                         <mat-icon>edit</mat-icon>
                                     </button>
                                     <button (click)="deleteEventSource(row.EventSourceArn)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete event source">

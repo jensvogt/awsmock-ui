@@ -4,6 +4,7 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {SqsMessageAttribute} from "../model/sqs-message-item";
 import {Store} from "@ngrx/store";
 import {RootState} from "../../../state/root.reducer";
+import {environment} from "../../../../environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class SqsService {
@@ -102,6 +103,22 @@ export class SqsService {
     public listLambdaTriggerCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListLambdaTriggerCounters');
         return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Get an event source
+     *
+     * @param functionArn function ARN
+     * @param eventSourceArn event source ARN
+     */
+    public getEventSource(functionArn: string, eventSourceArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'get-event-source');
+        const body = {
+            region: environment.awsmockRegion,
+            functionArn: functionArn,
+            eventSourceArn: eventSourceArn
+        }
+        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
     }
 
     /**

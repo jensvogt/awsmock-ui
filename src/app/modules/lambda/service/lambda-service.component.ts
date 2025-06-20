@@ -3,7 +3,7 @@ import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {CreateFunctionRequest} from "../model/lambda-item";
-import {AddEventSourceRequest} from "../model/lambda-event-source-item";
+import {AddEventSourceRequest, UpdateEventSourceRequest} from "../model/lambda-event-source-item";
 
 @Injectable({providedIn: 'root'})
 export class LambdaService {
@@ -177,6 +177,16 @@ export class LambdaService {
      */
     public addEventSource(request: AddEventSourceRequest) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'add-event-source-counter');
+        return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
+    }
+
+    /**
+     * @brief updates an existing event source mapping
+     *
+     * @param request update event source request
+     */
+    public updateEventSource(request: UpdateEventSourceRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'update-event-source-counter');
         return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
     }
 

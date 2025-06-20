@@ -36,6 +36,7 @@ import {LambdaEnvironmentEditDialog} from "../function-environment-edit/function
 import {LambdaInstanceCountersResponse} from "../model/lambda-instance-item";
 import {AddEventSourceRequest, LambdaEventSourceCountersResponse} from "../model/lambda-event-source-item";
 import {LambdaEventSourceAddDialog} from "../function-event-source-add/function-event-source-add.component";
+import {LambdaEventSourceEditDialog} from "../function-event-source-edit/function-event-source-edit.component";
 
 @Component({
     selector: 'lambda-function-detail-component',
@@ -410,27 +411,25 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    editEventSource(key: string, value: string) {
+    editEventSource(eventSourceArn: string, eventSourceType: string) {
 
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionArn, key: key, value: value};
-
-        /*this.dialog.open(LambdaEventSourceEditDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                if (result.Key !== key || result.Value !== value) {
-                    this.lambdaService.updateEventSource(this.functionArn, result.Key, result.Value)
-                        .subscribe(() => {
-                            this.loadTags();
-                            this.snackBar.open('Lambda eventSource variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
-                        })
-                } else {
-                    this.snackBar.open('Lambda eventSource variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-                }
+        dialogConfig.data = {functionArn: this.functionArn, eventSourceArn: eventSourceArn, type: eventSourceType};
+        console.log("Event source type: ", eventSourceType);
+        this.dialog.open(LambdaEventSourceEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result.EventSourceArn) {
+                this.lambdaService.updateEventSource(result)
+                    .subscribe(() => {
+                        this.loadTags();
+                        this.snackBar.open('Lambda event source updated, ARN: ' + result.EventSourceArn, 'Dismiss', {duration: 5000});
+                    })
+            } else {
+                this.snackBar.open('Lambda event source unchanged, ARN: ' + result.EventSourceArn, 'Dismiss', {duration: 5000});
             }
-        });*/
+        });
     }
 
     deleteEventSource(eventSourceArn: string) {

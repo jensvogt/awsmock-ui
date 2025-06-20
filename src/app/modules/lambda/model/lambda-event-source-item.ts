@@ -24,3 +24,13 @@ export interface AddEventSourceRequest {
     UUID: string;
     Enabled: boolean;
 }
+
+export interface UpdateEventSourceRequest {
+    FunctionArn: string;
+    Events: string;
+    FilterRuleType: string;
+    FilterRuleValue: string;
+    BatchSize: number;
+    MaximumBatchingWindowInSeconds: number;
+    Enabled: boolean;
+}

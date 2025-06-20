@@ -170,6 +170,22 @@ export class S3Service {
     }
 
     /**
+     * @brief Get an event source
+     *
+     * @param functionArn function ARN
+     * @param eventSourceArn event source ARN
+     */
+    public getEventSource(functionArn: string, eventSourceArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'GetEventSource');
+        const body = {
+            region: environment.awsmockRegion,
+            functionArn: functionArn,
+            eventSourceArn: eventSourceArn
+        }
+        return this.http.post(this.url, body, {headers: headers});
+    }
+
+    /**
      * @brief Deletes a S3 bucket. This will delete all objects of that bucket.
      *
      * @param bucketName bucket name
@@ -221,23 +237,4 @@ export class S3Service {
         }
         return this.http.post(this.url, body, {headers: headers});
     }
-
-    /*
-        public download(): string {
-            // create a write stream for a file
-            const params: GetObjectStreamInput = {
-                Bucket: 'file-delivery',
-                Key: 'ftpuser1/Onix21_13042025141953185.xml'
-            };
-            const chunks: any[] = [];
-            this.managedDownloader.getObjectStream(params)
-                .then(async (stream: any) => {
-                    for await (const chunk of stream) {
-                        chunks.push(Buffer.from(chunk));
-                    }
-                }, (err: any) => {
-                    console.error(err);
-                });
-            return Buffer.concat(chunks).toString("utf-8");
-        }*/
 }

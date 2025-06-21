@@ -4,20 +4,17 @@ import {CreateBucketCommand, DeleteBucketCommand, DeleteObjectCommand, GetObject
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {S3ObjectMetadata} from "../model/s3-object-item";
-//
-// const s3: S3 = new S3();
-// const options: any = {
-//     maxPartSize: 10 * 1024 * 1024,
-//     maxConcurrency: 5
-// };
 
 @Injectable({providedIn: 'root'})
 export class S3Service {
 
     // S3 client for AWS calls
+    baseUrl: string = <string>localStorage.getItem("backendUrl");
+    user: string = <string>localStorage.getItem("user");
+    region: string = <string>localStorage.getItem("region");
     client = new S3Client({
-        region: environment.awsmockRegion,
-        endpoint: environment.gatewayEndpoint,
+        region: this.region,
+        endpoint: this.baseUrl,
         forcePathStyle: true,
         credentials: {
             accessKeyId: 'none',
@@ -32,15 +29,10 @@ export class S3Service {
     // Default headers for AwsMock HTTP requests
     headers: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
+        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/' + this.region + '/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
-    url: string = environment.gatewayEndpoint + '/';
 
-//    private managedDownloader: any;
-
-    constructor(private http: HttpClient) {
-        // @ts-ignore
-        //   this.managedDownloader = new ManagedDownloader(s3, options);
+    constructor(private readonly http: HttpClient) {
     }
 
     createBucket(bucketName: string) {
@@ -108,7 +100,7 @@ export class S3Service {
             pageIndex: pageIndex,
             sortColumns: sortColumns
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -138,7 +130,7 @@ export class S3Service {
             pageIndex: pageIndex,
             sortColumns: sortColumns
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -152,7 +144,7 @@ export class S3Service {
             region: environment.awsmockRegion,
             bucketName: bucketName
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -166,7 +158,7 @@ export class S3Service {
             region: environment.awsmockRegion,
             id: id
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -182,7 +174,7 @@ export class S3Service {
             functionArn: functionArn,
             eventSourceArn: eventSourceArn
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -196,7 +188,7 @@ export class S3Service {
             region: environment.awsmockRegion,
             bucketName: bucketName
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -208,7 +200,7 @@ export class S3Service {
     public touchObject(bucket: string, key: string) {
         let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'TouchObject');
         const body = {region: environment.awsmockRegion, bucket: bucket, key: key}
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -221,7 +213,7 @@ export class S3Service {
     public updateObject(bucket: string, key: string, metadata: S3ObjectMetadata[]) {
         let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'UpdateObject');
         const body = {region: environment.awsmockRegion, bucket: bucket, key: key, metadata: metadata}
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -235,6 +227,6 @@ export class S3Service {
             region: environment.awsmockRegion,
             bucketName: bucketName
         }
-        return this.http.post(this.url, body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 }

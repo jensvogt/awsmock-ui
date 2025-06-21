@@ -9,9 +9,12 @@ import {AddEventSourceRequest, UpdateEventSourceRequest} from "../model/lambda-e
 export class LambdaService {
 
     // Default headers for AwsMock HTTP requests
+    baseUrl: string = <string>localStorage.getItem("backendUrl");
+    user: string = <string>localStorage.getItem("user");
+    region: string = <string>localStorage.getItem("region");
     headers: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
+        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/' + this.region + 'eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
 
     constructor(private readonly http: HttpClient) {
@@ -34,7 +37,7 @@ export class LambdaService {
             skip: pageSize * pageIndex,
             sortColumns: sortColumns
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -47,7 +50,7 @@ export class LambdaService {
         const body = {
             functionArn: functionArn
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -61,7 +64,7 @@ export class LambdaService {
             region: environment.awsmockRegion,
             functionName: name
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -71,7 +74,7 @@ export class LambdaService {
      */
     public createFunction(request: CreateFunctionRequest) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'functions');
-        return this.http.post(<string>localStorage.getItem('backendUrl') + "/2025-01-01/functions", request, {headers: headers});
+        return this.http.post(this.baseUrl + "/2025-01-01/functions", request, {headers: headers});
     }
 
     /**
@@ -83,7 +86,7 @@ export class LambdaService {
      */
     public uploadFunctionCode(functionArn: string, functionCode: string, version: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'upload-function-code');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {FunctionArn: functionArn, FunctionCode: functionCode, Version: version}, {headers: headers});
+        return this.http.post(this.baseUrl, {FunctionArn: functionArn, FunctionCode: functionCode, Version: version}, {headers: headers});
     }
 
     /**
@@ -93,7 +96,7 @@ export class LambdaService {
      */
     public startFunction(functionArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'start-function');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {FunctionArn: functionArn}, {headers: headers});
+        return this.http.post(this.baseUrl, {FunctionArn: functionArn}, {headers: headers});
     }
 
     /**
@@ -103,7 +106,7 @@ export class LambdaService {
      */
     public stopFunction(functionArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-function');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {FunctionArn: functionArn}, {headers: headers});
+        return this.http.post(this.baseUrl, {FunctionArn: functionArn}, {headers: headers});
     }
 
     /**
@@ -116,7 +119,7 @@ export class LambdaService {
      */
     public listEnvironmentCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ListEnvironmentCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -129,7 +132,7 @@ export class LambdaService {
     public addEnvironment(functionArn: string, key: string, value: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'AddFunctionEnvironment');
         const body = {FunctionArn: functionArn, Key: key, Value: value}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -142,7 +145,7 @@ export class LambdaService {
     public updateEnvironment(functionArn: string, key: string, value: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'UpdateFunctionEnvironment');
         const body = {FunctionArn: functionArn, Key: key, Value: value}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -154,7 +157,7 @@ export class LambdaService {
     public deleteEnvironment(functionArn: string, key: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'DeleteFunctionEnvironment');
         const body = {FunctionArn: functionArn, Key: key}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -167,7 +170,7 @@ export class LambdaService {
      */
     public listEventSourceCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-event-source-counters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -177,7 +180,7 @@ export class LambdaService {
      */
     public addEventSource(request: AddEventSourceRequest) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'add-event-source-counter');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
+        return this.http.post(this.baseUrl, request, {headers: headers});
     }
 
     /**
@@ -187,7 +190,7 @@ export class LambdaService {
      */
     public updateEventSource(request: UpdateEventSourceRequest) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'update-event-source-counter');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), request, {headers: headers});
+        return this.http.post(this.baseUrl, request, {headers: headers});
     }
 
     /**
@@ -200,7 +203,7 @@ export class LambdaService {
      */
     public listTagCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'ListTagCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -212,7 +215,7 @@ export class LambdaService {
     public deleteEventSource(functionArn: string, eventSourceArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-event-source-counter');
         const body = {FunctionArn: functionArn, EventSourceArn: eventSourceArn}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -225,7 +228,7 @@ export class LambdaService {
     public addTag(functionArn: string, key: string, value: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'add-function-tag');
         const body = {FunctionArn: functionArn, Key: key, Value: value}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -238,7 +241,7 @@ export class LambdaService {
     public updateTag(functionArn: string, key: string, value: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'update-function-tag');
         const body = {FunctionArn: functionArn, Key: key, Value: value}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -250,7 +253,7 @@ export class LambdaService {
     public deleteTag(functionArn: string, key: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-function-tag');
         const body = {FunctionArn: functionArn, Key: key}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -263,7 +266,7 @@ export class LambdaService {
      */
     public listInstanceCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-instance-counters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -274,7 +277,7 @@ export class LambdaService {
      */
     public deleteInstance(functionArn: string, instanceId: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-instance');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {functionArn: functionArn, instanceId: instanceId}, {headers: headers});
+        return this.http.post(this.baseUrl, {functionArn: functionArn, instanceId: instanceId}, {headers: headers});
     }
 
     /**
@@ -285,7 +288,7 @@ export class LambdaService {
     public deleteImage(functionArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-image');
         const body = {FunctionArn: functionArn}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -296,7 +299,7 @@ export class LambdaService {
     public deleteFunction(functionName: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-function');
         const body = {Region: environment.awsmockRegion, FunctionName: functionName}
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -304,7 +307,7 @@ export class LambdaService {
      */
     public listLambdaArns() {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-arns');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {}, {headers: headers});
+        return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 
     /**
@@ -312,7 +315,7 @@ export class LambdaService {
      */
     public listLambdaResultCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-lambda-result-counters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -320,7 +323,7 @@ export class LambdaService {
      */
     public getLambdaResultCounter(resultOid: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'get-lambda-result-counter');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {oid: resultOid}, {headers: headers});
+        return this.http.post(this.baseUrl, {oid: resultOid}, {headers: headers});
     }
 
     /**
@@ -328,7 +331,7 @@ export class LambdaService {
      */
     public deleteLambdaResultCounter(oid: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-lambda-result-counter');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {oid: oid}, {headers: headers});
+        return this.http.post(this.baseUrl, {oid: oid}, {headers: headers});
     }
 
     /**
@@ -336,6 +339,6 @@ export class LambdaService {
      */
     public deleteLambdaResultCounters(lambdaArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'delete-lambda-result-counters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {lambdaArn: lambdaArn}, {headers: headers});
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn}, {headers: headers});
     }
 }

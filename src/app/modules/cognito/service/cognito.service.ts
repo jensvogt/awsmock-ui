@@ -8,12 +8,15 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 export class CognitoService {
 
     // Default headers for AwsMock HTTP requests
+    baseUrl: string = <string>localStorage.getItem("backendUrl");
+    user: string = <string>localStorage.getItem("user");
+    region: string = <string>localStorage.getItem("region");
     headers: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/cognito-idp/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
+        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/' + this.region + 'eu-central-1/cognito-idp/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
 
-    constructor(private http: HttpClient) {
+    constructor(private readonly http: HttpClient) {
     }
 
     /**
@@ -28,7 +31,7 @@ export class CognitoService {
             pageIndex: pageIndex,
             sortColumns: sortColumns
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     public listUserCounters(userPoolId: string, maxResults: number, pageIndex: number, sortColumns: SortColumn[]) {
@@ -40,7 +43,7 @@ export class CognitoService {
             PageIndex: pageIndex,
             SortColumns: sortColumns
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     public deleteUserPool(userPoolId: string) {
@@ -49,7 +52,7 @@ export class CognitoService {
             Region: environment.awsmockRegion,
             UserPoolId: userPoolId
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     public deleteUser(userPoolId: string, userName: string) {
@@ -59,7 +62,7 @@ export class CognitoService {
             UserPoolId: userPoolId,
             Username: userName
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     public confirmUser(userPoolId: string, userName: string) {
@@ -69,7 +72,7 @@ export class CognitoService {
             UserPoolId: userPoolId,
             Username: userName
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     public createUserPool(userPoolName: string) {
@@ -78,7 +81,7 @@ export class CognitoService {
             Region: environment.awsmockRegion,
             PoolName: userPoolName
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     public createUser(userPoolId: string, userName: string) {
@@ -88,7 +91,7 @@ export class CognitoService {
             Username: userName,
             UserPoolId: userPoolId
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     public getUser(userPoolId: string, userName: string) {
@@ -98,6 +101,6 @@ export class CognitoService {
             Username: userName,
             UserPoolId: userPoolId
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 }

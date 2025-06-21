@@ -2,20 +2,22 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {SqsMessageAttribute} from "../model/sqs-message-item";
-import {Store} from "@ngrx/store";
-import {RootState} from "../../../state/root.reducer";
 import {environment} from "../../../../environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class SqsService {
 
     // Default headers for AwsMock HTTP requests
+    baseUrl: string = <string>localStorage.getItem("backendUrl");
+    user: string = <string>localStorage.getItem("user");
+    region: string = <string>localStorage.getItem("region");
     headers: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/eu-central-1/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
+        'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/' + this.region + '/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
 
-    constructor(private readonly http: HttpClient, private readonly store: Store<RootState>) {
+    constructor(private readonly http: HttpClient) {
+
     }
 
     /**
@@ -25,7 +27,7 @@ export class SqsService {
      */
     public createQueue(queueName: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'CreateQueue');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueName: queueName}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueName: queueName}, {headers: headers});
     }
 
     /**
@@ -33,7 +35,7 @@ export class SqsService {
      */
     public listQueueArns() {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueArns');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {}, {headers: headers});
+        return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 
     /**
@@ -43,7 +45,7 @@ export class SqsService {
      */
     purgeQueue(queueUrl: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'PurgeQueue');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueUrl: queueUrl}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueUrl: queueUrl}, {headers: headers});
     }
 
     /**
@@ -56,7 +58,7 @@ export class SqsService {
      */
     public listQueueCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -66,7 +68,7 @@ export class SqsService {
      */
     public getQueueDetails(queueArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'GetQueueDetails');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueArn: queueArn}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueArn: queueArn}, {headers: headers});
     }
 
     /**
@@ -76,7 +78,7 @@ export class SqsService {
      */
     public getQueueUrl(queueName: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'GetQueueUrl');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueName: queueName}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueName: queueName}, {headers: headers});
     }
 
     /**
@@ -89,7 +91,7 @@ export class SqsService {
      */
     public listQueueAttributeCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListQueueAttributeCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -102,7 +104,7 @@ export class SqsService {
      */
     public listLambdaTriggerCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListLambdaTriggerCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -118,7 +120,7 @@ export class SqsService {
             functionArn: functionArn,
             eventSourceArn: eventSourceArn
         }
-        return this.http.post(<string>localStorage.getItem('backendUrl'), body, {headers: headers});
+        return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
     /**
@@ -130,7 +132,7 @@ export class SqsService {
      */
     addTag(queueUrl: string, key: string, value: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'TagQueue');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueUrl: queueUrl, Tags: {[key]: value}}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueUrl: queueUrl, Tags: {[key]: value}}, {headers: headers});
     }
 
     /**
@@ -142,7 +144,7 @@ export class SqsService {
      */
     updateDql(queueArn: string, dlqTargetArn: string, dlqRetries: number) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'UpdateDlq');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueArn: queueArn, TargetArn: dlqTargetArn, Retries: dlqRetries}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueArn: queueArn, TargetArn: dlqTargetArn, Retries: dlqRetries}, {headers: headers});
     }
 
     /**
@@ -155,7 +157,7 @@ export class SqsService {
      */
     public listTagCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListTagCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -166,7 +168,7 @@ export class SqsService {
      */
     deleteTag(queueUrl: string, key: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'UntagQueue');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueUrl: queueUrl, TagKeys: [key]}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueUrl: queueUrl, TagKeys: [key]}, {headers: headers});
     }
 
     /**
@@ -176,7 +178,7 @@ export class SqsService {
      */
     public deleteQueue(queueUrl: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteQueue');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueUrl: queueUrl}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueUrl: queueUrl}, {headers: headers});
     }
 
     /**
@@ -186,7 +188,7 @@ export class SqsService {
      */
     public redriveMessages(queueArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'RedriveMessages');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn}, {headers: headers});
+        return this.http.post(this.baseUrl, {queueArn: queueArn}, {headers: headers});
     }
 
     /**
@@ -200,7 +202,7 @@ export class SqsService {
      */
     public listMessageCounters(queueArn: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListMessageCounters');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn, prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+        return this.http.post(this.baseUrl, {queueArn: queueArn, prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
     /**
@@ -213,7 +215,7 @@ export class SqsService {
      */
     public sendMessage(queueUrl: string, message: string, delaySeconds: number, messageAttributes: any) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'SendMessage');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds, MessageAttributes: messageAttributes}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueUrl: queueUrl, MessageBody: message, DelaySeconds: delaySeconds, MessageAttributes: messageAttributes}, {headers: headers});
     }
 
     /**
@@ -224,7 +226,7 @@ export class SqsService {
      */
     public resendMessage(queueArn: string, messageId: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ResendMessage');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {queueArn: queueArn, messageId: messageId}, {headers: headers});
+        return this.http.post(this.baseUrl, {queueArn: queueArn, messageId: messageId}, {headers: headers});
     }
 
     /**
@@ -235,7 +237,7 @@ export class SqsService {
      */
     public updateMessage(messageId: string, messageAttributes: SqsMessageAttribute[]) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'UpdateMessage');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {MessageId: messageId, MessageAttributes: messageAttributes}, {headers: headers});
+        return this.http.post(this.baseUrl, {MessageId: messageId, MessageAttributes: messageAttributes}, {headers: headers});
     }
 
     /**
@@ -246,7 +248,7 @@ export class SqsService {
      */
     public deleteAttribute(messageId: string, name: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteAttribute');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {MessageId: messageId, Name: name}, {headers: headers});
+        return this.http.post(this.baseUrl, {MessageId: messageId, Name: name}, {headers: headers});
     }
 
     /**
@@ -257,6 +259,6 @@ export class SqsService {
      */
     public deleteMessage(queueUrl: string, receiptHandle: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteMessage');
-        return this.http.post(<string>localStorage.getItem('backendUrl'), {QueueUrl: queueUrl, ReceiptHandle: receiptHandle}, {headers: headers});
+        return this.http.post(this.baseUrl, {QueueUrl: queueUrl, ReceiptHandle: receiptHandle}, {headers: headers});
     }
 }

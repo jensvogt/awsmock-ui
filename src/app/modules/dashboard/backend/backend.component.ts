@@ -6,8 +6,6 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {ModuleService} from "../../../services/module.service";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {State, Store} from "@ngrx/store";
-import {RootState} from "../../../state/root.reducer";
 
 @Component({
     selector: 'backend-dialog',
@@ -33,9 +31,13 @@ import {RootState} from "../../../state/root.reducer";
 export class BackendDialog implements OnInit {
 
     url: string | null = '';
+    region: string | null = '';
+    user: string | null = '';
 
-    constructor(private readonly dialogRef: MatDialogRef<BackendDialog>, private readonly state: State<RootState>, private readonly store: Store<RootState>) {
+    constructor(private readonly dialogRef: MatDialogRef<BackendDialog>) {
         this.url = localStorage.getItem('backendUrl');
+        this.region = localStorage.getItem('region');
+        this.user = localStorage.getItem('user');
     }
 
     ngOnInit() {
@@ -43,8 +45,14 @@ export class BackendDialog implements OnInit {
     }
 
     save() {
-        if(this.url !== null){
+        if (this.url?.startsWith(`http://`)) {
             localStorage.setItem('backendUrl', this.url);
+        }
+        if (this.region) {
+            localStorage.setItem('region', this.region);
+        }
+        if (this.user) {
+            localStorage.setItem('user', this.user);
         }
         this.dialogRef.close();
     }

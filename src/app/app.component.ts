@@ -16,7 +16,15 @@ export class AppComponent {
     title: string = 'awsmock.ui';
 
     constructor(private readonly router: Router, private readonly dialog: MatDialog) {
-        localStorage.setItem('backendUrl', "http://localhost:4566");
+        if (!localStorage.getItem("backendUrl")) {
+            localStorage.setItem('backendUrl', "http://localhost:4566");
+        }
+        if (!localStorage.getItem("region")) {
+            localStorage.setItem('region', "eu-central-1");
+        }
+        if (!localStorage.getItem("user")) {
+            localStorage.setItem('user', "none");
+        }
     }
 
     navigateMenu() {

@@ -13,6 +13,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {ListKeyCountersResponse} from "../model/key-item";
 import {KmsService} from "../service/kms-service.component";
+import {KeyAddComponentDialog} from "../key-add/key-add.component";
+import {KmsKeyAddRequest} from "../model/key-add-request";
 
 @Component({
     selector: 'kms-key-list-component',
@@ -124,20 +126,21 @@ export class KmsKeyListComponent implements OnInit, OnDestroy {
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
 
-        /*this.dialog.open(KeyAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(KeyAddComponentDialog, dialogConfig).afterClosed().subscribe((result: KmsKeyAddRequest) => {
+            console.log("Dialog result: ", result);
             if (result) {
                 this.kmsService.createKey(result).subscribe(() => {
                     this.loadKeys();
-                    this.snackBar.open('SNS key created, name: ' + result, 'Done', {duration: 5000})
+                    this.snackBar.open('KMS key created, name: ' + result.keyUsage, 'Done', {duration: 5000})
                 });
             }
-        });*/
+        });
     }
 
     deleteKey(keyArn: string) {
-        /*this.kmsService.deleteKey(keyArn).subscribe(() => {
+        this.kmsService.deleteKey(keyArn).subscribe(() => {
             this.loadKeys();
-            this.snackBar.open('SNS key deleted, keyArn: ' + keyArn, 'Done', {duration: 5000})
-        });*/
+            this.snackBar.open('KMS key deleted, keyArn: ' + keyArn, 'Done', {duration: 5000})
+        });
     }
 }

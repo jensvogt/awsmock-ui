@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Add KMS Key Topic</h2>
+<mat-dialog-content class="mat-typography" style="width: 500px">
+    <mat-form-field style="width: 100%">
+        <mat-label>Key Usage</mat-label>
+        <mat-select [(ngModel)]="selectedKeyUsage">
+            @for (keyUsage of KeyUsage; track keyUsage) {
+                <mat-option [value]="keyUsage.value">{{ keyUsage.viewValue }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Key Specification</mat-label>
+        <mat-select [(ngModel)]="selectedKeySpec">
+            @for (keySpec of KeySpec; track keySpec) {
+                <mat-option [value]="keySpec.value">{{ keySpec.viewValue }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+        <mat-label>Origin</mat-label>
+        <mat-select [(ngModel)]="selectedOrigin">
+            @for (origin of Origin; track origin) {
+                <mat-option [value]="origin.value">{{ origin.viewValue }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 100%;height:100%">
+        <mat-label>Description:</mat-label>
+        <textarea [(ngModel)]="description" cdkAutosizeMinRows="10" cdkTextareaAutosize matInput placeholder="Description" style="width:100%; height:100%"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+</mat-dialog-actions>

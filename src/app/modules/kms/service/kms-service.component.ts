@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {KmsKeyAddRequest} from "../model/key-add-request";
 
 @Injectable({providedIn: 'root'})
 export class KmsService {
@@ -18,15 +19,14 @@ export class KmsService {
     }
 
     /**
-     * @brief Create a new topic.
+     * @brief Create a new key.
      *
-     * @param topicName topic name
+     * @param request add key request
      */
-
-    /*createTopic(topicName: string) {
-        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'CreateTopic');
-        return this.http.post(this.baseUrl, "Name=" + topicName, {headers: headers, responseType: 'text'});
-    }*/
+    createKey(request: KmsKeyAddRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'kms').set('x-awsmock-action', 'create-key');
+        return this.http.post(this.baseUrl, request, {headers: headers, responseType: 'text'});
+    }
 
     /**
      * @brief List all keys
@@ -37,8 +37,17 @@ export class KmsService {
      * @param sortColumns sorting columns
      */
     public listKeyCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
-        let headers = this.headers.set('x-awsmock-target', 'kms').set('x-awsmock-action', 'ListKeyCounters');
+        let headers = this.headers.set('x-awsmock-target', 'kms').set('x-awsmock-action', 'list-key-counters');
         return this.http.post(this.baseUrl, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
     }
 
+    /**
+     * @brief Delete a key
+     *
+     * @param keyId key ID
+     */
+    deleteKey(keyId: string) {
+        let headers = this.headers.set('x-awsmock-target', 'kms').set('x-awsmock-action', 'delete-key');
+        return this.http.post(this.baseUrl, {keyId: keyId}, {headers: headers, responseType: 'text'});
+    }
 }

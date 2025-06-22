@@ -73,8 +73,8 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private snsService: SnsService, private route: ActivatedRoute, private dialog: MatDialog,
-                private location: Location, private store: Store, private state: State<SnsTopicDetailsState>) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly snsService: SnsService, private readonly route: ActivatedRoute, private readonly dialog: MatDialog,
+                private readonly location: Location, private readonly store: Store, private readonly state: State<SnsTopicDetailsState>) {
     }
 
     ngOnInit() {
@@ -87,7 +87,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
             this.loadAttributes();
         });
         this.topicDetailsError$.subscribe((msg: string) => {
-            if (msg && msg.length) {
+            if (msg?.length) {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });
@@ -107,21 +107,19 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
     // ===================================================================================================================
     // Details
-
+    // ===================================================================================================================
     refresh() {
         this.loadTopicDetails();
         this.loadSubscriptions();
     }
 
-    // ===================================================================================================================
-    // Subscriptions
-
-    // ===================================================================================================================
     loadTopicDetails() {
         this.store.dispatch(snsTopicDetailsActions.loadDetails({topicArn: this.topicArn}));
         this.lastUpdate = new Date();
     }
 
+    // ===================================================================================================================
+    // Subscriptions
     // ===================================================================================================================
     handleSubscriptionPageEvent(e: PageEvent) {
         this.state.value['sns-topic-details'].subscriptionPageSize = e.pageSize;
@@ -179,7 +177,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
     // ===================================================================================================================
     // Tags
-
+    // ===================================================================================================================
     addSubscription() {
         const dialogConfig = new MatDialogConfig();
 
@@ -198,7 +196,6 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    // ===================================================================================================================
     handleTagPageEvent(e: PageEvent) {
         this.state.value['sns-topic-details'].tagPageSize = e.pageSize;
         this.state.value['sns-topic-details'].tagPageIndex = e.pageIndex;
@@ -259,7 +256,7 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
 
     // ===================================================================================================================
     // Attributes
-
+    // ===================================================================================================================
     addTag() {
         const dialogConfig = new MatDialogConfig();
 
@@ -278,7 +275,6 @@ export class SnsTopicDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    // ===================================================================================================================
     handleAttributePageEvent(e: PageEvent) {
         this.state.value['sns-topic-details'].attributePageSize = e.pageSize;
         this.state.value['sns-topic-details'].attributePageIndex = e.pageIndex;

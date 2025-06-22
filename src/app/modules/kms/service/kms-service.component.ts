@@ -42,6 +42,16 @@ export class KmsService {
     }
 
     /**
+     * @brief Load key details
+     *
+     * @param keyId key ID
+     */
+    public getKeyDetails(keyId: string) {
+        let headers = this.headers.set('x-awsmock-target', 'kms').set('x-awsmock-action', 'describe-key');
+        return this.http.post(this.baseUrl, {KeyId: keyId}, {headers: headers});
+    }
+
+    /**
      * @brief Delete a key
      *
      * @param keyId key ID

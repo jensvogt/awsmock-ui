@@ -32,7 +32,7 @@ export class KmsKeyListComponent implements OnInit, OnDestroy {
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     listKeyCountersResponse$: Observable<ListKeyCountersResponse> = this.store.select(selectKeyCounters);
-    columns: any[] = ['keyId', 'keyUsage', 'keySpec', 'created', 'modified', 'actions'];
+    columns: any[] = ['keyId', 'keyState', 'keyUsage', 'keySpec', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -59,7 +59,7 @@ export class KmsKeyListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loadKeys();
         this.updateSubscription = interval(60000).subscribe(() => this.loadKeys());
-        this.listKeyCountersResponse$.subscribe((data) => console.log("Key list data: ", data));
+        //this.listKeyCountersResponse$.subscribe((data) => console.log("Key list data: ", data));
     }
 
     ngOnDestroy(): void {
@@ -127,7 +127,6 @@ export class KmsKeyListComponent implements OnInit, OnDestroy {
         dialogConfig.autoFocus = true;
 
         this.dialog.open(KeyAddComponentDialog, dialogConfig).afterClosed().subscribe((result: KmsKeyAddRequest) => {
-            console.log("Dialog result: ", result);
             if (result) {
                 this.kmsService.createKey(result).subscribe(() => {
                     this.loadKeys();

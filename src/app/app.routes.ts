@@ -130,6 +130,10 @@ export const routes: Routes = [
                 path: 'kms-key-list',
                 loadChildren: () => import('./modules/kms/kms.module').then(module => module.KmsModule),
             },
+            {
+                path: 'kms',
+                loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
+            },
             //=========================================================================
             // Not found
             //=========================================================================

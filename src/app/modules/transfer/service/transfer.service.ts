@@ -15,7 +15,7 @@ export class TransferService {
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/' + this.region + 'eu-central-1/transfer/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
 
-    constructor(private http: HttpClient) {
+    constructor(private readonly http: HttpClient) {
     }
 
     /**

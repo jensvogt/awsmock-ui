@@ -48,6 +48,10 @@
                                 </div>
                             </td>
                         </ng-container>
+                        <ng-container matColumnDef="keyState">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Key state" sortActionDescription="Sort by key state">State</th>
+                            <td *matCellDef="let element" mat-cell>{{ element.keyState }}</td>
+                        </ng-container>
                         <ng-container matColumnDef="keyUsage">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Key usage" sortActionDescription="Sort by key usage">Usage</th>
                             <td *matCellDef="let element" mat-cell>{{ element.keyUsage }}</td>
@@ -57,25 +61,19 @@
                             <td *matCellDef="let element" mat-cell>{{ element.keySpec }}</td>
                         </ng-container>
                         <ng-container matColumnDef="created">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic creation timestamp" sortActionDescription="Sort by created">
-                                Created
-                            </th>
-                            <td *matCellDef="let element" mat-cell>
-                                {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
-                            </td>
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic creation timestamp" sortActionDescription="Sort by created">Created</th>
+                            <td *matCellDef="let element" mat-cell>{{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="modified">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Modified</th>
-                            <td *matCellDef="let element" mat-cell>
-                                {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
-                            </td>
+                            <td *matCellDef="let element" mat-cell>{{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button [matTooltipShowDelay]="1000" aria-label="Details" mat-icon-button matTooltip="Edit key" routerLink="./details/{{ row.keyId }}">
+                                <!--button [matTooltipShowDelay]="1000" aria-label="Details" mat-icon-button matTooltip="Edit key" routerLink="./details/{{ row.keyId }}">
                                     <mat-icon>edit</mat-icon>
-                                </button>
+                                </button-->
                                 <button (click)="deleteKey(row.keyId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the key">
                                     <mat-icon>delete</mat-icon>
                                 </button>

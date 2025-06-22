@@ -68,6 +68,7 @@ export class KeyAddComponentDialog {
     selectedOrigin: string = 'AWS_KMS';
     keyAddRequest: KmsKeyAddRequest = {keyUsage: '', keySpec: '', description: '', origin: ''};
     description: string = '';
+    enabled: boolean = false;
 
     protected readonly KeyUsage = KeyUsage;
     protected readonly KeySpec = KeySpec;
@@ -78,6 +79,7 @@ export class KeyAddComponentDialog {
 
     save() {
         this.keyAddRequest = {keySpec: this.selectedKeySpec, keyUsage: this.selectedKeyUsage, description: this.description, origin: this.selectedOrigin}
+        console.log(this.keyAddRequest);
         this.dialogRef.close(this.keyAddRequest);
     }
 }

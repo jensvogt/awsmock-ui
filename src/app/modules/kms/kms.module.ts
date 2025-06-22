@@ -29,9 +29,12 @@ import {KmsKeyListComponent} from "./key-list/key-list.component";
 import {KmsService} from "./service/kms-service.component";
 import {kmsKeyListFeatureKey, kmsKeyListReducer} from "./key-list/state/key-list.reducer";
 import {KMSKeyListEffects} from "./key-list/state/key-list.effects";
+import {KmsKeyDetailComponent} from "./key-detail/key-detail.component";
+import {kmsKeyDetailReducer, kmsKeyDetailsFeatureKey} from "./key-detail/state/kms-key-detail.reducer";
+import {KmsKeyDetailEffects} from "./key-detail/state/kms-key-detail.effects";
 
 @NgModule({
-    declarations: [KmsKeyListComponent],
+    declarations: [KmsKeyListComponent, KmsKeyDetailComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -76,9 +79,8 @@ import {KMSKeyListEffects} from "./key-list/state/key-list.effects";
         AsyncPipe,
         KmsRoutingModule,
         StoreModule.forFeature(kmsKeyListFeatureKey, kmsKeyListReducer),
-//        StoreModule.forFeature(snsTopicDetailsFeatureKey, snsTopicDetailReducer),
-//        StoreModule.forFeature(snsMessageListFeatureKey, snsMessageListReducer),
-        EffectsModule.forFeature([KMSKeyListEffects/*, SnsTopicDetailEffects, SnsMessageListEffects*/]),
+        StoreModule.forFeature(kmsKeyDetailsFeatureKey, kmsKeyDetailReducer),
+        EffectsModule.forFeature([KMSKeyListEffects, KmsKeyDetailEffects]),
         MatDialogContent,
         CdkTextareaAutosize,
         CdkDrag,
@@ -94,7 +96,7 @@ import {KMSKeyListEffects} from "./key-list/state/key-list.effects";
         MatMenuItem,
         MatMenuTrigger,
     ],
-    exports: [KmsKeyListComponent],
+    exports: [KmsKeyListComponent, KmsKeyDetailComponent],
     providers: [KmsService],
 })
 export class KmsModule {

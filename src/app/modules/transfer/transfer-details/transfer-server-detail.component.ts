@@ -61,8 +61,8 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
     client: any;
     private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private transferService: TransferService, private route: ActivatedRoute, private dialog: MatDialog,
-                private location: Location, private store: Store, private state: State<TransferServerDetailsState>) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly transferService: TransferService, private readonly route: ActivatedRoute, private readonly dialog: MatDialog,
+                private readonly location: Location, private readonly store: Store, private readonly state: State<TransferServerDetailsState>) {
         // this.client = new SftpClient();
     }
 
@@ -75,7 +75,7 @@ export class TransferServerDetailComponent implements OnInit, OnDestroy {
             this.loadTags();
         });
         this.serverDetailsError$.subscribe((msg: string) => {
-            if (msg && msg.length) {
+            if (msg?.length) {
                 this.snackBar.open("ErrorMessage: " + msg.toString())
             }
         });

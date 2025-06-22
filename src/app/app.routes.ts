@@ -124,6 +124,13 @@ export const routes: Routes = [
                 loadChildren: () => import('./modules/secretsmanager/secretsmanager.module').then(module => module.SecretsmanagerModule),
             },
             //=========================================================================
+            // KMS
+            //=========================================================================
+            {
+                path: 'kms-key-list',
+                loadChildren: () => import('./modules/kms/kms.module').then(module => module.KmsModule),
+            },
+            //=========================================================================
             // Not found
             //=========================================================================
             {

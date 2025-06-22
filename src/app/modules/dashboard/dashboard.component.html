@@ -6,7 +6,7 @@
                     <mat-card-title>Services</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <mat-grid-list cols="2" rowHeight="200px">
+                    <mat-grid-list cols="3" rowHeight="200px">
                         <mat-grid-tile [colspan]="1" [rowspan]="1">
                             <div style="margin-left: -10px; width: 100%; height: 100%;">
                                 <mat-nav-list style="height:200px">
@@ -18,12 +18,19 @@
                             </div>
                         </mat-grid-tile>
                         <mat-grid-tile [colspan]="1" [rowspan]="1">
-                            <div style="margin-left: -10px;; width: 100%; height: 100%;">
+                            <div style="margin-left: -10px; width: 100%; height: 100%;">
                                 <mat-nav-list>
                                     <a href="/lambda-function-list" mat-list-item>Lambdas</a>
                                     <a href="/dynamodb-table-list" mat-list-item>DynamoDB</a>
                                     <a href="/transfer-server-list" mat-list-item>Transfer Server</a>
                                     <a href="/secret-list" mat-list-item>Secret Manager</a>
+                                </mat-nav-list>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]="1" [rowspan]="1">
+                            <div style="margin-left: -10px; width: 100%; height: 100%;">
+                                <mat-nav-list>
+                                    <a href="/kms-key-list" mat-list-item>Key Management</a>
                                 </mat-nav-list>
                             </div>
                         </mat-grid-tile>

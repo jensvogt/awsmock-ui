@@ -1,0 +1,107 @@
+<mat-card appearance="outlined" style="margin: 3px">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
+            KMS Keys ({{ (listKeyCountersResponse$ | async)?.total }})
+        </span>
+        <button (click)="addKey()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>add</mat-icon>
+        </button>
+        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button [matTooltipShowDelay]="1000" [routerLink]="['/sns-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
+            <mat-icon>
+                <span class="material-symbols-outlined">monitoring</span>
+            </mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card appearance="outlined" style="margin: -10px;">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+                    <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>close</mat-icon>
+                    </button>
+                    <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-card-actions>
+            <div class="table-container">
+                <div *ngIf="listKeyCountersResponse$ | async as keyCounters" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="keyCounters.keyCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
+                        <ng-container matColumnDef="keyId">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Key ID" sortActionDescription="Sort by key ID">ID</th>
+                            <td *matCellDef="let element" mat-cell>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a mat-list-item routerLink="./messages/{{ element.topicArn }}">{{ element.keyId }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="keyUsage">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Key usage" sortActionDescription="Sort by key usage">Usage</th>
+                            <td *matCellDef="let element" mat-cell>{{ element.keyUsage }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="keySpec">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Key spec" sortActionDescription="Sort by key spec">Spec</th>
+                            <td *matCellDef="let element" mat-cell>{{ element.keySpec }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="created">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic creation timestamp" sortActionDescription="Sort by created">
+                                Created
+                            </th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modified">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Modified</th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button [matTooltipShowDelay]="1000" aria-label="Details" mat-icon-button matTooltip="Edit key" routerLink="./details/{{ row.keyId }}">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="deleteKey(row.keyId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the key">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <mat-paginator (page)="handlePageEvent($event)"
+                           [disabled]="disabled"
+                           [hidePageSize]="hidePageSize"
+                           [length]="(listKeyCountersResponse$ | async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
+                           [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                           [pageSize]="(pageSize$ | async)"
+                           [showFirstLastButtons]="showFirstLastButtons"
+                           aria-label="Select page" style="width:99%; margin-left:15px">
+            </mat-paginator>
+        </mat-card>
+        <footer-component [lastUpdate]="lastUpdate"/>
+    </mat-card-content>
+</mat-card>

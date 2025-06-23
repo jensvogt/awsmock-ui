@@ -27,7 +27,10 @@
                 <ng-container matColumnDef="actions">
                     <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                     <td *matCellDef="let row" mat-cell>
-                        <button (click)="deleteAttribute(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                        <button (click)="editAttribute(row.name)" aria-label="Edit attribute" mat-icon-button matTooltip="Edit attribute">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button (click)="deleteAttribute(row.name)" aria-label="Delete attribute" mat-icon-button matTooltip="Delete attribute">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </td>

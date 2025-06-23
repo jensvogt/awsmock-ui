@@ -7,6 +7,7 @@ import {Sort} from "@angular/material/sort";
 import {SqsMessageAttribute} from "../model/sqs-message-item";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
+import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
 
 @Component({
     selector: 'queue-send-message-dialog',
@@ -31,7 +32,7 @@ export class SendMessageComponentDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(private dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private fileDialog: MatDialog, private dialog: MatDialog) {
+    constructor(private readonly dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly fileDialog: MatDialog, private readonly dialog: MatDialog) {
         this.queueUrl = data.queueUrl;
         this.queueName = this.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
     }
@@ -78,6 +79,26 @@ export class SendMessageComponentDialog implements OnInit {
             });
             this.messageAttributes = new MatTableDataSource(this.attributes);
         }
+    }
+
+    editAttribute(key: string) {
+
+        let localAttributes: SqsMessageAttribute[] = this.attributes.filter(element => {
+            return element.name === key
+        });
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {attribute: localAttributes[0]};
+
+        this.dialog.open(SqsMessageAttributeEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.attributes.push({name: result.Key, stringValue: result.Value, dataType: result.DataType, stringListValues: []});
+                this.messageAttributes = new MatTableDataSource(this.attributes);
+                this.messageAttributeLength = this.attributes.length;
+            }
+        });
     }
 
     addAttribute() {

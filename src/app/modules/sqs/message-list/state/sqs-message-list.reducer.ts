@@ -45,4 +45,14 @@ export const sqsMessageListReducer = createReducer(
     on(sqsMessageListActions.deleteMessage, (state: SQSMessageListState) => ({...state, loading: true})),
     on(sqsMessageListActions.deleteMessageSuccess, (state: SQSMessageListState) => ({...state, loading: false})),
     on(sqsMessageListActions.deleteMessageFailure, (state: SQSMessageListState, {error}) => ({...state, error: error, loading: false})),
+
+    // Add message attribute
+    on(sqsMessageListActions.addMessageAttribute, (state: SQSMessageListState) => ({...state, loading: true})),
+    on(sqsMessageListActions.addMessageAttributeSuccess, (state: SQSMessageListState) => ({...state, loading: false})),
+    on(sqsMessageListActions.addMessageAttributeFailure, (state: SQSMessageListState, {error}) => ({...state, error: error, loading: false})),
+
+    // Delete message attribute
+    on(sqsMessageListActions.deleteMessageAttribute, (state: SQSMessageListState) => ({...state, loading: true})),
+    on(sqsMessageListActions.deleteMessageAttributeSuccess, (state: SQSMessageListState) => ({...state, loading: false})),
+    on(sqsMessageListActions.deleteMessageAttributeFailure, (state: SQSMessageListState, {error}) => ({...state, error: error, loading: false})),
 );

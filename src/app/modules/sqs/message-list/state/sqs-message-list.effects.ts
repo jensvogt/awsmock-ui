@@ -48,6 +48,28 @@ export class SqsMessageListEffects {
                 )
         )));
 
-    constructor(private actions$: Actions, private sqsService: SqsService) {
+    addAttribute$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsMessageListActions.addMessageAttribute),
+        mergeMap(action =>
+            this.sqsService.addMessageAttribute(action.messageId, action.name, action.dataType, action.value)
+                .pipe(map(() => sqsMessageListActions.addMessageAttributeSuccess()),
+                    catchError((error) =>
+                        of(sqsMessageListActions.addMessageAttributeFailure({error: error.message}))
+                    )
+                )
+        )));
+
+    deleteAttribute$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsMessageListActions.deleteMessageAttribute),
+        mergeMap(action =>
+            this.sqsService.deleteMessageAttribute(action.messageId, action.attributeName)
+                .pipe(map(() => sqsMessageListActions.deleteMessageAttributeSuccess()),
+                    catchError((error) =>
+                        of(sqsMessageListActions.deleteMessageAttributeFailure({error: error.message}))
+                    )
+                )
+        )));
+
+    constructor(private readonly actions$: Actions, private readonly sqsService: SqsService) {
     }
 }

@@ -241,14 +241,27 @@ export class SqsService {
     }
 
     /**
+     * @brief Add message attribute
+     *
+     * @param messageId SQS message ID
+     * @param name attribute name
+     * @param dataType attribute dataType
+     * @param value attribute value
+     */
+    public addMessageAttribute(messageId: string, name: string, dataType: string, value: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'AddAttribute');
+        return this.http.post(this.baseUrl, {messageId: messageId, name: name, dataType: dataType, value: value}, {headers: headers});
+    }
+
+    /**
      * @brief Delete attribute
      *
      * @param messageId SQS message ID
      * @param name attribute name
      */
-    public deleteAttribute(messageId: string, name: string) {
+    public deleteMessageAttribute(messageId: string, name: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteAttribute');
-        return this.http.post(this.baseUrl, {MessageId: messageId, Name: name}, {headers: headers});
+        return this.http.post(this.baseUrl, {messageId: messageId, name: name}, {headers: headers});
     }
 
     /**

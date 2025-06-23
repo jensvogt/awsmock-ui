@@ -26,6 +26,16 @@ export const sqsMessageListActions = {
     updateMessageSuccess: createAction('[sqs-message-list] Update message success'),
     updateMessageFailure: createAction('[sqs-message-list] Update message error', props<{ error: string }>()),
 
+    // Add attribute
+    addMessageAttribute: createAction('[sqs-message-list] Add message attribute', props<{ messageId: string, name: string, dataType: string, value: string }>()),
+    addMessageAttributeSuccess: createAction('[sqs-message-list] Add message attribute success'),
+    addMessageAttributeFailure: createAction('[sqs-message-list] Add message attribute error', props<{ error: string }>()),
+
+    // Delete attribute
+    deleteMessageAttribute: createAction('[sqs-message-list] Delete message attribute', props<{ messageId: string, attributeName: string }>()),
+    deleteMessageAttributeSuccess: createAction('[sqs-message-list] Delete message attribute success'),
+    deleteMessageAttributeFailure: createAction('[sqs-message-list] Delete message attribute error', props<{ error: string }>()),
+
     // Delete message
     deleteMessage: createAction('[sqs-message-list] Delete message', props<{ queueUrl: string, receiptHandle: string }>()),
     deleteMessageSuccess: createAction('[sqs-message-list] Delete message success'),

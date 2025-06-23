@@ -31,6 +31,9 @@
                 <button (click)="addAttribute()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Add a new attribute">
                     <mat-icon>add</mat-icon>
                 </button>
+                <button (click)="refreshAttribute()" [matTooltipShowDelay]="1000" aria-label="Refresh attribute list" mat-icon-button matTooltip="Refresh attribute list">
+                    <mat-icon>refresh</mat-icon>
+                </button>
             </mat-card-actions>
             <table (matSortChange)="attributeSortChange($event)" [dataSource]="messageAttributesDatasource" class="mat-elevation-z8" mat-table matSort>
                 <ng-container matColumnDef="key">
@@ -51,7 +54,7 @@
                         <button (click)="editAttribute(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Edit attribute">
                             <mat-icon>edit</mat-icon>
                         </button>
-                        <button (click)="deleteAttribute(row.Key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                        <button (click)="deleteAttribute(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </td>

@@ -39,6 +39,7 @@ import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatDivider} from "@angular/material/divider";
 import {FooterComponent} from "../../shared/footer/footer.component";
+import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 
 @NgModule({
     declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent, SendMessageComponentDialog, ViewMessageComponentDialog],
@@ -105,6 +106,7 @@ import {FooterComponent} from "../../shared/footer/footer.component";
         MatMenu,
         MatDivider,
         FooterComponent,
+        CdkVirtualScrollViewport,
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

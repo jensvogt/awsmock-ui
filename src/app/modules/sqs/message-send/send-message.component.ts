@@ -8,6 +8,7 @@ import {SqsMessageAttribute} from "../model/sqs-message-item";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
 import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
+import {ScrollStrategyOptions} from "@angular/cdk/overlay";
 
 @Component({
     selector: 'queue-send-message-dialog',
@@ -31,6 +32,7 @@ export class SendMessageComponentDialog implements OnInit {
     attributeColumns: any[] = ['key', 'value', 'actions'];
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
+    protected readonly ScrollStrategyOptions = ScrollStrategyOptions;
 
     constructor(private readonly dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly fileDialog: MatDialog, private readonly dialog: MatDialog) {
         this.queueUrl = data.queueUrl;
@@ -39,7 +41,7 @@ export class SendMessageComponentDialog implements OnInit {
 
     ngOnInit() {
         //this.messageAttributes.Attributes = [];
-        this.dialogRef.updateSize("1000px", "600px");
+        //this.dialogRef.updateSize("1000px", "600px");
     }
 
     sendMessage() {

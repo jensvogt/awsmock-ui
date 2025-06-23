@@ -145,7 +145,8 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
-        dialogConfig.width = "90%"
+        dialogConfig.width = "70%"
+        dialogConfig.height = "70%"
 
         this.dialog.open(PublishMessageComponentDialog, dialogConfig).afterClosed().subscribe(message => {
             if (message) {

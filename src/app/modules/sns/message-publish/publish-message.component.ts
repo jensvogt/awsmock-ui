@@ -29,13 +29,13 @@ export class PublishMessageComponentDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(private dialogRef: MatDialogRef<PublishMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private dialog: MatDialog) {
+    constructor(private readonly dialogRef: MatDialogRef<PublishMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly dialog: MatDialog) {
         this.topicArn = data.topicArn;
         this.topicName = data.topicArn.substring(this.topicArn.lastIndexOf(':') + 1);
     }
 
     ngOnInit() {
-        this.dialogRef.updateSize("1200px", "800px");
+        //   this.dialogRef.updateSize("1200px", "800px");
     }
 
     publishMessage() {

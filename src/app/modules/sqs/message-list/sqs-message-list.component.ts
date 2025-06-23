@@ -167,7 +167,8 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         dialogConfig.data = {queueUrl: this.queueUrl};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
-        dialogConfig.width = "90%"
+        dialogConfig.width = "70%"
+        dialogConfig.height = "70%"
         dialogConfig.panelClass = 'full-screen-modal';
 
         this.dialog.open(SendMessageComponentDialog, dialogConfig).afterClosed().subscribe((result: SqsMessageDialogResult) => {

@@ -37,6 +37,7 @@ import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 import {FooterComponent} from "../../shared/footer/footer.component";
 import {MatDivider} from "@angular/material/divider";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {CdkScrollable, CdkVirtualScrollableElement} from "@angular/cdk/scrolling";
 
 @NgModule({
     declarations: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, SnsMessageDetailsDialog, PublishMessageComponentDialog],
@@ -101,6 +102,8 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
         MatMenu,
         MatMenuItem,
         MatMenuTrigger,
+        CdkScrollable,
+        CdkVirtualScrollableElement,
     ],
     exports: [SnsTopicListComponent, SnsTopicDetailComponent, SnsMessageListComponent, PublishMessageComponentDialog, SnsMessageDetailsDialog],
     providers: [SnsService],

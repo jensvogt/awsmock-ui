@@ -52,7 +52,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     uploadSuccess: boolean = false;
     uploadError: boolean = false;
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaFunctionUpgradeDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<LambdaFunctionUpgradeDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.functionArn = data.functionArn;
     }
 

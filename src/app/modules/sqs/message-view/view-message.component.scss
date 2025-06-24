@@ -17,3 +17,9 @@
   margin-bottom: 10px;
   font-size: x-large;
 }
+
+td, th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 400px;
+}

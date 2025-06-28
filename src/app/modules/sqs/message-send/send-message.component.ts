@@ -8,7 +8,7 @@ import {SqsMessageAttribute} from "../model/sqs-message-item";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
 import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
-import {ScrollStrategyOptions} from "@angular/cdk/overlay";
+import {SqsService} from "../service/sqs-service.component";
 
 @Component({
     selector: 'queue-send-message-dialog',
@@ -20,6 +20,7 @@ import {ScrollStrategyOptions} from "@angular/cdk/overlay";
 export class SendMessageComponentDialog implements OnInit {
 
     queueUrl: string = '';
+    queueArn: string = '';
     queueName: string = '';
     message: string = '';
 
@@ -32,16 +33,24 @@ export class SendMessageComponentDialog implements OnInit {
     attributeColumns: any[] = ['key', 'value', 'actions'];
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
-    protected readonly ScrollStrategyOptions = ScrollStrategyOptions;
 
-    constructor(private readonly dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly fileDialog: MatDialog, private readonly dialog: MatDialog) {
+    constructor(private readonly dialogRef: MatDialogRef<SendMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly fileDialog: MatDialog, private readonly dialog: MatDialog, private readonly sqsService: SqsService) {
         this.queueUrl = data.queueUrl;
+        this.queueArn = data.queueArn;
         this.queueName = this.queueUrl.substring(this.queueUrl.lastIndexOf('/') + 1);
     }
 
     ngOnInit() {
-        //this.messageAttributes.Attributes = [];
-        //this.dialogRef.updateSize("1000px", "600px");
+
+        // Load queue default message attributes
+        this.sqsService.listDefaultMessageAttributeCounters(this.queueArn, -1, -1, []).subscribe((data: any) => {
+            if (data) {
+                for (let a in data.attributeCounters) {
+                    this.attributes.push({name: a, stringValue: data.attributeCounters[a].StringValue, dataType: data.attributeCounters[a].dataType, stringListValues: data.attributeCounters[a].stringListValues});
+                }
+                this.messageAttributes = new MatTableDataSource<SqsMessageAttribute>(this.attributes);
+            }
+        });
     }
 
     sendMessage() {

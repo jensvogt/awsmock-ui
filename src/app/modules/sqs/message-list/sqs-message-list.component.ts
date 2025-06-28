@@ -164,7 +164,7 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {queueUrl: this.queueUrl};
+        dialogConfig.data = {queueUrl: this.queueUrl, queueArn: this.queueArn};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.width = "70%"

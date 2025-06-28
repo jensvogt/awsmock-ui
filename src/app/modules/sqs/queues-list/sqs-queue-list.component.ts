@@ -147,13 +147,13 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         });
     }
 
-    sendMessage(queueUrl: string) {
+    sendMessage(queueUrl: string, queueArn: string) {
 
         const dialogConfig = new MatDialogConfig();
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {queueUrl: queueUrl};
+        dialogConfig.data = {queueUrl: queueUrl, queueArn: queueArn};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';

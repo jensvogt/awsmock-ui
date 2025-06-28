@@ -87,7 +87,7 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:160px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="sendMessage(row.queueUrl)" [matTooltipShowDelay]="1000" aria-label="Send" mat-icon-button matTooltip="Send a message to the queue">
+                                <button (click)="sendMessage(row.queueUrl, row.queueArn)" [matTooltipShowDelay]="1000" aria-label="Send" mat-icon-button matTooltip="Send a message to the queue">
                                     <mat-icon>send</mat-icon>
                                 </button>
                                 <button [matTooltipShowDelay]="1000" aria-label="QueueDetails" mat-icon-button matTooltip="View queue details" routerLink="./details/{{ row.queueArn }}">

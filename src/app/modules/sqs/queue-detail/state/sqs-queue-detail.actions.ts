@@ -3,6 +3,7 @@ import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../../model/sq
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
 import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
+import {SqsDefaultMessageAttributeResponse} from "../../model/sqs-default-message-attribute";
 
 export const sqsQueueDetailsActions = {
     initialize: createAction('[sqs-queue-details] initialize'),
@@ -23,7 +24,27 @@ export const sqsQueueDetailsActions = {
     loadLambdaTriggersFailure: createAction('[sqs-queue-details] Load queue lambda trigger error', props<{ error: string }>()),
 
     // Load tags
-    loadTags: createAction('[sns-topic-details] Load topics tags', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
-    loadTagsSuccess: createAction('[sns-topic-details] Load topics tags success', props<{ tags: SqsTagCountersResponse }>()),
-    loadTagsFailure: createAction('[sns-topic-details] Load topics tags error', props<{ error: string }>()),
+    loadTags: createAction('[sns-queue-details] Load queue tags', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadTagsSuccess: createAction('[sns-queue-details] Load queue tags success', props<{ tags: SqsTagCountersResponse }>()),
+    loadTagsFailure: createAction('[sns-queue-details] Load queue tags error', props<{ error: string }>()),
+
+    // Load default message attributes
+    loadDefaultMessageAttributes: createAction('[sns-queue-details] Load default message attributes', props<{ queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadDefaultMessageAttributesSuccess: createAction('[sns-queue-details] Load default message attributes success', props<{ defaultMessageAttributes: SqsDefaultMessageAttributeResponse }>()),
+    loadDefaultMessageAttributesFailure: createAction('[sns-queue-details] Load default message attributes error', props<{ error: string }>()),
+
+    // Add default message attributes
+    addDefaultMessageAttributes: createAction('[sns-queue-details] Add default message attributes', props<{ queueArn: string, name: string, value: string, dataType: string }>()),
+    addDefaultMessageAttributesSuccess: createAction('[sns-queue-details] Add default message attributes success', props<{ defaultMessageAttributes: SqsDefaultMessageAttributeResponse }>()),
+    addDefaultMessageAttributesFailure: createAction('[sns-queue-details] Add default message attributes error', props<{ error: string }>()),
+
+    // Update default message attributes
+    updateDefaultMessageAttributes: createAction('[sns-queue-details] Update default message attributes', props<{ queueArn: string, name: string, value: string, dataType: string }>()),
+    updateDefaultMessageAttributesSuccess: createAction('[sns-queue-details] Update default message attributes success', props<{ defaultMessageAttributes: SqsDefaultMessageAttributeResponse }>()),
+    updateDefaultMessageAttributesFailure: createAction('[sns-queue-details] Update default message attributes error', props<{ error: string }>()),
+
+    // Delete default message attributes
+    deleteDefaultMessageAttributes: createAction('[sns-queue-details] Delete default message attributes', props<{ queueArn: string, name: string }>()),
+    deleteDefaultMessageAttributesSuccess: createAction('[sns-queue-details] Delete default message attributes success', props<{ defaultMessageAttributes: SqsDefaultMessageAttributeResponse }>()),
+    deleteDefaultMessageAttributesFailure: createAction('[sns-queue-details] Delete default message attributes error', props<{ error: string }>()),
 }

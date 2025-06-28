@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject} from "@angular/core";
-import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -36,8 +36,6 @@ interface DataType {
 })
 export class SqsMessageAttributeEditDialog {
 
-    // @ts-ignore
-    form: FormGroup;
     attribute: SqsMessageAttribute;
     name: string = '';
     value: string = '';
@@ -50,7 +48,7 @@ export class SqsMessageAttributeEditDialog {
     ];
     selectedDataType: string = 'String';
 
-    constructor(private dialogRef: MatDialogRef<SqsMessageAttributeEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly dialogRef: MatDialogRef<SqsMessageAttributeEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.attribute = data.attribute;
         this.name = data.attribute.name;
         this.selectedDataType = data.attribute.dataType;
@@ -60,6 +58,8 @@ export class SqsMessageAttributeEditDialog {
     }
 
     save() {
+        this.attribute.name = this.name;
+        this.attribute.stringValue = this.value;
         this.dialogRef.close({attribute: this.attribute});
     }
 }

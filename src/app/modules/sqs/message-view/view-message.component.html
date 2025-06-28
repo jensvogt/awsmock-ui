@@ -35,42 +35,46 @@
                     <mat-icon>refresh</mat-icon>
                 </button>
             </mat-card-actions>
-            <table (matSortChange)="attributeSortChange($event)" [dataSource]="messageAttributesDatasource" mat-table matSort>
-                <ng-container matColumnDef="key">
-                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
-                    <td *matCellDef="let element" mat-cell> {{ element.name }}</td>
-                </ng-container>
-                <ng-container matColumnDef="value">
-                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
-                    <td *matCellDef="let element" mat-cell> {{ element.stringValue }}</td>
-                </ng-container>
-                <ng-container matColumnDef="type">
-                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute type" sortActionDescription="Sort by attribute type">Type</th>
-                    <td *matCellDef="let element" mat-cell> {{ element.dataType }}</td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                    <td *matCellDef="let row" mat-cell>
-                        <button (click)="editAttribute(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Edit attribute">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button (click)="deleteAttribute(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-                <tr *matHeaderRowDef="messageAttributeColumns" mat-header-row></tr>
-                <tr *matRowDef="let row; columns: messageAttributeColumns;" mat-row></tr>
-                <tr *matNoDataRow class="mat-row">
-                    <td [attr.colspan]="messageAttributeColumns.length" class="mat-cell">
-                        No data matching the filter.
-                    </td>
-                </tr>
-            </table>
+            <div class="table-container">
+                <div *ngIf="messageAttributes$ | async as response" class="row">
+                    <table (matSortChange)="attributeSortChange($event)" [dataSource]="messageAttributesDatasource" mat-table matSort>
+                        <ng-container matColumnDef="key">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.name }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="value">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.stringValue }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="type">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute type" sortActionDescription="Sort by attribute type">Type</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.dataType }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="editAttribute(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Edit attribute">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="deleteAttribute(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete attribute">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="messageAttributeColumns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: messageAttributeColumns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="messageAttributeColumns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
             <mat-paginator (page)="handleAttributePageEvent($event)"
                            [disabled]="false"
                            [hidePageSize]="false"
-                           [length]="messageAttributeLength"
+                           [length]="(messageAttributes$ | async)?.total"
                            [pageIndex]="messageAttributePageIndex"
                            [pageSizeOptions]="messageAttributePageSizeOptions"
                            [pageSize]="messageAttributePageSize"

@@ -4,6 +4,7 @@ import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../../model/sq
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
 import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
+import {SqsDefaultMessageAttributeResponse} from "../../model/sqs-default-message-attribute";
 
 export const sqsQueueDetailsFeatureKey = 'sqs-queue-details';
 
@@ -27,6 +28,12 @@ export interface SqsQueueDetailsState {
     tagPageSize: number,
     tagPageIndex: number,
     tagSortColumns: SortColumn[],
+
+    // DefaultMessageAttributes
+    sqsQueueDefaultMessageAttributes: SqsDefaultMessageAttributeResponse;
+    defaultMessageAttributePageSize: number,
+    defaultMessageAttributePageIndex: number,
+    defaultMessageAttributeSortColumns: SortColumn[],
 
     loading: boolean;
     error: unknown;
@@ -52,6 +59,12 @@ export const initialState: SqsQueueDetailsState = {
     tagPageSize: 10,
     tagPageIndex: 0,
     tagSortColumns: [{column: 'endpoint', sortDirection: -1}],
+
+    // DefaultMessageAttributes
+    sqsQueueDefaultMessageAttributes: {} as SqsDefaultMessageAttributeResponse,
+    defaultMessageAttributePageSize: 10,
+    defaultMessageAttributePageIndex: 0,
+    defaultMessageAttributeSortColumns: [{column: 'endpoint', sortDirection: -1}],
 
     loading: false,
     error: {}
@@ -82,4 +95,24 @@ export const sqsQueueDetailReducer = createReducer(
     on(sqsQueueDetailsActions.loadTags, (state: SqsQueueDetailsState) => ({...state, loading: true})),
     on(sqsQueueDetailsActions.loadTagsSuccess, (state: SqsQueueDetailsState, {tags}) => ({...state, sqsQueueTags: tags, loading: false})),
     on(sqsQueueDetailsActions.loadTagsFailure, (state: SqsQueueDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // List queue default message attributes
+    on(sqsQueueDetailsActions.loadDefaultMessageAttributes, (state: SqsQueueDetailsState) => ({...state, loading: true})),
+    on(sqsQueueDetailsActions.loadDefaultMessageAttributesSuccess, (state: SqsQueueDetailsState, {defaultMessageAttributes}) => ({...state, sqsQueueDefaultMessageAttributes: defaultMessageAttributes, loading: false})),
+    on(sqsQueueDetailsActions.loadDefaultMessageAttributesFailure, (state: SqsQueueDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Add queue default message attributes
+    on(sqsQueueDetailsActions.addDefaultMessageAttributes, (state: SqsQueueDetailsState) => ({...state, loading: true})),
+    on(sqsQueueDetailsActions.addDefaultMessageAttributesSuccess, (state: SqsQueueDetailsState, {defaultMessageAttributes}) => ({...state, sqsQueueDefaultMessageAttributes: defaultMessageAttributes, loading: false})),
+    on(sqsQueueDetailsActions.addDefaultMessageAttributesFailure, (state: SqsQueueDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Update queue default message attributes
+    on(sqsQueueDetailsActions.updateDefaultMessageAttributes, (state: SqsQueueDetailsState) => ({...state, loading: true})),
+    on(sqsQueueDetailsActions.updateDefaultMessageAttributesSuccess, (state: SqsQueueDetailsState, {defaultMessageAttributes}) => ({...state, sqsQueueDefaultMessageAttributes: defaultMessageAttributes, loading: false})),
+    on(sqsQueueDetailsActions.updateDefaultMessageAttributesFailure, (state: SqsQueueDetailsState, {error}) => ({...state, error: error, loading: false})),
+
+    // Delete queue default message attributes
+    on(sqsQueueDetailsActions.deleteDefaultMessageAttributes, (state: SqsQueueDetailsState) => ({...state, loading: true})),
+    on(sqsQueueDetailsActions.deleteDefaultMessageAttributesSuccess, (state: SqsQueueDetailsState, {defaultMessageAttributes}) => ({...state, sqsQueueDefaultMessageAttributes: defaultMessageAttributes, loading: false})),
+    on(sqsQueueDetailsActions.deleteDefaultMessageAttributesFailure, (state: SqsQueueDetailsState, {error}) => ({...state, error: error, loading: false})),
 );

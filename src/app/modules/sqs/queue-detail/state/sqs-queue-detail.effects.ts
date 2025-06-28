@@ -64,6 +64,58 @@ export class SqsQueueDetailEffects {
         ),
     ));
 
-    constructor(private actions$: Actions, private sqsService: SqsService) {
+    loadQueueDefaultMessageAttributes$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.loadDefaultMessageAttributes),
+        mergeMap(action =>
+            this.sqsService.listDefaultMessageAttributeCounters(action.queueArn, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((defaultMessageAttributes: any) =>
+                        sqsQueueDetailsActions.loadDefaultMessageAttributesSuccess({defaultMessageAttributes})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.loadDefaultMessageAttributesFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    addQueueDefaultMessageAttributes$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.addDefaultMessageAttributes),
+        mergeMap(action =>
+            this.sqsService.addDefaultMessageAttributeCounters(action.queueArn, action.name, action.value, action.dataType)
+                .pipe(map((defaultMessageAttributes: any) =>
+                        sqsQueueDetailsActions.addDefaultMessageAttributesSuccess({defaultMessageAttributes})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.addDefaultMessageAttributesFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    updateQueueDefaultMessageAttributes$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.updateDefaultMessageAttributes),
+        mergeMap(action =>
+            this.sqsService.updateDefaultMessageAttributeCounters(action.queueArn, action.name, action.value, action.dataType)
+                .pipe(map((defaultMessageAttributes: any) =>
+                        sqsQueueDetailsActions.updateDefaultMessageAttributesSuccess({defaultMessageAttributes})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.updateDefaultMessageAttributesFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    deleteQueueDefaultMessageAttributes$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsQueueDetailsActions.deleteDefaultMessageAttributes),
+        mergeMap(action =>
+            this.sqsService.deleteDefaultMessageAttributeCounters(action.queueArn, action.name)
+                .pipe(map((defaultMessageAttributes: any) =>
+                        sqsQueueDetailsActions.deleteDefaultMessageAttributesSuccess({defaultMessageAttributes})),
+                    catchError((error) =>
+                        of(sqsQueueDetailsActions.deleteDefaultMessageAttributesFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    constructor(private readonly actions$: Actions, private readonly sqsService: SqsService) {
     }
 }

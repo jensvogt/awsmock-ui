@@ -161,11 +161,17 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     sortChange(sortState: Sort) {
         this.state.value['lambda-function-list'].sortColumns = [];
         let direction: number;
-        let column = 'keys';
-        if (sortState.active === 'size') {
-            column = 'size'
-        } else if (sortState.active === 'name') {
-            column = 'name';
+        let column = 'instances';
+        if (sortState.active === 'name') {
+            column = 'function'
+        } else if (sortState.active === 'instances') {
+            column = 'instances.size'
+        } else if (sortState.active === 'version') {
+            column = 'dockerTag';
+        } else if (sortState.active === 'runtime') {
+            column = 'runtime';
+        } else if (sortState.active === 'averageRuntime') {
+            column = 'averageRuntime';
         }
         if (sortState.direction === 'asc') {
             direction = 1;

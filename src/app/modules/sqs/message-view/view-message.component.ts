@@ -1,17 +1,19 @@
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {SqsAttribute, SqsMessageAttribute, SqsMessageItem} from "../model/sqs-message-item";
+import {ListMessageAttributeCountersResponse, SqsAttribute, SqsMessageAttribute, SqsMessageItem} from "../model/sqs-message-item";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {isJson} from "../../../shared/format/message-format-component";
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {Store} from "@ngrx/store";
+import {State, Store} from "@ngrx/store";
 import {SQSMessageListState} from "../message-list/state/sqs-message-list.reducer";
 import {sqsMessageListActions} from "../message-list/state/sqs-message-list.actions";
 import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
 import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
+import {Observable} from "rxjs";
+import {selectMessageAttributeCounters} from "../message-list/state/sqs-message-list.selectors";
 
 @Component({
     selector: 'sqs-edit-message-dialog',
@@ -29,13 +31,13 @@ export class ViewMessageComponentDialog implements OnInit {
     isJson: boolean = false;
 
     // Message attributes table
+    messageAttributes$: Observable<ListMessageAttributeCountersResponse> = this.store.select(selectMessageAttributeCounters);
+    messageAttributeList: SqsMessageAttribute[] = [];
     messageAttributesDatasource = new MatTableDataSource<SqsMessageAttribute>();
-    messageAttributeLength: number = 0;
-    messageAttributes: SqsMessageAttribute[] = [];
     messageAttributePageSize: number = 10;
     messageAttributePageIndex: number = 0;
-    messageAttributeColumns: any[] = ['key', 'value', 'type', 'actions'];
     messageAttributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
+    messageAttributeColumns: any[] = ['key', 'value', 'type', 'actions'];
     messageAttributePageSizeOptions = [5, 10, 20, 50, 100];
 
     // Message attributes table
@@ -48,7 +50,8 @@ export class ViewMessageComponentDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(private readonly dialogRef: MatDialogRef<ViewMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly store: Store<SQSMessageListState>, private readonly dialog: MatDialog) {
+    constructor(private readonly dialogRef: MatDialogRef<ViewMessageComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly store: Store<SQSMessageListState>,
+                private readonly state: State<SQSMessageListState>, private readonly dialog: MatDialog) {
         this.message = data.message;
         if (this.message.body?.length) {
             this.isJson = isJson(this.message.body);
@@ -59,17 +62,23 @@ export class ViewMessageComponentDialog implements OnInit {
             }
         }
         this.messageId = this.message?.messageId!;
-        for (let key in data.message.messageAttributes) {
-            let attribute: SqsMessageAttribute = {
-                name: key,
-                stringValue: data.message.messageAttributes[key].StringValue,
-                dataType: data.message.messageAttributes[key].DataType,
-                stringListValues: []
-            };
-            this.messageAttributes.push(attribute);
-        }
-        this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
-        this.messageAttributeLength = this.messageAttributes.length;
+
+        // Message attributes
+        this.messageAttributes$.subscribe((data: any) => {
+            this.messageAttributeList = [];
+            for (let key in data.messageAttributeCounters) {
+                let attribute: SqsMessageAttribute = {
+                    name: key,
+                    stringValue: data.messageAttributeCounters[key].StringValue,
+                    dataType: data.messageAttributeCounters[key].DataType,
+                    stringListValues: []
+                };
+                this.messageAttributeList.push(attribute);
+                this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributeList);
+            }
+        });
+
+        // System attributes
         if (data.message.attributes) {
             for (let key in data.message.attributes) {
                 let attribute: SqsAttribute = {key: key, value: data.message.attributes[key]};
@@ -80,11 +89,22 @@ export class ViewMessageComponentDialog implements OnInit {
             this.attributeLength = this.attributes.length;
         }
         //console.log("Message attributes: ", this.messageAttributes);
-        // console.log("Input data: ", data.message);
+        //console.log("Input data: ", data.message);
     }
 
     ngOnInit() {
         this.dialogRef.updateSize("1200px", "800px");
+        this.loadMessageAttributes();
+    }
+
+    loadMessageAttributes() {
+        this.store.dispatch(sqsMessageListActions.loadMessageAttributes({
+            messageId: this.messageId,
+            prefix: this.state.value['sqs-message-list'].messageAttributePrefix,
+            pageSize: this.state.value['sqs-message-list'].messageAttributePageSize,
+            pageIndex: this.state.value['sqs-message-list'].messageAttributePageIndex,
+            sortColumns: this.state.value['sqs-message-list'].messageAttributeSortColumns
+        }));
     }
 
     changePrettyPrint(event: MatSlideToggleChange) {
@@ -110,7 +130,7 @@ export class ViewMessageComponentDialog implements OnInit {
     }
 
     refreshAttribute(): void {
-        this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
+        this.loadMessageAttributes();
     }
 
     addAttribute(): void {
@@ -122,9 +142,8 @@ export class ViewMessageComponentDialog implements OnInit {
 
         this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.messageAttributes.push({name: result.Key, stringValue: result.Value, dataType: result.DataType, stringListValues: []});
-                this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
-                this.messageAttributeLength = this.attributes.length;
+                this.messageAttributeList.push({name: result.Key, stringValue: result.Value, dataType: result.DataType, stringListValues: []});
+                this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributeList);
                 this.store.dispatch(sqsMessageListActions.addMessageAttribute({messageId: this.messageId, name: result.Key, dataType: result.DataType, value: result.Value}));
             }
         });
@@ -140,12 +159,11 @@ export class ViewMessageComponentDialog implements OnInit {
 
             this.dialog.open(SqsMessageAttributeEditDialog, dialogConfig).afterClosed().subscribe(result => {
                 if (result?.attribute) {
-                    let index = this.messageAttributes.findIndex(x => x.name === result.attribute.name)
+                    let index = this.messageAttributeList.findIndex(x => x.name === result.attribute.name)
                     if (index > 0) {
-                        this.messageAttributes[index] = result.attribute
-                        this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
-                        this.messageAttributeLength = this.messageAttributes.length;
-                        this.store.dispatch(sqsMessageListActions.updateMessage({messageId: this.messageId, messageAttributes: this.messageAttributes}));
+                        this.messageAttributeList[index] = result.attribute
+                        this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributeList);
+                        this.store.dispatch(sqsMessageListActions.updateMessage({messageId: this.messageId, messageAttributes: this.messageAttributeList}));
                     }
                 }
             });
@@ -157,10 +175,10 @@ export class ViewMessageComponentDialog implements OnInit {
             this.store.dispatch(sqsMessageListActions.deleteMessageAttribute({
                 messageId: this.messageId, attributeName: key
             }));
-            this.messageAttributes = this.messageAttributes.filter(element => {
+            this.messageAttributeList = this.messageAttributeList.filter(element => {
                 return element.name !== key
             });
-            this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributes);
+            this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributeList);
         }
     }
 }

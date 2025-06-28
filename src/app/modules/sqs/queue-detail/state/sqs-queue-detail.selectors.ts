@@ -3,6 +3,7 @@ import {sqsQueueDetailsFeatureKey, SqsQueueDetailsState} from "./sqs-queue-detai
 import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../../model/sqs-queue-details";
 import {SqsLambdaTriggerCountersResponse} from "../../model/sqs-lambda-trigger-item";
 import {SqsTagCountersResponse} from "../../model/sqs-tag-item";
+import {SqsDefaultMessageAttributeResponse} from "../../model/sqs-default-message-attribute";
 
 export type SelectorType<T> = MemoizedSelector<object, T, DefaultProjectorFn<T>>;
 export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
@@ -63,4 +64,19 @@ export const selectTagPageIndex: SelectorType<number> = createSelector(
 export const selectError: SelectorType<any> = createSelector(
     selectQueueDetailsFeature,
     (state: SqsQueueDetailsState) => state?.error
+);
+
+export const selectDefaultMessageAttributes: SelectorType<SqsDefaultMessageAttributeResponse> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.sqsQueueDefaultMessageAttributes
+);
+
+export const selectDefaultMessageAttributePageSize: SelectorType<number> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.defaultMessageAttributePageSize
+);
+
+export const selectDefaultMessageAttributePageIndex: SelectorType<number> = createSelector(
+    selectQueueDetailsFeature,
+    (state: SqsQueueDetailsState) => state?.defaultMessageAttributePageIndex
 );

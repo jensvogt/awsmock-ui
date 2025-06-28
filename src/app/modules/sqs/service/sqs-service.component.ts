@@ -241,6 +241,20 @@ export class SqsService {
     }
 
     /**
+     * @brief List all message attribute counters
+     *
+     * @param messageId message ID
+     * @param prefix SQS message prefix
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listMessageAttributeCounters(messageId: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListMessageAttributeCounters');
+        return this.http.post(this.baseUrl, {messageId: messageId, prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
      * @brief Add message attribute
      *
      * @param messageId SQS message ID
@@ -273,5 +287,55 @@ export class SqsService {
     public deleteMessage(queueUrl: string, receiptHandle: string) {
         let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteMessage');
         return this.http.post(this.baseUrl, {QueueUrl: queueUrl, ReceiptHandle: receiptHandle}, {headers: headers});
+    }
+
+    /**
+     * @brief Gets a list of default message attributes for a queue
+     *
+     * @param queueArn queue ARN
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listDefaultMessageAttributeCounters(queueArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ListDefaultMessageAttributeCounters');
+        return this.http.post(this.baseUrl, {queueArn: queueArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Add a default message attributes to a queue
+     *
+     * @param queueArn queue ARN
+     * @param name attribute name
+     * @param value attribute string value
+     * @param dataType attribute type
+     */
+    public addDefaultMessageAttributeCounters(queueArn: string, name: string, value: string, dataType: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'AddDefaultMessageAttributeCounter');
+        return this.http.post(this.baseUrl, {queueArn: queueArn, name: name, messageAttribute: {StringValue: value, DataType: dataType}}, {headers: headers});
+    }
+
+    /**
+     * @brief Update a default message attributes from a queue
+     *
+     * @param queueArn queue ARN
+     * @param name attribute name
+     * @param value attribute value
+     * @param dataType attribute dataType
+     */
+    public updateDefaultMessageAttributeCounters(queueArn: string, name: string, value: string, dataType: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'UpdateDefaultMessageAttributeCounter');
+        return this.http.post(this.baseUrl, {queueArn: queueArn, name: name, value: value, dataType: dataType}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete a default message attributes from a queue
+     *
+     * @param queueArn queue ARN
+     * @param name attribute name
+     */
+    public deleteDefaultMessageAttributeCounters(queueArn: string, name: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'DeleteDefaultMessageAttributeCounter');
+        return this.http.post(this.baseUrl, {queueArn: queueArn, name: name}, {headers: headers});
     }
 }

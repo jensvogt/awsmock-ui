@@ -48,6 +48,17 @@ export class SqsMessageListEffects {
                 )
         )));
 
+    loadMessageAttribute$ = createEffect(() => this.actions$.pipe(
+        ofType(sqsMessageListActions.loadMessageAttributes),
+        mergeMap(action =>
+            this.sqsService.listMessageAttributeCounters(action.messageId, action.prefix, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((messageAttributes: any) => sqsMessageListActions.loadMessageAttributesSuccess({messageAttributes})),
+                    catchError((error) =>
+                        of(sqsMessageListActions.loadMessageAttributesFailure({error: error.message}))
+                    )
+                )
+        )));
+
     addAttribute$ = createEffect(() => this.actions$.pipe(
         ofType(sqsMessageListActions.addMessageAttribute),
         mergeMap(action =>

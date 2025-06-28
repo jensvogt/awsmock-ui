@@ -30,9 +30,9 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
     // Table
-    pageSize$: Observable<number> = this.store.select(selectPageSize);
-    pageIndex$: Observable<number> = this.store.select(selectPageIndex);
-    prefix$: Observable<string> = this.store.select(selectPrefix);
+    messagePageSize$: Observable<number> = this.store.select(selectPageSize);
+    messagePageIndex$: Observable<number> = this.store.select(selectPageIndex);
+    messagePrefix$: Observable<string> = this.store.select(selectPrefix);
     listMessageCountersResponse$: Observable<ListMessageCountersResponse> = this.store.select(selectMessageCounters);
     columns: any[] = ['messageId', 'contentType', 'size', 'retries', 'created', 'modified', 'actions'];
 
@@ -60,8 +60,8 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private sqsService: SqsService, private route: ActivatedRoute, private dialog: MatDialog, private state: State<SQSMessageListState>,
-                private location: Location, private store: Store<SQSMessageListState>, private actionsSubj$: ActionsSubject) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly sqsService: SqsService, private readonly route: ActivatedRoute, private readonly dialog: MatDialog, private readonly state: State<SQSMessageListState>,
+                private readonly location: Location, private readonly store: Store<SQSMessageListState>, private readonly actionsSubj$: ActionsSubject) {
         this.actionsSubj$.pipe(
             filter((action) =>
                 action.type === sqsMessageListActions.addMessageSuccess.type
@@ -69,9 +69,9 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         ).subscribe(() => {
             this.loadMessages();
         });
-        this.prefix$.subscribe((data: string) => {
+        this.messagePrefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -106,8 +106,8 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
     setPrefix() {
         this.prefixSet = true;
-        this.state.value['sqs-message-list'].pageIndex = 0;
-        this.state.value['sqs-message-list'].prefix = this.prefixValue;
+        this.state.value['sqs-message-list'].messagePageIndex = 0;
+        this.state.value['sqs-message-list'].messagePrefix = this.prefixValue;
         this.loadMessages();
     }
 
@@ -134,10 +134,10 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
         this.lastUpdate = new Date();
         this.store.dispatch(sqsMessageListActions.loadMessages({
             queueArn: this.queueArn,
-            prefix: this.state.value['sqs-message-list'].prefix,
-            pageSize: this.state.value['sqs-message-list'].pageSize,
-            pageIndex: this.state.value['sqs-message-list'].pageIndex,
-            sortColumns: this.state.value['sqs-message-list'].sortColumns
+            prefix: this.state.value['sqs-message-list'].messagePrefix,
+            pageSize: this.state.value['sqs-message-list'].messagePageSize,
+            pageIndex: this.state.value['sqs-message-list'].messagePageIndex,
+            sortColumns: this.state.value['sqs-message-list'].messageSortColumns
         }));
     }
 

@@ -34,9 +34,7 @@
                 <div *ngIf="listMessageCountersResponse$ | async as response" class="row">
                     <table (matSortChange)="sortChange($event)" [dataSource]="response.messageCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
                         <ng-container matColumnDef="messageId">
-                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Message ID"
-                                sortActionDescription="Sort by id">Message ID
-                            </th>
+                            <th *matHeaderCellDef [matTooltipPositionAtOrigin]="'left'" mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
                             <td *matCellDef="let element" mat-cell>
                                 <div class="with-icon">
                                     <mat-nav-list>
@@ -97,9 +95,9 @@
                            [disabled]="disabled"
                            [hidePageSize]="hidePageSize"
                            [length]="(listMessageCountersResponse$ | async)?.total"
-                           [pageIndex]="(pageIndex$ | async)"
+                           [pageIndex]="(messagePageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-                           [pageSize]="(pageSize$ | async)??false"
+                           [pageSize]="(messagePageSize$ | async)??false"
                            [showFirstLastButtons]="showFirstLastButtons"
                            aria-label="Select page" style="width:99%; margin-left:15px">
             </mat-paginator>

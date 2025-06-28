@@ -10,6 +10,9 @@ import {
     selectAttributePageIndex,
     selectAttributePageSize,
     selectAttributes,
+    selectDefaultMessageAttributePageIndex,
+    selectDefaultMessageAttributePageSize,
+    selectDefaultMessageAttributes,
     selectDetails,
     selectError,
     selectLambdaTriggerPageIndex,
@@ -29,6 +32,11 @@ import {SqsTagEditDialog} from "./tag-edit/tag-edit.component";
 import {SqsLambdaTriggerCountersResponse} from "../model/sqs-lambda-trigger-item";
 import {SqsDqlEditDialog} from "./dlq-edit/dlq-edit.component";
 import {SqsTagCountersResponse} from "../model/sqs-tag-item";
+import {SqsDefaultMessageAttributeItem, SqsDefaultMessageAttributeResponse} from "../model/sqs-default-message-attribute";
+import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatTabChangeEvent} from "@angular/material/tabs";
+import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
 
 @Component({
     selector: 'sqs-queue-detail-component',
@@ -61,12 +69,21 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     lambdaTriggerColumns: any[] = ['uuid', 'arn', 'enabled'];
     lambdaTriggerPageSizeOptions = [5, 10, 20, 50, 100];
 
-    // Tags Table
+    // Tags table
     queueTags$: Observable<SqsTagCountersResponse> = this.store.select(selectTags);
     tagPageSize$: Observable<number> = this.store.select(selectTagPageSize);
     tagPageIndex$: Observable<number> = this.store.select(selectTagPageIndex);
     tagColumns: any[] = ['name', 'value', 'actions'];
     tagPageSizeOptions = [5, 10, 20, 50, 100];
+
+    // Default message attribute table
+    defaultMessageAttributes$: Observable<SqsDefaultMessageAttributeResponse> = this.store.select(selectDefaultMessageAttributes);
+    defaultMessageAttributePageSize$: Observable<number> = this.store.select(selectDefaultMessageAttributePageSize);
+    defaultMessageAttributePageIndex$: Observable<number> = this.store.select(selectDefaultMessageAttributePageIndex);
+    defaultMessageAttributeColumns: any[] = ['name', 'value', 'type', 'actions'];
+    defaultMessageAttributePageSizeOptions = [5, 10, 20, 50, 100];
+    defaultMessageAttributesList: SqsDefaultMessageAttributeItem[] = [];
+    defaultMessageAttributesDatasource: MatTableDataSource<SqsDefaultMessageAttributeItem> = new MatTableDataSource();
 
     private routerSubscription: any;
 
@@ -78,8 +95,6 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             this.queueArn = params['queueArn'];
             this.loadDetails();
             this.loadAttributes();
-            this.loadLambdaTrigger();
-            this.loadTags();
         });
         this.queueDetailsError$.subscribe((msg: string) => {
             if (msg.length) {
@@ -93,6 +108,15 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             this.retries = data.dlqMaxReceive;
         });
 
+        this.defaultMessageAttributes$.subscribe((data: any) => {
+            this.defaultMessageAttributesList = [];
+            for (let key in data.attributeCounters) {
+                let attribute: SqsDefaultMessageAttributeItem = {name: key, value: data.attributeCounters[key]};
+                this.defaultMessageAttributesList.push(attribute);
+
+            }
+            this.defaultMessageAttributesDatasource = new MatTableDataSource(this.defaultMessageAttributesList);
+        });
         //this.queueDetails$.subscribe((data: any) => console.log("QeueuDetails: ", data));
         //this.queueAttributes$.subscribe((data: any) => console.log("Attributes: ", data));
         //this.queueTags$.subscribe((data: any) => console.log("Data: ", data));
@@ -110,6 +134,46 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
 
     back() {
         this.location.back();
+    }
+
+    tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+        switch (tabChangeEvent.index) {
+            case 0:
+                this.loadAttributes();
+                break;
+            case 1:
+                this.loadLambdaTrigger();
+                break;
+            case 3:
+                this.loadTags();
+                break;
+            case 4:
+                this.loadDefaultMessageAttributes();
+                break;
+        }
+    }
+
+    editDql() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {queueArn: this.queueArn, targetArn: this.targetArn, retries: this.retries};
+
+        this.dialog.open(SqsDqlEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.dlqTargetArn !== this.targetArn || result.dlqRetries !== this.retries) {
+                    this.sqsService.updateDql(result.queueArn, result.targetArn, result.retries)
+                        .subscribe(() => {
+                            this.loadDetails();
+                            this.snackBar.open('SQS DQL changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('SQS DQL unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
     }
 
     // ===================================================================================================================
@@ -221,29 +285,6 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
             })
     }
 
-    editDql() {
-
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {queueArn: this.queueArn, targetArn: this.targetArn, retries: this.retries};
-
-        this.dialog.open(SqsDqlEditDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                if (result.dlqTargetArn !== this.targetArn || result.dlqRetries !== this.retries) {
-                    this.sqsService.updateDql(result.queueArn, result.targetArn, result.retries)
-                        .subscribe(() => {
-                            this.loadDetails();
-                            this.snackBar.open('SQS DQL changed, name: ' + result.key, 'Dismiss', {duration: 5000});
-                        })
-                } else {
-                    this.snackBar.open('SQS DQL unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-                }
-            }
-        });
-    }
-
     editTag(tagKey: string, tagValue: string) {
         const dialogConfig = new MatDialogConfig();
 
@@ -282,5 +323,82 @@ export class SqsQueueDetailComponent implements OnInit, OnDestroy {
                     })
             }
         });
+    }
+
+    // ===================================================================================================================
+    // DefaultMessageAttributes
+    // ===================================================================================================================
+    handleDefaultMessageAttributePageEvent(e: PageEvent) {
+        this.state.value['sqs-queue-details'].defaultMessageAttributePageSize = e.pageSize;
+        this.state.value['sqs-queue-details'].defaultMessageAttributePageIndex = e.pageIndex;
+        this.loadDefaultMessageAttributes();
+    }
+
+    loadDefaultMessageAttributes() {
+        this.store.dispatch(sqsQueueDetailsActions.loadDefaultMessageAttributes({
+            queueArn: this.queueArn,
+            pageSize: this.state.value['sqs-queue-details'].defaultMessageAttributePageSize,
+            pageIndex: this.state.value['sqs-queue-details'].defaultMessageAttributePageIndex,
+            sortColumns: this.state.value['sqs-queue-details'].defaultMessageAttributeSortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    defaultMessageAttributeSortChange(sortState: Sort) {
+        this.state.value['sqs-queue-details'].sortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['sqs-queue-details'].sortColumns = [{column: column, sortDirection: direction}];
+        this.loadDefaultMessageAttributes();
+    }
+
+    refreshDefaultMessageAttributes() {
+        this.loadDefaultMessageAttributes();
+    }
+
+    addDefaultMessageAttribute() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {queueArn: this.queueArn, queueName: this.queueName, queueUrl: this.queueUrl};
+
+        this.dialog.open(SqsMessageAttributeAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.store.dispatch(sqsQueueDetailsActions.addDefaultMessageAttributes({
+                    queueArn: this.queueArn,
+                    name: result.Key,
+                    value: result.Value,
+                    dataType: result.DataType
+                }));
+            }
+        });
+    }
+
+    editDefaultMessageAttribute(name: string, value: string, dataType: string) {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {attribute: {name: name, stringValue: value, dataType: dataType}};
+
+        this.dialog.open(SqsMessageAttributeEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                console.log("resultfromdialog", result);
+                this.store.dispatch(sqsQueueDetailsActions.updateDefaultMessageAttributes({
+                    queueArn: this.queueArn,
+                    name: result.attribute.name,
+                    value: result.attribute.stringValue,
+                    dataType: result.attribute.dataType
+                }));
+            }
+        });
+    }
+
+    deleteDefaultMessageAttribute(key: string) {
+        this.store.dispatch(sqsQueueDetailsActions.deleteDefaultMessageAttributes({
+            queueArn: this.queueArn,
+            name: key,
+        }));
     }
 }

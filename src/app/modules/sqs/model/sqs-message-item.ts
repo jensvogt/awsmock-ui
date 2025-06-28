@@ -5,9 +5,19 @@ export interface SqsMessageAttribute {
     dataType: string
 }
 
+export interface ListMessageAttributeCountersResponse {
+    total: number,
+    messageAttributeCounters: SqsMessageAttribute[]
+}
+
 export interface SqsAttribute {
     key: string,
     value: string,
+}
+
+export interface ListAttributeCountersResponse {
+    total: number,
+    attributeCounters: SqsAttribute[]
 }
 
 export interface SqsMessageItem {

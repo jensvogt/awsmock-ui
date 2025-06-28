@@ -97,7 +97,7 @@
     </mat-card>
     <mat-card appearance="outlined" style="margin-top: 5px;">
         <mat-card-content>
-            <mat-tab-group>
+            <mat-tab-group (selectedTabChange)="tabChanged($event)">
                 <mat-tab label="Attributes">
                     <mat-card-actions class="head-buttons">
                         <button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
@@ -256,6 +256,61 @@
                         </mat-paginator>
                     </div>
                     <ng-template #tagsNotFound>No tags found</ng-template>
+                </mat-tab>
+                <mat-tab label="Default Message Attributes">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="addDefaultMessageAttribute()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button (click)="refreshDefaultMessageAttributes()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="defaultMessageAttributes$ | async as defaultMessageAttributes;else defaultMessageAttributesNotFound" class="row">
+                        <table (matSortChange)="defaultMessageAttributeSortChange($event)" [dataSource]="defaultMessageAttributesDatasource" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Default message attribute name" sortActionDescription="Sort by default message attribute  name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.name }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Default message attribute  value" sortActionDescription="Sort by default message attribute  value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.value.StringValue }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="type">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Default message attribute data type" sortActionDescription="Sort by default message attribute data type">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.value.DataType }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="editDefaultMessageAttribute(row.name, row.value.StringValue, row.value.DataType)" aria-label="Edit" mat-icon-button matTooltip="Edit the default message attribute">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button (click)="deleteDefaultMessageAttribute(row.name)" aria-label="Delete" mat-icon-button matTooltip="Delete default message attribute">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="defaultMessageAttributeColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: defaultMessageAttributeColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="defaultMessageAttributeColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleDefaultMessageAttributePageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(defaultMessageAttributes$ | async)?.total"
+                                       [pageIndex]="(defaultMessageAttributePageIndex$ | async)"
+                                       [pageSizeOptions]="defaultMessageAttributePageSizeOptions"
+                                       [pageSize]="(defaultMessageAttributePageSize$ | async)"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
+                    <ng-template #defaultMessageAttributesNotFound>No defaultMessageAttributes found</ng-template>
                 </mat-tab>
             </mat-tab-group>
         </mat-card-content>

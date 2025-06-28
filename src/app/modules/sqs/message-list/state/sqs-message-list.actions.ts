@@ -1,18 +1,12 @@
 import {createAction, props} from '@ngrx/store';
-import {ListMessageCountersResponse, SqsMessageAttribute} from '../../model/sqs-message-item';
+import {ListMessageAttributeCountersResponse, ListMessageCountersResponse, SqsMessageAttribute} from '../../model/sqs-message-item';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 
 export const sqsMessageListActions = {
     initialize: createAction('[sqs-message-list] initialize'),
 
     // Load message
-    loadMessages: createAction('[sqs-message-list] Load messages', props<{
-        queueArn: string,
-        prefix: string,
-        pageSize: number,
-        pageIndex: number,
-        sortColumns: SortColumn[]
-    }>()),
+    loadMessages: createAction('[sqs-message-list] Load messages', props<{ queueArn: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     loadMessagesSuccess: createAction('[sqs-message-list] Load messages success', props<{ messages: ListMessageCountersResponse }>()),
     loadMessagesFailure: createAction('[sqs-message-list] Load messages error', props<{ error: string }>()),
 
@@ -25,6 +19,11 @@ export const sqsMessageListActions = {
     updateMessage: createAction('[sqs-message-list] Update message', props<{ messageId: string, messageAttributes: SqsMessageAttribute[] }>()),
     updateMessageSuccess: createAction('[sqs-message-list] Update message success'),
     updateMessageFailure: createAction('[sqs-message-list] Update message error', props<{ error: string }>()),
+
+    // Load attribute
+    loadMessageAttributes: createAction('[sqs-message-list] Load message attributes', props<{ messageId: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadMessageAttributesSuccess: createAction('[sqs-message-list] Load message attributes success', props<{ messageAttributes: ListMessageAttributeCountersResponse }>()),
+    loadMessageAttributesFailure: createAction('[sqs-message-list] Load message attributes error', props<{ error: string }>()),
 
     // Add attribute
     addMessageAttribute: createAction('[sqs-message-list] Add message attribute', props<{ messageId: string, name: string, dataType: string, value: string }>()),

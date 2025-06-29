@@ -9,9 +9,9 @@
 
         <mat-checkbox [(ngModel)]="cleanFirst" [checked]=cleanFirst>Clean first</mat-checkbox>
         <mat-checkbox [(ngModel)]="includeObjects">Include Objects</mat-checkbox>
-        <mat-form-field style="width:100%;height:95%">
+        <mat-form-field appearance="fill" style="width:100%;height:95%">
             <mat-label>Infrastructure:</mat-label>
-            <textarea (ngModelChange)="onChange($event)" [ngModel]="body" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput placeholder="Infrastructure" style="display:block; overflow: scroll"></textarea>
+            <textarea (ngModelChange)="onChange($event)" [cdkAutosizeMaxRows]="50" [cdkAutosizeMinRows]="50" [ngModel]="body" cdkTextareaAutosize matInput md-detect-hidden md-resize-textarea placeholder="Infrastructure"></textarea>
         </mat-form-field>
     </ng-template>
 </mat-dialog-content>

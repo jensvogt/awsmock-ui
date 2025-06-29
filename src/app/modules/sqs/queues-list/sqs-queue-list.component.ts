@@ -215,8 +215,10 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         dialogConfig.data = queue.queueArn;
 
         this.dialog.open(ImportMessagesComponentDialog, dialogConfig).afterClosed().subscribe(result => {
-            this.loadQueues();
-            this.snackBar.open('SQS queue messages imported, queueArn: ' + queue.queueArn, 'Done', {duration: 5000})
+            if (result) {
+                this.loadQueues();
+                this.snackBar.open('SQS queue messages imported, queueArn: ' + queue.queueArn, 'Done', {duration: 5000})
+            }
         });
     }
 

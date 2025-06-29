@@ -6,9 +6,9 @@
         </div>
     </div>
     <ng-template #content>
-        <mat-form-field style="width:100%;height:100%">
+        <mat-form-field appearance="fill" style="width:100%;height:100%">
             <mat-label>Messages:</mat-label>
-            <textarea (change)="onChange($event)" [ngModel]="body" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput ng-copy="event=copy" placeholder="Messages" style="width:100%;height:100%"></textarea>
+            <textarea (change)="onChange($event)" [cdkAutosizeMaxRows]="53" [cdkAutosizeMinRows]="53" [ngModel]="body" cdkTextareaAutosize matInput ng-copy="event=copy" placeholder="Messages"></textarea>
         </mat-form-field>
     </ng-template>
 </mat-dialog-content>

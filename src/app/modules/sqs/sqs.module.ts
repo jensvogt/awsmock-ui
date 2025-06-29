@@ -40,6 +40,8 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatDivider} from "@angular/material/divider";
 import {FooterComponent} from "../../shared/footer/footer.component";
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {SpinnerComponent} from "../../shared/spinner/spinner.component";
 
 @NgModule({
     declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent, SendMessageComponentDialog, ViewMessageComponentDialog],
@@ -107,6 +109,8 @@ import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
         MatDivider,
         FooterComponent,
         CdkVirtualScrollViewport,
+        MatProgressSpinner,
+        SpinnerComponent,
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

@@ -192,6 +192,27 @@ export class SqsService {
     }
 
     /**
+     * @brief Export messages to JSON file
+     *
+     * @param queueArn SQS queue ARN
+     */
+    public exportMessages(queueArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ExportMessages');
+        return this.http.post(this.baseUrl, {queueArn: queueArn}, {headers: headers});
+    }
+
+    /**
+     * @brief Export messages to JSON file
+     *
+     * @param queueArn queue ARN
+     * @param messages messages as JSON string
+     */
+    public importMessages(queueArn: string, messages: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ImportMessages');
+        return this.http.post(this.baseUrl, {queueArn: queueArn, messages: messages}, {headers: headers});
+    }
+
+    /**
      * @brief List all message counters
      *
      * @param queueArn SQS queue ARN

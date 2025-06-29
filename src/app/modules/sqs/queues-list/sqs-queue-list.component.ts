@@ -15,6 +15,8 @@ import {SQSQueueListState} from "./state/sqs-queue-list.reducer";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsMessageDialogResult} from "../model/sqs-message-item";
+import {MessageExportComponent} from "../message-export/message-export.component";
+import {ImportMessagesComponentDialog} from "../message-import/message-import.component";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -26,6 +28,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
     // Last update
     lastUpdate: Date = new Date();
+    loading: boolean = false;
 
     // Observables
     pageSize$: Observable<number> = this.store.select(selectPageSize);
@@ -51,11 +54,11 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     // Misc
     protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<SQSQueueListState>, private sqsService: SqsService,
-                private location: Location, private store: Store) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<SQSQueueListState>, private readonly sqsService: SqsService,
+                private readonly location: Location, private readonly store: Store) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -98,10 +101,6 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         this.state.value['sqs-queue-list'].pageSize = e.pageSize;
         this.state.value['sqs-queue-list'].pageIndex = e.pageIndex;
         this.loadQueues();
-    }
-
-    setDlq() {
-
     }
 
     sortChange(sortState: Sort) {
@@ -183,6 +182,42 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
                 this.snackBar.open('SQS queue redrive executed, queueArn: ' + queue.queueArn, 'Done', {duration: 5000})
             });
         }
+    }
+
+    exportMessages(queue: SqsQueueItem) {
+        if (queue?.queueArn) {
+            this.loading = true;
+            this.sqsService.exportMessages(queue.queueArn).subscribe((messages: any) => {
+
+                this.loading = false;
+
+                const dialogConfig = new MatDialogConfig();
+                dialogConfig.disableClose = true;
+                dialogConfig.autoFocus = true;
+                dialogConfig.data = {body: messages, filename: queue.queueArn?.substring(queue.queueArn?.lastIndexOf(':') + 1) + '.json'};
+
+                this.dialog.open(MessageExportComponent, dialogConfig).afterClosed().subscribe(result => {
+                    this.snackBar.open('SQS queue messages exported, queueArn: ' + queue.queueArn, 'Done', {duration: 5000})
+                });
+            });
+        }
+    }
+
+    importMessages(queue: SqsQueueItem) {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "90%"
+        dialogConfig.data = queue.queueArn;
+
+        this.dialog.open(ImportMessagesComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+            this.loadQueues();
+            this.snackBar.open('SQS queue messages imported, queueArn: ' + queue.queueArn, 'Done', {duration: 5000})
+        });
     }
 
     deleteQueue(queueUrl: string) {

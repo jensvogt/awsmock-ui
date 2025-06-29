@@ -6,11 +6,12 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogC
 import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {FileExportComponent} from "./file-export/file-export.component";
+import {FileExportComponent} from "../../infrastructure/export/file-export/file-export.component";
+import {SpinnerComponent} from "../../../shared/spinner/spinner.component";
 
 @Component({
-    selector: 'export-infrastructure-component',
-    templateUrl: './export-infrastructure.component.html',
+    selector: 'sqs-export-messages-component',
+    templateUrl: './message-export.component.html',
     standalone: true,
     imports: [
         MatButton,
@@ -25,17 +26,24 @@ import {FileExportComponent} from "./file-export/file-export.component";
         CdkDrag,
         CdkDragHandle,
         CdkTextareaAutosize,
+        SpinnerComponent,
 
     ],
     providers: [],
-    styleUrls: ['./export-infrastructure.component.scss']
+    styleUrls: ['./message-export.component.scss']
 })
-export class ExportInfrastructureComponentDialog {
+export class MessageExportComponent {
 
     body: string | undefined;
+    filename: string | undefined;
+    loading: boolean = false;
 
-    constructor(private readonly dialogRef: MatDialogRef<ExportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private dialog: MatDialog) {
-        this.body = JSON.stringify(data, null, 4);
+    constructor(private readonly dialogRef: MatDialogRef<MessageExportComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly dialog: MatDialog) {
+        this.loading = true;
+        this.body = JSON.stringify(data.body, null, 4);
+        if (data.filename) {
+            this.filename = data.filename;
+        }
     }
 
     fileExport() {
@@ -43,7 +51,7 @@ export class ExportInfrastructureComponentDialog {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {body: this.body};
+        dialogConfig.data = {body: this.body, filename: this.filename};
 
         this.dialog.open(FileExportComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
@@ -25,24 +25,24 @@ import {saveAs} from "file-saver";
     styleUrls: ['./file-export.component.scss'],
     providers: []
 })
-export class FileExportComponent implements OnInit {
+export class FileExportComponent {
 
     body: string = '';
-    fileName: string | undefined = '';
+    filename: string | undefined = '';
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<FileExportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.body = data;
-    }
-
-    ngOnInit(): void {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<FileExportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.body = data.body;
+        if (data.filename) {
+            this.filename = data.filename;
+        }
     }
 
     // Method to handle file upload
     download(): void {
-        if (this.fileName) {
+        if (this.filename) {
             const blob = new Blob([this.body], {type: "application/json"});
-            saveAs(blob, this.fileName);
-            this.snackBar.open("Infrastructure saved to local file: " + this.fileName, 'Done', {duration: 5000});
+            saveAs(blob, this.filename);
+            this.snackBar.open("Infrastructure saved to local file: " + this.filename, 'Done', {duration: 5000});
             this.dialogRef.close(true);
         }
     }

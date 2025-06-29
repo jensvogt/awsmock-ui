@@ -1,19 +1,19 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ExportInfrastructureComponentDialog} from "./export-infrastructure.component";
+import {ImportMessagesComponentDialog} from "./message-import.component";
 
 describe('HomeComponent', () => {
-    let component: ExportInfrastructureComponentDialog;
-    let fixture: ComponentFixture<ExportInfrastructureComponentDialog>;
+    let component: ImportMessagesComponentDialog;
+    let fixture: ComponentFixture<ImportMessagesComponentDialog>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ExportInfrastructureComponentDialog]
+            declarations: [ImportMessagesComponentDialog]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ExportInfrastructureComponentDialog);
+        fixture = TestBed.createComponent(ImportMessagesComponentDialog);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

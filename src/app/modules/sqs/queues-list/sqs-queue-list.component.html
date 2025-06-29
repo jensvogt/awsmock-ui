@@ -1,4 +1,5 @@
 <mat-card appearance="outlined" style="margin: 3px;">
+    <app-spinner [show]="loading" [size]="150"></app-spinner>
     <mat-card-header>
         <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
@@ -98,6 +99,14 @@
                                 </button>
                                 <mat-menu #menu="matMenu" xPosition="before">
                                     <button mat-menu-item>
+                                        <button (click)="exportMessages(row)" [disabled]="row.isDlq" [matTooltipShowDelay]="1000" aria-label="Export messages" mat-menu-item matTooltip="Export all messages. Only available for standard queues.">
+                                            <mat-icon>archive</mat-icon>
+                                            <span>Export messages</span>
+                                        </button>
+                                        <button (click)="importMessages(row)" [disabled]="row.isDlq" [matTooltipShowDelay]="1000" aria-label="Export messages" mat-menu-item matTooltip="Export all messages. Only available for standard queues.">
+                                            <mat-icon>unarchive</mat-icon>
+                                            <span>Import messages</span>
+                                        </button>
                                         <button (click)="purgeQueue(row.queueUrl)" [matTooltipShowDelay]="1000" aria-label="Purge" mat-menu-item matTooltip="Purge queue">
                                             <mat-icon>clear_all</mat-icon>
                                             <span>Purge queue</span>

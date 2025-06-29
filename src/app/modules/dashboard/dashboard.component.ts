@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     @ViewChild(GatewayTimeComponent) gatewayTimeChart: GatewayTimeComponent | undefined;
     @ViewChild(ThreadsChartComponent) threadsChart: ThreadsChartComponent | undefined;
 
-    constructor(private snackBar: MatSnackBar, private moduleService: ModuleService, private dialog: MatDialog) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly moduleService: ModuleService, private readonly dialog: MatDialog) {
         this.updateSubscription = interval(60000).subscribe(() => {
             this.lastUpdate = new Date();
             this.cpuChart?.loadCpuChart();

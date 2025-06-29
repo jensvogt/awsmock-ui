@@ -2,7 +2,7 @@
 <mat-dialog-content class="mat-typography" style="width: 500px">
     <mat-form-field style="width: 100%">
         <mat-label>DataType</mat-label>
-        <mat-select [(ngModel)]="selectedDataType" name="dataType">
+        <mat-select [(ngModel)]="selectedDataType" first-tabbable name="dataType">
             @for (dataType of dataTypes; track dataType) {
                 <mat-option [value]="dataType.value">{{ dataType.viewValue }}</mat-option>
             }
@@ -18,6 +18,6 @@
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="save()" cdkFocusInitial mat-button>Save</button>
+    <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
+    <button (click)="save()" (keyup.enter)="save()" cdkFocusInitial mat-button>Save</button>
 </mat-dialog-actions>

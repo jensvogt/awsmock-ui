@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewChild} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
@@ -10,6 +10,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ModuleService} from "../../../services/module.service";
 import {FileImportComponent} from "../../infrastructure/import/file-import/file-import.component";
 import {SqsService} from "../service/sqs-service.component";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {NgIf} from "@angular/common";
 
 @Component({
     selector: 'sqs-import-messages-component',
@@ -28,24 +30,31 @@ import {SqsService} from "../service/sqs-service.component";
         CdkDrag,
         CdkDragHandle,
         CdkTextareaAutosize,
+        MatProgressSpinner,
+        NgIf,
 
     ],
     providers: [ModuleService],
     styleUrls: ['./message-import.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportMessagesComponentDialog {
+export class ImportMessagesComponentDialog implements OnInit {
 
     body: string | undefined = '';
     includeObjects = false;
     loadDisabled: boolean = true;
     queueArn: string = '';
+    loading: boolean = false;
 
     @ViewChild('importButton') importButton: MatInput | undefined;
 
     constructor(private readonly dialogRef: MatDialogRef<ImportMessagesComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly snackBar: MatSnackBar,
                 private readonly dialog: MatDialog, private readonly sqsService: SqsService, private readonly cdr: ChangeDetectorRef) {
         this.queueArn = data;
+    }
+
+    ngOnInit() {
+        this.dialogRef.updateSize("1500px", "1000px");
     }
 
     importMessages() {
@@ -61,6 +70,7 @@ export class ImportMessagesComponentDialog {
 
     onChange(event: any) {
         if (event) {
+            this.loading = false;
             this.loadDisabled = false;
         }
     }
@@ -77,13 +87,15 @@ export class ImportMessagesComponentDialog {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {extensions: ['.json']}
 
+        this.loading = true;
         this.dialog.open(FileImportComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.loadDisabled = false;
                 this.body = result;
                 this.importButton?.focus();
-                this.cdr.detectChanges();
             }
+            this.loadDisabled = false;
+            this.loading = false;
+            this.cdr.detectChanges();
         });
     }
 

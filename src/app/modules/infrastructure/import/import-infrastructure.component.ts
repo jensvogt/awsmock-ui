@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewChild} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
@@ -10,6 +10,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {FileImportComponent} from "./file-import/file-import.component";
 import {ModuleService} from "../../../services/module.service";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {NgIf} from "@angular/common";
+import {CdkScrollable} from "@angular/cdk/scrolling";
 
 @Component({
     selector: 'export-infrastructure-component',
@@ -29,21 +32,29 @@ import {MatCheckbox} from "@angular/material/checkbox";
         CdkDragHandle,
         CdkTextareaAutosize,
         MatCheckbox,
+        MatProgressSpinner,
+        NgIf,
+        CdkScrollable,
     ],
     providers: [ModuleService],
     styleUrls: ['./import-infrastructure.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportInfrastructureComponentDialog {
+export class ImportInfrastructureComponentDialog implements OnInit {
 
     body: string | undefined = '';
     cleanFirst = false;
     includeObjects = false;
     loadDisabled: boolean = true;
+    loading = false;
     @ViewChild('importButton') importButton: MatInput | undefined;
 
-    constructor(private dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar,
-                private dialog: MatDialog, private moduleService: ModuleService, private cdr: ChangeDetectorRef) {
+    constructor(private readonly dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly snackBar: MatSnackBar,
+                private readonly dialog: MatDialog, private readonly moduleService: ModuleService, private readonly cdr: ChangeDetectorRef) {
+    }
+
+    ngOnInit() {
+        this.dialogRef.updateSize("1500px", "1000px");
     }
 
     importInfrastructure() {
@@ -75,13 +86,15 @@ export class ImportInfrastructureComponentDialog {
         dialogConfig.autoFocus = true;
         dialogConfig.data = {extensions: ['.json']}
 
+        this.loading = true;
         this.dialog.open(FileImportComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.loadDisabled = false;
                 this.body = result;
                 this.importButton?.focus();
-                this.cdr.detectChanges();
             }
+            this.loading = false;
+            this.loadDisabled = false;
+            this.cdr.detectChanges();
         });
     }
 

@@ -1,9 +1,16 @@
 <h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Import Messages</h2>
 <mat-dialog-content class="mat-typography">
-    <mat-form-field style="width:100%;height:100%">
-        <mat-label>Infrastructure:</mat-label>
-        <textarea (ngModelChange)="onChange($event)" [ngModel]="body" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput ng-copy="event=copy" placeholder="Infrastructure" style="width:100%;height:100%"></textarea>
-    </mat-form-field>
+    <div *ngIf="loading; else content" class="spinner-loading">
+        <div class="spinner-loading">
+            <mat-progress-spinner diameter="60" mode="indeterminate"></mat-progress-spinner>
+        </div>
+    </div>
+    <ng-template #content>
+        <mat-form-field style="width:100%;height:100%">
+            <mat-label>Messages:</mat-label>
+            <textarea (change)="onChange($event)" [ngModel]="body" cdkAutosizeMinRows="70" cdkTextareaAutosize matInput ng-copy="event=copy" placeholder="Messages" style="width:100%;height:100%"></textarea>
+        </mat-form-field>
+    </ng-template>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button (click)="onClear()" mat-button tabindex="-1">Clear</button>

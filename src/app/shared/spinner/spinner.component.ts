@@ -10,5 +10,5 @@ import {NgIf} from "@angular/common";
 })
 export class SpinnerComponent {
     @Input() size = 50;
-    @Input() show: boolean | undefined;
+    @Input() show: boolean = false;
 }

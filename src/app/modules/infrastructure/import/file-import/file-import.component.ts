@@ -29,8 +29,8 @@ export class FileImportComponent {
     uploadError: boolean = false;
     extensions: string[] | undefined;
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<FileImportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        if (data && data.extensions) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<FileImportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        if (data?.extensions) {
             this.extensions = data.extensions;
         }
     }
@@ -74,6 +74,10 @@ export class FileImportComponent {
             this.uploadError = true;
             this.snackBar.open('Only JSON or BSON files are supported!', 'Close', {duration: 3000, panelClass: 'error'});
         }
+    }
+
+    onCancel() {
+        this.dialogRef.close(false);
     }
 
     private checkFileName(fileName: string): boolean {

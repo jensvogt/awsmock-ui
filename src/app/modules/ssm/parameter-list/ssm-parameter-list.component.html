@@ -1,0 +1,151 @@
+<mat-card appearance="outlined" style="margin: 3px;">
+    <app-spinner [show]="loading" [size]="150"></app-spinner>
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
+            SQS Parameters ({{ (listParameterCountersResponse$ | async)?.total }})
+        </span>
+        <button (click)="createParameter()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new parameter">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the parameter list">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button [matTooltipShowDelay]="1000" [routerLink]="['/sqs-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
+            <mat-icon>
+                <span class="material-symbols-outlined">monitoring</span>
+            </mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card appearance="outlined" style="margin: -10px;">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+                    <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>close</mat-icon>
+                    </button>
+                    <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-card-actions>
+            <div class="table-container">
+                <div *ngIf="listParameterCountersResponse$ | async as parameterCounters" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="parameterCounters.parameterCounters" class="mat-elevation-z8 parameter-table" mat-table matSort>
+                        <ng-container matColumnDef="name">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Parameter name" sortActionDescription="Sort by parameter name">Name</th>
+                            <td *matCellDef="let element" mat-cell>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a mat-list-item routerLink="./parameter/{{ element.arn }}"> {{ element.name }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.parameterName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <!--ng-container matColumnDef="messagesAvailable">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages available"
+                                sortActionDescription="Sort by messageAvailable">Available
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.available }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="messagesInFlight">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages invisible"
+                                sortActionDescription="Sort by messagesInFlight">In flight
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.invisible }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="messagesDelayed">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages delayed"
+                                sortActionDescription="Sort by messagesDelayed">Delayed
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.delayed }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="size">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Total size of all messages in bytes"
+                                sortActionDescription="Sort by size">Size
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
+                        </ng-container-->
+                        <ng-container matColumnDef="created">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Parameter creation timestamp" sortActionDescription="Sort by created">Created</th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modified">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Parameter modified timestamp" sortActionDescription="Sort by modified">Modified</th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <!--button (click)="sendMessage(row.parameterUrl, row.parameterArn)" [matTooltipShowDelay]="1000" aria-label="Send" mat-icon-button matTooltip="Send a message to the parameter">
+                                    <mat-icon>send</mat-icon>
+                                </button-->
+                                <button [matTooltipShowDelay]="1000" aria-label="ParameterDetails" mat-icon-button matTooltip="View parameter details" routerLink="./details/{{ row.parameterArn }}">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button [matMenuTriggerFor]="menu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="before">
+                                    <button mat-menu-item>
+                                        <!--button (click)="exportMessages(row)" [disabled]="row.isDlq" [matTooltipShowDelay]="1000" aria-label="Export messages" mat-menu-item matTooltip="Export all messages. Only available for standard parameters.">
+                                            <mat-icon>archive</mat-icon>
+                                            <span>Export messages</span>
+                                        </button>
+                                        <button (click)="importMessages(row)" [disabled]="row.isDlq" [matTooltipShowDelay]="1000" aria-label="Export messages" mat-menu-item matTooltip="Export all messages. Only available for standard parameters.">
+                                            <mat-icon>unarchive</mat-icon>
+                                            <span>Import messages</span>
+                                        </button>
+                                        <button (click)="purgeParameter(row.parameterUrl)" [matTooltipShowDelay]="1000" aria-label="Purge" mat-menu-item matTooltip="Purge parameter">
+                                            <mat-icon>clear_all</mat-icon>
+                                            <span>Purge parameter</span>
+                                        </button>
+                                        <button (click)="redriveMessages(row)" [disabled]="!row.isDlq" [matTooltipShowDelay]="1000" aria-label="Send" mat-menu-item matTooltip="Redrive messages. Only available for DQLs.">
+                                            <mat-icon>redo</mat-icon>
+                                            <span>Redrive messages</span>
+                                        </button>
+                                        <mat-divider></mat-divider-->
+                                        <button (click)="deleteParameter(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-menu-item matTooltip="Delete the parameter">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete parameter</span>
+                                        </button>
+                                    </button>
+                                </mat-menu>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="columns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <mat-paginator (page)="handlePageEvent($event)"
+                           [disabled]="disabled"
+                           [hidePageSize]="hidePageSize"
+                           [length]="(listParameterCountersResponse$ | async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
+                           [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                           [pageSize]="(pageSize$ | async)??false"
+                           [showFirstLastButtons]="showFirstLastButtons"
+                           aria-label="Select page" style="width:99%; margin-left:15px">
+
+            </mat-paginator>
+        </mat-card>
+        <footer-component [lastUpdate]="lastUpdate"/>
+    </mat-card-content>
+</mat-card>

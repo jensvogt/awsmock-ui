@@ -135,6 +135,13 @@ export const routes: Routes = [
                 loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
             },
             //=========================================================================
+            // SSM
+            //=========================================================================
+            {
+                path: 'ssm-parameter-list',
+                loadChildren: () => import('./modules/ssm/ssm.module').then(module => module.SsmModule),
+            },
+            //=========================================================================
             // Not found
             //=========================================================================
             {

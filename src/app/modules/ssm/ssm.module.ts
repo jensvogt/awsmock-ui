@@ -33,9 +33,12 @@ import {SsmParameterListComponent} from "./parameter-list/ssm-parameter-list.com
 import {ssmParameterListFeatureKey, ssmParameterListReducer} from "./parameter-list/state/ssm-parameter-list.reducer";
 import {SsmParameterListEffects} from "./parameter-list/state/ssm-parameter-list.effects";
 import {SsmService} from "./service/ssm-service.component";
+import {SsmParameterDetailComponent} from "./parameter-detail/ssm-parameter-detail.component";
+import {SsmParameterDetailEffects} from "./parameter-detail/state/ssm-parameter-detail.effects";
+import {ssmParameterDetailReducer, ssmParameterDetailsFeatureKey} from "./parameter-detail/state/ssm-parameter-detail.reducer";
 
 @NgModule({
-    declarations: [SsmParameterListComponent],
+    declarations: [SsmParameterListComponent, SsmParameterDetailComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -80,7 +83,8 @@ import {SsmService} from "./service/ssm-service.component";
         AsyncPipe,
         SsmRoutingModule,
         StoreModule.forFeature(ssmParameterListFeatureKey, ssmParameterListReducer),
-        EffectsModule.forFeature([SsmParameterListEffects]),
+        StoreModule.forFeature(ssmParameterDetailsFeatureKey, ssmParameterDetailReducer),
+        EffectsModule.forFeature([SsmParameterListEffects, SsmParameterDetailEffects]),
         CdkTextareaAutosize,
         CdkDrag,
         CdkDragHandle,
@@ -101,7 +105,7 @@ import {SsmService} from "./service/ssm-service.component";
         MatProgressSpinner,
         SpinnerComponent,
     ],
-    exports: [SsmParameterListComponent],
+    exports: [SsmParameterListComponent, SsmParameterDetailComponent],
     providers: [SsmService],
 })
 export class SsmModule {

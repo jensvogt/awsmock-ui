@@ -1,18 +1,19 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SsmParameterListComponent} from "./parameter-list/ssm-parameter-list.component";
+import {SsmParameterDetailComponent} from "./parameter-detail/ssm-parameter-detail.component";
 
 const routes: Routes = [
     {
         path: '',
         title: 'SSMParameterList',
         component: SsmParameterListComponent
-    }/*,
-    {
-        path: 'details/:queueArn',
-        title: 'SQSQueueDetails',
-        component: SqsQueueDetailComponent
     },
+    {
+        path: 'details/:name',
+        title: 'SSMParameterDetails',
+        component: SsmParameterDetailComponent
+    }/*,
     {
         path: 'messages/:queueArn',
         title: 'SQSQueueMessages',

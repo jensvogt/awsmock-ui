@@ -18,6 +18,17 @@ export class SsmService {
     }
 
     /**
+     * @brief Get a parameter
+     *
+     * @param name parameter ARN
+     * @param withDescription with description
+     */
+    public getParameter(name: string, withDescription: boolean = true) {
+        let headers = this.headers.set('x-awsmock-target', 'ssm').set('x-awsmock-action', 'GetParameterCounter');
+        return this.http.post(this.baseUrl, {name: name, withDescription: withDescription}, {headers: headers});
+    }
+
+    /**
      * @brief List all parameters
      *
      * @param prefix parameter name prefix

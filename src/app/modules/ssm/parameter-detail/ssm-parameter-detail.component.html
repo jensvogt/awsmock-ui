@@ -1,0 +1,299 @@
+<mat-card appearance="outlined" style="margin: 3px;">
+    <mat-card-header>
+        <span>
+            <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        </span>
+        <span class="fill-remaining-space">
+            Parameter Details: {{ (parameterDetails$ | async)?.Parameter?.name }}
+        </span>
+        <span>
+            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </span>
+    </mat-card-header>
+    <mat-card appearance="outlined" style="margin: 3px;">
+        <mat-card-header>
+            <mat-card-title>Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="(parameterDetails$ | async) as parameterDetails">
+                <mat-grid-list cols="4" rowHeight="240px">
+                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Name: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.Parameter.name }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>ARN: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.Parameter.arn }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>KeyId: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.Parameter.keyId }}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Value: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.Parameter.value }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Description: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.Parameter.description }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Created: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.Parameter.created ? (parameterDetails.Parameter.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Modified: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.Parameter.modified ? (parameterDetails.Parameter.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <!--mat-card appearance="outlined" style="margin-top: 5px;">
+        <mat-card-content>
+            <mat-tab-group (selectedTabChange)="tabChanged($event)">
+                <mat-tab label="Attributes">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="parameterAttributes$ | async as attributes" class="row">
+                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.attributeCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.attributeKey }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.attributeValue }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator (page)="handleAttributePageEvent($event)"
+                                   [disabled]="false"
+                                   [hidePageSize]="false"
+                                   [length]="(parameterAttributes$ | async)?.total"
+                                   [pageIndex]="(attributePageIndex$ | async)"
+                                   [pageSizeOptions]="attributePageSizeOptions"
+                                   [pageSize]="(attributePageSize$ | async)"
+                                   [showFirstLastButtons]="true"
+                                   aria-label="Select page">
+                    </mat-paginator>
+                </mat-tab>
+                <mat-tab label="Lambda Trigger">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="refreshLambdaTriggers()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="lambdaTriggers$ | async as lambdaTriggersCounter;else lambdaTriggerNotExistent" class="row">
+                        <table (matSortChange)="lambdaTriggerSortChange($event)" [dataSource]="lambdaTriggersCounter.LambdaTriggerCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="uuid">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by lambda trigger UUID">UUID</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.uuid }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="arn">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Lambda trigger ARN" sortActionDescription="Sort by lambda trigger ARN">ARN</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.arn }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="enabled">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Lambda trigger enabled" sortActionDescription="Sort by lambda trigger enabled flag">Enabled</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.enabled }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="lambdaTriggerColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: lambdaTriggerColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="lambdaTriggerColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleLambdaTriggerPageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(lambdaTriggers$ | async)?.Total"
+                                       [pageIndex]="(lambdaTriggerPageIndex$ | async)"
+                                       [pageSizeOptions]="lambdaTriggerPageSizeOptions"
+                                       [pageSize]="(lambdaTriggerPageSize$ | async)"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
+                    <ng-template #lambdaTriggerNotExistent>No lambda triggers found</ng-template>
+                </mat-tab>
+                <mat-tab label="Dead Letter Parameter">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="editDql()" aria-label="Refresh tags" mat-icon-button>
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="(parameterDetails$ | async) as parameterDetails">
+                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Target Parameter ARN:</p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.dlqArn }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Max. Receive:</p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ parameterDetails.dlqMaxReceive }}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Tags">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button (click)="refreshTags()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="parameterTags$ | async as tags;else tagsNotFound" class="row">
+                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Key }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by tag value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.Value }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="editTag(row.Key, row.Value)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button (click)="deleteTag(row.Key)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="tagColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleTagPageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(parameterTags$ | async)?.total"
+                                       [pageIndex]="(tagPageIndex$ | async)"
+                                       [pageSizeOptions]="tagPageSizeOptions"
+                                       [pageSize]="(tagPageSize$ | async)"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
+                    <ng-template #tagsNotFound>No tags found</ng-template>
+                </mat-tab>
+                <mat-tab label="Default Message Attributes">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="addDefaultMessageAttribute()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button (click)="refreshDefaultMessageAttributes()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <div *ngIf="defaultMessageAttributes$ | async as defaultMessageAttributes;else defaultMessageAttributesNotFound" class="row">
+                        <table (matSortChange)="defaultMessageAttributeSortChange($event)" [dataSource]="defaultMessageAttributesDatasource" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Default message attribute name" sortActionDescription="Sort by default message attribute  name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.name }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Default message attribute  value" sortActionDescription="Sort by default message attribute  value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.value.StringValue }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="type">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Default message attribute data type" sortActionDescription="Sort by default message attribute data type">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.value.DataType }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="editDefaultMessageAttribute(row.name, row.value.StringValue, row.value.DataType)" aria-label="Edit" mat-icon-button matTooltip="Edit the default message attribute">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button (click)="deleteDefaultMessageAttribute(row.name)" aria-label="Delete" mat-icon-button matTooltip="Delete default message attribute">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="defaultMessageAttributeColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: defaultMessageAttributeColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="defaultMessageAttributeColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleDefaultMessageAttributePageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="(defaultMessageAttributes$ | async)?.total"
+                                       [pageIndex]="(defaultMessageAttributePageIndex$ | async)"
+                                       [pageSizeOptions]="defaultMessageAttributePageSizeOptions"
+                                       [pageSize]="(defaultMessageAttributePageSize$ | async)"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </div>
+                    <ng-template #defaultMessageAttributesNotFound>No defaultMessageAttributes found</ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card-->
+    <footer-component [lastUpdate]="lastUpdate"/>
+</mat-card>

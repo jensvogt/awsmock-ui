@@ -12,6 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ListParameterCountersResponse} from "../model/ssm-parameter-item";
 import {SsmParameterListState} from "./state/ssm-parameter-list.reducer";
 import {SsmService} from "../service/ssm-service.component";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'ssm-parameter-list',
@@ -48,9 +49,11 @@ export class SsmParameterListComponent implements OnInit, OnDestroy {
 
     // Misc
     protected readonly byteConversion = byteConversion;
+    protected readonly encodeURI = encodeURI;
+    protected readonly btoa = btoa;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<SsmParameterListState>, private readonly ssmService: SsmService,
-                private readonly location: Location, private readonly store: Store) {
+                private readonly location: Location, private readonly store: Store, private readonly router: Router) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data?.length) {
@@ -106,6 +109,10 @@ export class SsmParameterListComponent implements OnInit, OnDestroy {
         let direction = sortState.direction === 'asc' ? 1 : -1
         this.state.value['ssm-parameter-list'].sortColumns = [{column: column, sortDirection: direction}];
         this.loadParameters();
+    }
+
+    navigateToDetails(name: string) {
+        this.router.navigate(['/ssm-parameter-list/details/' + btoa(name)]);
     }
 
     loadParameters() {

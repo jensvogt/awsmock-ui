@@ -161,6 +161,16 @@ export class SqsService {
     }
 
     /**
+     * @brief Reload message counters
+     *
+     * @param queueArn queue ARN
+     */
+    public reloadCounters(queueArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ReloadCounters');
+        return this.http.post(this.baseUrl, {queueArn: queueArn}, {headers: headers});
+    }
+
+    /**
      * @brief Delete a queue tag
      *
      * @param queueUrl queue URL

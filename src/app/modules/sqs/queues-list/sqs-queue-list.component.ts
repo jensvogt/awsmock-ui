@@ -83,6 +83,12 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         this.loadQueues();
     }
 
+    reloadCounters(queueArn: string) {
+        this.sqsService.reloadCounters(queueArn).subscribe(() => {
+            this.loadQueues();
+        })
+    }
+
     setPrefix() {
         this.prefixSet = true;
         this.state.value['sqs-queue-list'].pageIndex = 0;

@@ -115,6 +115,10 @@
                                             <mat-icon>redo</mat-icon>
                                             <span>Redrive messages</span>
                                         </button>
+                                        <button (click)="reloadCounters(row.queueArn)" [matTooltipShowDelay]="1000" aria-label="Reload counters" mat-menu-item matTooltip="Reload message counters.">
+                                            <mat-icon>pin</mat-icon>
+                                            <span>Reload queue counters</span>
+                                        </button>
                                         <mat-divider></mat-divider>
                                         <button (click)="deleteQueue(row.queueUrl)" [matTooltipShowDelay]="1000" aria-label="Purge" mat-menu-item matTooltip="Delete the queue">
                                             <mat-icon>delete</mat-icon>

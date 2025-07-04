@@ -25,6 +25,9 @@ export class AppComponent {
         if (!localStorage.getItem("user")) {
             localStorage.setItem('user', "none");
         }
+        if (!localStorage.getItem("autoReload")) {
+            localStorage.setItem('autoReload', "60");
+        }
     }
 
     navigateMenu() {

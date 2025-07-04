@@ -28,7 +28,6 @@ import {MatDivider} from "@angular/material/divider";
 import {FooterComponent} from "../../shared/footer/footer.component";
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {SpinnerComponent} from "../../shared/spinner/spinner.component";
 import {SsmParameterListComponent} from "./parameter-list/ssm-parameter-list.component";
 import {ssmParameterListFeatureKey, ssmParameterListReducer} from "./parameter-list/state/ssm-parameter-list.reducer";
 import {SsmParameterListEffects} from "./parameter-list/state/ssm-parameter-list.effects";
@@ -103,7 +102,6 @@ import {ssmParameterDetailReducer, ssmParameterDetailsFeatureKey} from "./parame
         FooterComponent,
         CdkVirtualScrollViewport,
         MatProgressSpinner,
-        SpinnerComponent,
     ],
     exports: [SsmParameterListComponent, SsmParameterDetailComponent],
     providers: [SsmService],

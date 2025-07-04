@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {AsyncPipe, DatePipe, NgIf} from '@angular/common';
+import {AsyncPipe, DatePipe, NgIf, NgStyle} from '@angular/common';
 
 import {SqsQueueListComponent} from "./queues-list/sqs-queue-list.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -36,12 +36,11 @@ import {ViewMessageComponentDialog} from "./message-view/view-message.component"
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatMenuModule} from "@angular/material/menu";
 import {MatDivider} from "@angular/material/divider";
 import {FooterComponent} from "../../shared/footer/footer.component";
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {SpinnerComponent} from "../../shared/spinner/spinner.component";
 
 @NgModule({
     declarations: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent, SendMessageComponentDialog, ViewMessageComponentDialog],
@@ -103,14 +102,12 @@ import {SpinnerComponent} from "../../shared/spinner/spinner.component";
         MatCheckbox,
         CdkCopyToClipboard,
         MatTabLabel,
-        MatMenuItem,
-        MatMenuTrigger,
-        MatMenu,
+        MatMenuModule,
         MatDivider,
         FooterComponent,
         CdkVirtualScrollViewport,
         MatProgressSpinner,
-        SpinnerComponent,
+        NgStyle,
     ],
     exports: [SqsQueueListComponent, SqsQueueDetailComponent, SqsMessageListComponent],
     providers: [SqsService],

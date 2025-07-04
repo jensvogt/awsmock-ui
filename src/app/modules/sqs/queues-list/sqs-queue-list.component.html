@@ -1,5 +1,4 @@
 <mat-card appearance="outlined" style="margin: 3px;">
-    <app-spinner [show]="loading" [size]="150"></app-spinner>
     <mat-card-header>
         <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
@@ -18,6 +17,21 @@
                 <span class="material-symbols-outlined">monitoring</span>
             </mat-icon>
         </button>
+        <div>
+            <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #mainmenu="matMenu" xPosition="before">
+                <button mat-menu-item>
+                    <button (click)="autoReload()" mat-menu-item>
+                        <mat-icon>
+                            <span class="material-symbols-outlined">hourglass</span>
+                        </mat-icon>
+                        <span>Auto Reload</span>
+                    </button>
+                </button>
+            </mat-menu>
+        </div>
     </mat-card-header>
     <mat-card-content>
         <mat-card appearance="outlined" style="margin: -10px;">
@@ -94,10 +108,10 @@
                                 <button [matTooltipShowDelay]="1000" aria-label="QueueDetails" mat-icon-button matTooltip="View queue details" routerLink="./details/{{ row.queueArn }}">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button [matMenuTriggerFor]="menu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                                <button [matMenuTriggerFor]="queuemenu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
                                     <mat-icon>more_vert</mat-icon>
                                 </button>
-                                <mat-menu #menu="matMenu" xPosition="before">
+                                <mat-menu #queuemenu="matMenu" xPosition="before">
                                     <button mat-menu-item>
                                         <button (click)="exportMessages(row)" [disabled]="row.isDlq" [matTooltipShowDelay]="1000" aria-label="Export messages" mat-menu-item matTooltip="Export all messages. Only available for standard queues.">
                                             <mat-icon>archive</mat-icon>

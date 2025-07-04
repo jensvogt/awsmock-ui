@@ -7,7 +7,6 @@ import {MatInput} from "@angular/material/input";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FileExportComponent} from "../../infrastructure/export/file-export/file-export.component";
-import {SpinnerComponent} from "../../../shared/spinner/spinner.component";
 
 @Component({
     selector: 'sqs-export-messages-component',
@@ -26,8 +25,6 @@ import {SpinnerComponent} from "../../../shared/spinner/spinner.component";
         CdkDrag,
         CdkDragHandle,
         CdkTextareaAutosize,
-        SpinnerComponent,
-
     ],
     providers: [],
     styleUrls: ['./message-export.component.scss']

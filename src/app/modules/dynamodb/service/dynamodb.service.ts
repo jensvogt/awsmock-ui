@@ -18,17 +18,17 @@ export class DynamodbService {
         'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/' + this.region + 'eu-central-1/dynamodb/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
     });
 
-    constructor(private http: HttpClient) {
+    constructor(private readonly http: HttpClient) {
     }
 
     public listTableCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "ListTableCounters");
         const body = {
-            Region: environment.awsmockRegion,
-            Prefix: prefix,
-            PageSize: pageSize,
-            PageIndex: pageIndex,
-            SortColumns: sortColumns
+            region: environment.awsmockRegion,
+            prefix: prefix,
+            pageSize: pageSize,
+            pageIndex: pageIndex,
+            sortColumns: sortColumns
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
     }

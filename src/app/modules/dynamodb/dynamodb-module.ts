@@ -25,6 +25,7 @@ import {DynamodbItemListComponent} from "./item-list/item-list.component";
 import {dynamodbItemListFeatureKey, dynamodbItemListReducer} from "./item-list/state/dynamodb-item-list.reducer";
 import {DynamodbItemListEffects} from "./item-list/state/dynamodb-item-list.effects";
 import {FooterComponent} from "../../shared/footer/footer.component";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 @NgModule({
     declarations: [DynamodbTableListComponent, DynamodbItemListComponent],
@@ -75,6 +76,9 @@ import {FooterComponent} from "../../shared/footer/footer.component";
         StoreModule.forFeature(dynamodbItemListFeatureKey, dynamodbItemListReducer),
         EffectsModule.forFeature([DynamodbTableListEffects, DynamodbItemListEffects]),
         FooterComponent,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
     ],
     exports: [DynamodbTableListComponent],
     providers: [DynamodbService],

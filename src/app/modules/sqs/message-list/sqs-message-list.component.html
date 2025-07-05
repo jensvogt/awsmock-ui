@@ -15,6 +15,19 @@
         <button (click)="purgeMessages()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Purge messages from queue">
             <mat-icon>clear_all</mat-icon>
         </button>
+        <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #mainmenu="matMenu" xPosition="before">
+            <button mat-menu-item>
+                <button (click)="autoReload()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">hourglass</span>
+                    </mat-icon>
+                    <span>Auto Reload</span>
+                </button>
+            </button>
+        </mat-menu>
     </mat-card-header>
     <mat-card-content>
         <mat-card appearance="outlined" style="margin: -10px">
@@ -102,6 +115,6 @@
                            aria-label="Select page" style="width:99%; margin-left:15px">
             </mat-paginator>
         </mat-card>
-        <footer-component/>
+        <footer-component [lastUpdate]="lastUpdate"/>
     </mat-card-content>
 </mat-card>

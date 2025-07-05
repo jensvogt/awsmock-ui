@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Component, Inject} from "@angular/core";
+import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -33,7 +33,7 @@ interface DataType {
     styleUrls: ['./attribute-add.component.scss'],
     providers: [SqsService]
 })
-export class SqsMessageAttributeAddDialog implements OnInit {
+export class SqsMessageAttributeAddDialog {
 
     // @ts-ignore
     form: FormGroup;
@@ -47,14 +47,7 @@ export class SqsMessageAttributeAddDialog implements OnInit {
     ];
     selectedDataType: string = 'String';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<SqsMessageAttributeAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-    }
-
-    ngOnInit() {
-        this.form = this.fb.group({
-            key: [""],
-            value: [""]
-        });
+    constructor(private readonly dialogRef: MatDialogRef<SqsMessageAttributeAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
     }
 
     save() {

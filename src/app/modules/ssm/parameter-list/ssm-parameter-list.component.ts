@@ -9,10 +9,12 @@ import {selectPageIndex, selectPageSize, selectParameterCounters, selectPrefix} 
 import {ssmParameterListActions} from "./state/ssm-parameter-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ListParameterCountersResponse} from "../model/ssm-parameter-item";
+import {CreateParameterCounterRequest, ListParameterCountersResponse} from "../model/ssm-parameter-item";
 import {SsmParameterListState} from "./state/ssm-parameter-list.reducer";
 import {SsmService} from "../service/ssm-service.component";
 import {Router} from "@angular/router";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {ParameterAddDialogComponent} from "../parameter-add/parameter-add-component";
 
 @Component({
     selector: 'ssm-parameter-list',
@@ -61,16 +63,38 @@ export class SsmParameterListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.listQueueCountersResponse$.subscribe((data) => console.log("Data: ", data));
+        //this.listParameterCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
     }
 
     ngOnInit(): void {
         this.loadParameters();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadParameters());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadParameters());
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadParameters());
+            }
+        });
     }
 
     back() {
@@ -131,15 +155,28 @@ export class SsmParameterListComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+        dialogConfig.minWidth = '580px'
 
-        /*this.dialog.open(QueueAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(ParameterAddDialogComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.ssmService.createQueue(result).subscribe(() => {
-                    this.loadQueues();
-                    this.snackBar.open('SQS queue created, url: ' + result, 'Done', {duration: 5000})
-                });
+                let request: CreateParameterCounterRequest = {
+                    name: result.name,
+                    value: result.value,
+                    description: result.description,
+                    type: result.type,
+                    kmsKeyArn: result.kmsKeyArn,
+                    prefix: this.state.value['ssm-parameter-list'].prefix,
+                    pageSize: this.state.value['ssm-parameter-list'].pageSize,
+                    pageIndex: this.state.value['ssm-parameter-list'].pageIndex,
+                    sortColumns: this.state.value['ssm-parameter-list'].sortColumns
+                };
+                this.store.dispatch(ssmParameterListActions.createParameter({request: request}));
             }
-        });*/
+        });
     }
 
     deleteParameter(name: string) {

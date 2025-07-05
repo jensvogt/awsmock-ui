@@ -16,6 +16,7 @@ import {LambdaFunctionListState} from "./state/lambda-function-list.reducer";
 import {LambdaFunctionCreateDialog} from "../function-create/function-create-dialog.component";
 import {LambdaFunctionUpgradeDialog} from "../function-upgrade/function-upgrade-dialog.component";
 import {LambdaResultDialog} from "../function-result/function-result-dialog.component";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'lambda-function-list',
@@ -78,7 +79,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         });
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -86,13 +87,10 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     ngOnInit(): void {
-        this.store
-            .pipe(select(selectFunctionCounters))
-            .subscribe((functionCounters) => this.initializeData(functionCounters.functionCounters));
-        this.store
-            .pipe(select(selectTotal))
-            .subscribe((total) => (this.total = total));
-        this.updateSubscription = interval(60000).subscribe(() => this.loadFunctions());
+        this.store.pipe(select(selectFunctionCounters)).subscribe((functionCounters) => this.initializeData(functionCounters.functionCounters));
+        this.store.pipe(select(selectTotal)).subscribe((total) => (this.total = total));
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadFunctions());
     }
 
     ngAfterViewInit() {
@@ -129,6 +127,27 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadFunctions());
+            }
+        });
     }
 
     back() {
@@ -183,6 +202,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     loadFunctions() {
+        this.lastUpdate = new Date();
         this.store.dispatch(lambdaFunctionListActions.loadFunctions({
             prefix: this.state.value['lambda-function-list'].prefix,
             pageSize: this.state.value['lambda-function-list'].pageSize,

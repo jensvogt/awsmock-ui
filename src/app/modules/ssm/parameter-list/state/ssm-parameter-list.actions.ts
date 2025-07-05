@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {ListParameterCountersResponse} from "../../model/ssm-parameter-item";
+import {CreateParameterCounterRequest, ListParameterCountersResponse} from "../../model/ssm-parameter-item";
 
 export const ssmParameterListActions = {
     initialize: createAction('[ssm-parameter-list] initialize'),
@@ -13,13 +13,13 @@ export const ssmParameterListActions = {
     // Delete parameter
     deleteParameter: createAction('[ssm-parameter-list] Delete parameter', props<{ name: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     deleteParameterSuccess: createAction('[ssm-parameter-list] Delete parameter success', props<{ parameters: ListParameterCountersResponse }>()),
-    deleteParameterFailure: createAction('[ssm-parameter-list] Delete parameter error', props<{ error: string }>())
+    deleteParameterFailure: createAction('[ssm-parameter-list] Delete parameter error', props<{ error: string }>()),
 
-    //
-    // // Add queue
-    // createQueue: createAction('[ssm-parameter-list] Create queue', props<{ name: string }>()),
-    // createQueueSuccess: createAction('[ssm-parameter-list] Create queue success'),
-    // createQueueFailure: createAction('[ssm-parameter-list] Create queue error', props<{ error: string }>()),
+    // Add parameter
+    createParameter: createAction('[ssm-parameter-list] Create parameter', props<{ request: CreateParameterCounterRequest }>()),
+    createParameterSuccess: createAction('[ssm-parameter-list] Create parameter success', props<{ parameters: ListParameterCountersResponse }>()),
+    createParameterFailure: createAction('[ssm-parameter-list] Create parameter error', props<{ error: string }>()),
+    
     //
     // // Send a message
     // sendMessage: createAction('[ssm-parameter-list] Send message', props<{ queueUrl: string, message: string, delay: number, attributes: any }>()),

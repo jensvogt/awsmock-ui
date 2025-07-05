@@ -17,6 +17,7 @@ import {selectMessageCounters} from "./state/sqs-message-list.selectors";
 import {sqsMessageListActions} from "./state/sqs-message-list.actions";
 import {SQSMessageListState} from "./state/sqs-message-list.reducer";
 import {byteConversion} from '../../../shared/byte-utils.component';
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'sqs-message-list',
@@ -88,12 +89,34 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
             this.queueUrl = data.QueueUrl;
         });
         this.loadMessages();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadMessages());
     }
 
     ngOnDestroy(): void {
         this.routerSubscription?.unsubscribe();
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadMessages());
+            }
+        });
     }
 
     back() {

@@ -21,6 +21,7 @@ import {S3ObjectDownloadComponent} from "./download/s3-object-download.component
 import {S3ObjectViewDialog} from "./view/object-view.component";
 import {ofType} from "@ngrx/effects";
 import {s3BucketListActions} from "../bucket-list/state/s3-bucket-list.actions";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 's3-object-list',
@@ -69,7 +70,8 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
             this.bucketName = decodeURI(params['bucketName']);
             this.state.value.bucketName = decodeURI(params['bucketName']);
         });
-        this.updateSubscription = interval(60000).subscribe(() => this.loadObjects());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadObjects());
         this.loadObjects();
         this.actionsSubject$.pipe(ofType(s3BucketListActions.addBucketSuccess)).subscribe(() => {
             this.loadObjects();
@@ -84,6 +86,27 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadObjects());
+            }
+        });
     }
 
     setPrefix() {

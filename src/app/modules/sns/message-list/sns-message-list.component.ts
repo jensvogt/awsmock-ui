@@ -15,6 +15,7 @@ import {selectMessageCounters, selectPageIndex, selectPageSize} from "./state/sn
 import {SnsMessageDetailsDialog} from "../message-details/sns-message-details.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'sns-message-list-component',
@@ -53,8 +54,8 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     private updateSubscription: Subscription | undefined;
     private routerSubscription: Subscription | undefined;
 
-    constructor(private route: ActivatedRoute, private location: Location, private dialog: MatDialog, private store: Store, private state: State<SNSMessageListState>,
-                private snsService: SnsService, private snackBar: MatSnackBar) {
+    constructor(private readonly route: ActivatedRoute, private readonly location: Location, private readonly dialog: MatDialog, private readonly store: Store, private readonly state: State<SNSMessageListState>,
+                private readonly snsService: SnsService, private readonly snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
@@ -63,7 +64,8 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
             this.topicName = this.topicArn.substring(this.topicArn.lastIndexOf(':') + 1);
         });
         this.state.value['sns-message-list'].sortColumns = [{column: 'created', sortDirection: -1}];
-        this.updateSubscription = interval(60000).subscribe(() => this.loadMessages());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadMessages());
         // this.listMessageCountersResponse$.subscribe((data) => console.log("Data: ", data));
         this.loadMessages();
     }
@@ -71,6 +73,27 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.routerSubscription?.unsubscribe();
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadMessages());
+            }
+        });
     }
 
     back() {
@@ -118,6 +141,7 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     }
 
     loadMessages() {
+        this.lastUpdate = new Date();
         this.store.dispatch(snsMessageListActions.loadMessages({
             topicArn: this.topicArn,
             prefix: this.state.value['sns-message-list'].prefix,

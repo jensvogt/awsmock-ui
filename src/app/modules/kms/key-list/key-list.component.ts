@@ -15,6 +15,7 @@ import {ListKeyCountersResponse} from "../model/key-item";
 import {KmsService} from "../service/kms-service.component";
 import {KeyAddComponentDialog} from "../key-add/key-add.component";
 import {KmsKeyAddRequest} from "../model/key-add-request";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'kms-key-list-component',
@@ -58,12 +59,34 @@ export class KmsKeyListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadKeys();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadKeys());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadKeys());
         //this.listKeyCountersResponse$.subscribe((data) => console.log("Key list data: ", data));
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadKeys());
+            }
+        });
     }
 
     back() {

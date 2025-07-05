@@ -15,6 +15,7 @@ import {dynamodbTableListActions} from "./state/dynamodb-table-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {DynamodbService} from "../service/dynamodb.service";
 import {DynamoDbAddTableDialog} from "./add-table/add-table.component";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'dynamodb-table-list',
@@ -53,10 +54,10 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
     prefixSet: boolean = false;
     protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<DynamodbTableListState>, private store: Store, private dynamodbService: DynamodbService) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly state: State<DynamodbTableListState>, private readonly store: Store, private readonly dynamodbService: DynamodbService) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -66,11 +67,33 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadTables();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadTables());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadTables());
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadTables());
+            }
+        });
     }
 
     setPrefix() {

@@ -9,6 +9,8 @@ import {transferServerListActions} from "./state/transfer-server-list.actions";
 import {TransferServerListState} from "./state/transfer-server-list.reducer";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {ListTransferServerCountersResponse} from "../model/transfer-server-item";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'transfer-server-list',
@@ -43,10 +45,10 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
     prefixSet: boolean = false;
     protected readonly byteConversion = byteConversion;
 
-    constructor(private state: State<TransferServerListState>, private location: Location, private store: Store) {
+    constructor(private readonly state: State<TransferServerListState>, private readonly location: Location, private readonly store: Store, private readonly dialog: MatDialog) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -56,11 +58,33 @@ export class TransferServerListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadTransferServer();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadTransferServer());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadTransferServer());
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe((result) => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadTransferServer());
+            }
+        });
     }
 
     back() {

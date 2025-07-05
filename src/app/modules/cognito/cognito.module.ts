@@ -4,19 +4,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable
-} from "@angular/material/table";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -38,6 +26,7 @@ import {cognitoUserListFeatureKey, cognitoUserListReducer} from "./user-list/sta
 import {CognitoUserListEffects} from "./user-list/state/cognito-user-list.effects";
 import {CognitoUserDetailsComponent} from "./user-detail/user-detail.component";
 import {FooterComponent} from "../../shared/footer/footer.component";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 @NgModule({
     declarations: [CognitoUserPoolListComponent, CognitoUserListComponent, CognitoUserDetailsComponent],
@@ -88,6 +77,9 @@ import {FooterComponent} from "../../shared/footer/footer.component";
         StoreModule.forFeature(cognitoUserListFeatureKey, cognitoUserListReducer),
         EffectsModule.forFeature([CognitoUserPoolListEffects, CognitoUserListEffects]),
         FooterComponent,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
     ],
     exports: [CognitoUserPoolListComponent, CognitoUserListComponent, CognitoUserDetailsComponent],
     providers: [CognitoService],

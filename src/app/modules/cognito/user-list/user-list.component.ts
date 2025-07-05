@@ -15,6 +15,7 @@ import {selectPageIndex, selectPageSize, selectPrefix} from "../user-pool-list/s
 import {CognitoUserListState} from "./state/cognito-user-list.reducer";
 import {UserCountersResponse} from "../model/user-item";
 import {selectUsersCounters} from "./state/cognito-user-list.selectors";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'cognito-user-list',
@@ -45,7 +46,6 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
-    pageEvent: PageEvent = {length: 0, pageIndex: 0, pageSize: 0};
 
     // Prefix
     prefixValue: string = this.state.value['cognito-user-list'].prefix;
@@ -55,11 +55,11 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
     sortColumns: SortColumn[] = [];
     private routerSubscription: any;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private route: ActivatedRoute, private location: Location, private store: Store,
-                private state: State<CognitoUserListState>, private cognitoService: CognitoService, private actionsSubj$: ActionsSubject) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly route: ActivatedRoute, private readonly location: Location, private readonly store: Store,
+                private readonly state: State<CognitoUserListState>, private readonly cognitoService: CognitoService, private readonly actionsSubj$: ActionsSubject) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -81,12 +81,34 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
             this.userPoolId = params['userPoolId'];
         });
         this.loadUsers();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadUsers());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadUsers());
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
         this.routerSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadUsers());
+            }
+        });
     }
 
     setPrefix() {

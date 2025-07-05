@@ -69,7 +69,8 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadQueues();
-        this.updateSubscription = interval(parseInt(<string>localStorage.getItem("autoReload"))).subscribe(() => this.loadQueues());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadQueues());
     }
 
     ngOnDestroy(): void {
@@ -98,7 +99,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                const period = parseInt(<string>localStorage.getItem("autoReload")) * 1000;
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
                 this.updateSubscription?.unsubscribe();
                 this.updateSubscription = interval(period).subscribe(() => this.loadQueues());
             }

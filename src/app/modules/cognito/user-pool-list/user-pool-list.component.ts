@@ -13,6 +13,7 @@ import {CognitoUserPoolListState} from "./state/cognito-userpool-list.reducer";
 import {cognitoUserpoolListActions} from "./state/cognito-userpool-list.actions";
 import {selectPageIndex, selectPageSize, selectPrefix, selectUserPoolCounters} from "./state/cognito-userpool-list.selectors";
 import {UserPoolCountersResponse} from "../model/user-pool-item";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'cognito-user-pool-list',
@@ -51,11 +52,11 @@ export class CognitoUserPoolListComponent implements OnInit, OnDestroy {
     prefixValue: string = this.state.value['cognito-userpool-list'].prefix;
     prefixSet: boolean = false;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<CognitoUserPoolListState>,
-                private store: Store) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly state: State<CognitoUserPoolListState>,
+                private readonly store: Store) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -65,11 +66,33 @@ export class CognitoUserPoolListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadUserpools();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadUserpools());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadUserpools());
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadUserpools());
+            }
+        });
     }
 
     setPrefix() {

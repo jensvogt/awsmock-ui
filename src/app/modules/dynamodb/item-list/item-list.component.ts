@@ -17,6 +17,7 @@ import {DynamodbItemListState} from "./state/dynamodb-item-list.reducer";
 import {ActivatedRoute} from "@angular/router";
 import {DynamodbViewItemDialog} from "./view-item/view-item.component";
 import {DynamoDbAddItemDialog} from "./add-item/add-item.component";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'dynamodb-item-list',
@@ -60,10 +61,11 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private routerSubscription: Subscription | undefined;
 
-    constructor(private snackBar: MatSnackBar, private route: ActivatedRoute, private dialog: MatDialog, private location: Location, private state: State<DynamodbItemListState>, private store: Store, private dynamodbService: DynamodbService) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly route: ActivatedRoute, private readonly dialog: MatDialog, private readonly location: Location, private readonly state: State<DynamodbItemListState>,
+                private readonly store: Store, private readonly dynamodbService: DynamodbService) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -76,12 +78,34 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
             this.tableName = decodeURI(params['tableName']);
         });
         this.loadItems();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadItems());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadItems());
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
         this.routerSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadItems());
+            }
+        });
     }
 
     setPrefix() {

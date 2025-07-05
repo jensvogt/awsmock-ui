@@ -6,7 +6,6 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 
-
 @Component({
     selector: 'auto-reload-component',
     templateUrl: './auto-reload.component.html',
@@ -26,16 +25,16 @@ import {MatButton} from "@angular/material/button";
 })
 export class AutoReloadComponent {
 
-    autoReload: string | null = "10";
+    autoReload: number = 10;
 
     constructor(private readonly dialogRef: MatDialogRef<AutoReloadComponent>, private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any) {
         if (localStorage.getItem("autoReload") !== null) {
-            this.autoReload = localStorage.getItem("autoReload");
+            this.autoReload = parseInt(<string>localStorage.getItem("autoReload")) / 1000;
         }
     }
 
     save() {
-        localStorage.setItem("autoReload", String(this.autoReload));
+        localStorage.setItem("autoReload", String(this.autoReload * 1000));
         this.dialogRef.close(String(this.autoReload));
     }
 }

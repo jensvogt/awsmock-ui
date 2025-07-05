@@ -27,6 +27,7 @@ import {TransferServerDetailEffects} from "./transfer-details/state/transfer-ser
 import {transferServerDetailReducer, transferServerDetailsFeatureKey} from "./transfer-details/state/transfer-server-detail.reducer";
 import {FooterComponent} from "../../shared/footer/footer.component";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 @NgModule({
     declarations: [TransferServerListComponent, TransferServerDetailComponent],
@@ -78,6 +79,9 @@ import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
         EffectsModule.forFeature([TransferServerListEffects, TransferServerDetailEffects]),
         FooterComponent,
         CdkCopyToClipboard,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
     ],
     exports: [TransferServerListComponent],
     providers: [TransferService],

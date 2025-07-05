@@ -1,3 +1,5 @@
+import {SortColumn} from "../../../shared/sorting/sorting.component";
+
 export interface SsmParameterItem {
     name: string | undefined;
     created: Date | undefined;
@@ -16,6 +18,7 @@ export interface SsmParameterDetails {
     type: string | undefined;
     description: string | undefined;
     keyId: string | undefined;
+    kmsKeyArn: string | undefined;
     arn: string | undefined;
     created: Date | undefined;
     modified: Date | undefined;
@@ -23,4 +26,20 @@ export interface SsmParameterDetails {
 
 export interface SsmParameterDetailsResponse {
     Parameter: SsmParameterDetails;
+}
+
+export interface CreateParameterCounterRequest {
+    name: string;
+    value: string;
+    description: string;
+    type: string;
+    kmsKeyArn: string;
+    prefix: string;
+    pageSize: number;
+    pageIndex: number;
+    sortColumns: SortColumn[];
+}
+
+export interface LoadKmsKeyArnsResponse {
+    kmsKeyArns: string[];
 }

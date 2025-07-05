@@ -42,6 +42,14 @@ export class KmsService {
     }
 
     /**
+     * @brief List all key ARNs
+     */
+    public listKeyArns() {
+        let headers = this.headers.set('x-awsmock-target', 'kms').set('x-awsmock-action', 'list-key-arns');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
+    }
+
+    /**
      * @brief Load key details
      *
      * @param keyId key ID

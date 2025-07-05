@@ -15,6 +15,7 @@ import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-
 import {SNSTopicListState} from "./state/sns-topic-list.reducer";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'sns-topic-list-component',
@@ -52,18 +53,40 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     sortColumns: SortColumn[] = [{column: 'name', sortDirection: -1}];
     protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private location: Location, private state: State<SNSTopicListState>, private store: Store,
-                private snsService: SnsService) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly state: State<SNSTopicListState>, private readonly store: Store,
+                private readonly snsService: SnsService) {
     }
 
     ngOnInit(): void {
         this.loadTopics();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadTopics());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadTopics());
         this.listTopicCountersResponse$.subscribe((data) => console.log("Topic list data: ", data));
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.updateSubscription?.unsubscribe();
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription = interval(period).subscribe(() => this.loadTopics());
+            }
+        });
     }
 
     back() {

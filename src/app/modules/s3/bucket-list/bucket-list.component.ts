@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {interval, Observable, Subscription} from "rxjs";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {PageEvent} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -16,6 +16,7 @@ import {S3BucketListState} from "./state/s3-bucket-list.reducer";
 import {s3BucketListActions} from "./state/s3-bucket-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
 import {ofType} from "@ngrx/effects";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 's3-bucket-list',
@@ -59,12 +60,11 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
 
     // Byte conversion
     protected readonly byteConversion = byteConversion;
-    @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator | undefined;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<S3BucketListState>, private store: Store, private location: Location, private actionsSubject$: ActionsSubject) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<S3BucketListState>, private readonly store: Store, private readonly location: Location, private readonly actionsSubject$: ActionsSubject) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -73,7 +73,8 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadBuckets();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadBuckets());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadBuckets());
         this.actionsSubject$.pipe(ofType(s3BucketListActions.addBucketSuccess)).subscribe(() => {
             this.loadBuckets();
         });
@@ -87,6 +88,27 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadBuckets());
+            }
+        });
     }
 
     back() {

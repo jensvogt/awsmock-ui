@@ -19,11 +19,9 @@ import {ssmParameterDetailsActions} from "./state/ssm-parameter-detail.actions";
 export class SsmParameterDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
-    parameterArn: string = '';
-    parameterUrl: string = '';
     parameterName: string = '';
-    targetArn: string = '';
-    retries: string = '';
+    parameterValue: string = '';
+    kmsKeyId: string = '';
     parameterDetails$: Observable<SsmParameterDetailsResponse> = this.store.select(selectDetails);
     parameterDetailsError$: Observable<string> = this.store.select(selectError);
 
@@ -42,7 +40,6 @@ export class SsmParameterDetailComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routerSubscription = this.route.params.subscribe(params => {
             this.parameterName = atob(params['name']);
-            console.log("Parameter Name", this.parameterName);
             this.loadDetails();
         });
         this.parameterDetailsError$.subscribe((msg: string) => {
@@ -51,12 +48,13 @@ export class SsmParameterDetailComponent implements OnInit, OnDestroy {
             }
         });
         this.parameterDetails$.subscribe((data: any) => {
-            this.parameterUrl = data.parameterUrl;
-            this.parameterName = data.parameterName;
-            this.targetArn = data.dlqArn;
-            this.retries = data.dlqMaxReceive;
+            if (data?.Parameter) {
+                console.log(data?.Parameter);
+                this.kmsKeyId = data.Parameter.kmsKeyArn.substring(data.Parameter.kmsKeyArn.lastIndexOf('/') + 1);
+                this.parameterValue = atob(data.Parameter.value);
+            }
         });
-        this.parameterDetails$.subscribe((data: any) => console.log("ParameterDetails: ", data));
+        //this.parameterDetails$.subscribe((data: any) => console.log("ParameterDetails: ", data));
         //this.parameterAttributes$.subscribe((data: any) => console.log("Attributes: ", data));
         //this.parameterTags$.subscribe((data: any) => console.log("Data: ", data));
         //this.lambdaTriggers$.subscribe((data: any) => console.log("Data: ", data));

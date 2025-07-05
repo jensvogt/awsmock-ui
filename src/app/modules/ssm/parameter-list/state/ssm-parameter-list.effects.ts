@@ -36,44 +36,17 @@ export class SsmParameterListEffects {
         )
     ));
 
-    /*
-        createParameter$ = createEffect(() => this.actions$.pipe(
-            ofType(ssmParameterListActions.createParameter),
-            mergeMap((action) =>
-                this.sqsService.createParameter(action.name)
-                    .pipe(map(() => ssmParameterListActions.createParameterSuccess),
-                        catchError((error) =>
-                            of(ssmParameterListActions.createParameterFailure({error: error.message}))
-                        )
+    createParameter$ = createEffect(() => this.actions$.pipe(
+        ofType(ssmParameterListActions.createParameter),
+        mergeMap(action =>
+            this.ssmService.createParameter(action.request)
+                .pipe(map((parameters: any) => ssmParameterListActions.createParameterSuccess({parameters})),
+                    catchError((error) =>
+                        of(ssmParameterListActions.createParameterFailure({error: error.message}))
                     )
-            )
-        ));
-
-        sendMessage$ = createEffect(() => this.actions$.pipe(
-            ofType(ssmParameterListActions.sendMessage),
-            mergeMap(action =>
-                this.sqsService.sendMessage(action.parameterUrl, action.message, action.delay, action.attributes)
-                    .pipe(map(() => ssmParameterListActions.sendMessageSuccess),
-                        catchError((error) =>
-                            of(ssmParameterListActions.sendMessageFailure({error: error.message}))
-                        )
-                    )
-            )
-        ));
-
-        purgeParameter$ = createEffect(() => this.actions$.pipe(
-            ofType(ssmParameterListActions.purgeParameter),
-            mergeMap(action =>
-                this.sqsService.purgeParameter(action.parameterUrl)
-                    .pipe(map(() => ssmParameterListActions.purgeParameterSuccess()),
-                        catchError((error) =>
-                            of(ssmParameterListActions.purgeParameterFailure({error: error.message}))
-                        )
-                    )
-            )
-        ));
-
-*/
+                )
+        ),
+    ));
 
     constructor(private readonly actions$: Actions, private readonly ssmService: SsmService) {
     }

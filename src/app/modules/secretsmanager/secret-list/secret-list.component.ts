@@ -13,6 +13,7 @@ import {SecretListState} from "./state/secret-list.reducer";
 import {SecretsmanagerService} from "../service/secretsmanager-service.component";
 import {ListSecretCountersResponse} from "../model/secret-item";
 import {SecretAddDialogComponent} from "../secret-add/secret-add-component";
+import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 
 @Component({
     selector: 'secret-list',
@@ -49,11 +50,11 @@ export class SecretListComponent implements OnInit, OnDestroy {
     // Misc
     protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private state: State<SecretListState>, private secretsmanagerService: SecretsmanagerService,
-                private location: Location, private store: Store) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<SecretListState>, private readonly secretsmanagerService: SecretsmanagerService,
+                private readonly location: Location, private readonly store: Store) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
-            if (data && data.length) {
+            if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
@@ -63,11 +64,33 @@ export class SecretListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadSecrets();
-        this.updateSubscription = interval(60000).subscribe(() => this.loadSecrets());
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadSecrets());
     }
 
     ngOnDestroy(): void {
         this.updateSubscription?.unsubscribe();
+    }
+
+    autoReload(): void {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "20%"
+        dialogConfig.minWidth = '280px'
+        dialogConfig.data = {title: 'Export modules', mode: 'export'};
+
+        this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                this.updateSubscription?.unsubscribe();
+                this.updateSubscription = interval(period).subscribe(() => this.loadSecrets());
+            }
+        });
     }
 
     back() {

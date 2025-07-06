@@ -61,30 +61,6 @@
                                 </div>
                             </td>
                         </ng-container>
-                        <!--ng-container matColumnDef="messagesAvailable">
-                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages available"
-                                sortActionDescription="Sort by messageAvailable">Available
-                            </th>
-                            <td *matCellDef="let element" mat-cell> {{ element.available }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="messagesInFlight">
-                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages invisible"
-                                sortActionDescription="Sort by messagesInFlight">In flight
-                            </th>
-                            <td *matCellDef="let element" mat-cell> {{ element.invisible }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="messagesDelayed">
-                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Number of messages delayed"
-                                sortActionDescription="Sort by messagesDelayed">Delayed
-                            </th>
-                            <td *matCellDef="let element" mat-cell> {{ element.delayed }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="size">
-                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Total size of all messages in bytes"
-                                sortActionDescription="Sort by size">Size
-                            </th>
-                            <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
-                        </ng-container-->
                         <ng-container matColumnDef="created">
                             <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Parameter creation timestamp" sortActionDescription="Sort by created">Created</th>
                             <td *matCellDef="let element" mat-cell>
@@ -98,39 +74,14 @@
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:80px">Actions</th>
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:120px">Actions</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="deleteParameter(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-menu-item matTooltip="Delete the parameter">
+                                <button (click)="editParameter(row)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the parameter">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="deleteParameter(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the parameter">
                                     <mat-icon>delete</mat-icon>
                                 </button>
-                                <!--button [matMenuTriggerFor]="menu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
-                                    <mat-icon>more_vert</mat-icon>
-                                </button>
-                                <mat-menu #menu="matMenu" xPosition="before">
-                                    <button mat-menu-item>
-                                        <button (click)="exportMessages(row)" [disabled]="row.isDlq" [matTooltipShowDelay]="1000" aria-label="Export messages" mat-menu-item matTooltip="Export all messages. Only available for standard parameters.">
-                                            <mat-icon>archive</mat-icon>
-                                            <span>Export messages</span>
-                                        </button>
-                                        <button (click)="importMessages(row)" [disabled]="row.isDlq" [matTooltipShowDelay]="1000" aria-label="Export messages" mat-menu-item matTooltip="Export all messages. Only available for standard parameters.">
-                                            <mat-icon>unarchive</mat-icon>
-                                            <span>Import messages</span>
-                                        </button>
-                                        <button (click)="purgeParameter(row.parameterUrl)" [matTooltipShowDelay]="1000" aria-label="Purge" mat-menu-item matTooltip="Purge parameter">
-                                            <mat-icon>clear_all</mat-icon>
-                                            <span>Purge parameter</span>
-                                        </button>
-                                        <button (click)="redriveMessages(row)" [disabled]="!row.isDlq" [matTooltipShowDelay]="1000" aria-label="Send" mat-menu-item matTooltip="Redrive messages. Only available for DQLs.">
-                                            <mat-icon>redo</mat-icon>
-                                            <span>Redrive messages</span>
-                                        </button>
-                                        <mat-divider></mat-divider>
-                                        <button (click)="deleteParameter(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-menu-item matTooltip="Delete the parameter">
-                                            <mat-icon>delete</mat-icon>
-                                            <span>Delete parameter</span>
-                                        </button>
-                                    </button>
-                                </mat-menu-->
                             </td>
                         </ng-container>
                         <tr *matHeaderRowDef="columns" mat-header-row></tr>

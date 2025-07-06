@@ -9,12 +9,13 @@ import {selectPageIndex, selectPageSize, selectParameterCounters, selectPrefix} 
 import {ssmParameterListActions} from "./state/ssm-parameter-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {CreateParameterCounterRequest, ListParameterCountersResponse} from "../model/ssm-parameter-item";
+import {CreateParameterCounterRequest, ListParameterCountersResponse, UpdateParameterCounterRequest} from "../model/ssm-parameter-item";
 import {SsmParameterListState} from "./state/ssm-parameter-list.reducer";
 import {SsmService} from "../service/ssm-service.component";
 import {Router} from "@angular/router";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 import {ParameterAddDialogComponent} from "../parameter-add/parameter-add-component";
+import {ParameterEditDialogComponent} from "../parameter-edit/parameter-edit-component";
 
 @Component({
     selector: 'ssm-parameter-list',
@@ -175,6 +176,37 @@ export class SsmParameterListComponent implements OnInit, OnDestroy {
                     sortColumns: this.state.value['ssm-parameter-list'].sortColumns
                 };
                 this.store.dispatch(ssmParameterListActions.createParameter({request: request}));
+            }
+        });
+    }
+
+    editParameter(parameter: any) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+        dialogConfig.minWidth = '580px'
+        dialogConfig.data = parameter;
+
+        this.dialog.open(ParameterEditDialogComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                let request: UpdateParameterCounterRequest = {
+                    name: result.name,
+                    value: result.value,
+                    description: result.description,
+                    type: result.type,
+                    kmsKeyArn: result.kmsKeyArn,
+                    prefix: this.state.value['ssm-parameter-list'].prefix,
+                    pageSize: this.state.value['ssm-parameter-list'].pageSize,
+                    pageIndex: this.state.value['ssm-parameter-list'].pageIndex,
+                    sortColumns: this.state.value['ssm-parameter-list'].sortColumns
+                };
+                this.store.dispatch(ssmParameterListActions.updateParameter({request: request}));
             }
         });
     }

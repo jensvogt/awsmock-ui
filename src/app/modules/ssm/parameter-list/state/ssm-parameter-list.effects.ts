@@ -24,18 +24,6 @@ export class SsmParameterListEffects {
         ),
     ));
 
-    deleteParameter$ = createEffect(() => this.actions$.pipe(
-        ofType(ssmParameterListActions.deleteParameter),
-        mergeMap((action) =>
-            this.ssmService.deleteParameter(action.name, action.prefix, action.pageSize, action.pageIndex, action.sortColumns)
-                .pipe(map((parameters: any) => ssmParameterListActions.deleteParameterSuccess({parameters})),
-                    catchError((error) =>
-                        of(ssmParameterListActions.deleteParameterFailure({error: error.message}))
-                    )
-                )
-        )
-    ));
-
     createParameter$ = createEffect(() => this.actions$.pipe(
         ofType(ssmParameterListActions.createParameter),
         mergeMap(action =>
@@ -46,6 +34,30 @@ export class SsmParameterListEffects {
                     )
                 )
         ),
+    ));
+
+    updateParameter$ = createEffect(() => this.actions$.pipe(
+        ofType(ssmParameterListActions.updateParameter),
+        mergeMap(action =>
+            this.ssmService.updateParameter(action.request)
+                .pipe(map((parameters: any) => ssmParameterListActions.updateParameterSuccess({parameters})),
+                    catchError((error) =>
+                        of(ssmParameterListActions.updateParameterFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    deleteParameter$ = createEffect(() => this.actions$.pipe(
+        ofType(ssmParameterListActions.deleteParameter),
+        mergeMap((action) =>
+            this.ssmService.deleteParameter(action.name, action.prefix, action.pageSize, action.pageIndex, action.sortColumns)
+                .pipe(map((parameters: any) => ssmParameterListActions.deleteParameterSuccess({parameters})),
+                    catchError((error) =>
+                        of(ssmParameterListActions.deleteParameterFailure({error: error.message}))
+                    )
+                )
+        )
     ));
 
     constructor(private readonly actions$: Actions, private readonly ssmService: SsmService) {

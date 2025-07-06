@@ -28,7 +28,6 @@ export class SsmService {
         return this.http.post(this.baseUrl, {name: name, withDescription: withDescription}, {headers: headers});
     }
 
-
     /**
      * @brief Put a parameter
      *
@@ -36,6 +35,17 @@ export class SsmService {
      */
     public createParameter(request: any) {
         let headers = this.headers.set('x-awsmock-target', 'ssm').set('x-awsmock-action', 'CreateParameterCounter');
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+
+    /**
+     * @brief Update a parameter
+     *
+     * @param request parameter update request
+     */
+    public updateParameter(request: any) {
+        let headers = this.headers.set('x-awsmock-target', 'ssm').set('x-awsmock-action', 'UpdateParameterCounter');
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
 

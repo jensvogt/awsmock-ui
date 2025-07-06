@@ -40,6 +40,18 @@ export interface CreateParameterCounterRequest {
     sortColumns: SortColumn[];
 }
 
+export interface UpdateParameterCounterRequest {
+    name: string;
+    value: string;
+    description: string;
+    type: string;
+    kmsKeyArn: string;
+    prefix: string;
+    pageSize: number;
+    pageIndex: number;
+    sortColumns: SortColumn[];
+}
+
 export interface LoadKmsKeyArnsResponse {
     kmsKeyArns: string[];
 }

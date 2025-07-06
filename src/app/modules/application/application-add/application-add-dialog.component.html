@@ -1,0 +1,122 @@
+<h2 mat-dialog-title>Create Application</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-card appearance="outlined" style="margin: 3px;">
+        <mat-card-content>
+            <mat-grid-list cols="2" rowHeight="480px">
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <mat-list style="width:100%">
+                        <mat-list-item style="height:80px; width:100%">
+                            <mat-form-field style="width:100%">
+                                <mat-label>Name</mat-label>
+                                <input (change)="onInputChanged($event)" [(ngModel)]="name" matInput value="">
+                            </mat-form-field>
+                        </mat-list-item>
+                        <mat-list-item style="height:80px; width:100%">
+                            <mat-form-field style="width:100%">
+                                <mat-label>File</mat-label>
+                                <input (change)="onInputChanged($event)" [(ngModel)]="fileName" matInput readonly value="">
+                            </mat-form-field>
+                        </mat-list-item>
+                        <mat-list-item style="height:80px; width:100%">
+                            <mat-form-field style="width:100%">
+                                <mat-label>Version</mat-label>
+                                <input (change)="onInputChanged($event)" [(ngModel)]="version" matInput value="">
+                            </mat-form-field>
+                        </mat-list-item>
+                        <mat-list-item style="height:80px; width:100%">
+                            <mat-form-field style="width:100%">
+                                <mat-label>Runtime</mat-label>
+                                <mat-select [(ngModel)]="selectedRuntime">
+                                    @for (runtime of runtimes; track runtime) {
+                                        <mat-option [value]="runtime.value">{{ runtime.viewValue }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-list-item>
+                        <mat-list-item style="height:80px; width:100%">
+                            <mat-form-field style="width:100%">
+                                <mat-label>Memory (MB)</mat-label>
+                                <input [(ngModel)]="memorySize" matInput value="512">
+                            </mat-form-field>
+                        </mat-list-item>
+                        <mat-list-item style="height:80px; width:100%">
+                            <mat-form-field style="width:100%">
+                                <mat-label>Timeout (s)</mat-label>
+                                <input [(ngModel)]="timeout" matInput value="3600">
+                            </mat-form-field>
+                        </mat-list-item>
+                    </mat-list>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <div (dragover)="onDragOver($event)" (drop)="onFileDrop($event)" [class.error]="uploadError" [class.success]="uploadSuccess" class="file-upload-wrapper">
+                        <input #fileInput (change)="onFileChange($event)" hidden type="file"/>
+                        <div (click)="fileInput.click()" class="file-dropper">
+                            <mat-icon>upload</mat-icon>
+                            <p>Upload file</p>
+                        </div>
+                    </div>
+                </mat-grid-tile>
+                <!--mat-grid-tile [colspan]="2" [rowspan]="1" style="width:100%">
+                    <mat-form-field style="width: 50%;height:100%">
+                        <textarea [(ngModel)]="jsonEnvironment" cdkAutosizeMinRows="100" cdkTextareaAutosize matInput placeholder="Environment"></textarea>
+                    </mat-form-field>
+                    <mat-form-field style="width: 50%;height:100%; padding-left:5px">
+                        <textarea [(ngModel)]="jsonTags" cdkAutosizeMinRows="100" cdkTextareaAutosize matInput placeholder="Tags"></textarea>
+                    </mat-form-field>
+                </mat-grid-tile-->
+            </mat-grid-list>
+        </mat-card-content>
+    </mat-card>
+    <mat-card appearance="outlined" style="margin-top: 5px;">
+        <mat-card-content>
+            <mat-tab-group (selectedTabChange)="tabChanged($event)">
+                <mat-tab label="Environment">
+                    <mat-card-actions class="head-buttons">
+                        <!--button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
+                            <mat-icon>refresh</mat-icon>
+                        </button-->
+                    </mat-card-actions>
+                    <!--div *ngIf="queueAttributes$ | async as attributes" class="row">
+                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.attributeCounters" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.attributeKey }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="value">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.attributeValue }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div-->
+                    <!--mat-paginator (page)="handleAttributePageEvent($event)"
+                                   [disabled]="false"
+                                   [hidePageSize]="false"
+                                   [length]="(queueAttributes$ | async)?.total"
+                                   [pageIndex]="(attributePageIndex$ | async)"
+                                   [pageSizeOptions]="attributePageSizeOptions"
+                                   [pageSize]="(attributePageSize$ | async)"
+                                   [showFirstLastButtons]="true"
+                                   aria-label="Select page">
+                    </mat-paginator-->
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+    >
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="doCreate()" cdkFocusInitial disabled="{{createDisabled}}" mat-button>Create</button>
+</mat-dialog-actions>

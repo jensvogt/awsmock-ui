@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {ListApplicationCountersResponse} from "../../model/application-item";
+import {AddApplicationRequest, ListApplicationCountersResponse} from "../../model/application-item";
 
 export const applicationListActions = {
     initialize: createAction('[application-list] initialize'),
@@ -10,10 +10,10 @@ export const applicationListActions = {
     loadApplicationsSuccess: createAction('[application-list] Load applications success', props<{ applications: ListApplicationCountersResponse }>()),
     loadApplicationsFailure: createAction('[application-list] Load applications error', props<{ error: string }>()),
 
-    // Add parameter
-    // createParameter: createAction('[application-list] Create parameter', props<{ request: CreateParameterCounterRequest }>()),
-    // createParameterSuccess: createAction('[application-list] Create parameter success', props<{ parameters: ListParameterCountersResponse }>()),
-    // createParameterFailure: createAction('[application-list] Create parameter error', props<{ error: string }>()),
+    // Add application
+    addApplication: createAction('[application-list] Add application', props<{ request: AddApplicationRequest }>()),
+    addApplicationSuccess: createAction('[application-list] Add application success', props<{ applications: ListApplicationCountersResponse }>()),
+    addApplicationFailure: createAction('[application-list] Add application error', props<{ error: string }>()),
 
     // Update parameter
     // updateParameter: createAction('[application-list] Update parameter', props<{ request: UpdateParameterCounterRequest }>()),

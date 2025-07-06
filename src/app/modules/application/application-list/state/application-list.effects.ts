@@ -23,42 +23,41 @@ export class ApplicationListEffects {
         ),
     ));
 
-    /*
-    createParameter$ = createEffect(() => this.actions$.pipe(
-        ofType(applicationListActions.createParameter),
+    addApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.addApplication),
         mergeMap(action =>
-            this.ssmService.createParameter(action.request)
-                .pipe(map((parameters: any) => applicationListActions.createParameterSuccess({parameters})),
+            this.applicationService.addApplication(action.request)
+                .pipe(map((applications: any) => applicationListActions.addApplicationSuccess({applications})),
                     catchError((error) =>
-                        of(applicationListActions.createParameterFailure({error: error.message}))
+                        of(applicationListActions.addApplicationFailure({error: error.message}))
                     )
                 )
         ),
     ));
 
-    updateParameter$ = createEffect(() => this.actions$.pipe(
-        ofType(applicationListActions.updateParameter),
-        mergeMap(action =>
-            this.ssmService.updateParameter(action.request)
-                .pipe(map((parameters: any) => applicationListActions.updateParameterSuccess({parameters})),
-                    catchError((error) =>
-                        of(applicationListActions.updateParameterFailure({error: error.message}))
+    /*    updateParameter$ = createEffect(() => this.actions$.pipe(
+            ofType(applicationListActions.updateParameter),
+            mergeMap(action =>
+                this.ssmService.updateParameter(action.request)
+                    .pipe(map((parameters: any) => applicationListActions.updateParameterSuccess({parameters})),
+                        catchError((error) =>
+                            of(applicationListActions.updateParameterFailure({error: error.message}))
+                        )
                     )
-                )
-        ),
-    ));
+            ),
+        ));
 
-    deleteParameter$ = createEffect(() => this.actions$.pipe(
-        ofType(applicationListActions.deleteParameter),
-        mergeMap((action) =>
-            this.ssmService.deleteParameter(action.name, action.prefix, action.pageSize, action.pageIndex, action.sortColumns)
-                .pipe(map((parameters: any) => applicationListActions.deleteParameterSuccess({parameters})),
-                    catchError((error) =>
-                        of(applicationListActions.deleteParameterFailure({error: error.message}))
+        deleteParameter$ = createEffect(() => this.actions$.pipe(
+            ofType(applicationListActions.deleteParameter),
+            mergeMap((action) =>
+                this.ssmService.deleteParameter(action.name, action.prefix, action.pageSize, action.pageIndex, action.sortColumns)
+                    .pipe(map((parameters: any) => applicationListActions.deleteParameterSuccess({parameters})),
+                        catchError((error) =>
+                            of(applicationListActions.deleteParameterFailure({error: error.message}))
+                        )
                     )
-                )
-        )
-    ));*/
+            )
+        ));*/
 
     constructor(private readonly actions$: Actions, private readonly applicationService: ApplicationService) {
     }

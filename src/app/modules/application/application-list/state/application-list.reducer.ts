@@ -3,7 +3,7 @@ import {applicationListActions} from './application-list.actions';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {ListApplicationCountersResponse} from "../../model/application-item";
 
-export const applicationListFeatureKey = 'ssm-parameter-list';
+export const applicationListFeatureKey = 'application-list';
 
 export interface ApplicationListState {
     listApplicationResponse: ListApplicationCountersResponse;

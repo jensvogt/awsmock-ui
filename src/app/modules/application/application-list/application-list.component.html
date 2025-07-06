@@ -6,7 +6,7 @@
         <span class="fill-remaining-space">
             Applications ({{ (listApplicationCountersResponse$ | async)?.total }})
         </span>
-        <button (click)="createApplication()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new application">
+        <button (click)="addApplication()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new application">
             <mat-icon>add</mat-icon>
         </button>
         <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the application list">

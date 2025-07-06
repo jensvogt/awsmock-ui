@@ -1,3 +1,6 @@
+import {Code} from "../../lambda/model/lambda-item";
+import {SortColumn} from "../../../shared/sorting/sorting.component";
+
 export interface ApplicationItem {
     name: string | undefined;
     runtime: string | undefined;
@@ -13,4 +16,18 @@ export interface ApplicationItem {
 export interface ListApplicationCountersResponse {
     total: number;
     applicationCounters: ApplicationItem[];
+}
+
+
+export interface AddApplicationRequest {
+    name: string;
+    runtime: string;
+    archive: string;
+    code: Code;
+    version: string;
+    status: number;
+    prefix: string,
+    pageSize: number,
+    pageIndex: number,
+    sortColumns: SortColumn[]
 }

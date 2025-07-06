@@ -12,8 +12,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 import {ApplicationService} from "../service/application-service.component";
-import {ListApplicationCountersResponse} from "../model/application-item";
+import {AddApplicationRequest, ListApplicationCountersResponse} from "../model/application-item";
 import {ApplicationListState} from "./state/application-list.reducer";
+import {ApplicationAddDialog} from "../application-add/application-add-dialog.component";
 
 @Component({
     selector: 'application-list',
@@ -45,7 +46,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     disabled = false;
 
     // Prefix
-    prefixValue: string = this.state.value['ssm-parameter-list'].prefix;
+    prefixValue: string = this.state.value['application-list'].prefix;
     prefixSet: boolean = false;
 
     // Misc
@@ -106,21 +107,21 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
     setPrefix() {
         this.prefixSet = true;
-        this.state.value['ssm-parameter-list'].pageIndex = 0;
-        this.state.value['ssm-parameter-list'].prefix = this.prefixValue;
+        this.state.value['application-list'].pageIndex = 0;
+        this.state.value['application-list'].prefix = this.prefixValue;
         this.loadParameters();
     }
 
     unsetPrefix() {
         this.prefixValue = '';
         this.prefixSet = false;
-        this.state.value['ssm-parameter-list'].prefix = '';
+        this.state.value['application-list'].prefix = '';
         this.loadParameters();
     }
 
     handlePageEvent(e: PageEvent) {
-        this.state.value['ssm-parameter-list'].pageSize = e.pageSize;
-        this.state.value['ssm-parameter-list'].pageIndex = e.pageIndex;
+        this.state.value['application-list'].pageSize = e.pageSize;
+        this.state.value['application-list'].pageIndex = e.pageIndex;
         this.loadParameters();
     }
 
@@ -130,25 +131,25 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
             column = 'name'
         }
         let direction = sortState.direction === 'asc' ? 1 : -1
-        this.state.value['ssm-parameter-list'].sortColumns = [{column: column, sortDirection: direction}];
+        this.state.value['application-list'].sortColumns = [{column: column, sortDirection: direction}];
         this.loadParameters();
     }
 
     navigateToDetails(name: string) {
-        this.router.navigate(['/ssm-parameter-list/details/' + btoa(name)]);
+        this.router.navigate(['/application-list/details/' + btoa(name)]);
     }
 
     loadParameters() {
         this.lastUpdate = new Date();
         this.store.dispatch(applicationListActions.loadApplications({
-            prefix: this.state.value['ssm-parameter-list'].prefix,
-            pageSize: this.state.value['ssm-parameter-list'].pageSize,
-            pageIndex: this.state.value['ssm-parameter-list'].pageIndex,
-            sortColumns: this.state.value['ssm-parameter-list'].sortColumns
+            prefix: this.state.value['application-list'].prefix,
+            pageSize: this.state.value['application-list'].pageSize,
+            pageIndex: this.state.value['application-list'].pageIndex,
+            sortColumns: this.state.value['application-list'].sortColumns
         }));
     }
 
-    createApplication() {
+    addApplication() {
 
         const dialogConfig = new MatDialogConfig();
 
@@ -160,22 +161,23 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         dialogConfig.width = "40%"
         dialogConfig.minWidth = '580px'
 
-        /*this.dialog.open(ParameterAddDialogComponent, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(ApplicationAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                let request: CreateParameterCounterRequest = {
+                let request: AddApplicationRequest = {
                     name: result.name,
-                    value: result.value,
-                    description: result.description,
-                    type: result.type,
-                    kmsKeyArn: result.kmsKeyArn,
-                    prefix: this.state.value['ssm-parameter-list'].prefix,
-                    pageSize: this.state.value['ssm-parameter-list'].pageSize,
-                    pageIndex: this.state.value['ssm-parameter-list'].pageIndex,
-                    sortColumns: this.state.value['ssm-parameter-list'].sortColumns
+                    runtime: result.runtime,
+                    archive: result.archive,
+                    version: result.version,
+                    code: result.code,
+                    status: result.status,
+                    prefix: this.state.value['application-list'].prefix,
+                    pageSize: this.state.value['application-list'].pageSize,
+                    pageIndex: this.state.value['application-list'].pageIndex,
+                    sortColumns: this.state.value['application-list'].sortColumns
                 };
-                this.store.dispatch(applicationListActions.createParameter({request: request}));
+                this.store.dispatch(applicationListActions.addApplication({request: request}));
             }
-        });*/
+        });
     }
 
     editParameter(parameter: any) {
@@ -199,10 +201,10 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
                         description: result.description,
                         type: result.type,
                         kmsKeyArn: result.kmsKeyArn,
-                        prefix: this.state.value['ssm-parameter-list'].prefix,
-                        pageSize: this.state.value['ssm-parameter-list'].pageSize,
-                        pageIndex: this.state.value['ssm-parameter-list'].pageIndex,
-                        sortColumns: this.state.value['ssm-parameter-list'].sortColumns
+                        prefix: this.state.value['application-list'].prefix,
+                        pageSize: this.state.value['application-list'].pageSize,
+                        pageIndex: this.state.value['application-list'].pageIndex,
+                        sortColumns: this.state.value['application-list'].sortColumns
                     };
                     this.store.dispatch(applicationListActions.updateParameter({request: request}));
                 }
@@ -213,10 +215,10 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         this.lastUpdate = new Date();
         /*this.store.dispatch(applicationListActions.deleteParameter({
             name: name,
-            prefix: this.state.value['ssm-parameter-list'].prefix,
-            pageSize: this.state.value['ssm-parameter-list'].pageSize,
-            pageIndex: this.state.value['ssm-parameter-list'].pageIndex,
-            sortColumns: this.state.value['ssm-parameter-list'].sortColumns
+            prefix: this.state.value['application-list'].prefix,
+            pageSize: this.state.value['application-list'].pageSize,
+            pageIndex: this.state.value['application-list'].pageIndex,
+            sortColumns: this.state.value['application-list'].sortColumns
         }));*/
     }
 }

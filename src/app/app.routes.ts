@@ -142,6 +142,13 @@ export const routes: Routes = [
                 loadChildren: () => import('./modules/ssm/ssm.module').then(module => module.SsmModule),
             },
             //=========================================================================
+            // application
+            //=========================================================================
+            {
+                path: 'application-list',
+                loadChildren: () => import('./modules/application/application.module').then(module => module.ApplicationModule),
+            },
+            //=========================================================================
             // Not found
             //=========================================================================
             {

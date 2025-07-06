@@ -1,0 +1,111 @@
+<mat-card appearance="outlined" style="margin: 3px;">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
+            Applications ({{ (listApplicationCountersResponse$ | async)?.total }})
+        </span>
+        <button (click)="createApplication()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new application">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the application list">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button [matTooltipShowDelay]="1000" [routerLink]="['/sqs-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
+            <mat-icon>
+                <span class="material-symbols-outlined">monitoring</span>
+            </mat-icon>
+        </button>
+        <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #mainmenu="matMenu" xPosition="before">
+            <button mat-menu-item>
+                <button (click)="autoReload()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">hourglass</span>
+                    </mat-icon>
+                    <span>Auto Reload</span>
+                </button>
+            </button>
+        </mat-menu>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card appearance="outlined" style="margin: -10px;">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+                    <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>close</mat-icon>
+                    </button>
+                    <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-card-actions>
+            <div class="table-container">
+                <div *ngIf="listApplicationCountersResponse$ | async as applicationCounters" class="row">
+                    <table (matSortChange)="sortChange($event)" [dataSource]="applicationCounters.applicationCounters" class="mat-elevation-z8 application-table" mat-table matSort>
+                        <ng-container matColumnDef="name">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Application name" sortActionDescription="Sort by application name">Name</th>
+                            <td *matCellDef="let element" mat-cell>
+                                <div class="with-icon">
+                                    <mat-nav-list>
+                                        <a (click)="navigateToDetails(element.name)" mat-list-item> {{ element.name }}</a>
+                                    </mat-nav-list>
+                                    <button [cdkCopyToClipboard]="element.name" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
+                                        <mat-icon class="copy-icon">content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="created">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application creation timestamp" sortActionDescription="Sort by created">Created</th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modified">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application modified timestamp" sortActionDescription="Sort by modified">Modified</th>
+                            <td *matCellDef="let element" mat-cell>
+                                {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <!--button (click)="editApplication(row)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the application">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="deleteApplication(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the application">
+                                    <mat-icon>delete</mat-icon>
+                                </button-->
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="columns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <mat-paginator (page)="handlePageEvent($event)"
+                           [disabled]="disabled"
+                           [hidePageSize]="hidePageSize"
+                           [length]="(listApplicationCountersResponse$ | async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
+                           [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                           [pageSize]="(pageSize$ | async)??false"
+                           [showFirstLastButtons]="showFirstLastButtons"
+                           aria-label="Select page" style="width:99%; margin-left:15px">
+
+            </mat-paginator>
+        </mat-card>
+        <footer-component [lastUpdate]="lastUpdate"/>
+    </mat-card-content>
+</mat-card>

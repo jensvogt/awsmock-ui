@@ -12,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 import {ApplicationService} from "../service/application-service.component";
-import {AddApplicationRequest, ListApplicationCountersResponse} from "../model/application-item";
+import {AddApplicationRequest, ApplicationItem, DeleteApplicationRequest, ListApplicationCountersResponse} from "../model/application-item";
 import {ApplicationListState} from "./state/application-list.reducer";
 import {ApplicationAddDialog} from "../application-add/application-add-dialog.component";
 
@@ -63,7 +63,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.listParameterCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
+        this.listApplicationCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
     }
 
     ngOnInit(): void {
@@ -211,14 +211,15 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
             });*/
     }
 
-    deleteParameter(name: string) {
+    deleteApplication(application: ApplicationItem) {
         this.lastUpdate = new Date();
-        /*this.store.dispatch(applicationListActions.deleteParameter({
-            name: name,
+        let request: DeleteApplicationRequest = {
+            name: application.name,
             prefix: this.state.value['application-list'].prefix,
             pageSize: this.state.value['application-list'].pageSize,
             pageIndex: this.state.value['application-list'].pageIndex,
             sortColumns: this.state.value['application-list'].sortColumns
-        }));*/
+        };
+        this.store.dispatch(applicationListActions.deleteApplication({request: request}));
     }
 }

@@ -25,7 +25,7 @@ export class AppComponent {
         if (!localStorage.getItem("user")) {
             localStorage.setItem('user', "none");
         }
-        if (!localStorage.getItem("autoReload")) {
+        if (!localStorage.getItem("autoReload") || parseInt(<string>localStorage.getItem("autoReload")) < 10000) {
             localStorage.setItem('autoReload', "60000");
         }
     }

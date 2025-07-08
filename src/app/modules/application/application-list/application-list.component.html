@@ -47,7 +47,7 @@
             </mat-card-actions>
             <div class="table-container">
                 <div *ngIf="listApplicationCountersResponse$ | async as applicationCounters" class="row">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="applicationCounters.applicationCounters" class="mat-elevation-z8 application-table" mat-table matSort>
+                    <table (matSortChange)="sortChange($event)" [dataSource]="applicationCounters.applications" class="mat-elevation-z8 application-table" mat-table matSort>
                         <ng-container matColumnDef="name">
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Application name" sortActionDescription="Sort by application name">Name</th>
                             <td *matCellDef="let element" mat-cell>
@@ -78,10 +78,10 @@
                             <td *matCellDef="let row" mat-cell>
                                 <!--button (click)="editApplication(row)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the application">
                                     <mat-icon>edit</mat-icon>
-                                </button>
-                                <button (click)="deleteApplication(row.name)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the application">
-                                    <mat-icon>delete</mat-icon>
                                 </button-->
+                                <button (click)="deleteApplication(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the application">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
                             </td>
                         </ng-container>
                         <tr *matHeaderRowDef="columns" mat-header-row></tr>

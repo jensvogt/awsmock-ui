@@ -85,6 +85,13 @@ export class ApplicationAddDialog implements OnInit {
         {value: 'go', viewValue: 'Go'},
     ];
 
+    // Environment
+    // environmentColumns: string[] = ['key', 'value', 'actions'];
+    // evironments: Observable<LambdaEnvironmentCountersResponse> = this.store.select(selectEnvironment);
+    // environmentPageSize$: Observable<number> = this.store.select(selectEnvironmentPageSize);
+    // environmentPageIndex$: Observable<number> = this.store.select(selectEnvironmentPageIndex);
+    // environmentPageSizeOptions = [5, 10, 20, 50, 100];
+
     // Byte conversion
     protected readonly byteConversion = byteConversion;
 

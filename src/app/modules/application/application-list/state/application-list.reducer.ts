@@ -43,8 +43,8 @@ export const applicationListReducer = createReducer(
     // on(applicationListActions.createParameterSuccess, (state: ApplicationListState, {parameters}) => ({...state, listParameterResponse: parameters, loading: false, reload: true})),
     // on(applicationListActions.createParameterFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false, reload: true})),
 
-    // Delete parameter
-    // on(applicationListActions.deleteParameter, (state: ApplicationListState) => ({...state, loading: true})),
-    // on(applicationListActions.deleteParameterSuccess, (state: ApplicationListState, {parameters}) => ({...state, listParameterResponse: parameters, loading: false, reload: true})),
-    // on(applicationListActions.deleteParameterFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false, reload: true})),
+    // Delete application
+    on(applicationListActions.deleteApplication, (state: ApplicationListState) => ({...state, loading: true})),
+    on(applicationListActions.deleteApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false, reload: true})),
+    on(applicationListActions.deleteApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false, reload: true})),
 );

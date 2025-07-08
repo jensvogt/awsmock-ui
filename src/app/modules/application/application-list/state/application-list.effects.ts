@@ -46,18 +46,18 @@ export class ApplicationListEffects {
                     )
             ),
         ));
-
-        deleteParameter$ = createEffect(() => this.actions$.pipe(
-            ofType(applicationListActions.deleteParameter),
-            mergeMap((action) =>
-                this.ssmService.deleteParameter(action.name, action.prefix, action.pageSize, action.pageIndex, action.sortColumns)
-                    .pipe(map((parameters: any) => applicationListActions.deleteParameterSuccess({parameters})),
-                        catchError((error) =>
-                            of(applicationListActions.deleteParameterFailure({error: error.message}))
-                        )
+*/
+    deleteApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.deleteApplication),
+        mergeMap((action) =>
+            this.applicationService.deleteApplication(action.request)
+                .pipe(map((applications: any) => applicationListActions.deleteApplicationSuccess({applications})),
+                    catchError((error) =>
+                        of(applicationListActions.deleteApplicationFailure({error: error.message}))
                     )
-            )
-        ));*/
+                )
+        )
+    ));
 
     constructor(private readonly actions$: Actions, private readonly applicationService: ApplicationService) {
     }

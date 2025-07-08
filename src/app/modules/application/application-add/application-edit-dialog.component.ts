@@ -21,7 +21,7 @@ interface Runtime {
 
 @Component({
     selector: 'application-add',
-    templateUrl: './application-add-dialog.component.html',
+    templateUrl: './application-edit-dialog.component.html',
     standalone: true,
     imports: [
         FormsModule,
@@ -46,7 +46,7 @@ interface Runtime {
         MatTab,
         MatTabGroup
     ],
-    styleUrls: ['./application-add-dialog.component.scss']
+    styleUrls: ['./application-edit-dialog.component.scss']
 })
 export class ApplicationAddDialog implements OnInit {
 

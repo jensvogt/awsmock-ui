@@ -14,7 +14,7 @@ import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.compon
 import {ApplicationService} from "../service/application-service.component";
 import {AddApplicationRequest, ApplicationItem, DeleteApplicationRequest, ListApplicationCountersResponse} from "../model/application-item";
 import {ApplicationListState} from "./state/application-list.reducer";
-import {ApplicationAddDialog} from "../application-add/application-add-dialog.component";
+import {ApplicationAddDialog} from "../application-add/application-edit-dialog.component";
 
 @Component({
     selector: 'application-list',
@@ -180,7 +180,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         });
     }
 
-    editParameter(parameter: any) {
+    editApplication(parameter: any) {
 
         const dialogConfig = new MatDialogConfig();
 

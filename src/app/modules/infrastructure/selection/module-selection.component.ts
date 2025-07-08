@@ -21,6 +21,7 @@ const AllModules = {
         {name: 'dynamodb', displayName: 'DynamoDB', selected: false},
         {name: 'lambda', displayName: 'Lambda', selected: false},
         {name: 'transfer', displayName: 'Transfer', selected: false},
+        {name: 'application', displayName: 'Applications', selected: false},
     ]
 }
 
@@ -63,7 +64,7 @@ export class ModuleSelectionComponentDialog implements OnInit {
     mode: string = 'export';
     protected readonly allModules = AllModules.modules;
 
-    constructor(private dialogRef: MatDialogRef<ModuleSelectionComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar) {
+    constructor(private readonly dialogRef: MatDialogRef<ModuleSelectionComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly snackBar: MatSnackBar) {
         this.title = data.title;
         this.mode = data.mode;
         if (this.mode === 'export') {

@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest} from "../model/application-item";
+import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest} from "../model/application-item";
 
 @Injectable({providedIn: 'root'})
 export class ApplicationService {
@@ -29,6 +29,16 @@ export class ApplicationService {
     public listApplicationCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'list-applications');
         return this.http.post(this.baseUrl, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Adds a new application
+     *
+     * @param request add application request
+     */
+    public getApplication(request: GetApplicationRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'get-application');
+        return this.http.post(this.baseUrl, request, {headers: headers});
     }
 
     /**

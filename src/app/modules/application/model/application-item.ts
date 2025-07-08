@@ -17,16 +17,18 @@ export interface Options {
 }
 
 export interface ApplicationItem {
+    region: string | undefined;
+    user: string | undefined;
     name: string | undefined;
     runtime: string | undefined;
-    archive: string | undefined;
+    archive: string;
     version: string | undefined;
     containerId: string | undefined;
     status: string | undefined;
     enabled: boolean | undefined;
-    environment: Environment[] | undefined;
-    tags: Tags[] | undefined;
-    options: Options[] | undefined;
+    environment: object;
+    tags: object;
+    options: object;
     created: Date | undefined;
     modified: Date | undefined;
 }
@@ -47,6 +49,14 @@ export interface AddApplicationRequest {
     pageSize: number,
     pageIndex: number,
     sortColumns: SortColumn[]
+}
+
+export interface GetApplicationRequest {
+    name: string;
+}
+
+export interface GetApplicationResponse {
+    application: ApplicationItem;
 }
 
 export interface DeleteApplicationRequest {

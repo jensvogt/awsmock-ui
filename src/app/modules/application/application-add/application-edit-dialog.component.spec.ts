@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ApplicationAddDialog} from './application-add-dialog.component';
+import {ApplicationAddDialog} from './application-edit-dialog.component';
 
 describe('HomeComponent', () => {
     let component: ApplicationAddDialog;

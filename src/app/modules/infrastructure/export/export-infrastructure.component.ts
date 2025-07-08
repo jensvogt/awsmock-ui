@@ -34,7 +34,7 @@ export class ExportInfrastructureComponentDialog {
 
     body: string | undefined;
 
-    constructor(private readonly dialogRef: MatDialogRef<ExportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private dialog: MatDialog) {
+    constructor(private readonly dialogRef: MatDialogRef<ExportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly dialog: MatDialog) {
         this.body = JSON.stringify(data, null, 4);
     }
 

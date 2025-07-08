@@ -13,14 +13,14 @@
         </div>
         <div class="item">
             <mat-list>
-                <mat-list-item *ngFor="let module of allModules | slice:0:5">
+                <mat-list-item *ngFor="let module of allModules | slice:0:6">
                     <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
                 </mat-list-item>
             </mat-list>
         </div>
         <div class="item">
             <mat-list>
-                <mat-list-item *ngFor="let module of allModules | slice:5:10">
+                <mat-list-item *ngFor="let module of allModules | slice:6:11">
                     <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
                 </mat-list-item>
             </mat-list>

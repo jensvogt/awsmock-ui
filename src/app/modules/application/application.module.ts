@@ -32,9 +32,12 @@ import {ApplicationService} from "./service/application-service.component";
 import {ApplicationRoutingModule} from "./application-routing.module";
 import {applicationListFeatureKey, applicationListReducer} from "./application-list/state/application-list.reducer";
 import {ApplicationListEffects} from "./application-list/state/application-list.effects";
+import {applicationDetailFeatureKey, applicationDetailReducer} from "./application-details/state/application-details.reducer";
+import {ApplicationDetailEffects} from "./application-details/state/application-details.effects";
+import {ApplicationDetailsComponent} from "./application-details/application-detail.component";
 
 @NgModule({
-    declarations: [ApplicationListComponent],
+    declarations: [ApplicationListComponent, ApplicationDetailsComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -79,7 +82,8 @@ import {ApplicationListEffects} from "./application-list/state/application-list.
         AsyncPipe,
         ApplicationRoutingModule,
         StoreModule.forFeature(applicationListFeatureKey, applicationListReducer),
-        EffectsModule.forFeature([ApplicationListEffects]),
+        StoreModule.forFeature(applicationDetailFeatureKey, applicationDetailReducer),
+        EffectsModule.forFeature([ApplicationListEffects, ApplicationDetailEffects]),
         CdkTextareaAutosize,
         CdkDrag,
         CdkDragHandle,
@@ -99,7 +103,7 @@ import {ApplicationListEffects} from "./application-list/state/application-list.
         CdkVirtualScrollViewport,
         MatProgressSpinner,
     ],
-    exports: [ApplicationListComponent],
+    exports: [ApplicationListComponent, ApplicationDetailsComponent],
     providers: [ApplicationService],
 })
 export class ApplicationModule {

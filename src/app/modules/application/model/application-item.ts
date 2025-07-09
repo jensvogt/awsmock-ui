@@ -17,19 +17,19 @@ export interface Options {
 }
 
 export interface ApplicationItem {
-    region: string | undefined;
-    user: string | undefined;
-    name: string | undefined;
-    runtime: string | undefined;
-    runType: string | undefined;
+    region: string;
+    user: string;
+    name: string;
+    runtime: string;
+    runType: string;
     archive: string;
-    version: string | undefined;
-    containerId: string | undefined;
-    status: string | undefined;
-    enabled: boolean | undefined;
+    version: string;
+    containerId: string;
+    status: string;
+    enabled: boolean;
     environment: any;
-    tags: object;
-    options: object;
+    tags: any;
+    options: any;
     created: Date | undefined;
     modified: Date | undefined;
 }

@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Edit Application</h2>
+<h2 mat-dialog-title>Add Application</h2>
 <mat-dialog-content class="mat-typography">
     <mat-card appearance="outlined" style="margin: 3px;">
         <mat-card-content>
@@ -8,7 +8,7 @@
                         <mat-list-item style="height:80px; width:100%">
                             <mat-form-field style="width:100%">
                                 <mat-label>Name</mat-label>
-                                <input (change)="onInputChanged($event)" [(ngModel)]="name" matInput value="">
+                                <input (change)="onInputChanged($event)" [(ngModel)]="applicationItem.name" matInput value="">
                             </mat-form-field>
                         </mat-list-item>
                         <mat-list-item style="height:80px; width:100%">
@@ -20,7 +20,7 @@
                         <mat-list-item style="height:80px; width:100%">
                             <mat-form-field style="width:100%">
                                 <mat-label>Version</mat-label>
-                                <input (change)="onInputChanged($event)" [(ngModel)]="version" matInput value="">
+                                <input (change)="onInputChanged($event)" [(ngModel)]="applicationItem.version" matInput value="">
                             </mat-form-field>
                         </mat-list-item>
                         <mat-list-item style="height:80px; width:100%">
@@ -56,60 +56,57 @@
                         </div>
                     </div>
                 </mat-grid-tile>
-                <!--mat-grid-tile [colspan]="2" [rowspan]="1" style="width:100%">
-                    <mat-form-field style="width: 50%;height:100%">
-                        <textarea [(ngModel)]="jsonEnvironment" cdkAutosizeMinRows="100" cdkTextareaAutosize matInput placeholder="Environment"></textarea>
-                    </mat-form-field>
-                    <mat-form-field style="width: 50%;height:100%; padding-left:5px">
-                        <textarea [(ngModel)]="jsonTags" cdkAutosizeMinRows="100" cdkTextareaAutosize matInput placeholder="Tags"></textarea>
-                    </mat-form-field>
-                </mat-grid-tile-->
             </mat-grid-list>
         </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined" style="margin-top: 5px;">
         <mat-card-content>
-            <mat-tab-group (selectedTabChange)="tabChanged($event)">
-                <mat-tab label="Environment">
+            <mat-tab-group>
+                <mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Application environment variables">
                     <mat-card-actions class="head-buttons">
-                        <!--button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button-->
+                        <button (click)="addEnvironment()" [matTooltipShowDelay]="1000" aria-label="Add environment variable" mat-icon-button matTooltip="Add a new environment variable">
+                            <mat-icon>add</mat-icon>
+                        </button>
                     </mat-card-actions>
-                    <!--div *ngIf="queueAttributes$ | async as attributes" class="row">
-                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.attributeCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="name">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.attributeKey }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.attributeValue }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                    </div-->
-                    <!--mat-paginator (page)="handleAttributePageEvent($event)"
+                    <table (matSortChange)="environmentSortChanged($event)" [dataSource]="environmentDatasource" class="mat-elevation-z8" mat-table matSort>
+                        <ng-container matColumnDef="key">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable name" sortActionDescription="Sort by name">Name</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="value">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable value" sortActionDescription="Sort by value">Value
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="editEnvironment(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the lambda environment variable">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="deleteEnvironment(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda environment variable">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: environmentColumns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="environmentColumns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                    <mat-paginator (page)="handleEnvironmentPageEvent($event)"
                                    [disabled]="false"
                                    [hidePageSize]="false"
-                                   [length]="(queueAttributes$ | async)?.total"
-                                   [pageIndex]="(attributePageIndex$ | async)"
-                                   [pageSizeOptions]="attributePageSizeOptions"
-                                   [pageSize]="(attributePageSize$ | async)"
+                                   [length]="environmentTotal"
+                                   [pageIndex]="environmentPageIndex"
+                                   [pageSizeOptions]="environmentPageSizeOptions"
+                                   [pageSize]="environmentPageSize"
                                    [showFirstLastButtons]="true"
                                    aria-label="Select page">
-                    </mat-paginator-->
+                    </mat-paginator>
                 </mat-tab>
             </mat-tab-group>
         </mat-card-content>

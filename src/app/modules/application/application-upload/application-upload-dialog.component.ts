@@ -9,6 +9,7 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {BinaryFileUploadComponent} from "../../../shared/binary-file-upload/binary-file-upload.component";
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
+import {getVersion} from "../../../shared/version-utils.componen";
 
 interface Runtime {
     value: string;
@@ -64,7 +65,7 @@ export class ApplicationUploadDialog implements OnInit {
     onFileChange(event: any): void {
         this.file = event.target.files[0];
         this.fileName = this.file.name;
-        this.getVersion(this.fileName);
+        this.version = getVersion(this.fileName);
         this.uploadDisabled = !(this.version && this.fileName)
     }
 
@@ -118,13 +119,6 @@ export class ApplicationUploadDialog implements OnInit {
 
     handleProgress(event: ProgressEvent) {
         this.progress = (event.loaded / event.total) * 100;
-    }
-
-    getVersion(filename: string) {
-        const matches = filename.match(/.*-(\d+\.\d+\.\d+)-.*/);
-        if (matches && matches.length > 1) {
-            this.version = matches[1];
-        }
     }
 }
 

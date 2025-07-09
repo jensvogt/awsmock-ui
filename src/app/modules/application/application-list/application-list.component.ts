@@ -11,10 +11,9 @@ import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
-import {ApplicationService} from "../service/application-service.component";
 import {AddApplicationRequest, ApplicationItem, DeleteApplicationRequest, ListApplicationCountersResponse} from "../model/application-item";
 import {ApplicationListState} from "./state/application-list.reducer";
-import {ApplicationAddDialog} from "../application-add/application-edit-dialog.component";
+import {ApplicationAddDialog} from "../application-add/application-add-dialog.component";
 
 @Component({
     selector: 'application-list',
@@ -54,7 +53,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     protected readonly encodeURI = encodeURI;
     protected readonly btoa = btoa;
 
-    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<ApplicationListState>, private readonly applicationService: ApplicationService,
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<ApplicationListState>,
                 private readonly location: Location, private readonly store: Store, private readonly router: Router) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;

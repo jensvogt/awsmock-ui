@@ -19,6 +19,7 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ApplicationEnvironmentAddDialog} from "../application-environment-add/application-environment-add.component";
 import {ApplicationEnvironmentEditDialog} from "../application-environment-edit/application-environment-edit.component";
 import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
+import {convertObjectToArray} from "../../../shared/paging-utils.component";
 
 @Component({
     selector: 'application-detail-component',
@@ -71,8 +72,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this.applicationDetails$.subscribe(applicationDetails => {
             console.log("applicationDetails: ", applicationDetails);
             this.applicationItem = applicationDetails;
-            this.environmentDatasource = this.convertObjectToArray('environment', applicationDetails.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
-            this.optionsDatasource = this.convertObjectToArray('options', applicationDetails.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
+            this.environmentTotal = this.applicationItem.environment.length;
+            this.optionsTotal = this.applicationItem.options.length;
+            this.environmentDatasource = convertObjectToArray(applicationDetails.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
+            this.optionsDatasource = convertObjectToArray(applicationDetails.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
         })
         //this.lambdaEnvironment$.subscribe((data) => console.log(data));
         //this.lambdaTags$.subscribe((data) => console.log(data));
@@ -124,13 +127,13 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     handleEnvironmentPageEvent(e: PageEvent) {
         this.environmentPageSize = e.pageSize;
         this.environmentPageIndex = e.pageIndex;
-        this.environmentDatasource = this.convertObjectToArray('environment', this.applicationItem.environment, e.pageSize, e.pageIndex, this.environmentSortColumn);
+        this.environmentDatasource = convertObjectToArray(this.applicationItem.environment, e.pageSize, e.pageIndex, this.environmentSortColumn);
     }
 
     environmentSortChanged(sortState: Sort) {
         let direction = sortState.direction === 'asc' ? 1 : -1;
         this.environmentSortColumn = {column: sortState.active, sortDirection: direction};
-        this.environmentDatasource = this.convertObjectToArray('environment', this.applicationItem.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
+        this.environmentDatasource = convertObjectToArray(this.applicationItem.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
     }
 
     addEnvironment() {
@@ -184,13 +187,13 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     handleOptionsPageEvent(e: PageEvent) {
         this.optionsPageSize = e.pageSize;
         this.optionsPageIndex = e.pageIndex;
-        this.optionsDatasource = this.convertObjectToArray('options', this.applicationItem.options, e.pageSize, e.pageIndex, this.optionsSortColumn);
+        this.optionsDatasource = convertObjectToArray(this.applicationItem.options, e.pageSize, e.pageIndex, this.optionsSortColumn);
     }
 
     optionsSortChanged(sortState: Sort) {
         let direction = sortState.direction === 'asc' ? 1 : -1;
         this.optionsSortColumn = {column: sortState.active, sortDirection: direction};
-        this.optionsDatasource = this.convertObjectToArray('options', this.applicationItem.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
+        this.optionsDatasource = convertObjectToArray(this.applicationItem.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
     }
 
     addOptions() {
@@ -244,22 +247,5 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         //         this.loadOptions();
         //         this.snackBar.open('Lambda options variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
         //     })
-    }
-
-    convertObjectToArray(name: string, obj: any, pageSize: number, pageIndex: number, sortColumn: SortColumn): MatTableDataSource<Environment> {
-        let environments: Environment[] = [];
-        for (let key of Object.getOwnPropertyNames(obj)) {
-            environments.push({key: key, value: obj[key]});
-        }
-        this.environmentTotal = environments.length;
-
-        environments = environments.sort((a: any, b: any) => a[sortColumn.column].localeCompare(b[sortColumn.column]));
-        if (sortColumn.sortDirection === 1) {
-            environments = environments.reverse();
-        }
-        if (environments.length > pageSize) {
-            environments = environments.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
-        }
-        return new MatTableDataSource<Environment>(environments);
     }
 }

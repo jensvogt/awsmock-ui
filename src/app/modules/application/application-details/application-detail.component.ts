@@ -7,7 +7,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {State, Store} from "@ngrx/store";
 import {PageEvent} from "@angular/material/paginator";
-import {ApplicationItem, Environment, GetApplicationRequest} from "../model/application-item";
+import {ApplicationItem, Environment, GetApplicationRequest, Options, UpdateApplicationRequest} from "../model/application-item";
 import {ApplicationService} from "../service/application-service.component";
 import {ApplicationDetailsState} from "./state/application-details.reducer";
 import {applicationDetailsActions} from "./state/application-details.actions";
@@ -16,6 +16,8 @@ import {selectError} from "../../sqs/queue-detail/state/sqs-queue-detail.selecto
 import {selectApplicationItem} from "./state/application-details.selectors";
 import {MatTableDataSource} from "@angular/material/table";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
+import {ApplicationEnvironmentAddDialog} from "../application-environment-add/application-environment-add.component";
+import {ApplicationEnvironmentEditDialog} from "../application-environment-edit/application-environment-edit.component";
 
 @Component({
     selector: 'application-detail-component',
@@ -44,30 +46,14 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     environmentPageIndex: number = 0;
     environmentPageSizeOptions = [5, 10, 20, 50, 100];
 
-    // Event sources
-    // eventSourceColumns: string[] = ['uuid', 'arn', 'type', 'actions'];
-    // lambdaEventSource$: Observable<LambdaEventSourceCountersResponse> = this.store.select(selectEventSource);
-    // eventSourcePageSize$: Observable<number> = this.store.select(selectEventSourcePageSize);
-    // eventSourcePageIndex$: Observable<number> = this.store.select(selectEventSourcePageIndex);
-    // eventSourcePageSizeOptions = [5, 10, 20, 50, 100];
-
-    // Tags Table
-    // tagColumns: any[] = ['key', 'value', 'actions'];
-    // lambdaTags$: Observable<LambdaTagCountersResponse> = this.store.select(selectTags);
-    // tagPageSize$: Observable<number> = this.store.select(selectTagPageSize);
-    // tagPageIndex$: Observable<number> = this.store.select(selectTagPageIndex);
-    // tagPageSizeOptions = [5, 10, 20, 50, 100];
-
-    // Instances Table
-    // instanceColumns: any[] = ['instanceId', 'containerId', 'status', 'actions'];
-    // lambdaInstances$: Observable<LambdaInstanceCountersResponse> = this.store.select(selectInstances);
-    // instancePageSize$: Observable<number> = this.store.select(selectInstancePageSize);
-    // instancePageIndex$: Observable<number> = this.store.select(selectInstancePageIndex);
-    // instancePageSizeOptions = [5, 10, 20, 50, 100];
-
-    // Tab
-    selectedTabIndex: string | undefined;
-    tabNames: string[] = ['environments', 'eventSources', 'tags', 'instances'];
+    // Options
+    optionsColumns: string[] = ['key', 'value', 'actions'];
+    optionsSortColumn: SortColumn = {column: 'key', sortDirection: -1};
+    optionsDatasource: MatTableDataSource<Options> = {} as MatTableDataSource<Options>;
+    optionsTotal: number = 0;
+    optionsPageSize: number = 5;
+    optionsPageIndex: number = 0;
+    optionsPageSizeOptions = [5, 10, 20, 50, 100];
 
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
@@ -84,7 +70,8 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this.applicationDetails$.subscribe(applicationDetails => {
             console.log("applicationDetails: ", applicationDetails);
             this.applicationItem = applicationDetails;
-            this.environmentDatasource = this.convertObjectToArray(applicationDetails.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
+            this.environmentDatasource = this.convertObjectToArray('environment', applicationDetails.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
+            this.optionsDatasource = this.convertObjectToArray('options', applicationDetails.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
         })
         //this.lambdaEnvironment$.subscribe((data) => console.log(data));
         //this.lambdaTags$.subscribe((data) => console.log(data));
@@ -131,163 +118,19 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         // });
     }
 
-    tabChanged($event: any) {
-        let clickedIndex = $event.index;
-        console.log(this.tabNames[clickedIndex]);
-        switch (this.tabNames[clickedIndex]) {
-            case 'environments':
-                this.loadEnvironment();
-                break;
-            case 'tags':
-                this.loadTags();
-                break;
-            case 'instances':
-                this.loadInstances();
-                break;
-        }
-    }
-
-    // ===================================================================================================================
-    // Tags
-    // ===================================================================================================================
-    handleTagPageEvent(e: PageEvent) {
-        this.state.value['application-details'].tagPageSize = e.pageSize;
-        this.state.value['application-details'].tagPageIndex = e.pageIndex;
-        this.loadTags();
-    }
-
-    loadTags() {
-        // this.store.dispatch(applicationDetailsActions.loadTags({
-        //     lambdaArn: this.functionArn,
-        //     pageSize: this.state.value['application-details'].tagPageSize,
-        //     pageIndex: this.state.value['application-details'].tagPageIndex,
-        //     sortColumns: this.state.value['application-details'].tagSortColumns
-        // }));
-        // this.lastUpdate = new Date();
-    }
-
-    tagSortChange(sortState: Sort) {
-        this.state.value['application-details'].tagSortColumns = [];
-        let column = sortState.active;
-        let direction = sortState.direction === 'asc' ? 1 : -1;
-        this.state.value['application-details'].tagSortColumns = [{column: column, sortDirection: direction}];
-        this.loadTags();
-    }
-
-    addTag() {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        //dialogConfig.data = {functionArn: this.functionArn};
-
-        // this.dialog.open(LambdaTagAddDialog, dialogConfig).afterClosed().subscribe(result => {
-        //     if (result) {
-        //         if (result.Key && result.Value) {
-        //             this.lambdaService.addTag(this.functionArn, result.Key, result.Value)
-        //                 .subscribe(() => {
-        //                     this.loadTags();
-        //                     this.snackBar.open('Lambda tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //                 })
-        //         } else {
-        //             this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //         }
-        //     }
-        // });
-    }
-
-    editTag(key: string, value: string) {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {applicationName: this.applicationName, key: key, value: value};
-
-        // this.dialog.open(LambdaTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
-        //     if (result) {
-        //         if (result.Key !== key || result.Value !== value) {
-        //             this.lambdaService.updateTag(this.functionArn, result.Key, result.Value)
-        //                 .subscribe(() => {
-        //                     this.loadTags();
-        //                     this.snackBar.open('Lambda tag updated, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //                 })
-        //         } else {
-        //             this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //         }
-        //     }
-        // });
-    }
-
-    deleteTag(key: string) {
-        // this.applicationService.deleteTag(this.functionArn, key)
-        //     .subscribe(() => {
-        //         this.loadTags();
-        //         this.snackBar.open('Lambda tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
-        //     })
-    }
-
-    // ===================================================================================================================
-    // Instances
-    // ===================================================================================================================
-    handleInstancePageEvent(e: PageEvent) {
-        this.state.value['application-details'].instancePageSize = e.pageSize;
-        this.state.value['application-details'].instancePageIndex = e.pageIndex;
-        this.loadInstances();
-    }
-
-    loadInstances() {
-        // this.store.dispatch(applicationDetailsActions.loadInstances({
-        //     lambdaArn: this.functionArn,
-        //     pageSize: this.state.value['application-details'].instancePageSize,
-        //     pageIndex: this.state.value['application-details'].instancePageIndex,
-        //     sortColumns: this.state.value['application-details'].instanceSortColumns
-        // }));
-        // this.lastUpdate = new Date();
-    }
-
-    instanceSortChange(sortState: Sort) {
-        this.state.value['application-details'].instanceSortColumns = [];
-        let column = sortState.active;
-        let direction = sortState.direction === 'asc' ? 1 : -1;
-        this.state.value['application-details'].instanceSortColumns = [{column: column, sortDirection: direction}];
-        this.loadInstances();
-    }
-
-    refreshInstances() {
-        this.loadInstances();
-    }
-
-    deleteInstance(instanceId: string) {
-        // this.applicationService.deleteInstance(this.functionArn, instanceId)
-        //     .subscribe(() => {
-        //         this.loadInstances();
-        //         this.snackBar.open('Lambda instance deleted, instanceId: ' + instanceId, 'Dismiss', {duration: 5000});
-        //     })
-    }
-
     // ===================================================================================================================
     // Environment
     // ===================================================================================================================
     handleEnvironmentPageEvent(e: PageEvent) {
-        this.state.value['application-details'].environmentPageSize = e.pageSize;
-        this.state.value['application-details'].environmentPageIndex = e.pageIndex;
-        this.loadEnvironment();
-    }
-
-    loadEnvironment() {
-        // this.store.dispatch(applicationDetailsActions.loadEnvironment({
-        //     lambdaArn: this.functionArn,
-        //     pageSize: this.state.value['application-details'].environmentPageSize,
-        //     pageIndex: this.state.value['application-details'].environmentPageIndex,
-        //     sortColumns: this.state.value['application-details'].environmentSortColumns
-        // }));
-        this.lastUpdate = new Date();
+        this.environmentPageSize = e.pageSize;
+        this.environmentPageIndex = e.pageIndex;
+        this.environmentDatasource = this.convertObjectToArray('environment', this.applicationItem.environment, e.pageSize, e.pageIndex, this.environmentSortColumn);
     }
 
     environmentSortChanged(sortState: Sort) {
         let direction = sortState.direction === 'asc' ? 1 : -1;
         this.environmentSortColumn = {column: sortState.active, sortDirection: direction};
-        this.environmentDatasource = this.convertObjectToArray(this.applicationItem.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
+        this.environmentDatasource = this.convertObjectToArray('environment', this.applicationItem.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
     }
 
     addEnvironment() {
@@ -295,21 +138,17 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.applicationName};
 
-        // this.dialog.open(LambdaEnvironmentAddDialog, dialogConfig).afterClosed().subscribe(result => {
-        //     if (result) {
-        //         if (result.Key && result.Value) {
-        //             this.applicationService.addEnvironment(this.functionArn, result.Key, result.Value)
-        //                 .subscribe(() => {
-        //                     this.loadEnvironment();
-        //                     this.snackBar.open('Lambda environment variable changed, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //                 })
-        //         } else {
-        //             this.snackBar.open('Lambda environment variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //         }
-        //     }
-        // });
+        this.dialog.open(ApplicationEnvironmentAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result?.key && result.value) {
+                this.applicationItem.environment[result.key] = result.value;
+                let request: UpdateApplicationRequest = {application: this.applicationItem}
+                this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+                this.snackBar.open('Application environment variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+            } else {
+                this.snackBar.open('Application environment variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+            }
+        });
     }
 
     editEnvironment(key: string, value: string) {
@@ -318,32 +157,96 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {applicationName: this.applicationName, key: key, value: value};
+        dialogConfig.data = {key: key, value: value};
 
-        // this.dialog.open(LambdaEnvironmentEditDialog, dialogConfig).afterClosed().subscribe(result => {
+        this.dialog.open(ApplicationEnvironmentEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result?.key && result.value) {
+                this.applicationItem.environment[result.key] = result.value;
+                let request: UpdateApplicationRequest = {application: this.applicationItem}
+                this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+                this.snackBar.open('Application environment variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+            } else {
+                this.snackBar.open('Application environment variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+            }
+        });
+    }
+
+    deleteEnvironment(key: string) {
+        delete this.applicationItem.environment[key];
+        let request: UpdateApplicationRequest = {application: this.applicationItem}
+        this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+        this.snackBar.open('Application environment variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
+    }
+
+    // ===================================================================================================================
+    // Options
+    // ===================================================================================================================
+    handleOptionsPageEvent(e: PageEvent) {
+        this.optionsPageSize = e.pageSize;
+        this.optionsPageIndex = e.pageIndex;
+        this.optionsDatasource = this.convertObjectToArray('options', this.applicationItem.options, e.pageSize, e.pageIndex, this.optionsSortColumn);
+    }
+
+    optionsSortChanged(sortState: Sort) {
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.optionsSortColumn = {column: sortState.active, sortDirection: direction};
+        this.optionsDatasource = this.convertObjectToArray('options', this.applicationItem.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
+    }
+
+    addOptions() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.applicationName};
+
+        // this.dialog.open(LambdaOptionsAddDialog, dialogConfig).afterClosed().subscribe(result => {
         //     if (result) {
-        //         if (result.Key !== key || result.Value !== value) {
-        //             this.applicationService.updateEnvironment(this.functionArn, result.Key, result.Value)
+        //         if (result.Key && result.Value) {
+        //             this.optionsService.addOptions(this.functionArn, result.Key, result.Value)
         //                 .subscribe(() => {
-        //                     this.loadTags();
-        //                     this.snackBar.open('Lambda environment variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+        //                     this.loadOptions();
+        //                     this.snackBar.open('Lambda options variable changed, name: ' + result.key, 'Dismiss', {duration: 5000});
         //                 })
         //         } else {
-        //             this.snackBar.open('Lambda environment variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+        //             this.snackBar.open('Lambda options variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
         //         }
         //     }
         // });
     }
 
-    deleteEnvironment(key: string) {
-        // this.applicationService.deleteEnvironment(this.functionArn, key)
+    editOptions(key: string, value: string) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {optionsName: this.applicationName, key: key, value: value};
+
+        // this.dialog.open(LambdaOptionsEditDialog, dialogConfig).afterClosed().subscribe(result => {
+        //     if (result) {
+        //         if (result.Key !== key || result.Value !== value) {
+        //             this.optionsService.updateOptions(this.functionArn, result.Key, result.Value)
+        //                 .subscribe(() => {
+        //                     this.loadTags();
+        //                     this.snackBar.open('Lambda options variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+        //                 })
+        //         } else {
+        //             this.snackBar.open('Lambda options variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+        //         }
+        //     }
+        // });
+    }
+
+    deleteOptions(key: string) {
+        // this.optionsService.deleteOptions(this.functionArn, key)
         //     .subscribe(() => {
-        //         this.loadEnvironment();
-        //         this.snackBar.open('Lambda environment variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
+        //         this.loadOptions();
+        //         this.snackBar.open('Lambda options variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
         //     })
     }
 
-    convertObjectToArray(obj: any, pageSize: number, pageIndex: number, sortColumn: SortColumn): MatTableDataSource<Environment> {
+    convertObjectToArray(name: string, obj: any, pageSize: number, pageIndex: number, sortColumn: SortColumn): MatTableDataSource<Environment> {
         let environments: Environment[] = [];
         for (let key of Object.getOwnPropertyNames(obj)) {
             environments.push({key: key, value: obj[key]});
@@ -355,7 +258,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
             environments = environments.reverse();
         }
         if (environments.length > pageSize) {
-            environments = environments.slice(pageIndex * pageSize, (pageSize + 1) * pageSize);
+            environments = environments.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
         }
         return new MatTableDataSource<Environment>(environments);
     }

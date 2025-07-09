@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest} from "../model/application-item";
+import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest, UpdateApplicationRequest} from "../model/application-item";
 
 @Injectable({providedIn: 'root'})
 export class ApplicationService {
@@ -48,7 +48,19 @@ export class ApplicationService {
      */
     public addApplication(request: AddApplicationRequest) {
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'create-applications');
-        return this.http.post(this.baseUrl, {request: request}, {headers: headers});
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    /**
+     * @brief Update an application
+     *
+     * @param request update application request
+     * @return Get application response
+     */
+    public updateApplication(request: UpdateApplicationRequest) {
+        request.application.region = this.region;
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'update-application');
+        return this.http.post(this.baseUrl, request, {headers: headers});
     }
 
     /**
@@ -59,5 +71,17 @@ export class ApplicationService {
     public deleteApplication(request: DeleteApplicationRequest) {
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'delete-application');
         return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+
+    /**
+     * @brief Delete an application environment variable
+     *
+     * @param name application name
+     * @param key environment variable name
+     */
+    public deleteEnvironment(name: string, key: string) {
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'delete-application');
+        return this.http.post(this.baseUrl, {name: name, key: key}, {headers: headers});
     }
 }

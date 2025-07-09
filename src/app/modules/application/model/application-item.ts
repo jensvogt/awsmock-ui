@@ -26,7 +26,7 @@ export interface ApplicationItem {
     containerId: string | undefined;
     status: string | undefined;
     enabled: boolean | undefined;
-    environment: object;
+    environment: any;
     tags: object;
     options: object;
     created: Date | undefined;
@@ -49,6 +49,15 @@ export interface AddApplicationRequest {
     pageSize: number,
     pageIndex: number,
     sortColumns: SortColumn[]
+}
+
+
+export interface UpdateApplicationRequest {
+    application: ApplicationItem;
+}
+
+export interface UpdateApplicationResponse {
+    application: ApplicationItem;
 }
 
 export interface GetApplicationRequest {

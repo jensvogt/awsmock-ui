@@ -19,54 +19,18 @@ export class ApplicationDetailEffects {
                 )
         )
     ));
-    //
-    // loadEnvironment$ = createEffect(() => this.actions$.pipe(
-    //     ofType(applicationDetailsActions.loadEnvironment),
-    //     mergeMap(action =>
-    //         this.applicationService.listEnvironmentCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
-    //             .pipe(map((environment: any) => applicationDetailsActions.loadEnvironmentSuccess({environment})),
-    //                 catchError((error) =>
-    //                     of(applicationDetailsActions.loadEnvironmentFailure({error: error.message}))
-    //                 )
-    //             )
-    //     )
-    // ));
-    //
-    // loadTags$ = createEffect(() => this.actions$.pipe(
-    //     ofType(applicationDetailsActions.loadTags),
-    //     mergeMap(action =>
-    //         this.applicationService.listTagCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
-    //             .pipe(map((tags: any) => applicationDetailsActions.loadTagsSuccess({tags})),
-    //                 catchError((error) =>
-    //                     of(applicationDetailsActions.loadTagsFailure({error: error.message}))
-    //                 )
-    //             )
-    //     )
-    // ));
-    //
-    // loadInstances$ = createEffect(() => this.actions$.pipe(
-    //     ofType(applicationDetailsActions.loadInstances),
-    //     mergeMap(action =>
-    //         this.applicationService.listInstanceCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
-    //             .pipe(map((instances: any) => applicationDetailsActions.loadInstancesSuccess({instances})),
-    //                 catchError((error) =>
-    //                     of(applicationDetailsActions.loadInstancesFailure({error: error.message}))
-    //                 )
-    //             )
-    //     )
-    // ));
-    //
-    // loadEventSource$ = createEffect(() => this.actions$.pipe(
-    //     ofType(applicationDetailsActions.loadEventSource),
-    //     mergeMap(action =>
-    //         this.applicationService.listEventSourceCounters(action.lambdaArn, action.pageSize, action.pageIndex, action.sortColumns)
-    //             .pipe(map((eventSource: any) => applicationDetailsActions.loadEventSourceSuccess({eventSource})),
-    //                 catchError((error) =>
-    //                     of(applicationDetailsActions.loadEventSourceFailure({error: error.message}))
-    //                 )
-    //             )
-    //     )
-    // ));
+
+    updateApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationDetailsActions.updateApplication),
+        mergeMap(action =>
+            this.applicationService.updateApplication(action.request)
+                .pipe(map((getApplicationResponse: any) => applicationDetailsActions.updateApplicationSuccess({getApplicationResponse})),
+                    catchError((error) =>
+                        of(applicationDetailsActions.updateApplicationFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
 
     constructor(private readonly actions$: Actions, private readonly applicationService: ApplicationService) {
     }

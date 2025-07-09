@@ -6,8 +6,8 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 
 @Component({
-    selector: 'application-environment-add-dialog',
-    templateUrl: './application-environment-add.component.html',
+    selector: 'application-environment-edit-dialog',
+    templateUrl: './application-environment-edit.component.html',
     standalone: true,
     imports: [
         MatDialogContent,
@@ -21,15 +21,17 @@ import {MatInput} from "@angular/material/input";
         MatInput,
         ReactiveFormsModule
     ],
-    styleUrls: ['./application-environment-add.component.scss'],
+    styleUrls: ['./application-environment-edit.component.scss'],
 })
-export class ApplicationEnvironmentAddDialog {
+export class ApplicationEnvironmentEditDialog {
 
     // @ts-ignore
     key: string = '';
     value: string = '';
 
-    constructor(private readonly dialogRef: MatDialogRef<ApplicationEnvironmentAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly dialogRef: MatDialogRef<ApplicationEnvironmentEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.key = data.key;
+        this.value = data.value;
     }
 
     save() {

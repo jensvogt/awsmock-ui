@@ -73,7 +73,7 @@ export const applicationDetailReducer = createReducer(
         loading: true
     })),
 
-    // Application list
+    // Get application
     on(applicationDetailsActions.loadApplication, (state: ApplicationDetailsState) => ({...state, loading: true})),
     on(applicationDetailsActions.loadApplicationSuccess, (state: ApplicationDetailsState, {getApplicationResponse}) => ({
         ...state,
@@ -82,23 +82,10 @@ export const applicationDetailReducer = createReducer(
     })),
     on(applicationDetailsActions.loadApplicationFailure, (state: ApplicationDetailsState, {error}) => ({...state, error: error, loading: false})),
 
-    // //  environment
-    // on(applicationDetailsActions.loadEnvironment, (state: ApplicationDetailsState) => ({...state, loading: true})),
-    // on(applicationDetailsActions.loadEnvironmentSuccess, (state: ApplicationDetailsState, {environment}) => ({...state, Environment: environment, loading: false})),
-    // on(applicationDetailsActions.loadEnvironmentFailure, (state: ApplicationDetailsState, {error}) => ({...state, error: error, loading: false})),
-    //
-    // //  tags
-    // on(applicationDetailsActions.loadTags, (state: ApplicationDetailsState) => ({...state, loading: true})),
-    // on(applicationDetailsActions.loadTagsSuccess, (state: ApplicationDetailsState, {tags}) => ({...state, Tags: tags, loading: false})),
-    // on(applicationDetailsActions.loadTagsFailure, (state: ApplicationDetailsState, {error}) => ({...state, error: error, loading: false})),
-    //
-    // //  instances
-    // on(applicationDetailsActions.loadInstances, (state: ApplicationDetailsState) => ({...state, loading: true})),
-    // on(applicationDetailsActions.loadInstancesSuccess, (state: ApplicationDetailsState, {instances}) => ({...state, Instances: instances, loading: false})),
-    // on(applicationDetailsActions.loadInstancesFailure, (state: ApplicationDetailsState, {error}) => ({...state, error: error, loading: false})),
-    //
-    // //  eventSource
-    // on(applicationDetailsActions.loadEventSource, (state: ApplicationDetailsState) => ({...state, loading: true})),
-    // on(applicationDetailsActions.loadEventSourceSuccess, (state: ApplicationDetailsState, {eventSource}) => ({...state, EventSource: eventSource, loading: false})),
-    // on(applicationDetailsActions.loadEventSourceFailure, (state: ApplicationDetailsState, {error}) => ({...state, error: error, loading: false})),
+    // Update application
+    on(applicationDetailsActions.updateApplication, (state: ApplicationDetailsState) => ({...state, loading: true})),
+    on(applicationDetailsActions.updateApplicationSuccess, (state: ApplicationDetailsState, {getApplicationResponse}) => ({
+        ...state, getApplicationResponse: getApplicationResponse, loading: false
+    })),
+    on(applicationDetailsActions.loadApplicationFailure, (state: ApplicationDetailsState, {error}) => ({...state, error: error, loading: false})),
 );

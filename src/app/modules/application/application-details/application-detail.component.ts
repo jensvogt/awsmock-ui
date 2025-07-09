@@ -18,6 +18,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ApplicationEnvironmentAddDialog} from "../application-environment-add/application-environment-add.component";
 import {ApplicationEnvironmentEditDialog} from "../application-environment-edit/application-environment-edit.component";
+import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
 
 @Component({
     selector: 'application-detail-component',
@@ -102,20 +103,19 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        //dialogConfig.data = {functionArn: this.functionItem.functionArn};
+        dialogConfig.data = {applicationName: this.applicationItem.name};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "40%"
 
-        // this.dialog.open(LambdaFunctionUpgradeDialog, dialogConfig).afterClosed().subscribe(result => {
-        //     if (result) {
-        //         this.lambdaService.uploadFunctionCode(result.functionArn, result.functionCode, result.version).subscribe(() => {
-        //             this.loadFunction();
-        //             this.snackBar.open('Lambda function code uploaded, ARN: ' + this.functionItem.functionArn, 'Done', {duration: 5000});
-        //         });
-        //     }
-        // });
+        this.dialog.open(ApplicationUploadDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.applicationService.uploadApplicationCode(result.applicationName, result.applicationCode, result.version).subscribe(() => {
+                    this.snackBar.open('Application code uploaded, name: ' + result.applicationName, 'Done', {duration: 5000});
+                });
+            }
+        });
     }
 
     // ===================================================================================================================

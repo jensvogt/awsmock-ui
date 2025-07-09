@@ -21,6 +21,7 @@ export interface ApplicationItem {
     user: string | undefined;
     name: string | undefined;
     runtime: string | undefined;
+    runType: string | undefined;
     archive: string;
     version: string | undefined;
     containerId: string | undefined;

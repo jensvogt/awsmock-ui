@@ -73,6 +73,28 @@ export class ApplicationService {
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
 
+    /**
+     * @brief Upload new application code
+     *
+     * @param applicationName application name
+     * @param applicationCode base64 encoded application code
+     * @param version function code version
+     */
+    public uploadApplicationCode(applicationName: string, applicationCode: string, version: string) {
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'upload-application');
+        /*        let headers: HttpHeaders = new HttpHeaders({
+                    'x-awsmock-target': 'application',
+                    'x-awsmock-action': 'upload-application',
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'AWS4-HMAC-SHA256 Credential=none/20240928/' + this.region + '/s3/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target, Signature=01316d694335ec0e0bf68b08570490f1b0bae0b130ecbe13ebad511b3ece8a41'
+                });
+                const formData = new FormData();
+                formData.append('applicationName', applicationName);
+                formData.append('applicationCode', applicationCode);
+                formData.append('version', version);
+                return this.http.post<any>(this.baseUrl, formData, {headers: headers});*/
+        return this.http.post<any>(this.baseUrl, {applicationName: applicationName, applicationCode: applicationCode, version: version}, {headers: headers});
+    }
 
     /**
      * @brief Delete an application environment variable

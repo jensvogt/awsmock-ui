@@ -11,7 +11,7 @@ import {FileImportComponent} from "./file-import/file-import.component";
 import {ModuleService} from "../../../services/module.service";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {NgIf} from "@angular/common";
+
 import {CdkScrollable} from "@angular/cdk/scrolling";
 
 @Component({
@@ -19,23 +19,22 @@ import {CdkScrollable} from "@angular/cdk/scrolling";
     templateUrl: './import-infrastructure.component.html',
     standalone: true,
     imports: [
-        MatButton,
-        FormsModule,
-        MatDialogActions,
-        MatDialogClose,
-        MatDialogContent,
-        MatDialogTitle,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        CdkDrag,
-        CdkDragHandle,
-        CdkTextareaAutosize,
-        MatCheckbox,
-        MatProgressSpinner,
-        NgIf,
-        CdkScrollable,
-    ],
+    MatButton,
+    FormsModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    CdkDrag,
+    CdkDragHandle,
+    CdkTextareaAutosize,
+    MatCheckbox,
+    MatProgressSpinner,
+    CdkScrollable
+],
     providers: [ModuleService],
     styleUrls: ['./import-infrastructure.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

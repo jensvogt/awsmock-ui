@@ -1,85 +1,103 @@
 <h2 mat-dialog-title>Edit Event Source: {{ functionName }}</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px">
-    <!------------------------------------------------------->
-    <!-- Type selection                                    -->
-    <!------------------------------------------------------->
+  <!------------------------------------------------------->
+  <!-- Type selection                                    -->
+  <!------------------------------------------------------->
+  <mat-form-field style="width: 100%">
+    <mat-label>Type</mat-label>
+    <mat-select (selectionChange)="loadTypeObjects($event)" [(ngModel)]="selectedType" style="width:100%; margin-right:10px">
+      @for (type of EventTypes; track type) {
+        <mat-option [value]="type.value">{{ type.viewValue }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <!------------------------------------------------------->
+  <!-- SQS                                                -->
+  <!------------------------------------------------------->
+  @if (selectedType === 'SQS') {
     <mat-form-field style="width: 100%">
-        <mat-label>Type</mat-label>
-        <mat-select (selectionChange)="loadTypeObjects($event)" [(ngModel)]="selectedType" style="width:100%; margin-right:10px">
-            @for (type of EventTypes; track type) {
-                <mat-option [value]="type.value">{{ type.viewValue }}</mat-option>
-            }
-        </mat-select>
+      <mat-label>SQS Queue ARN</mat-label>
+      <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedQueueArn" style="width:100%; margin-right:10px">
+        @for (arn of queueArns; track arn) {
+          <mat-option [value]="arn">{{ arn }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
-    <!------------------------------------------------------->
-    <!-- SQS                                                -->
-    <!------------------------------------------------------->
-    <mat-form-field *ngIf="selectedType === 'SQS'" style="width: 100%">
-        <mat-label>SQS Queue ARN</mat-label>
-        <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedQueueArn" style="width:100%; margin-right:10px">
-            @for (arn of queueArns; track arn) {
-                <mat-option [value]="arn">{{ arn }}</mat-option>
-            }
-        </mat-select>
+  }
+  <!------------------------------------------------------->
+  <!-- SNS                                                -->
+  <!------------------------------------------------------->
+  @if (selectedType === 'SNS') {
+    <mat-form-field style="width: 100%">
+      <mat-label>SNS Topic ARN</mat-label>
+      <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedTopicArn" style="width:100%; margin-right:10px">
+        @for (arn of topicArns; track arn) {
+          <mat-option [value]="arn">{{ arn }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
-    <!------------------------------------------------------->
-    <!-- SNS                                                -->
-    <!------------------------------------------------------->
-    <mat-form-field *ngIf="selectedType === 'SNS'" style="width: 100%">
-        <mat-label>SNS Topic ARN</mat-label>
-        <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedTopicArn" style="width:100%; margin-right:10px">
-            @for (arn of topicArns; track arn) {
-                <mat-option [value]="arn">{{ arn }}</mat-option>
-            }
-        </mat-select>
+  }
+  <!------------------------------------------------------->
+  <!-- S3                                                -->
+  <!------------------------------------------------------->
+  @if (selectedType === 'S3') {
+    <mat-form-field style="width: 100%">
+      <mat-label>S3 Bucket ARN</mat-label>
+      <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedBucketArn" style="width:100%; margin-right:10px">
+        @for (arn of bucketArns; track arn) {
+          <mat-option [value]="arn">{{ arn }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
-    <!------------------------------------------------------->
-    <!-- S3                                                -->
-    <!------------------------------------------------------->
-    <mat-form-field *ngIf="selectedType === 'S3'" style="width: 100%">
-        <mat-label>S3 Bucket ARN</mat-label>
-        <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedBucketArn" style="width:100%; margin-right:10px">
-            @for (arn of bucketArns; track arn) {
-                <mat-option [value]="arn">{{ arn }}</mat-option>
-            }
-        </mat-select>
+  }
+  @if (selectedType === 'S3') {
+    <mat-form-field style="width: 100%">
+      <mat-label>Event</mat-label>
+      <mat-select [(ngModel)]="selectedEvent" multiple>
+        @for (event of events; track event) {
+          <mat-option [value]="event">{{ event }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
-    <mat-form-field *ngIf="selectedType === 'S3'" style="width: 100%">
-        <mat-label>Event</mat-label>
-        <mat-select [(ngModel)]="selectedEvent" multiple>
-            @for (event of events; track event) {
-                <mat-option [value]="event">{{ event }}</mat-option>
-            }
-        </mat-select>
+  }
+  @if (selectedType === 'S3') {
+    <mat-form-field style="width: 100%">
+      <mat-label>Filter Rule Type</mat-label>
+      <mat-select [(ngModel)]="selectedFilterRuleType">
+        @for (range of filterRuleTypes; track range) {
+          <mat-option [value]="range">{{ range }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
-    <mat-form-field *ngIf="selectedType === 'S3'" style="width: 100%">
-        <mat-label>Filter Rule Type</mat-label>
-        <mat-select [(ngModel)]="selectedFilterRuleType">
-            @for (range of filterRuleTypes; track range) {
-                <mat-option [value]="range">{{ range }}</mat-option>
-            }
-        </mat-select>
+  }
+  @if (selectedType === 'S3') {
+    <mat-form-field style="width: 100%">
+      <mat-label>Filter Rule Value</mat-label>
+      <input [(ngModel)]="filterRuleValue" matInput value="">
     </mat-form-field>
-    <mat-form-field *ngIf="selectedType === 'S3'" style="width: 100%">
-        <mat-label>Filter Rule Value</mat-label>
-        <input [(ngModel)]="filterRuleValue" matInput value="">
+  }
+  <!------------------------------------------------------->
+  <!-- All                                               -->
+  <!------------------------------------------------------->
+  @if (selectedType !== '') {
+    <mat-form-field style="width: 100%">
+      <mat-label>Batch Size</mat-label>
+      <input [(ngModel)]="batchSize" matInput value="">
     </mat-form-field>
-    <!------------------------------------------------------->
-    <!-- All                                               -->
-    <!------------------------------------------------------->
-    <mat-form-field *ngIf="selectedType !== ''" style="width: 100%">
-        <mat-label>Batch Size</mat-label>
-        <input [(ngModel)]="batchSize" matInput value="">
+  }
+  @if (selectedType !== '') {
+    <mat-form-field style="width: 100%">
+      <mat-label>Max batch in Window</mat-label>
+      <input [(ngModel)]="maximumBatchingWindowInSeconds" matInput value="">
     </mat-form-field>
-    <mat-form-field *ngIf="selectedType !== ''" style="width: 100%">
-        <mat-label>Max batch in Window</mat-label>
-        <input [(ngModel)]="maximumBatchingWindowInSeconds" matInput value="">
-    </mat-form-field>
-    <mat-slide-toggle *ngIf="selectedType !== ''" [checked]="enabled" labelPosition="before">
-        Enabled:
+  }
+  @if (selectedType !== '') {
+    <mat-slide-toggle [checked]="enabled" labelPosition="before">
+      Enabled:
     </mat-slide-toggle>
+  }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()" cdkFocusInitial mat-button>Add</button>
 </mat-dialog-actions>

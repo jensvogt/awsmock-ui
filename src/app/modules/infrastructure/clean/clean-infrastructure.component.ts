@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit} from "@angular/core";
 import {MatButton} from "@angular/material/button";
-import {NgForOf, SlicePipe} from "@angular/common";
+import { SlicePipe } from "@angular/common";
 import {MatList, MatListItem} from "@angular/material/list";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MonitoringService} from "../../../services/monitoring.service";
@@ -32,20 +32,22 @@ const AllModules = {
     templateUrl: './clean-infrastructure.component.html',
     standalone: true,
     imports: [
-        MatButton,
-        NgForOf,
-        MatList,
-        MatListItem,
-        FormsModule,
-        MatDialogActions,
-        MatDialogClose,
-        MatDialogContent,
-        MatDialogTitle,
-        CdkDrag,
-        CdkDragHandle,
-        MatCheckbox,
-        FormsModule, ReactiveFormsModule, MatCheckboxModule, SlicePipe
-    ],
+    MatButton,
+    MatList,
+    MatListItem,
+    FormsModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    CdkDrag,
+    CdkDragHandle,
+    MatCheckbox,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    SlicePipe
+],
     providers: [MonitoringService],
     styleUrls: ['./clean-infrastructure.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

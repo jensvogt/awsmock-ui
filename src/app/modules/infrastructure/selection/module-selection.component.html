@@ -1,50 +1,60 @@
 <h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>{{ title }}</h2>
 <mat-dialog-content class="mat-typography">
-    <h6>Select modules:</h6>
-    <div class="container">
-        <div class="item">
-            <mat-list>
-                <mat-list-item>
-                    <mat-checkbox (click)="setAll()" [(ngModel)]="allSelected">All</mat-checkbox>
-                </mat-list-item>
-            </mat-list>
-        </div>
-        <div class="item">
-        </div>
-        <div class="item">
-            <mat-list>
-                <mat-list-item *ngFor="let module of allModules | slice:0:6">
-                    <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
-                </mat-list-item>
-            </mat-list>
-        </div>
-        <div class="item">
-            <mat-list>
-                <mat-list-item *ngFor="let module of allModules | slice:6:11">
-                    <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
-                </mat-list-item>
-            </mat-list>
-        </div>
-        <div class="item">
-            <mat-list>
-                <mat-list-item *ngIf="onlyObjectsVisible">
-                    <mat-checkbox [(ngModel)]="onlyObjects">Only Objects</mat-checkbox>
-                </mat-list-item>
-                <mat-list-item *ngIf="includeObjectsVisible">
-                    <mat-checkbox (click)="includeObjectsSelected()" [(ngModel)]="includeObjects">Include Objects</mat-checkbox>
-                </mat-list-item>
-            </mat-list>
-        </div>
-        <div class="item">
-            <mat-list>
-                <mat-list-item *ngIf="prettyPrintVisible">
-                    <mat-checkbox [(ngModel)]="prettyPrint">Pretty Print</mat-checkbox>
-                </mat-list-item>
-            </mat-list>
-        </div>
+  <h6>Select modules:</h6>
+  <div class="container">
+    <div class="item">
+      <mat-list>
+        <mat-list-item>
+          <mat-checkbox (click)="setAll()" [(ngModel)]="allSelected">All</mat-checkbox>
+        </mat-list-item>
+      </mat-list>
     </div>
+    <div class="item">
+    </div>
+    <div class="item">
+      <mat-list>
+        @for (module of allModules | slice:0:6; track module) {
+          <mat-list-item>
+            <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
+          </mat-list-item>
+        }
+      </mat-list>
+    </div>
+    <div class="item">
+      <mat-list>
+        @for (module of allModules | slice:6:11; track module) {
+          <mat-list-item>
+            <mat-checkbox [(ngModel)]="module.selected">{{ module.displayName }}</mat-checkbox>
+          </mat-list-item>
+        }
+      </mat-list>
+    </div>
+    <div class="item">
+      <mat-list>
+        @if (onlyObjectsVisible) {
+          <mat-list-item>
+            <mat-checkbox [(ngModel)]="onlyObjects">Only Objects</mat-checkbox>
+          </mat-list-item>
+        }
+        @if (includeObjectsVisible) {
+          <mat-list-item>
+            <mat-checkbox (click)="includeObjectsSelected()" [(ngModel)]="includeObjects">Include Objects</mat-checkbox>
+          </mat-list-item>
+        }
+      </mat-list>
+    </div>
+    <div class="item">
+      <mat-list>
+        @if (prettyPrintVisible) {
+          <mat-list-item>
+            <mat-checkbox [(ngModel)]="prettyPrint">Pretty Print</mat-checkbox>
+          </mat-list-item>
+        }
+      </mat-list>
+    </div>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
-    <button (click)="save()" cdkFocusInitial mat-button>Ok</button>
+  <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()" cdkFocusInitial mat-button>Ok</button>
 </mat-dialog-actions>

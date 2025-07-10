@@ -8,7 +8,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
 import {KmsService} from "../../kms/service/kms-service.component";
-import {NgIf} from "@angular/common";
+
 
 interface DataType {
     value: string;
@@ -20,21 +20,20 @@ interface DataType {
     templateUrl: './parameter-add-component.html',
     standalone: true,
     imports: [
-        MatDialogContent,
-        MatDialogTitle,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-        MatFormField,
-        MatLabel,
-        FormsModule,
-        MatInput,
-        ReactiveFormsModule,
-        CdkTextareaAutosize,
-        MatOption,
-        MatSelect,
-        NgIf
-    ],
+    MatDialogContent,
+    MatDialogTitle,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatFormField,
+    MatLabel,
+    FormsModule,
+    MatInput,
+    ReactiveFormsModule,
+    CdkTextareaAutosize,
+    MatOption,
+    MatSelect
+],
     styleUrls: ['./parameter-add-component.scss']
 })
 export class ParameterAddDialogComponent implements OnInit {

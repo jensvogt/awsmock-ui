@@ -4,7 +4,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogC
 import {FormsModule} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatIcon} from "@angular/material/icon";
-import {DatePipe, NgIf} from "@angular/common";
+import { DatePipe } from "@angular/common";
 import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatSort, MatSortHeader, Sort} from "@angular/material/sort";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
@@ -24,39 +24,38 @@ import {LambdaResultDetail} from "./function-result-view/function-result-detail.
     templateUrl: './function-result-dialog.component.html',
     standalone: true,
     imports: [
-        FormsModule,
-        MatButton,
-        MatDialogActions,
-        MatDialogClose,
-        MatDialogContent,
-        MatIcon,
-        MatCard,
-        MatCardContent,
-        MatCardHeader,
-        MatIconButton,
-        NgIf,
-        MatSort,
-        MatTable,
-        MatNavList,
-        CdkCopyToClipboard,
-        MatTooltip,
-        MatColumnDef,
-        MatHeaderCell,
-        MatSortHeader,
-        MatCell,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatNoDataRow,
-        MatRowDef,
-        MatRow,
-        MatPaginator,
-        MatListItem,
-        RouterLink,
-        DatePipe,
-        FooterComponent
-    ],
+    FormsModule,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatIcon,
+    MatCard,
+    MatCardContent,
+    MatCardHeader,
+    MatIconButton,
+    MatSort,
+    MatTable,
+    MatNavList,
+    CdkCopyToClipboard,
+    MatTooltip,
+    MatColumnDef,
+    MatHeaderCell,
+    MatSortHeader,
+    MatCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatNoDataRow,
+    MatRowDef,
+    MatRow,
+    MatPaginator,
+    MatListItem,
+    RouterLink,
+    DatePipe,
+    FooterComponent
+],
     styleUrls: ['./function-result-dialog.component.scss']
 })
 export class LambdaResultDialog implements OnInit {

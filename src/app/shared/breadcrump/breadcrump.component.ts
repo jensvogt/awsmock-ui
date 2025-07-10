@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink} from '@angular/router';
-import {NgClass, NgForOf, NgIf} from "@angular/common";
+import { NgClass } from "@angular/common";
 
 export interface Breadcrumb {
     label: string;
@@ -12,11 +12,9 @@ export interface Breadcrumb {
     selector: 'app-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     imports: [
-        NgIf,
-        NgForOf,
-        NgClass,
-        RouterLink
-    ],
+    NgClass,
+    RouterLink
+],
     standalone: true
 })
 export class BreadcrumbComponent {

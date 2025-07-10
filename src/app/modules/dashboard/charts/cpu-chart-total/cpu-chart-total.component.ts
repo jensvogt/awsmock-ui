@@ -5,7 +5,7 @@ import {ChartService, TimeRange} from "../../../../services/chart-service.compon
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
+
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -24,16 +24,15 @@ export type ChartOptions = {
     templateUrl: './cpu-chart-total.component.html',
     styleUrls: ['./cpu-chart-total.component.scss'],
     imports: [
-        MatCard,
-        MatCardHeader,
-        MatCardActions,
-        MatSelect,
-        FormsModule,
-        MatOption,
-        MatCardContent,
-        ChartComponent,
-        NgIf
-    ],
+    MatCard,
+    MatCardHeader,
+    MatCardActions,
+    MatSelect,
+    FormsModule,
+    MatOption,
+    MatCardContent,
+    ChartComponent
+],
     standalone: true
 })
 export class CpuChartTotalComponent implements OnInit {

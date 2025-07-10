@@ -11,29 +11,27 @@ import {ModuleService} from "../../../services/module.service";
 import {FileImportComponent} from "../../infrastructure/import/file-import/file-import.component";
 import {SqsService} from "../service/sqs-service.component";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {NgIf} from "@angular/common";
+
 
 @Component({
     selector: 'sqs-import-messages-component',
     templateUrl: './message-import.component.html',
     standalone: true,
     imports: [
-        MatButton,
-        FormsModule,
-        MatDialogActions,
-        MatDialogClose,
-        MatDialogContent,
-        MatDialogTitle,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        CdkDrag,
-        CdkDragHandle,
-        CdkTextareaAutosize,
-        MatProgressSpinner,
-        NgIf,
-
-    ],
+    MatButton,
+    FormsModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    CdkDrag,
+    CdkDragHandle,
+    CdkTextareaAutosize,
+    MatProgressSpinner
+],
     providers: [ModuleService],
     styleUrls: ['./message-import.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

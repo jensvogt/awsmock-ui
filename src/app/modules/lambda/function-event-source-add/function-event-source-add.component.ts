@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject} from "@angular/core";
-import {NgIf} from "@angular/common";
+
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -31,21 +31,20 @@ const EventTypes: Array<EventType> = [
     templateUrl: './function-event-source-add.component.html',
     standalone: true,
     imports: [
-        MatDialogContent,
-        MatDialogTitle,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-        MatFormField,
-        MatLabel,
-        FormsModule,
-        ReactiveFormsModule,
-        MatOption,
-        MatSelect,
-        NgIf,
-        MatInput,
-        MatSlideToggle
-    ],
+    MatDialogContent,
+    MatDialogTitle,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatFormField,
+    MatLabel,
+    FormsModule,
+    ReactiveFormsModule,
+    MatOption,
+    MatSelect,
+    MatInput,
+    MatSlideToggle
+],
     styleUrls: ['./function-event-source-add.component.scss'],
 })
 export class LambdaEventSourceAddDialog {

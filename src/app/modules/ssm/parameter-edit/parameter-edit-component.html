@@ -1,35 +1,37 @@
 <h2 mat-dialog-title>Edit Parameter</h2>
 <mat-dialog-content class="mat-typography">
+  <mat-form-field style="width: 100%">
+    <mat-label>Name</mat-label>
+    <input [(ngModel)]="parameterName" matInput value="">
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <mat-label>Value</mat-label>
+    <input [(ngModel)]="parameterValue" matInput value="">
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <mat-label>Type</mat-label>
+    <mat-select [(ngModel)]="selectedDataType" name="dataType">
+      @for (dataType of dataTypes; track dataType) {
+        <mat-option [value]="dataType.value">{{ dataType.viewValue }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <mat-label>Description</mat-label>
+    <textarea [(ngModel)]="description" cdkAutosizeMinRows="5" cdkTextareaAutosize matInput placeholder="Description" style="width:100%; height:100%"></textarea>
+  </mat-form-field>
+  @if (selectedDataType === 'SecureString') {
     <mat-form-field style="width: 100%">
-        <mat-label>Name</mat-label>
-        <input [(ngModel)]="parameterName" matInput value="">
+      <mat-label>KMS Key ARN</mat-label>
+      <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedKmsKeyArn" style="width:100%; margin-right:10px">
+        @for (arn of kmsKeys; track arn) {
+          <mat-option [value]="arn">{{ arn }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
-    <mat-form-field style="width: 100%">
-        <mat-label>Value</mat-label>
-        <input [(ngModel)]="parameterValue" matInput value="">
-    </mat-form-field>
-    <mat-form-field style="width: 100%">
-        <mat-label>Type</mat-label>
-        <mat-select [(ngModel)]="selectedDataType" name="dataType">
-            @for (dataType of dataTypes; track dataType) {
-                <mat-option [value]="dataType.value">{{ dataType.viewValue }}</mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field style="width: 100%">
-        <mat-label>Description</mat-label>
-        <textarea [(ngModel)]="description" cdkAutosizeMinRows="5" cdkTextareaAutosize matInput placeholder="Description" style="width:100%; height:100%"></textarea>
-    </mat-form-field>
-    <mat-form-field *ngIf="selectedDataType === 'SecureString'" style="width: 100%">
-        <mat-label>KMS Key ARN</mat-label>
-        <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedKmsKeyArn" style="width:100%; margin-right:10px">
-            @for (arn of kmsKeys; track arn) {
-                <mat-option [value]="arn">{{ arn }}</mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
+  }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
-    <button (click)="save()" cdkFocusInitial mat-button>Save</button>
+  <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
+  <button (click)="save()" cdkFocusInitial mat-button>Save</button>
 </mat-dialog-actions>

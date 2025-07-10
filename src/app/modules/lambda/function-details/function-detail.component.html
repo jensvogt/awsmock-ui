@@ -1,362 +1,370 @@
 <mat-card appearance="outlined" style="margin: 3px;">
+  <mat-card-header>
+    <span>
+      <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </span>
+    <span class="fill-remaining-space">
+      Lambda Function Details: {{ this.functionName }}
+    </span>
+    <span>
+      <button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
+        <mat-icon>upload</mat-icon>
+      </button>
+      <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </span>
+  </mat-card-header>
+  <mat-card appearance="outlined" style="margin: 3px;">
     <mat-card-header>
-        <span>
-            <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-        </span>
-        <span class="fill-remaining-space">
-            Lambda Function Details: {{ this.functionName }}
-        </span>
-        <span>
-            <button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
-                <mat-icon>upload</mat-icon>
-            </button>
-            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
-                <mat-icon>refresh</mat-icon>
-            </button>
-        </span>
+      <mat-card-title>Details</mat-card-title>
     </mat-card-header>
-    <mat-card appearance="outlined" style="margin: 3px;">
-        <mat-card-header>
-            <mat-card-title>Details</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <mat-grid-list cols="5" rowHeight="420px">
-                <mat-grid-tile [colspan]="2" [rowspan]="1">
-                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                        <mat-list>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Region: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.region }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Function name: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionName }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Handler: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.handler }}
-                                    <button [cdkCopyToClipboard]="functionItem.handler" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                        <mat-icon class="copy-icon">content_copy</mat-icon>
-                                    </button>
-                                </p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Role: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.role }}
-                                    <button [cdkCopyToClipboard]="functionItem.role" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                        <mat-icon class="copy-icon">content_copy</mat-icon>
-                                    </button>
-                                </p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>ARN: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionArn }}
-                                    <button [cdkCopyToClipboard]="functionItem.functionArn" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                        <mat-icon class="copy-icon">content_copy</mat-icon>
-                                    </button>
-                                </p>
-                            </mat-list-item>
-                        </mat-list>
-                    </div>
-                </mat-grid-tile>
-                <mat-grid-tile [colspan]="1" [rowspan]="1">
-                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                        <mat-list>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>User: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.user }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Runtime: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.runtime }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Version: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.version }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Size:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ byteConversion(functionItem.size) }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Concurrency:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.concurrency }}</p>
-                            </mat-list-item>
-                        </mat-list>
-                    </div>
-                </mat-grid-tile>
-                <mat-grid-tile [colspan]="1" [rowspan]="1">
-                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                        <mat-list>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Number of invocation:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.invocations }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Average Execution time:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.averageRuntime }} ms</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Last invocation:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.lastInvocation ? (functionItem.lastInvocation | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Created:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.created ? (functionItem.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Modified:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.modified ? (functionItem.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                            </mat-list-item>
-                        </mat-list>
-                    </div>
-                </mat-grid-tile>
-                <mat-grid-tile [colspan]="1" [rowspan]="1">
-                    <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
-                        <mat-list>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>ZIP file name:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.zipFile }}
-                                    <button [cdkCopyToClipboard]="functionItem.zipFile" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                        <mat-icon class="copy-icon">content_copy</mat-icon>
-                                    </button>
-                                </p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>S3 Bucket Name:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3Bucket }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>S3 Key:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3Key }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>S3 Object Version:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3ObjectVersion }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
-                                <p class="mat-list-span-title" matListItemTitle>Instances:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.instances }}</p>
-                            </mat-list-item>
-                        </mat-list>
-                    </div>
-                </mat-grid-tile>
-            </mat-grid-list>
-        </mat-card-content>
-    </mat-card>
-    <mat-card appearance="outlined" style="margin-top: 5px;">
-        <mat-card-content>
-            <mat-tab-group (selectedTabChange)="tabChanged($event);" [(selectedIndex)]="selectedTabIndex">
-                <mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Lambda function environment variables">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="addEnvironment()" [matTooltipShowDelay]="1000" aria-label="Add environment variable" mat-icon-button matTooltip="Add a new environment variable">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="loadEnvironment()" [matTooltipShowDelay]="1000" aria-label="Refresh environment variable" mat-icon-button matTooltip="Refresh the environment variable list">
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="lambdaEnvironment$ | async as environment" class="row">
-                        <table (matSortChange)="environmentSortChanged($event)" [dataSource]="environment.environmentCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="key">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable name" sortActionDescription="Sort by name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable value" sortActionDescription="Sort by value">Value
-                                </th>
-                                <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editEnvironment(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the lambda environment variable">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button (click)="deleteEnvironment(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda environment variable">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: environmentColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="environmentColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                        <mat-paginator (page)="handleEnvironmentPageEvent($event)"
-                                       [disabled]="false"
-                                       [hidePageSize]="false"
-                                       [length]="(lambdaEnvironment$ | async)?.total"
-                                       [pageIndex]="environmentPageIndex$"
-                                       [pageSizeOptions]="environmentPageSizeOptions"
-                                       [pageSize]="environmentPageSize$"
-                                       [showFirstLastButtons]="true"
-                                       aria-label="Select page">
-                        </mat-paginator>
-                    </div>
-                </mat-tab>
-                <mat-tab [matTooltipShowDelay]="1000" label="Event Sources" matTooltip="Lambda function event sources">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="addEventSource()" [matTooltipShowDelay]="1000" aria-label="Add eventSource variable" mat-icon-button matTooltip="Add a new event source">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="loadEventSource()" [matTooltipShowDelay]="1000" aria-label="Refresh eventSource variable" mat-icon-button matTooltip="Refresh the event source list">
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="lambdaEventSource$ | async as eventSource" class="row">
-                        <table (matSortChange)="eventSourceSortChanged($event)" [dataSource]="eventSource.eventSourceCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="uuid">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source uuid" sortActionDescription="Sort by uuid">UUID</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.UUID }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="arn">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source ARN" sortActionDescription="Sort by ARN">ARN</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.EventSourceArn }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="type">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source type" sortActionDescription="Sort by type">Type</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.Type }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editEventSource(row.EventSourceArn, row.Type)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the event source">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button (click)="deleteEventSource(row.EventSourceArn)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete event source">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="eventSourceColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: eventSourceColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="eventSourceColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                        <mat-paginator (page)="handleEventSourcePageEvent($event)"
-                                       [disabled]="false"
-                                       [hidePageSize]="false"
-                                       [length]="(lambdaEventSource$ | async)?.total"
-                                       [pageIndex]="eventSourcePageIndex$"
-                                       [pageSizeOptions]="eventSourcePageSizeOptions"
-                                       [pageSize]="eventSourcePageSize$"
-                                       [showFirstLastButtons]="true"
-                                       aria-label="Select page">
-                        </mat-paginator>
-                    </div>
-                </mat-tab>
-                <mat-tab [matTooltipShowDelay]="1000" label="Tags" matTooltip="Lambda function tags">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="loadTags()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="lambdaTags$ | async as tags" class="row">
-                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="key">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag name" sortActionDescription="Sort by name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by value">Value
-                                </th>
-                                <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editTag(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button (click)="deleteTag(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda tag">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="tagColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                        <mat-paginator (page)="handleTagPageEvent($event)"
-                                       [disabled]="false"
-                                       [hidePageSize]="false"
-                                       [length]="(lambdaTags$ | async)?.total"
-                                       [pageIndex]="tagPageIndex$"
-                                       [pageSizeOptions]="tagPageSizeOptions"
-                                       [pageSize]="tagPageSize$"
-                                       [showFirstLastButtons]="true"
-                                       aria-label="Select page">
-                        </mat-paginator>
-                    </div>
-                </mat-tab>
-                <mat-tab [matTooltipShowDelay]="1000" label="Instances" matTooltip="Lambfda function instances">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="refreshInstances()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="lambdaInstances$ | async as instances" class="row">
-                        <table (matSortChange)="instanceSortChange($event)" [dataSource]="instances.instanceCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="instanceId">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Instance ID" sortActionDescription="Sort by instance ID">Instance ID</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.instanceId }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="containerId">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by container ID">Container ID</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.containerId }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="status">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.status }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                    <button (click)="deleteInstance(row.instanceId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda instance">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="instanceColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: instanceColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="instanceColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                        <mat-paginator (page)="handleInstancePageEvent($event)"
-                                       [disabled]="false"
-                                       [hidePageSize]="false"
-                                       [length]="(lambdaInstances$ | async)?.total"
-                                       [pageIndex]="instancePageIndex$"
-                                       [pageSizeOptions]="instancePageSizeOptions"
-                                       [pageSize]="instancePageSize$"
-                                       [showFirstLastButtons]="true"
-                                       aria-label="Select page">
-                        </mat-paginator>
-                    </div>
-                </mat-tab>
-            </mat-tab-group>
-        </mat-card-content>
-    </mat-card>
-    <div class="footer">
-        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
-    </div>
+    <mat-card-content>
+      <mat-grid-list cols="5" rowHeight="420px">
+        <mat-grid-tile [colspan]="2" [rowspan]="1">
+          <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+            <mat-list>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Region: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.region }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Function name: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionName }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Handler: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.handler }}
+                  <button [cdkCopyToClipboard]="functionItem.handler" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                    <mat-icon class="copy-icon">content_copy</mat-icon>
+                  </button>
+                </p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Role: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.role }}
+                  <button [cdkCopyToClipboard]="functionItem.role" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                    <mat-icon class="copy-icon">content_copy</mat-icon>
+                  </button>
+                </p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>ARN: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionArn }}
+                  <button [cdkCopyToClipboard]="functionItem.functionArn" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                    <mat-icon class="copy-icon">content_copy</mat-icon>
+                  </button>
+                </p>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+          <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+            <mat-list>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>User: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.user }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Runtime: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.runtime }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Version: </p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.version }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Size:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ byteConversion(functionItem.size) }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Concurrency:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.concurrency }}</p>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+          <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+            <mat-list>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Number of invocation:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.invocations }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Average Execution time:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.averageRuntime }} ms</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Last invocation:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.lastInvocation ? (functionItem.lastInvocation | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Created:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.created ? (functionItem.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Modified:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.modified ? (functionItem.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+          <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+            <mat-list>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>ZIP file name:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.zipFile }}
+                  <button [cdkCopyToClipboard]="functionItem.zipFile" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                    <mat-icon class="copy-icon">content_copy</mat-icon>
+                  </button>
+                </p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>S3 Bucket Name:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3Bucket }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>S3 Key:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3Key }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>S3 Object Version:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.s3ObjectVersion }}</p>
+              </mat-list-item>
+              <mat-list-item style="height:80px">
+                <p class="mat-list-span-title" matListItemTitle>Instances:</p>
+                <p class="mat-list-span-value" matListItemLine>{{ functionItem.instances }}</p>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+  <mat-card appearance="outlined" style="margin-top: 5px;">
+    <mat-card-content>
+      <mat-tab-group (selectedTabChange)="tabChanged($event);" [(selectedIndex)]="selectedTabIndex">
+        <mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Lambda function environment variables">
+          <mat-card-actions class="head-buttons">
+            <button (click)="addEnvironment()" [matTooltipShowDelay]="1000" aria-label="Add environment variable" mat-icon-button matTooltip="Add a new environment variable">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button (click)="loadEnvironment()" [matTooltipShowDelay]="1000" aria-label="Refresh environment variable" mat-icon-button matTooltip="Refresh the environment variable list">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-actions>
+          @if (lambdaEnvironment$ | async; as environment) {
+            <div class="row">
+              <table (matSortChange)="environmentSortChanged($event)" [dataSource]="environment.environmentCounters" class="mat-elevation-z8" mat-table matSort>
+                <ng-container matColumnDef="key">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable name" sortActionDescription="Sort by name">Name</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                </ng-container>
+                <ng-container matColumnDef="value">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Environment variable value" sortActionDescription="Sort by value">Value
+                  </th>
+                  <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                  <td *matCellDef="let row" mat-cell>
+                    <button (click)="editEnvironment(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the lambda environment variable">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteEnvironment(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda environment variable">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="environmentColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: environmentColumns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                  <td [attr.colspan]="environmentColumns.length" class="mat-cell">
+                    No data matching the filter.
+                  </td>
+                </tr>
+              </table>
+              <mat-paginator (page)="handleEnvironmentPageEvent($event)"
+                [disabled]="false"
+                [hidePageSize]="false"
+                [length]="(lambdaEnvironment$ | async)?.total"
+                [pageIndex]="environmentPageIndex$"
+                [pageSizeOptions]="environmentPageSizeOptions"
+                [pageSize]="environmentPageSize$"
+                [showFirstLastButtons]="true"
+                aria-label="Select page">
+              </mat-paginator>
+            </div>
+          }
+        </mat-tab>
+        <mat-tab [matTooltipShowDelay]="1000" label="Event Sources" matTooltip="Lambda function event sources">
+          <mat-card-actions class="head-buttons">
+            <button (click)="addEventSource()" [matTooltipShowDelay]="1000" aria-label="Add eventSource variable" mat-icon-button matTooltip="Add a new event source">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button (click)="loadEventSource()" [matTooltipShowDelay]="1000" aria-label="Refresh eventSource variable" mat-icon-button matTooltip="Refresh the event source list">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-actions>
+          @if (lambdaEventSource$ | async; as eventSource) {
+            <div class="row">
+              <table (matSortChange)="eventSourceSortChanged($event)" [dataSource]="eventSource.eventSourceCounters" class="mat-elevation-z8" mat-table matSort>
+                <ng-container matColumnDef="uuid">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source uuid" sortActionDescription="Sort by uuid">UUID</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.UUID }}</td>
+                </ng-container>
+                <ng-container matColumnDef="arn">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source ARN" sortActionDescription="Sort by ARN">ARN</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.EventSourceArn }}</td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Event source type" sortActionDescription="Sort by type">Type</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.Type }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                  <td *matCellDef="let row" mat-cell>
+                    <button (click)="editEventSource(row.EventSourceArn, row.Type)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the event source">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteEventSource(row.EventSourceArn)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete event source">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="eventSourceColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: eventSourceColumns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                  <td [attr.colspan]="eventSourceColumns.length" class="mat-cell">
+                    No data matching the filter.
+                  </td>
+                </tr>
+              </table>
+              <mat-paginator (page)="handleEventSourcePageEvent($event)"
+                [disabled]="false"
+                [hidePageSize]="false"
+                [length]="(lambdaEventSource$ | async)?.total"
+                [pageIndex]="eventSourcePageIndex$"
+                [pageSizeOptions]="eventSourcePageSizeOptions"
+                [pageSize]="eventSourcePageSize$"
+                [showFirstLastButtons]="true"
+                aria-label="Select page">
+              </mat-paginator>
+            </div>
+          }
+        </mat-tab>
+        <mat-tab [matTooltipShowDelay]="1000" label="Tags" matTooltip="Lambda function tags">
+          <mat-card-actions class="head-buttons">
+            <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
+              <mat-icon>add</mat-icon>
+            </button>
+            <button (click)="loadTags()" aria-label="Refresh" mat-icon-button>
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-actions>
+          @if (lambdaTags$ | async; as tags) {
+            <div class="row">
+              <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
+                <ng-container matColumnDef="key">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag name" sortActionDescription="Sort by name">Name</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                </ng-container>
+                <ng-container matColumnDef="value">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by value">Value
+                  </th>
+                  <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                  <td *matCellDef="let row" mat-cell>
+                    <button (click)="editTag(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteTag(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda tag">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                  <td [attr.colspan]="tagColumns.length" class="mat-cell">
+                    No data matching the filter.
+                  </td>
+                </tr>
+              </table>
+              <mat-paginator (page)="handleTagPageEvent($event)"
+                [disabled]="false"
+                [hidePageSize]="false"
+                [length]="(lambdaTags$ | async)?.total"
+                [pageIndex]="tagPageIndex$"
+                [pageSizeOptions]="tagPageSizeOptions"
+                [pageSize]="tagPageSize$"
+                [showFirstLastButtons]="true"
+                aria-label="Select page">
+              </mat-paginator>
+            </div>
+          }
+        </mat-tab>
+        <mat-tab [matTooltipShowDelay]="1000" label="Instances" matTooltip="Lambfda function instances">
+          <mat-card-actions class="head-buttons">
+            <button (click)="refreshInstances()" aria-label="Refresh" mat-icon-button>
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-actions>
+          @if (lambdaInstances$ | async; as instances) {
+            <div class="row">
+              <table (matSortChange)="instanceSortChange($event)" [dataSource]="instances.instanceCounters" class="mat-elevation-z8" mat-table matSort>
+                <ng-container matColumnDef="instanceId">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Instance ID" sortActionDescription="Sort by instance ID">Instance ID</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.instanceId }}</td>
+                </ng-container>
+                <ng-container matColumnDef="containerId">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by container ID">Container ID</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.containerId }}</td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.status }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
+                  <td *matCellDef="let row" mat-cell>
+                    <button (click)="deleteInstance(row.instanceId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda instance">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="instanceColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: instanceColumns;" mat-row></tr>
+                <tr *matNoDataRow class="mat-row">
+                  <td [attr.colspan]="instanceColumns.length" class="mat-cell">
+                    No data matching the filter.
+                  </td>
+                </tr>
+              </table>
+              <mat-paginator (page)="handleInstancePageEvent($event)"
+                [disabled]="false"
+                [hidePageSize]="false"
+                [length]="(lambdaInstances$ | async)?.total"
+                [pageIndex]="instancePageIndex$"
+                [pageSizeOptions]="instancePageSizeOptions"
+                [pageSize]="instancePageSize$"
+                [showFirstLastButtons]="true"
+                aria-label="Select page">
+              </mat-paginator>
+            </div>
+          }
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+  <div class="footer">
+    Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
+  </div>
 </mat-card>

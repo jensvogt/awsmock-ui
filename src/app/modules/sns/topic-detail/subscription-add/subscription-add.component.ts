@@ -5,7 +5,7 @@ import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatInput} from "@angular/material/input";
-import {NgIf} from "@angular/common";
+
 import {SqsService} from "../../../sqs/service/sqs-service.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {LambdaService} from "../../../lambda/service/lambda-service.component";
@@ -27,20 +27,19 @@ export const Protocols: string[] = [
     templateUrl: './subscription-add.component.html',
     standalone: true,
     imports: [
-        MatDialogContent,
-        MatDialogTitle,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-        MatFormField,
-        MatSelect,
-        MatOption,
-        MatLabel,
-        FormsModule,
-        MatInput,
-        ReactiveFormsModule,
-        NgIf
-    ],
+    MatDialogContent,
+    MatDialogTitle,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatLabel,
+    FormsModule,
+    MatInput,
+    ReactiveFormsModule
+],
     styleUrls: ['./subscription-add.component.scss'],
     providers: [SqsService]
 })

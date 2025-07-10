@@ -1,20 +1,21 @@
 <h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Import Messages</h2>
 <mat-dialog-content class="mat-typography">
-    <div *ngIf="loading; else content" class="spinner-loading">
-        <div class="spinner-loading">
-            <mat-progress-spinner diameter="60" mode="indeterminate"></mat-progress-spinner>
-        </div>
+  @if (loading) {
+    <div class="spinner-loading">
+      <div class="spinner-loading">
+        <mat-progress-spinner diameter="60" mode="indeterminate"></mat-progress-spinner>
+      </div>
     </div>
-    <ng-template #content>
-        <mat-form-field appearance="fill" style="width:100%;height:100%">
-            <mat-label>Messages:</mat-label>
-            <textarea (change)="onChange($event)" [cdkAutosizeMaxRows]="53" [cdkAutosizeMinRows]="53" [ngModel]="body" cdkTextareaAutosize matInput ng-copy="event=copy" placeholder="Messages"></textarea>
-        </mat-form-field>
-    </ng-template>
+  } @else {
+    <mat-form-field appearance="fill" style="width:100%;height:100%">
+      <mat-label>Messages:</mat-label>
+      <textarea (change)="onChange($event)" [cdkAutosizeMaxRows]="53" [cdkAutosizeMinRows]="53" [ngModel]="body" cdkTextareaAutosize matInput ng-copy="event=copy" placeholder="Messages"></textarea>
+    </mat-form-field>
+  }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button (click)="onClear()" mat-button tabindex="-1">Clear</button>
-    <button (click)="close()" mat-button mat-dialog-close tabindex="-1">Cancel</button>
-    <button (click)="loadFromFile()" mat-button>Load File</button>
-    <button #importButton (click)="importMessages()" [disabled]="loadDisabled" cdkFocusInitial="loadEnabled" mat-button>Import</button>
+  <button (click)="onClear()" mat-button tabindex="-1">Clear</button>
+  <button (click)="close()" mat-button mat-dialog-close tabindex="-1">Cancel</button>
+  <button (click)="loadFromFile()" mat-button>Load File</button>
+  <button #importButton (click)="importMessages()" [disabled]="loadDisabled" cdkFocusInitial="loadEnabled" mat-button>Import</button>
 </mat-dialog-actions>

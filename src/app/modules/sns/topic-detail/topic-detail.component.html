@@ -1,236 +1,244 @@
 <mat-card appearance="outlined" style="margin: 3px;">
-    <mat-card-header>
-        <span>
-            <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-        </span>
-        <span class="fill-remaining-space">
-            Topic Details: {{ (topicDetails$ | async)?.topicName }}
-        </span>
-        <span>
-            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
-                <mat-icon>refresh</mat-icon>
-            </button>
-        </span>
-    </mat-card-header>
-    <mat-card appearance="outlined" style="margin-top: 5px;">
-        <mat-card-content>
-            <div *ngIf="(topicDetails$ | async) as topicDetails">
-                <mat-grid-list cols="5" rowHeight="300px">
-                    <mat-grid-tile [colspan]="2" [rowspan]="1">
-                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
-                            <mat-list>
-                                <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Topic Name: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicName }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>ARN: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicArn }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Owner: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.owner }}</p>
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
-                            <mat-list>
-                                <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Messages: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.messageCount }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Size: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ byteConversion(topicDetails.size) }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
-                        <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
-                            <mat-list>
-                                <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Created: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.created ? (topicDetails.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Modified: </p>
-                                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.modified ? (topicDetails.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                    </mat-grid-tile>
-                </mat-grid-list>
-            </div>
-        </mat-card-content>
-    </mat-card>
-    <mat-card appearance="outlined" style="margin-top: 5px;">
-        <!--mat-card-header>
-            <mat-card-title>Attributes</mat-card-title>
-        </mat-card-header-->
-        <mat-card-content>
-            <mat-tab-group>
-                <mat-tab label="Attributes">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="topicAttributes$ | async as attributes" class="row">
-                        <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.attributeCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="name">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.attributeKey }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.attributeValue }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator (page)="handleAttributePageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="(topicAttributes$ | async)?.total"
-                                   [pageIndex]="(attributePageIndex$ | async)"
-                                   [pageSizeOptions]="attributePageSizeOptions"
-                                   [pageSize]="(attributePageSize$ | async)"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator>
-                </mat-tab>
-                <mat-tab label="Tags">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="refreshTags()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="topicTags$ | async as tags" class="row">
-                        <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="name">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.tagKey }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="value">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by tag value">Value</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.tagValue }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editTag(row.tagKey, row.tagValue)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button (click)="deleteTag(row.tagKey)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="tagColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator (page)="handleTagPageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="(topicTags$ | async)?.total"
-                                   [pageIndex]="(tagPageIndex$ | async)"
-                                   [pageSizeOptions]="tagPageSizeOptions"
-                                   [pageSize]="(tagPageSize$ | async)"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator>
-                </mat-tab>
-                <mat-tab label="Subscriptions">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </button>
-                        <button (click)="refreshSubscriptions()" aria-label="Refresh" mat-icon-button>
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <div *ngIf="topicSubscriptions$ | async as subscriptions" class="row">
-                        <table (matSortChange)="subscriptionSortChange($event)" [dataSource]="subscriptions.subscriptionCounters" class="mat-elevation-z8" mat-table matSort>
-                            <ng-container matColumnDef="id">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by subscriptionArn">ID</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.id }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="endpoint">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Endpoint" sortActionDescription="Sort by endpoint">Endpoint</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.endpoint }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="protocol">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Protocol" sortActionDescription="Sort by endpoint">Protocol</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.protocol }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="owner">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Owner" sortActionDescription="Sort by endpoint">Owner</th>
-                                <td *matCellDef="let element" mat-cell> {{ element.owner }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                                <td *matCellDef="let row" mat-cell>
-                                    <button (click)="editSubscription(row.subscriptionArn, row.protocol, row.endpoint)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button (click)="unsubscribe(row.subscriptionArn)" aria-label="Delete" mat-icon-button matTooltip="Unsubscribe from the topic">
-                                        <mat-icon>unsubscribe</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <tr *matHeaderRowDef="subscriptionColumns" mat-header-row></tr>
-                            <tr *matRowDef="let row; columns: subscriptionColumns;" mat-row></tr>
-                            <tr *matNoDataRow class="mat-row">
-                                <td [attr.colspan]="subscriptionColumns.length" class="mat-cell">
-                                    No data matching the filter.
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator (page)="handleSubscriptionPageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="(topicSubscriptions$ | async)?.total"
-                                   [pageIndex]="(subscriptionPageIndex$ | async)"
-                                   [pageSizeOptions]="subscriptionPageSizeOptions"
-                                   [pageSize]="(subscriptionPageSize$ | async)"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator>
-                </mat-tab>
-            </mat-tab-group>
-        </mat-card-content>
-    </mat-card>
-    <div class="footer">
-        Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
-    </div>
+  <mat-card-header>
+    <span>
+      <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </span>
+    <span class="fill-remaining-space">
+      Topic Details: {{ (topicDetails$ | async)?.topicName }}
+    </span>
+    <span>
+      <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </span>
+  </mat-card-header>
+  <mat-card appearance="outlined" style="margin-top: 5px;">
+    <mat-card-content>
+      @if ((topicDetails$ | async); as topicDetails) {
+        <div>
+          <mat-grid-list cols="5" rowHeight="300px">
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+              <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
+                <mat-list>
+                  <mat-list-item style="height:80px">
+                    <p class="mat-list-span-title" matListItemTitle>Topic Name: </p>
+                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicName }}</p>
+                  </mat-list-item>
+                  <mat-list-item style="height:80px">
+                    <p class="mat-list-span-title" matListItemTitle>ARN: </p>
+                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.topicArn }}</p>
+                  </mat-list-item>
+                  <mat-list-item style="height:80px">
+                    <p class="mat-list-span-title" matListItemTitle>Owner: </p>
+                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.owner }}</p>
+                  </mat-list-item>
+                </mat-list>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+              <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
+                <mat-list>
+                  <mat-list-item style="height:80px">
+                    <p class="mat-list-span-title" matListItemTitle>Messages: </p>
+                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.messageCount }}</p>
+                  </mat-list-item>
+                  <mat-list-item style="height:80px">
+                    <p class="mat-list-span-title" matListItemTitle>Size: </p>
+                    <p class="map-list-span-value" matListItemLine>{{ byteConversion(topicDetails.size) }}</p>
+                  </mat-list-item>
+                  <mat-list-item style="height:80px">
+                  </mat-list-item>
+                </mat-list>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="1" [rowspan]="1">
+              <div style="width: 100%; display: flex; align-items: flex-start; align-content:flex-start; justify-content: flex-start">
+                <mat-list>
+                  <mat-list-item style="height:80px">
+                    <p class="mat-list-span-title" matListItemTitle>Created: </p>
+                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.created ? (topicDetails.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                  </mat-list-item>
+                  <mat-list-item style="height:80px">
+                    <p class="mat-list-span-title" matListItemTitle>Modified: </p>
+                    <p class="map-list-span-value" matListItemLine>{{ topicDetails.modified ? (topicDetails.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                  </mat-list-item>
+                  <mat-list-item style="height:80px">
+                  </mat-list-item>
+                </mat-list>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+  <mat-card appearance="outlined" style="margin-top: 5px;">
+    <!--mat-card-header>
+    <mat-card-title>Attributes</mat-card-title>
+  </mat-card-header-->
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label="Attributes">
+        <mat-card-actions class="head-buttons">
+          <button (click)="refreshAttributes()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </mat-card-actions>
+        @if (topicAttributes$ | async; as attributes) {
+          <div class="row">
+            <table (matSortChange)="attributeSortChange($event)" [dataSource]="attributes.attributeCounters" class="mat-elevation-z8" mat-table matSort>
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by attribute name">Name</th>
+                <td *matCellDef="let element" mat-cell> {{ element.attributeKey }}</td>
+              </ng-container>
+              <ng-container matColumnDef="value">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Attribute value" sortActionDescription="Sort by attribute value">Value</th>
+                <td *matCellDef="let element" mat-cell> {{ element.attributeValue }}</td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                <td *matCellDef="let row" mat-cell>
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="attributeColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: attributeColumns;" mat-row></tr>
+              <tr *matNoDataRow class="mat-row">
+                <td [attr.colspan]="attributeColumns.length" class="mat-cell">
+                  No data matching the filter.
+                </td>
+              </tr>
+            </table>
+          </div>
+        }
+        <mat-paginator (page)="handleAttributePageEvent($event)"
+          [disabled]="false"
+          [hidePageSize]="false"
+          [length]="(topicAttributes$ | async)?.total"
+          [pageIndex]="(attributePageIndex$ | async)"
+          [pageSizeOptions]="attributePageSizeOptions"
+          [pageSize]="(attributePageSize$ | async)"
+          [showFirstLastButtons]="true"
+          aria-label="Select page">
+        </mat-paginator>
+      </mat-tab>
+      <mat-tab label="Tags">
+        <mat-card-actions class="head-buttons">
+          <button (click)="addTag()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>add</mat-icon>
+          </button>
+          <button (click)="refreshTags()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </mat-card-actions>
+        @if (topicTags$ | async; as tags) {
+          <div class="row">
+            <table (matSortChange)="tagSortChange($event)" [dataSource]="tags.tagCounters" class="mat-elevation-z8" mat-table matSort>
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by tag name">Name</th>
+                <td *matCellDef="let element" mat-cell> {{ element.tagKey }}</td>
+              </ng-container>
+              <ng-container matColumnDef="value">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by tag value">Value</th>
+                <td *matCellDef="let element" mat-cell> {{ element.tagValue }}</td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                <td *matCellDef="let row" mat-cell>
+                  <button (click)="editTag(row.tagKey, row.tagValue)" aria-label="Edit" mat-icon-button matTooltip="Edit the tag">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button (click)="deleteTag(row.tagKey)" aria-label="Delete" mat-icon-button matTooltip="Delete tag">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
+              <tr *matNoDataRow class="mat-row">
+                <td [attr.colspan]="tagColumns.length" class="mat-cell">
+                  No data matching the filter.
+                </td>
+              </tr>
+            </table>
+          </div>
+        }
+        <mat-paginator (page)="handleTagPageEvent($event)"
+          [disabled]="false"
+          [hidePageSize]="false"
+          [length]="(topicTags$ | async)?.total"
+          [pageIndex]="(tagPageIndex$ | async)"
+          [pageSizeOptions]="tagPageSizeOptions"
+          [pageSize]="(tagPageSize$ | async)"
+          [showFirstLastButtons]="true"
+          aria-label="Select page">
+        </mat-paginator>
+      </mat-tab>
+      <mat-tab label="Subscriptions">
+        <mat-card-actions class="head-buttons">
+          <button (click)="addSubscription()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>add</mat-icon>
+          </button>
+          <button (click)="refreshSubscriptions()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </mat-card-actions>
+        @if (topicSubscriptions$ | async; as subscriptions) {
+          <div class="row">
+            <table (matSortChange)="subscriptionSortChange($event)" [dataSource]="subscriptions.subscriptionCounters" class="mat-elevation-z8" mat-table matSort>
+              <ng-container matColumnDef="id">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="ID" sortActionDescription="Sort by subscriptionArn">ID</th>
+                <td *matCellDef="let element" mat-cell> {{ element.id }}</td>
+              </ng-container>
+              <ng-container matColumnDef="endpoint">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Endpoint" sortActionDescription="Sort by endpoint">Endpoint</th>
+                <td *matCellDef="let element" mat-cell> {{ element.endpoint }}</td>
+              </ng-container>
+              <ng-container matColumnDef="protocol">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Protocol" sortActionDescription="Sort by endpoint">Protocol</th>
+                <td *matCellDef="let element" mat-cell> {{ element.protocol }}</td>
+              </ng-container>
+              <ng-container matColumnDef="owner">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Owner" sortActionDescription="Sort by endpoint">Owner</th>
+                <td *matCellDef="let element" mat-cell> {{ element.owner }}</td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                <td *matCellDef="let row" mat-cell>
+                  <button (click)="editSubscription(row.subscriptionArn, row.protocol, row.endpoint)" aria-label="Edit" mat-icon-button matTooltip="Edit the subscription">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button (click)="unsubscribe(row.subscriptionArn)" aria-label="Delete" mat-icon-button matTooltip="Unsubscribe from the topic">
+                    <mat-icon>unsubscribe</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="subscriptionColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: subscriptionColumns;" mat-row></tr>
+              <tr *matNoDataRow class="mat-row">
+                <td [attr.colspan]="subscriptionColumns.length" class="mat-cell">
+                  No data matching the filter.
+                </td>
+              </tr>
+            </table>
+          </div>
+        }
+        <mat-paginator (page)="handleSubscriptionPageEvent($event)"
+          [disabled]="false"
+          [hidePageSize]="false"
+          [length]="(topicSubscriptions$ | async)?.total"
+          [pageIndex]="(subscriptionPageIndex$ | async)"
+          [pageSizeOptions]="subscriptionPageSizeOptions"
+          [pageSize]="(subscriptionPageSize$ | async)"
+          [showFirstLastButtons]="true"
+          aria-label="Select page">
+        </mat-paginator>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
+<div class="footer">
+  Last update: {{ lastUpdate | date: 'HH:mm:ss' }}
+</div>
 </mat-card>

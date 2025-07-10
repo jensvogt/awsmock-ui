@@ -9,7 +9,7 @@ import {MatInput} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
 import xmlFormat from 'xml-formatter';
-import {NgIf} from "@angular/common";
+
 import {MatTab, MatTabGroup, MatTabLabel} from "@angular/material/tabs";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable, MatTableDataSource} from "@angular/material/table";
@@ -31,42 +31,41 @@ import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
     standalone: true,
     providers: [S3Service],
     imports: [
-        CdkDrag,
-        CdkDragHandle,
-        CdkTextareaAutosize,
-        MatButton,
-        MatDialogActions,
-        MatDialogClose,
-        MatDialogContent,
-        MatDialogTitle,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        ReactiveFormsModule,
-        FormsModule,
-        MatSlideToggle,
-        NgIf,
-        MatTab,
-        MatTabGroup,
-        MatTabLabel,
-        MatTooltip,
-        MatCell,
-        MatCellDef,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatPaginator,
-        MatRow,
-        MatRowDef,
-        MatSort,
-        MatSortHeader,
-        MatTable,
-        MatHeaderCellDef,
-        MatNoDataRow,
-        MatIcon,
-        MatIconButton
-    ]
+    CdkDrag,
+    CdkDragHandle,
+    CdkTextareaAutosize,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    ReactiveFormsModule,
+    FormsModule,
+    MatSlideToggle,
+    MatTab,
+    MatTabGroup,
+    MatTabLabel,
+    MatTooltip,
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatPaginator,
+    MatRow,
+    MatRowDef,
+    MatSort,
+    MatSortHeader,
+    MatTable,
+    MatHeaderCellDef,
+    MatNoDataRow,
+    MatIcon,
+    MatIconButton
+]
 })
 export class S3ObjectViewDialog {
 

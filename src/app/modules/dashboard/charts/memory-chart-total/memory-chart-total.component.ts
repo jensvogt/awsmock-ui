@@ -4,7 +4,7 @@ import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {NgIf} from "@angular/common";
+
 import {FormsModule} from "@angular/forms";
 
 export type ChartOptions = {
@@ -24,16 +24,15 @@ export type ChartOptions = {
     templateUrl: './memory-chart-total.component.html',
     styleUrls: ['./memory-chart-total.component.scss'],
     imports: [
-        MatCardActions,
-        MatSelect,
-        MatCardHeader,
-        MatCard,
-        MatCardContent,
-        ChartComponent,
-        NgIf,
-        FormsModule,
-        MatOption
-    ],
+    MatCardActions,
+    MatSelect,
+    MatCardHeader,
+    MatCard,
+    MatCardContent,
+    ChartComponent,
+    FormsModule,
+    MatOption
+],
     standalone: true
 })
 export class MemoryChartTotalComponent implements OnInit {

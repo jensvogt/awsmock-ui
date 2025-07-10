@@ -1,85 +1,89 @@
 <mat-dialog-content class="mat-typography">
-    <mat-card appearance="outlined" style="margin: 3px;">
-        <mat-card-header>
-            <span class="fill-remaining-space">
-            Lambda Results ({{ total }})
-        </span>
-            <button (click)="refresh()" aria-label="Refresh the result list" mat-icon-button>
-                <mat-icon>refresh</mat-icon>
-            </button>
-            <div *ngIf="total > 0" class="table-container">
-                <button (click)="deleteAll()" aria-label="Delete all results" mat-icon-button>
-                    <mat-icon>delete</mat-icon>
+  <mat-card appearance="outlined" style="margin: 3px;">
+    <mat-card-header>
+      <span class="fill-remaining-space">
+        Lambda Results ({{ total }})
+      </span>
+      <button (click)="refresh()" aria-label="Refresh the result list" mat-icon-button>
+        <mat-icon>refresh</mat-icon>
+      </button>
+      @if (total > 0) {
+        <div class="table-container">
+          <button (click)="deleteAll()" aria-label="Delete all results" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </mat-card-header>
+    <mat-card-content>
+      @if (total > 0) {
+        <div class="table-container">
+          <table (matSortChange)="sortChange($event)" [dataSource]="lambdaResultDataSource" [matSortActive]="defaultSort.active" [matSortDirection]="defaultSort.direction" mat-table matSort matSortDisableClear="false">
+            <ng-container matColumnDef="name">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
+              <td *matCellDef="let element" mat-cell>
+                <div class="with-icon">
+                  <mat-nav-list>
+                    <a mat-list-item routerLink="./details/{{ element.lambdaArn }}"> {{ element.lambdaName }}</a>
+                  </mat-nav-list>
+                  <button [cdkCopyToClipboard]="element.functionName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                    <mat-icon class="copy-icon">content_copy</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Name" sortActionDescription="Sort by name">Name</th>
+              <td *matCellDef="let element" mat-cell> {{ element.lambdaName }}</td>
+            </ng-container>
+            <ng-container matColumnDef="containerId">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by name">Container</th>
+              <td *matCellDef="let element" mat-cell> {{ element.containerId.substring(0, 12) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
+              <td *matCellDef="let element" mat-cell> {{ element.lambdaStatus }}</td>
+            </ng-container>
+            <ng-container matColumnDef="timestamp">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Timestamp" sortActionDescription="Sort by timestamp">Timestamp</th>
+              <td *matCellDef="let element" mat-cell> {{ element.timestamp ? (element.timestamp | date: 'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+              <td *matCellDef="let row" mat-cell>
+                <button (click)="viewResult(row.oid)" [matTooltipShowDelay]="1000" aria-label="View details" mat-icon-button matTooltip="View details">
+                  <mat-icon>edit</mat-icon>
                 </button>
-            </div>
-        </mat-card-header>
-        <mat-card-content>
-            <div *ngIf="total > 0" class="table-container">
-                <table (matSortChange)="sortChange($event)" [dataSource]="lambdaResultDataSource" [matSortActive]="defaultSort.active" [matSortDirection]="defaultSort.direction" mat-table matSort matSortDisableClear="false">
-                    <ng-container matColumnDef="name">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
-                        <td *matCellDef="let element" mat-cell>
-                            <div class="with-icon">
-                                <mat-nav-list>
-                                    <a mat-list-item routerLink="./details/{{ element.lambdaArn }}"> {{ element.lambdaName }}</a>
-                                </mat-nav-list>
-                                <button [cdkCopyToClipboard]="element.functionName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                    <mat-icon class="copy-icon">content_copy</mat-icon>
-                                </button>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="name">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Name" sortActionDescription="Sort by name">Name</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.lambdaName }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="containerId">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by name">Container</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.containerId.substring(0, 12) }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="status">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.lambdaStatus }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="timestamp">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Timestamp" sortActionDescription="Sort by timestamp">Timestamp</th>
-                        <td *matCellDef="let element" mat-cell> {{ element.timestamp ? (element.timestamp | date: 'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="actions">
-                        <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                        <td *matCellDef="let row" mat-cell>
-                            <button (click)="viewResult(row.oid)" [matTooltipShowDelay]="1000" aria-label="View details" mat-icon-button matTooltip="View details">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                            <button (click)="deleteResult(row.oid)" [matTooltipShowDelay]="1000" aria-label="Delete the result" mat-icon-button matTooltip="Delete result">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                        </td>
-                    </ng-container>
-                    <tr *matHeaderRowDef="lambdaResultColumns" mat-header-row></tr>
-                    <tr *matRowDef="let row; columns: lambdaResultColumns;" mat-row></tr>
-                    <tr *matNoDataRow class="mat-row">
-                        <td [attr.colspan]="lambdaResultColumns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
-                            No data matching the filter.
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <mat-paginator (page)="handlePageEvent($event)"
-                           [disabled]="disabled"
-                           [hidePageSize]="hidePageSize"
-                           [length]="total"
-                           [pageIndex]="(pageIndex)"
-                           [pageSizeOptions]="showPageSizeOptions ? lambdaResultPageSizeOptions : []"
-                           [pageSize]="(pageSize)"
-                           [showFirstLastButtons]="showFirstLastButtons"
-                           aria-label="Select page" style="width:99%; margin-left:15px">
-            </mat-paginator>
-        </mat-card-content>
-    </mat-card>
-    <footer-component [lastUpdate]="lastUpdate"/>
+                <button (click)="deleteResult(row.oid)" [matTooltipShowDelay]="1000" aria-label="Delete the result" mat-icon-button matTooltip="Delete result">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr *matHeaderRowDef="lambdaResultColumns" mat-header-row></tr>
+            <tr *matRowDef="let row; columns: lambdaResultColumns;" mat-row></tr>
+            <tr *matNoDataRow class="mat-row">
+              <td [attr.colspan]="lambdaResultColumns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
+                No data matching the filter.
+              </td>
+            </tr>
+          </table>
+        </div>
+      }
+      <mat-paginator (page)="handlePageEvent($event)"
+        [disabled]="disabled"
+        [hidePageSize]="hidePageSize"
+        [length]="total"
+        [pageIndex]="(pageIndex)"
+        [pageSizeOptions]="showPageSizeOptions ? lambdaResultPageSizeOptions : []"
+        [pageSize]="(pageSize)"
+        [showFirstLastButtons]="showFirstLastButtons"
+        aria-label="Select page" style="width:99%; margin-left:15px">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+  <footer-component [lastUpdate]="lastUpdate"/>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Close</button>
-    <!--button (click)="doCreate()" cdkFocusInitial disabled="{{createDisabled}}" mat-button>Create</button-->
+  <button mat-button mat-dialog-close>Close</button>
+<!--button (click)="doCreate()" cdkFocusInitial disabled="{{createDisabled}}" mat-button>Create</button-->
 </mat-dialog-actions>

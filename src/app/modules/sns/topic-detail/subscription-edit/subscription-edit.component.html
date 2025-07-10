@@ -1,37 +1,47 @@
 <h2 mat-dialog-title>Add Topic Subscription</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px">
+  <mat-form-field style="width: 100%">
+    <mat-label>Subscription ARN</mat-label>
+    <input [(ngModel)]="subscriptionArn" matInput readonly value="">
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <mat-label>Protocol</mat-label>
+    <mat-select (selectionChange)="protocolSelectionChanged()" [(ngModel)]="protocol" style="width:100%">
+      @for (protocol of Protocols; track protocol) {
+        <mat-option [value]="protocol">{{ protocol }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  @if (protocol == 'sqs' || protocol == 'http' || protocol == 'https'||protocol==='lambda') {
     <mat-form-field style="width: 100%">
-        <mat-label>Subscription ARN</mat-label>
-        <input [(ngModel)]="subscriptionArn" matInput readonly value="">
+      <mat-label>Endpoint</mat-label>
+      @if (protocol == 'sqs') {
+        <mat-select [(ngModel)]="endpoint" [(value)]="queueSelection" style="width:100%">
+          @for (arn of queueArnData; track $index) {
+            <mat-option [value]="arn">{{ arn }}</mat-option>
+          }
+        </mat-select>
+      }
+      @if (protocol === 'lambda') {
+        <mat-select [(ngModel)]="endpoint" [(value)]="lambdaSelection" style="width:100%">
+          @for (arn of lambdaArnData; track $index) {
+            <mat-option [value]="arn">{{ arn }}</mat-option>
+          }
+        </mat-select>
+      }
+      @if (protocol === 'http'|| protocol === 'https') {
+        <input [(ngModel)]="endpoint" matInput value="">
+      }
     </mat-form-field>
+  }
+  @if (protocol != 'sqs' && protocol !=='http' && protocol !== 'https' && protocol !== 'lambda') {
     <mat-form-field style="width: 100%">
-        <mat-label>Protocol</mat-label>
-        <mat-select (selectionChange)="protocolSelectionChanged()" [(ngModel)]="protocol" style="width:100%">
-            @for (protocol of Protocols; track protocol) {
-                <mat-option [value]="protocol">{{ protocol }}</mat-option>
-            }
-        </mat-select>
+      <mat-label>Not supported yet</mat-label>
+      <input matInput readonly value="">
     </mat-form-field>
-    <mat-form-field *ngIf="protocol == 'sqs' || protocol == 'http' || protocol == 'https'||protocol==='lambda'" style="width: 100%">
-        <mat-label>Endpoint</mat-label>
-        <mat-select *ngIf="protocol == 'sqs'" [(ngModel)]="endpoint" [(value)]="queueSelection" style="width:100%">
-            @for (arn of queueArnData; track $index) {
-                <mat-option [value]="arn">{{ arn }}</mat-option>
-            }
-        </mat-select>
-        <mat-select *ngIf="protocol === 'lambda'" [(ngModel)]="endpoint" [(value)]="lambdaSelection" style="width:100%">
-            @for (arn of lambdaArnData; track $index) {
-                <mat-option [value]="arn">{{ arn }}</mat-option>
-            }
-        </mat-select>
-        <input *ngIf="protocol === 'http'|| protocol === 'https'" [(ngModel)]="endpoint" matInput value="">
-    </mat-form-field>
-    <mat-form-field *ngIf="protocol != 'sqs' && protocol !=='http' && protocol !== 'https' && protocol !== 'lambda'" style="width: 100%">
-        <mat-label>Not supported yet</mat-label>
-        <input matInput readonly value="">
-    </mat-form-field>
+  }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="save()" cdkFocusInitial mat-button>Update</button>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()" cdkFocusInitial mat-button>Update</button>
 </mat-dialog-actions>

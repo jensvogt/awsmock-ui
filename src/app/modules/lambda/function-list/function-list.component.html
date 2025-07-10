@@ -1,157 +1,161 @@
 <mat-card appearance="outlined" style="margin: 3px;">
-    <mat-card-header>
-        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
-            <mat-icon>arrow_back</mat-icon>
+  <mat-card-header>
+    <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="fill-remaining-space">
+      Lambda Functions ({{ total }})
+    </span>
+    <button (click)="createLambda()" aria-label="Upload" mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </button>
+    <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button [matTooltipShowDelay]="1000" [routerLink]="['/lambda-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
+      <mat-icon>
+        <span class="material-symbols-outlined">monitoring</span>
+      </mat-icon>
+    </button>
+    <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #mainmenu="matMenu" xPosition="before">
+      <button mat-menu-item>
+        <button (click)="autoReload()" mat-menu-item>
+          <mat-icon>
+            <span class="material-symbols-outlined">hourglass</span>
+          </mat-icon>
+          <span>Auto Reload</span>
         </button>
-        <span class="fill-remaining-space">
-            Lambda Functions ({{ total }})
-        </span>
-        <button (click)="createLambda()" aria-label="Upload" mat-icon-button>
-            <mat-icon>add</mat-icon>
-        </button>
-        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
-            <mat-icon>refresh</mat-icon>
-        </button>
-        <button [matTooltipShowDelay]="1000" [routerLink]="['/lambda-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
-            <mat-icon>
-                <span class="material-symbols-outlined">monitoring</span>
-            </mat-icon>
-        </button>
-        <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #mainmenu="matMenu" xPosition="before">
-            <button mat-menu-item>
-                <button (click)="autoReload()" mat-menu-item>
-                    <mat-icon>
-                        <span class="material-symbols-outlined">hourglass</span>
-                    </mat-icon>
-                    <span>Auto Reload</span>
-                </button>
+      </button>
+    </mat-menu>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-card appearance="outlined" style="margin: -10px;">
+      <mat-card-actions align="start">
+        <mat-form-field style="width:100%">
+          <mat-label>Prefix</mat-label>
+          <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+          @if (prefixSet) {
+            <button (click)="unsetPrefix()" mat-icon-button matSuffix style="float: right">
+              <mat-icon matSuffix>close</mat-icon>
             </button>
-        </mat-menu>
-    </mat-card-header>
-    <mat-card-content>
-        <mat-card appearance="outlined" style="margin: -10px;">
-            <mat-card-actions align="start">
-                <mat-form-field style="width:100%">
-                    <mat-label>Prefix</mat-label>
-                    <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
-                    <button (click)="unsetPrefix()" *ngIf="prefixSet" mat-icon-button matSuffix style="float: right">
-                        <mat-icon matSuffix>close</mat-icon>
+          }
+          <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+            <mat-icon matSuffix>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </mat-card-actions>
+      <mat-card-content>
+        @if (total>0) {
+          <div class="table-container">
+            <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" [matSortActive]="defaultSort.active" [matSortDirection]="defaultSort.direction" mat-table matSort matSortDisableClear="false">
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
+                <td *matCellDef="let element" mat-cell>
+                  <div class="with-icon">
+                    <mat-nav-list>
+                      <a mat-list-item routerLink="./details/{{ element.functionArn }}"> {{ element.functionName }}</a>
+                    </mat-nav-list>
+                    <button [cdkCopyToClipboard]="element.functionName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                      <mat-icon class="copy-icon">content_copy</mat-icon>
                     </button>
-                    <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
-                        <mat-icon matSuffix>search</mat-icon>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="runtime">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Runtime" sortActionDescription="Sort by runtime">Runtime</th>
+                <td *matCellDef="let element" mat-cell> {{ element.runtime }}</td>
+              </ng-container>
+              <ng-container matColumnDef="version">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Version" sortActionDescription="Sort by version">Version</th>
+                <td *matCellDef="let element" mat-cell> {{ element.version }}</td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
+                <td *matCellDef="let element" mat-cell> {{ element.state }}</td>
+              </ng-container>
+              <ng-container matColumnDef="instances">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Instances" sortActionDescription="Sort by instances">Instances</th>
+                <td *matCellDef="let element" mat-cell> {{ element.instances }}</td>
+              </ng-container>
+              <ng-container matColumnDef="invocations">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Invocations" sortActionDescription="Sort by invocations">Invocations</th>
+                <td *matCellDef="let element" mat-cell> {{ element.invocations }}</td>
+              </ng-container>
+              <ng-container matColumnDef="averageRuntime">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Average runtime in milliseconds"
+                  sortActionDescription="Sort by average runtime">Avg. Execution Time (ms)
+                </th>
+                <td *matCellDef="let element" mat-cell> {{ element.averageRuntime }}</td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
+                <td *matCellDef="let row" mat-cell>
+                  <button (click)="loadLambdaLogs(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
+                    <mat-icon>assignment</mat-icon>
+                  </button>
+                  <button (click)="uploadCode(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
+                    <mat-icon>upload</mat-icon>
+                  </button>
+                  <button [matMenuTriggerFor]="lambdaListMenu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #lambdaListMenu="matMenu" xPosition="before">
+                    <button mat-menu-item>
+                      <button (click)="startFunction(row.functionArn)" [disabled]="startDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Start lambda function" mat-menu-item matTooltip="Start lambda function">
+                        <mat-icon>start</mat-icon>
+                        <span>Start function</span>
+                      </button>
+                      <button (click)="stopFunction(row.functionArn)" [disabled]="stopDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Stop lambda function" mat-menu-item matTooltip="Stop lambda function">
+                        <mat-icon>stop</mat-icon>
+                        <span>Stop function</span>
+                      </button>
+                      <button (click)="clearResults(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Delete results" mat-menu-item matTooltip="Delete results">
+                        <mat-icon>history</mat-icon>
+                        <span>Clear results</span>
+                      </button>
+                      <button (click)="resetCounters(row.functionName)" [matTooltipShowDelay]="1000" aria-label="Reset counters" mat-menu-item matTooltip="Reset counters">
+                        <mat-icon>history</mat-icon>
+                        <span>Reset counters</span>
+                      </button>
+                      <mat-divider/>
+                      <button (click)="deleteImage(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
+                        <mat-icon>delete</mat-icon>
+                        <span>Delete image</span>
+                      </button>
+                      <button (click)="deleteFunction(row.functionName)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
+                        <mat-icon>delete</mat-icon>
+                        <span>Delete function</span>
+                      </button>
                     </button>
-                </mat-form-field>
-            </mat-card-actions>
-            <mat-card-content>
-                <div *ngIf="total>0" class="table-container">
-                    <table (matSortChange)="sortChange($event)" [dataSource]="dataSource" [matSortActive]="defaultSort.active" [matSortDirection]="defaultSort.direction" mat-table matSort matSortDisableClear="false">
-                        <ng-container matColumnDef="name">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Function name" sortActionDescription="Sort by name">Name</th>
-                            <td *matCellDef="let element" mat-cell>
-                                <div class="with-icon">
-                                    <mat-nav-list>
-                                        <a mat-list-item routerLink="./details/{{ element.functionArn }}"> {{ element.functionName }}</a>
-                                    </mat-nav-list>
-                                    <button [cdkCopyToClipboard]="element.functionName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                        <mat-icon class="copy-icon">content_copy</mat-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="runtime">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Runtime" sortActionDescription="Sort by runtime">Runtime</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.runtime }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="version">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Version" sortActionDescription="Sort by version">Version</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.version }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="status">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.state }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="instances">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Instances" sortActionDescription="Sort by instances">Instances</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.instances }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="invocations">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Invocations" sortActionDescription="Sort by invocations">Invocations</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.invocations }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="averageRuntime">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Average runtime in milliseconds"
-                                sortActionDescription="Sort by average runtime">Avg. Execution Time (ms)
-                            </th>
-                            <td *matCellDef="let element" mat-cell> {{ element.averageRuntime }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
-                            <td *matCellDef="let row" mat-cell>
-                                <button (click)="loadLambdaLogs(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
-                                    <mat-icon>assignment</mat-icon>
-                                </button>
-                                <button (click)="uploadCode(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
-                                    <mat-icon>upload</mat-icon>
-                                </button>
-                                <button [matMenuTriggerFor]="lambdaListMenu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
-                                    <mat-icon>more_vert</mat-icon>
-                                </button>
-                                <mat-menu #lambdaListMenu="matMenu" xPosition="before">
-                                    <button mat-menu-item>
-                                        <button (click)="startFunction(row.functionArn)" [disabled]="startDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Start lambda function" mat-menu-item matTooltip="Start lambda function">
-                                            <mat-icon>start</mat-icon>
-                                            <span>Start function</span>
-                                        </button>
-                                        <button (click)="stopFunction(row.functionArn)" [disabled]="stopDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Stop lambda function" mat-menu-item matTooltip="Stop lambda function">
-                                            <mat-icon>stop</mat-icon>
-                                            <span>Stop function</span>
-                                        </button>
-                                        <button (click)="clearResults(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Delete results" mat-menu-item matTooltip="Delete results">
-                                            <mat-icon>history</mat-icon>
-                                            <span>Clear results</span>
-                                        </button>
-                                        <button (click)="resetCounters(row.functionName)" [matTooltipShowDelay]="1000" aria-label="Reset counters" mat-menu-item matTooltip="Reset counters">
-                                            <mat-icon>history</mat-icon>
-                                            <span>Reset counters</span>
-                                        </button>
-                                        <mat-divider/>
-                                        <button (click)="deleteImage(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
-                                            <mat-icon>delete</mat-icon>
-                                            <span>Delete image</span>
-                                        </button>
-                                        <button (click)="deleteFunction(row.functionName)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
-                                            <mat-icon>delete</mat-icon>
-                                            <span>Delete function</span>
-                                        </button>
-                                    </button>
-                                </mat-menu>
-                            </td>
-                        </ng-container>
-                        <tr *matHeaderRowDef="columns" mat-header-row></tr>
-                        <tr *matRowDef="let row; columns: columns;" mat-row></tr>
-                        <tr *matNoDataRow class="mat-row">
-                            <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
-                                No data matching the filter.
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <!--/div-->
-                <mat-paginator (page)="handlePageEvent($event)"
-                               [disabled]="disabled"
-                               [hidePageSize]="hidePageSize"
-                               [length]="total"
-                               [pageIndex]="(pageIndex$ | async)"
-                               [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-                               [pageSize]="(pageSize$ | async)"
-                               [showFirstLastButtons]="showFirstLastButtons"
-                               aria-label="Select page" style="width:99%; margin-left:15px">
-                </mat-paginator>
-            </mat-card-content>
-        </mat-card>
-        <footer-component [lastUpdate]="lastUpdate"/>
-    </mat-card-content>
+                  </mat-menu>
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="columns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+              <tr *matNoDataRow class="mat-row">
+                <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
+                  No data matching the filter.
+                </td>
+              </tr>
+            </table>
+          </div>
+        }
+        <!--/div-->
+        <mat-paginator (page)="handlePageEvent($event)"
+          [disabled]="disabled"
+          [hidePageSize]="hidePageSize"
+          [length]="total"
+          [pageIndex]="(pageIndex$ | async)"
+          [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+          [pageSize]="(pageSize$ | async)"
+          [showFirstLastButtons]="showFirstLastButtons"
+          aria-label="Select page" style="width:99%; margin-left:15px">
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+    <footer-component [lastUpdate]="lastUpdate"/>
+  </mat-card-content>
 </mat-card>

@@ -35,7 +35,7 @@ interface SecretKeyValuePair {
     ],
     styleUrls: ['./value-edit-component.scss']
 })
-export class SecretValueEditDialogComponent implements OnInit {
+export class SecretValueEditDialogComponent {
 
     valueObject: any;
     valueArray: SecretKeyValuePair[] = [];
@@ -45,9 +45,6 @@ export class SecretValueEditDialogComponent implements OnInit {
         for(let i of Object.keys(this.valueObject)) {
             this.valueArray.push({key:i, value: this.valueObject[i]});
         }
-    }
-
-    ngOnInit() {
     }
 
     save() {

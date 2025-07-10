@@ -7,12 +7,10 @@ import {
     MatDialogTitle
 } from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {KeyValuePipe, NgForOf} from "@angular/common";
 
 interface SecretKeyValuePair {
     key: string,

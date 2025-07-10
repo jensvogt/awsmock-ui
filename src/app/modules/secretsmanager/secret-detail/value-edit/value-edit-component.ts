@@ -33,8 +33,7 @@ interface SecretKeyValuePair {
         MatLabel,
         FormsModule,
         MatInput,
-        ReactiveFormsModule,
-        NgForOf
+        ReactiveFormsModule
     ],
     styleUrls: ['./value-edit-component.scss']
 })
@@ -57,7 +56,6 @@ export class SecretValueEditDialogComponent implements OnInit {
         for(let i of this.valueArray) {
             this.valueObject[i.key]=i.value;
         }
-        let result: string = JSON.stringify(this.valueObject);
-        this.dialogRef.close(result);
+        this.dialogRef.close(JSON.stringify(this.valueObject));
     }
 }

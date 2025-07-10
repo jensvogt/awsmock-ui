@@ -1,13 +1,13 @@
 <h2 mat-dialog-title>Add Secret</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px">
-    <div *ngFor="let item of valueArray; track item">
+    @for(item of valueArray; track item){
         <mat-form-field style="width: 100%">
             <mat-label>{{item.key}}</mat-label>
             <input [(ngModel)]="item.value" matInput value="">
         </mat-form-field>
-    </div>
+    }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Save</button>
 </mat-dialog-actions>

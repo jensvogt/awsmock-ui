@@ -179,10 +179,9 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
         this.dialog.open(SecretValueEditDialogComponent, dialogConfig).afterClosed().subscribe(result => {
             console.log("Dialog result: ", result);
             if (result) {
-                // this.secretsmanagerService.createSecret(result).subscribe(() => {
-                //     this.loadSecrets();
-                //     this.snackBar.open('Secret created, arn: ' + result, 'Done', {duration: 5000})
-                // });
+                this.secret.secretString = result;
+                this.store.dispatch(secretDetailsActions.updateDetails({secretDetails: this.secret}));
+                this.lastUpdate = new Date();
             }
         });
     }

@@ -4,16 +4,28 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Location} from "@angular/common";
 import {State, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {selectDetails, selectError, selectRotationLambdaARNs, selectTagPageIndex, selectTagPageSize, selectTags, selectVersionPageIndex, selectVersionPageSize, selectVersions} from "./state/secret-detail.selectors";
+import {
+    selectDetails,
+    selectError,
+    selectRotationLambdaARNs,
+    selectTagPageIndex,
+    selectTagPageSize,
+    selectTags,
+    selectVersionPageIndex,
+    selectVersionPageSize,
+    selectVersions
+} from "./state/secret-detail.selectors";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {LoadLambdaArnsResponse, RotateSecretRequest, SecretDetails} from "../model/secret-detail-item";
 import {SecretTagCountersResponse} from "../model/secret-tag-item";
 import {SecretDetailsState} from "./state/secret-detail.reducer";
 import {secretDetailsActions} from "./state/secret-detail.actions";
 import {SecretVersionCountersResponse} from "../model/secret-version-item";
 import * as uuid from 'uuid';
+import {SecretAddDialogComponent} from "../secret-add/secret-add-component";
+import {SecretValueEditDialogComponent} from "./value-edit/value-edit-component";
 
 interface LambdaSelect {
     value: string;
@@ -58,7 +70,9 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
 
     private routerSubscription: any;
 
-    constructor(private readonly snackBar: MatSnackBar, private readonly route: ActivatedRoute, private readonly location: Location, private readonly store: Store, private readonly state: State<SecretDetailsState>) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly route: ActivatedRoute,
+                private readonly dialog: MatDialog, private readonly location: Location, private readonly store: Store,
+                private readonly state: State<SecretDetailsState>) {
     }
 
     ngOnInit() {
@@ -154,6 +168,24 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
         this.loadLambdas();
     }
 
+    editValue() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = this.secret;
+
+        this.dialog.open(SecretValueEditDialogComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                // this.secretsmanagerService.createSecret(result).subscribe(() => {
+                //     this.loadSecrets();
+                //     this.snackBar.open('Secret created, arn: ' + result, 'Done', {duration: 5000})
+                // });
+            }
+        });
+    }
+
     // ===================================================================================================================
     // Rotation rule
     // ===================================================================================================================
@@ -164,7 +196,13 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
     }
 
     rotateSecret() {
-        let rotateSecretRequest: RotateSecretRequest = {SecretId: this.secret.secretId, RotateImmediately: true, RotationRules: this.secret.rotationRules, RotationLambdaARN: this.secret.rotationLambdaARN, ClientRequestToken: uuid.v4()};
+        let rotateSecretRequest: RotateSecretRequest = {
+            SecretId: this.secret.secretId,
+            RotateImmediately: true,
+            RotationRules: this.secret.rotationRules,
+            RotationLambdaARN: this.secret.rotationLambdaARN,
+            ClientRequestToken: uuid.v4()
+        };
         this.store.dispatch(secretDetailsActions.rotateSecret({rotateSecretRequest: rotateSecretRequest}));
         this.lastUpdate = new Date();
     }
@@ -226,7 +264,12 @@ export class SecretDetailComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {secretUrl: this.secretUrl, secretName: this.secretName, tagKey: tagKey, tagValue: tagValue};
+        dialogConfig.data = {
+            secretUrl: this.secretUrl,
+            secretName: this.secretName,
+            tagKey: tagKey,
+            tagValue: tagValue
+        };
 
         /*this.dialog.open(SqsTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

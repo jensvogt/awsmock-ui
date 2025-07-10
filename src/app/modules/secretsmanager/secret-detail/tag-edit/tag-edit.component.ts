@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {SqsService} from "../../service/sqs-service.component";
 
 @Component({
     selector: 'tag-edit-dialog',
@@ -23,7 +22,7 @@ import {SqsService} from "../../service/sqs-service.component";
         ReactiveFormsModule
     ],
     styleUrls: ['./tag-edit.component.scss'],
-    providers: [SqsService]
+    providers: []
 })
 export class SqsTagEditDialog implements OnInit {
 

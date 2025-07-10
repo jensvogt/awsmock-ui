@@ -37,20 +37,20 @@ interface SecretKeyValuePair {
 })
 export class SecretValueEditDialogComponent {
 
-    valueObject: any;
     valueArray: SecretKeyValuePair[] = [];
 
     constructor(private dialogRef: MatDialogRef<SecretValueEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.valueObject = JSON.parse(data.secretString);
-        for(let i of Object.keys(this.valueObject)) {
-            this.valueArray.push({key:i, value: this.valueObject[i]});
+        let valueObject = JSON.parse(data.secretString);
+        for(let key of Object.keys(valueObject)) {
+            this.valueArray.push({key: key, value: valueObject[key]});
         }
     }
 
     save() {
-        for(let i of this.valueArray) {
-            this.valueObject[i.key]=i.value;
+        let valueObject: any = {};
+        for(let key of this.valueArray) {
+            valueObject[key.key] = key.value;
         }
-        this.dialogRef.close(JSON.stringify(this.valueObject));
+        this.dialogRef.close(JSON.stringify(valueObject));
     }
 }

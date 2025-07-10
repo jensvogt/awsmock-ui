@@ -1,112 +1,124 @@
 <mat-card appearance="outlined" style="margin: 3px;">
-  <mat-card-header>
-    <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <span class="fill-remaining-space">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
       Applications ({{ (listApplicationCountersResponse$ | async)?.total }})
     </span>
-    <button (click)="addApplication()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new application">
-      <mat-icon>add</mat-icon>
-    </button>
-    <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the application list">
-      <mat-icon>refresh</mat-icon>
-    </button>
-    <button [matTooltipShowDelay]="1000" [routerLink]="['/sqs-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
-      <mat-icon>
-        <span class="material-symbols-outlined">monitoring</span>
-      </mat-icon>
-    </button>
-    <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #mainmenu="matMenu" xPosition="before">
-      <button mat-menu-item>
-        <button (click)="autoReload()" mat-menu-item>
-          <mat-icon>
-            <span class="material-symbols-outlined">hourglass</span>
-          </mat-icon>
-          <span>Auto Reload</span>
+        <button (click)="addApplication()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new application">
+            <mat-icon>add</mat-icon>
         </button>
-      </button>
-    </mat-menu>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-card appearance="outlined" style="margin: -10px;">
-      <mat-card-actions align="start">
-        <mat-form-field style="width:100%">
-          <mat-label>Prefix</mat-label>
-          <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
-          @if (prefixSet) {
-            <button (click)="unsetPrefix()" mat-icon-button matSuffix style="float: right">
-              <mat-icon matSuffix>close</mat-icon>
+        <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the application list">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button [matTooltipShowDelay]="1000" [routerLink]="['/sqs-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
+            <mat-icon>
+                <span class="material-symbols-outlined">monitoring</span>
+            </mat-icon>
+        </button>
+        <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #mainmenu="matMenu" xPosition="before">
+            <button mat-menu-item>
+                <button (click)="autoReload()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">hourglass</span>
+                    </mat-icon>
+                    <span>Auto Reload</span>
+                </button>
             </button>
-          }
-          <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
-            <mat-icon matSuffix>search</mat-icon>
-          </button>
-        </mat-form-field>
-      </mat-card-actions>
-      <div class="table-container">
-        @if (listApplicationCountersResponse$ | async; as applicationCounters) {
-          <div class="row">
-            <table (matSortChange)="sortChange($event)" [dataSource]="applicationCounters.applications" class="mat-elevation-z8 application-table" mat-table matSort>
-              <ng-container matColumnDef="name">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Application name" sortActionDescription="Sort by application name">Name</th>
-                <td *matCellDef="let element" mat-cell>
-                  <div class="with-icon">
-                    <mat-nav-list>
-                      <a (click)="navigateToDetails(element.name)" mat-list-item> {{ element.name }}</a>
-                    </mat-nav-list>
-                    <button [cdkCopyToClipboard]="element.name" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
-                      <mat-icon class="copy-icon">content_copy</mat-icon>
+        </mat-menu>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card appearance="outlined" style="margin: -10px;">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+                    @if (prefixSet) {
+                        <button (click)="unsetPrefix()" mat-icon-button matSuffix style="float: right">
+                            <mat-icon matSuffix>close</mat-icon>
+                        </button>
+                    }
+                    <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
                     </button>
-                  </div>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="created">
-                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application creation timestamp" sortActionDescription="Sort by created">Created</th>
-                <td *matCellDef="let element" mat-cell>
-                  {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="modified">
-                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application modified timestamp" sortActionDescription="Sort by modified">Modified</th>
-                <td *matCellDef="let element" mat-cell>
-                  {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:80px">Actions</th>
-                <td *matCellDef="let row" mat-cell>
-                  <button (click)="deleteApplication(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the application">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-              <tr *matHeaderRowDef="columns" mat-header-row></tr>
-              <tr *matRowDef="let row; columns: columns;" mat-row></tr>
-              <tr *matNoDataRow class="mat-row">
-                <td [attr.colspan]="columns.length" class="mat-cell">
-                  No data matching the filter.
-                </td>
-              </tr>
-            </table>
-          </div>
-        }
-      </div>
-      <mat-paginator (page)="handlePageEvent($event)"
-        [disabled]="disabled"
-        [hidePageSize]="hidePageSize"
-        [length]="(listApplicationCountersResponse$ | async)?.total"
-        [pageIndex]="(pageIndex$ | async)"
-        [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-        [pageSize]="(pageSize$ | async)??false"
-        [showFirstLastButtons]="showFirstLastButtons"
-        aria-label="Select page" style="width:99%; margin-left:15px">
+                </mat-form-field>
+            </mat-card-actions>
+            <div class="table-container">
+                @if (listApplicationCountersResponse$ | async; as applicationCounters) {
+                    <div class="row">
+                        <table (matSortChange)="sortChange($event)" [dataSource]="applicationCounters.applications" class="mat-elevation-z8 application-table" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Application name" sortActionDescription="Sort by application name">Name</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    <div class="with-icon">
+                                        <mat-nav-list>
+                                            <a (click)="navigateToDetails(element.name)" mat-list-item> {{ element.name }}</a>
+                                        </mat-nav-list>
+                                        <button [cdkCopyToClipboard]="element.name" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
+                                            <mat-icon class="copy-icon">content_copy</mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="version">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application version" sortActionDescription="Sort by version">Version</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.version }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="enabled">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application enabled" sortActionDescription="Sort by enabled">Enabled</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.enabled }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application status" sortActionDescription="Sort by status">Status</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.status }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="created">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application creation timestamp" sortActionDescription="Sort by created">Created</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="modified">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application modified timestamp" sortActionDescription="Sort by modified">Modified</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:80px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="deleteApplication(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the application">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="columns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            </div>
+            <mat-paginator (page)="handlePageEvent($event)"
+                           [disabled]="disabled"
+                           [hidePageSize]="hidePageSize"
+                           [length]="(listApplicationCountersResponse$ | async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
+                           [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                           [pageSize]="(pageSize$ | async)??false"
+                           [showFirstLastButtons]="showFirstLastButtons"
+                           aria-label="Select page" style="width:99%; margin-left:15px">
 
-      </mat-paginator>
-    </mat-card>
-    <footer-component [lastUpdate]="lastUpdate"/>
-  </mat-card-content>
+            </mat-paginator>
+        </mat-card>
+        <footer-component [lastUpdate]="lastUpdate"/>
+    </mat-card-content>
 </mat-card>

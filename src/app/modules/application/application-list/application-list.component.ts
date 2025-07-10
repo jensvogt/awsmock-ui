@@ -62,7 +62,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        this.listApplicationCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
+        //this.listApplicationCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
     }
 
     ngOnInit(): void {

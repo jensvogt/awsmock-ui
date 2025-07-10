@@ -12,6 +12,12 @@ import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {KeyValuePipe, NgForOf} from "@angular/common";
+
+interface SecretKeyValuePair {
+    key: string,
+    value: string
+}
 
 @Component({
     selector: 'secret-value-edit-dialog',
@@ -27,24 +33,31 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
         MatLabel,
         FormsModule,
         MatInput,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgForOf
     ],
     styleUrls: ['./value-edit-component.scss']
 })
 export class SecretValueEditDialogComponent implements OnInit {
 
     valueObject: any;
+    valueArray: SecretKeyValuePair[] = [];
 
     constructor(private dialogRef: MatDialogRef<SecretValueEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.valueObject = JSON.parse(data.secretString);
-        console.log("Dialog valueObject: ", this.valueObject);
+        for(let i of Object.keys(this.valueObject)) {
+            this.valueArray.push({key:i, value: this.valueObject[i]});
+        }
     }
 
     ngOnInit() {
     }
 
     save() {
-        let result: any = {};
+        for(let i of this.valueArray) {
+            this.valueObject[i.key]=i.value;
+        }
+        let result: string = JSON.stringify(this.valueObject);
         this.dialogRef.close(result);
     }
 }

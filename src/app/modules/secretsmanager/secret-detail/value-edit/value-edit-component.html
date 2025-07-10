@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Add Secret</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px">
-    <div *ngFor="let item of object | keyvalue">
+    <div *ngFor="let item of valueArray; track item">
         <mat-form-field style="width: 100%">
             <mat-label>{{item.key}}</mat-label>
             <input [(ngModel)]="item.value" matInput value="">

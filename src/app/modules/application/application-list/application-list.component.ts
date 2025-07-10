@@ -32,7 +32,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listApplicationCountersResponse$: Observable<ListApplicationCountersResponse> = this.store.select(selectApplicationCounters);
-    columns: any[] = ['name', 'created', 'modified', 'actions'];
+    columns: any[] = ['name', 'version', 'enabled', 'status', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;

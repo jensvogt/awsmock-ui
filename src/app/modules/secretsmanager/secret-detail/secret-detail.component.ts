@@ -4,17 +4,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Location} from "@angular/common";
 import {State, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {
-    selectDetails,
-    selectError,
-    selectRotationLambdaARNs,
-    selectTagPageIndex,
-    selectTagPageSize,
-    selectTags,
-    selectVersionPageIndex,
-    selectVersionPageSize,
-    selectVersions
-} from "./state/secret-detail.selectors";
+import {selectDetails, selectError, selectRotationLambdaARNs, selectTagPageIndex, selectTagPageSize, selectTags, selectVersionPageIndex, selectVersionPageSize, selectVersions} from "./state/secret-detail.selectors";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -24,7 +14,6 @@ import {SecretDetailsState} from "./state/secret-detail.reducer";
 import {secretDetailsActions} from "./state/secret-detail.actions";
 import {SecretVersionCountersResponse} from "../model/secret-version-item";
 import * as uuid from 'uuid';
-import {SecretAddDialogComponent} from "../secret-add/secret-add-component";
 import {SecretValueEditDialogComponent} from "./value-edit/value-edit-component";
 
 interface LambdaSelect {

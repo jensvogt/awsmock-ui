@@ -110,7 +110,7 @@ export class S3ObjectViewDialog {
                     });
                 } else {
                     this.isImage = true;
-                    data.Body?.transformToByteArray().then((data) => {
+                    data.Body?.transformToByteArray().then((data:any) => {
                         const reader = new FileReader();
                         reader.onload = (e) => this.image = e.target?.result;
                         reader.readAsDataURL(new Blob([data]));

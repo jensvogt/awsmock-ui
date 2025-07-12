@@ -79,7 +79,7 @@
                             <ng-container matColumnDef="lastStarted">
                                 <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Last application atsrt timestamp" sortActionDescription="Sort by last started timestamp">LastStarted</th>
                                 <td *matCellDef="let element" mat-cell>
-                                    {{ element.created ? (element.lastStarted | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                                    {{ element.lastStarted ? (element.lastStarted | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="created">

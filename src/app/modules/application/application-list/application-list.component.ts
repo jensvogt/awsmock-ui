@@ -163,51 +163,16 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         this.dialog.open(ApplicationAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 let request: AddApplicationRequest = {
-                    name: result.name,
-                    runtime: result.runtime,
-                    archive: result.archive,
-                    version: result.version,
-                    code: result.code,
-                    status: result.status,
+                    application: result.application,
                     prefix: this.state.value['application-list'].prefix,
                     pageSize: this.state.value['application-list'].pageSize,
                     pageIndex: this.state.value['application-list'].pageIndex,
-                    sortColumns: this.state.value['application-list'].sortColumns
+                    sortColumns: this.state.value['application-list'].sortColumns,
+                    code: result.content
                 };
                 this.store.dispatch(applicationListActions.addApplication({request: request}));
             }
         });
-    }
-
-    editApplication(parameter: any) {
-
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.maxWidth = '100vw';
-        dialogConfig.maxHeight = '100vh';
-        dialogConfig.panelClass = 'full-screen-modal';
-        dialogConfig.width = "40%"
-        dialogConfig.minWidth = '580px'
-        dialogConfig.data = parameter;
-
-        /*    this.dialog.open(ParameterEditDialogComponent, dialogConfig).afterClosed().subscribe(result => {
-                if (result) {
-                    let request: UpdateParameterCounterRequest = {
-                        name: result.name,
-                        value: result.value,
-                        description: result.description,
-                        type: result.type,
-                        kmsKeyArn: result.kmsKeyArn,
-                        prefix: this.state.value['application-list'].prefix,
-                        pageSize: this.state.value['application-list'].pageSize,
-                        pageIndex: this.state.value['application-list'].pageIndex,
-                        sortColumns: this.state.value['application-list'].sortColumns
-                    };
-                    this.store.dispatch(applicationListActions.updateParameter({request: request}));
-                }
-            });*/
     }
 
     deleteApplication(application: ApplicationItem) {

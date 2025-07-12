@@ -47,7 +47,7 @@ export class ApplicationService {
      * @param request add application request
      */
     public addApplication(request: AddApplicationRequest) {
-        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'create-applications');
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'create-application');
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
 

@@ -72,10 +72,8 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this.applicationDetails$.subscribe(applicationDetails => {
             console.log("applicationDetails: ", applicationDetails);
             this.applicationItem = applicationDetails;
-            this.environmentTotal = this.applicationItem.environment.length;
-            this.optionsTotal = this.applicationItem.options.length;
+            this.environmentTotal = Object.getOwnPropertyNames(applicationDetails.environment).length;
             this.environmentDatasource = convertObjectToArray(applicationDetails.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
-            this.optionsDatasource = convertObjectToArray(applicationDetails.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
         })
         //this.lambdaEnvironment$.subscribe((data) => console.log(data));
         //this.lambdaTags$.subscribe((data) => console.log(data));
@@ -179,73 +177,5 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         let request: UpdateApplicationRequest = {application: this.applicationItem}
         this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
         this.snackBar.open('Application environment variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
-    }
-
-    // ===================================================================================================================
-    // Options
-    // ===================================================================================================================
-    handleOptionsPageEvent(e: PageEvent) {
-        this.optionsPageSize = e.pageSize;
-        this.optionsPageIndex = e.pageIndex;
-        this.optionsDatasource = convertObjectToArray(this.applicationItem.options, e.pageSize, e.pageIndex, this.optionsSortColumn);
-    }
-
-    optionsSortChanged(sortState: Sort) {
-        let direction = sortState.direction === 'asc' ? 1 : -1;
-        this.optionsSortColumn = {column: sortState.active, sortDirection: direction};
-        this.optionsDatasource = convertObjectToArray(this.applicationItem.options, this.optionsPageSize, this.optionsPageIndex, this.optionsSortColumn);
-    }
-
-    addOptions() {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.applicationName};
-
-        // this.dialog.open(LambdaOptionsAddDialog, dialogConfig).afterClosed().subscribe(result => {
-        //     if (result) {
-        //         if (result.Key && result.Value) {
-        //             this.optionsService.addOptions(this.functionArn, result.Key, result.Value)
-        //                 .subscribe(() => {
-        //                     this.loadOptions();
-        //                     this.snackBar.open('Lambda options variable changed, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //                 })
-        //         } else {
-        //             this.snackBar.open('Lambda options variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //         }
-        //     }
-        // });
-    }
-
-    editOptions(key: string, value: string) {
-
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {optionsName: this.applicationName, key: key, value: value};
-
-        // this.dialog.open(LambdaOptionsEditDialog, dialogConfig).afterClosed().subscribe(result => {
-        //     if (result) {
-        //         if (result.Key !== key || result.Value !== value) {
-        //             this.optionsService.updateOptions(this.functionArn, result.Key, result.Value)
-        //                 .subscribe(() => {
-        //                     this.loadTags();
-        //                     this.snackBar.open('Lambda options variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //                 })
-        //         } else {
-        //             this.snackBar.open('Lambda options variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-        //         }
-        //     }
-        // });
-    }
-
-    deleteOptions(key: string) {
-        // this.optionsService.deleteOptions(this.functionArn, key)
-        //     .subscribe(() => {
-        //         this.loadOptions();
-        //         this.snackBar.open('Lambda options variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
-        //     })
     }
 }

@@ -155,52 +155,6 @@
                                    aria-label="Select page">
                     </mat-paginator>
                 </mat-tab>
-                <mat-tab [matTooltipShowDelay]="1000" label="Options" matTooltip="Application options">
-                    <mat-card-actions class="head-buttons">
-                        <button (click)="addOptions()" [matTooltipShowDelay]="1000" aria-label="Add options variable" mat-icon-button matTooltip="Add a new options variable">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                    <table (matSortChange)="optionsSortChanged($event)" [dataSource]="optionsDatasource" class="mat-elevation-z8" mat-table matSort>
-                        <ng-container matColumnDef="key">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Options variable name" sortActionDescription="Sort by name">Name</th>
-                            <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="value">
-                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Options variable value" sortActionDescription="Sort by value">Value
-                            </th>
-                            <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="actions">
-                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
-                            <td *matCellDef="let row" mat-cell>
-                                <button (click)="editOptions(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the lambda options variable">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <button (click)="deleteOptions(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda options variable">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </td>
-                        </ng-container>
-                        <tr *matHeaderRowDef="optionsColumns" mat-header-row></tr>
-                        <tr *matRowDef="let row; columns: optionsColumns;" mat-row></tr>
-                        <tr *matNoDataRow class="mat-row">
-                            <td [attr.colspan]="optionsColumns.length" class="mat-cell">
-                                No data matching the filter.
-                            </td>
-                        </tr>
-                    </table>
-                    <mat-paginator (page)="handleOptionsPageEvent($event)"
-                                   [disabled]="false"
-                                   [hidePageSize]="false"
-                                   [length]="optionsTotal"
-                                   [pageIndex]="optionsPageIndex"
-                                   [pageSizeOptions]="optionsPageSizeOptions"
-                                   [pageSize]="optionsPageSize"
-                                   [showFirstLastButtons]="true"
-                                   aria-label="Select page">
-                    </mat-paginator>
-                </mat-tab>
             </mat-tab-group>
         </mat-card-content>
     </mat-card>

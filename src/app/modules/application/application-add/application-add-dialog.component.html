@@ -26,7 +26,7 @@
                         <mat-list-item style="height:80px; width:100%">
                             <mat-form-field style="width:100%">
                                 <mat-label>Runtime</mat-label>
-                                <mat-select [(ngModel)]="selectedRuntime">
+                                <mat-select [(ngModel)]="selectedRuntime" name="runtime">
                                     @for (runtime of runtimes; track runtime) {
                                         <mat-option [value]="runtime.value">{{ runtime.viewValue }}</mat-option>
                                     }
@@ -35,14 +35,8 @@
                         </mat-list-item>
                         <mat-list-item style="height:80px; width:100%">
                             <mat-form-field style="width:100%">
-                                <mat-label>Privatve port</mat-label>
-                                <input [(ngModel)]="privatePort" matInput value="8080">
-                            </mat-form-field>
-                        </mat-list-item>
-                        <mat-list-item style="height:80px; width:100%">
-                            <mat-form-field style="width:100%">
-                                <mat-label>Timeout (s)</mat-label>
-                                <input [(ngModel)]="timeout" matInput value="3600">
+                                <mat-label>Private port</mat-label>
+                                <input [(ngModel)]="privatePort" matInput type="number" value="8080">
                             </mat-form-field>
                         </mat-list-item>
                     </mat-list>
@@ -111,7 +105,6 @@
             </mat-tab-group>
         </mat-card-content>
     </mat-card>
-    >
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>

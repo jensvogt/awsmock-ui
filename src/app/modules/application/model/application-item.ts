@@ -1,4 +1,3 @@
-import {Code} from "../../lambda/model/lambda-item";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 
 export interface Environment {
@@ -42,12 +41,8 @@ export interface ListApplicationCountersResponse {
 }
 
 export interface AddApplicationRequest {
-    name: string;
-    runtime: string;
-    archive: string;
-    code: Code;
-    version: string;
-    status: number;
+    application: ApplicationItem,
+    code: string,
     prefix: string,
     pageSize: number,
     pageIndex: number,

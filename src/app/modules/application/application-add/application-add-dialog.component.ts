@@ -95,27 +95,28 @@ export class ApplicationAddDialog implements OnInit {
     uploadError: boolean = false;
 
     // Runtime
-    selectedRuntime: string = 'JAVA_21';
+    selectedRuntime: string = 'JAVA21';
     runtimes: Runtime[] = [
-        {value: 'JAVA_11', viewValue: 'Java 11'},
-        {value: 'JAVA_17', viewValue: 'Java 17'},
-        {value: 'JAVA_21', viewValue: 'Java 21'},
-        {value: 'PYTHON_38', viewValue: 'Python 3.8'},
-        {value: 'PYTHON_39', viewValue: 'Python 3.9'},
-        {value: 'PYTHON_310', viewValue: 'Python 3.10'},
-        {value: 'PYTHON_311', viewValue: 'Python 3.11'},
-        {value: 'PYTHON_312', viewValue: 'Python 3.12'},
+        {value: 'JAVA11', viewValue: 'Java 11'},
+        {value: 'JAVA17', viewValue: 'Java 17'},
+        {value: 'JAVA21', viewValue: 'Java 21'},
+        {value: 'PYTHON39', viewValue: 'Python 3.9'},
+        {value: 'PYTHON310', viewValue: 'Python 3.10'},
+        {value: 'PYTHON311', viewValue: 'Python 3.11'},
+        {value: 'PYTHON312', viewValue: 'Python 3.12'},
+        {value: 'PYTHON312', viewValue: 'Python 3.13'},
         {value: 'provided.al2', viewValue: 'Provided AL2'},
         {value: 'provided.al2023', viewValue: 'Provided AL2023'},
         {value: 'provided.latest', viewValue: 'Provided Latest'},
         {value: 'nodejs_20x', viewValue: 'NodeJS 20'},
+        {value: 'nodejs_22x', viewValue: 'NodeJS 22'},
         {value: 'go', viewValue: 'Go'},
     ];
 
     // Environment
     environmentColumns: string[] = ['key', 'value', 'actions'];
     environmentSortColumn: SortColumn = {column: 'key', sortDirection: -1};
-    environmentDatasource: MatTableDataSource<Environment> = {} as MatTableDataSource<Environment>;
+    environmentDatasource: MatTableDataSource<Environment> = new MatTableDataSource();
     environmentTotal: number = 0;
     environmentPageSize: number = 5;
     environmentPageIndex: number = 0;
@@ -138,7 +139,7 @@ export class ApplicationAddDialog implements OnInit {
         this.file = event.target.files[0];
         this.fileName = this.file.name;
         this.applicationItem.version = getVersion(this.fileName);
-        //   this.createDisabled = !(this.applicationItem.name && this.fileName && this.applicationItem.version && this.selectedRuntime)
+        this.createDisabled = !(this.applicationItem.name && this.fileName && this.applicationItem.version && this.selectedRuntime)
     }
 
     // Handler for file drop
@@ -174,9 +175,14 @@ export class ApplicationAddDialog implements OnInit {
             const reader = new FileReader();
             reader.onload = () => {
                 const content: any = reader.result;
+                if (this.fileName != null) {
+                    this.applicationItem.archive = this.fileName;
+                }
+                this.applicationItem.region = <string>localStorage.getItem("region");
+                this.applicationItem.runtime = this.selectedRuntime;
+                this.applicationItem.privatePort = this.privatePort;
                 this.dialogRef.close({
-                    content: content.split(',')[1], name: this.applicationItem.name, fileName: this.fileName, handler: this.applicationItem.version,
-                    runtime: this.selectedRuntime, privatePort: this.privatePort, timeout: this.timeout, jsonEnvironment: this.jsonEnvironment
+                    content: content.split(',')[1], application: this.applicationItem
                 });
             };
             reader.addEventListener("progress", this.handleProgress);

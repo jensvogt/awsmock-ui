@@ -81,7 +81,7 @@ export class ApplicationAddDialog implements OnInit {
     applicationItem: ApplicationItem = {} as ApplicationItem;
     file: File = {} as File;
     fileName: string | undefined;
-    memorySize: number = 512;
+    privatePort: number = 8080;
     timeout: number = 3600;
     jsonEnvironment: string | undefined;
     jsonTags: string | undefined;
@@ -176,7 +176,7 @@ export class ApplicationAddDialog implements OnInit {
                 const content: any = reader.result;
                 this.dialogRef.close({
                     content: content.split(',')[1], name: this.applicationItem.name, fileName: this.fileName, handler: this.applicationItem.version,
-                    runtime: this.selectedRuntime, memorySize: this.memorySize, timeout: this.timeout, jsonEnvironment: this.jsonEnvironment
+                    runtime: this.selectedRuntime, privatePort: this.privatePort, timeout: this.timeout, jsonEnvironment: this.jsonEnvironment
                 });
             };
             reader.addEventListener("progress", this.handleProgress);

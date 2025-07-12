@@ -22,6 +22,7 @@ export interface ApplicationItem {
     name: string;
     runtime: string;
     runType: string;
+    privatePort: number;
     archive: string;
     version: string;
     containerId: string;
@@ -30,6 +31,7 @@ export interface ApplicationItem {
     environment: any;
     tags: any;
     options: any;
+    lastStarted: Date | undefined;
     created: Date | undefined;
     modified: Date | undefined;
 }

@@ -5,11 +5,10 @@ import {Sort} from "@angular/material/sort";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {State, Store} from "@ngrx/store";
+import {Store} from "@ngrx/store";
 import {PageEvent} from "@angular/material/paginator";
 import {ApplicationItem, Environment, GetApplicationRequest, Tag, UpdateApplicationRequest} from "../model/application-item";
 import {ApplicationService} from "../service/application-service.component";
-import {ApplicationDetailsState} from "./state/application-details.reducer";
 import {applicationDetailsActions} from "./state/application-details.actions";
 import {Observable} from "rxjs";
 import {selectError} from "../../sqs/queue-detail/state/sqs-queue-detail.selectors";
@@ -62,23 +61,26 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
-    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly route: ActivatedRoute, private readonly applicationService: ApplicationService,
-                private readonly store: Store, private readonly state: State<ApplicationDetailsState>) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly route: ActivatedRoute, private readonly applicationService: ApplicationService, private readonly store: Store) {
     }
 
     ngOnInit() {
+        this.applicationDetails$.subscribe((applicationDetails: ApplicationItem) => {
+            this.applicationItem = applicationDetails;
+            if (this.applicationItem.environment) {
+                this.environmentTotal = Object.keys(this.applicationItem.environment).length;
+                this.environmentDatasource = convertObjectToArray(this.applicationItem.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
+            }
+            if (this.applicationItem.tags) {
+                this.tagTotal = Object.keys(this.applicationItem.tags).length;
+                this.tagDatasource = convertObjectToArray(this.applicationItem.tags, this.tagPageSize, this.tagPageIndex, this.tagSortColumn);
+            }
+        })
+        //this.applicationDetails$.subscribe((data) => console.log("Application data:", data));
         this.routerSubscription = this.route.params.subscribe(params => {
             this.applicationName = atob(params['name']);
             this.loadApplication();
         });
-        this.applicationDetails$.subscribe(applicationDetails => {
-            this.applicationItem = applicationDetails;
-            this.environmentTotal = Object.getOwnPropertyNames(applicationDetails.environment).length;
-            this.environmentDatasource = convertObjectToArray(applicationDetails.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
-            this.tagTotal = Object.getOwnPropertyNames(applicationDetails.tags).length;
-            this.tagDatasource = convertObjectToArray(applicationDetails.tags, this.tagPageSize, this.tagPageIndex, this.tagSortColumn);
-        })
-        this.applicationDetails$.subscribe((data) => console.log("Application data:", data));
     }
 
     ngOnDestroy() {
@@ -91,7 +93,6 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     refresh() {
         this.loadApplication();
-        //this.loadEnvironment();
     }
 
     loadApplication() {

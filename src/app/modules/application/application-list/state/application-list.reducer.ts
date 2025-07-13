@@ -33,15 +33,20 @@ export const applicationListReducer = createReducer(
     // Initialize
     on(applicationListActions.initialize, (state: ApplicationListState): ApplicationListState => ({...state, pageIndex: 0, pageSize: 10, loading: true, reload: false,})),
 
-    // Parameter list
+    // Load application
     on(applicationListActions.loadApplications, (state: ApplicationListState) => ({...state, loading: true, reload: false})),
-    on(applicationListActions.loadApplicationsSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false, reload: false})),
-    on(applicationListActions.loadApplicationsFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false, reload: false})),
+    on(applicationListActions.loadApplicationsSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false})),
+    on(applicationListActions.loadApplicationsFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
 
-    // Add parameter
-    // on(applicationListActions.createParameter, (state: ApplicationListState) => ({...state, loading: true})),
-    // on(applicationListActions.createParameterSuccess, (state: ApplicationListState, {parameters}) => ({...state, listParameterResponse: parameters, loading: false, reload: true})),
-    // on(applicationListActions.createParameterFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false, reload: true})),
+    // Start application
+    on(applicationListActions.startApplication, (state: ApplicationListState) => ({...state, starting: true, restart: false})),
+    on(applicationListActions.startApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications})),
+    on(applicationListActions.startApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error})),
+
+    // Stop application
+    on(applicationListActions.stopApplication, (state: ApplicationListState) => ({...state, stopping: true, restart: false})),
+    on(applicationListActions.stopApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications})),
+    on(applicationListActions.stopApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error})),
 
     // Delete application
     on(applicationListActions.deleteApplication, (state: ApplicationListState) => ({...state, loading: true})),

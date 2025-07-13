@@ -148,6 +148,40 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         }));
     }
 
+    startApplication(application: ApplicationItem) {
+        this.lastUpdate = new Date();
+        this.store.dispatch(applicationListActions.startApplication({
+            request: {
+                application: application,
+                prefix: this.state.value['application-list'].prefix,
+                pageSize: this.state.value['application-list'].pageSize,
+                pageIndex: this.state.value['application-list'].pageIndex,
+                sortColumns: this.state.value['application-list'].sortColumns
+            }
+        }));
+    }
+
+    stopApplication(application: ApplicationItem) {
+        this.lastUpdate = new Date();
+        this.store.dispatch(applicationListActions.stopApplication({
+            request: {
+                application: application,
+                prefix: this.state.value['application-list'].prefix,
+                pageSize: this.state.value['application-list'].pageSize,
+                pageIndex: this.state.value['application-list'].pageIndex,
+                sortColumns: this.state.value['application-list'].sortColumns
+            }
+        }));
+    }
+
+    startDisabled(application: ApplicationItem) {
+        return application.status === "RUNNING";
+    }
+
+    stopDisabled(application: ApplicationItem) {
+        return application.status !== "RUNNING";
+    }
+
     addApplication() {
 
         const dialogConfig = new MatDialogConfig();

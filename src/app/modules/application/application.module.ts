@@ -101,7 +101,7 @@ import {ApplicationDetailsComponent} from "./application-details/application-det
         MatDivider,
         FooterComponent,
         CdkVirtualScrollViewport,
-        MatProgressSpinner,
+        MatProgressSpinner
     ],
     exports: [ApplicationListComponent, ApplicationDetailsComponent],
     providers: [ApplicationService],

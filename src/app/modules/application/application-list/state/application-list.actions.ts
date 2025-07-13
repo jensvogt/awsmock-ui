@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest, ListApplicationCountersResponse} from "../../model/application-item";
+import {AddApplicationRequest, DeleteApplicationRequest, ListApplicationCountersResponse, StartApplicationRequest, StopApplicationRequest} from "../../model/application-item";
 
 export const applicationListActions = {
     initialize: createAction('[application-list] initialize'),
@@ -15,10 +15,15 @@ export const applicationListActions = {
     addApplicationSuccess: createAction('[application-list] Add application success', props<{ applications: ListApplicationCountersResponse }>()),
     addApplicationFailure: createAction('[application-list] Add application error', props<{ error: string }>()),
 
-    // Update parameter
-    // updateParameter: createAction('[application-list] Update parameter', props<{ request: UpdateParameterCounterRequest }>()),
-    // updateParameterSuccess: createAction('[application-list] Update parameter success', props<{ parameters: ListParameterCountersResponse }>()),
-    // updateParameterFailure: createAction('[application-list] Update parameter error', props<{ error: string }>()),
+    // Start application
+    startApplication: createAction('[application-list] Start application', props<{ request: StartApplicationRequest }>()),
+    startApplicationSuccess: createAction('[application-list] Start application success', props<{ applications: ListApplicationCountersResponse }>()),
+    startApplicationFailure: createAction('[application-list] Start application error', props<{ error: string }>()),
+
+    // Stop application
+    stopApplication: createAction('[application-list] Stop application', props<{ request: StopApplicationRequest }>()),
+    stopApplicationSuccess: createAction('[application-list] Stop application success', props<{ applications: ListApplicationCountersResponse }>()),
+    stopApplicationFailure: createAction('[application-list] Stop application error', props<{ error: string }>()),
 
     // Delete application
     deleteApplication: createAction('[application-list] Delete application', props<{ request: DeleteApplicationRequest }>()),

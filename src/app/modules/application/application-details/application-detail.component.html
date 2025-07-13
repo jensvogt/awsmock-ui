@@ -47,12 +47,8 @@
                                 <p class="mat-list-span-value" matListItemLine>{{ applicationItem.runType }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
-                                <!--p class="mat-list-span-title" matListItemTitle>ARN: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ applicationItem.functionArn }}
-                                    <button [cdkCopyToClipboard]="applicationItem.functionArn" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                        <mat-icon class="copy-icon">content_copy</mat-icon>
-                                    </button>
-                                </p-->
+                                <p class="mat-list-span-title" matListItemTitle>Container Name: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ applicationItem.containerName }}</p>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -77,8 +73,10 @@
                                 <p class="mat-list-span-value" matListItemLine>{{ applicationItem.status }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
-                                <!--p class="mat-list-span-title" matListItemTitle>Concurrency:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ applicationItem.concurrency }}</p-->
+                                <p class="mat-list-span-title" matListItemTitle>Enabled: </p>
+                                <p class="mat-list-span-value" matListItemLine>
+                                    <mat-slide-toggle (change)="enabledChanged($event)" [checked]="applicationItem.enabled" labelPosition="before"></mat-slide-toggle>
+                                </p>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -87,14 +85,16 @@
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
                             <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Last Started:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ applicationItem.lastStarted ? (applicationItem.lastStarted | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Created:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ applicationItem.created ? (applicationItem.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Modified:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ applicationItem.modified ? (applicationItem.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                             </mat-list-item>
@@ -151,6 +151,52 @@
                                    [pageIndex]="environmentPageIndex"
                                    [pageSizeOptions]="environmentPageSizeOptions"
                                    [pageSize]="environmentPageSize"
+                                   [showFirstLastButtons]="true"
+                                   aria-label="Select page">
+                    </mat-paginator>
+                </mat-tab>
+                <mat-tab [matTooltipShowDelay]="1000" label="Tag" matTooltip="Application tags">
+                    <mat-card-actions class="head-buttons">
+                        <button (click)="addTag()" [matTooltipShowDelay]="1000" aria-label="Add tag" mat-icon-button matTooltip="Add a new tag">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                    <table (matSortChange)="tagSortChanged($event)" [dataSource]="tagDatasource" class="mat-elevation-z8" mat-table matSort>
+                        <ng-container matColumnDef="key">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag name" sortActionDescription="Sort by name">Name</th>
+                            <td *matCellDef="let element" mat-cell> {{ element.key }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="value">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Tag value" sortActionDescription="Sort by value">Value
+                            </th>
+                            <td *matCellDef="let element" mat-cell> {{ element.value }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="editTag(row.key, row.value)" [matTooltipShowDelay]="1000" aria-label="Edit" mat-icon-button matTooltip="Edit the lambda tag variable">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button (click)="deleteTag(row.key)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete lambda tag variable">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="tagColumns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: tagColumns;" mat-row></tr>
+                        <tr *matNoDataRow class="mat-row">
+                            <td [attr.colspan]="tagColumns.length" class="mat-cell">
+                                No data matching the filter.
+                            </td>
+                        </tr>
+                    </table>
+                    <mat-paginator (page)="handleTagPageEvent($event)"
+                                   [disabled]="false"
+                                   [hidePageSize]="false"
+                                   [length]="tagTotal"
+                                   [pageIndex]="tagPageIndex"
+                                   [pageSizeOptions]="tagPageSizeOptions"
+                                   [pageSize]="tagPageSize"
                                    [showFirstLastButtons]="true"
                                    aria-label="Select page">
                     </mat-paginator>

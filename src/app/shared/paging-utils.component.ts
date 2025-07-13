@@ -3,6 +3,9 @@ import {MatTableDataSource} from "@angular/material/table";
 import {Environment} from "../modules/application/model/application-item";
 
 export function convertObjectToArray(obj: any, pageSize: number, pageIndex: number, sortColumn: SortColumn): MatTableDataSource<Environment> {
+    if (obj === undefined || obj === null || isNaN(obj)) {
+        return new MatTableDataSource<Environment>([]);
+    }
     let attributes = Object.getOwnPropertyNames(obj);
     if (attributes.length > 0) {
 

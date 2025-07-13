@@ -5,12 +5,7 @@ export interface Environment {
     value: string | undefined;
 }
 
-export interface Tags {
-    key: string | undefined;
-    value: string | undefined;
-}
-
-export interface Options {
+export interface Tag {
     key: string | undefined;
     value: string | undefined;
 }
@@ -22,9 +17,11 @@ export interface ApplicationItem {
     runtime: string;
     runType: string;
     privatePort: number;
+    publicPort: number;
     archive: string;
     version: string;
     containerId: string;
+    containerName: string;
     status: string;
     enabled: boolean;
     environment: any;
@@ -49,13 +46,32 @@ export interface AddApplicationRequest {
     sortColumns: SortColumn[]
 }
 
-
 export interface UpdateApplicationRequest {
     application: ApplicationItem;
 }
 
 export interface UpdateApplicationResponse {
     application: ApplicationItem;
+}
+
+export interface StartApplicationRequest {
+    region?: string;
+    user?: string;
+    application: ApplicationItem;
+    prefix: string,
+    pageSize: number,
+    pageIndex: number,
+    sortColumns: SortColumn[]
+}
+
+export interface StopApplicationRequest {
+    region?: string;
+    user?: string;
+    application: ApplicationItem;
+    prefix: string,
+    pageSize: number,
+    pageIndex: number,
+    sortColumns: SortColumn[]
 }
 
 export interface GetApplicationRequest {

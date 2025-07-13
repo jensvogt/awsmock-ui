@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest, UpdateApplicationRequest} from "../model/application-item";
+import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest, StartApplicationRequest, StopApplicationRequest, UpdateApplicationRequest} from "../model/application-item";
 
 @Injectable({providedIn: 'root'})
 export class ApplicationService {
@@ -60,6 +60,30 @@ export class ApplicationService {
     public updateApplication(request: UpdateApplicationRequest) {
         request.application.region = this.region;
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'update-application');
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    /**
+     * @brief Starts an application
+     *
+     * @param request start application request
+     */
+    public startApplication(request: StartApplicationRequest) {
+        request.region = this.region;
+        request.user = this.user;
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'start-application');
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    /**
+     * @brief Stops an application
+     *
+     * @param request stop application request
+     */
+    public stopApplication(request: StopApplicationRequest) {
+        request.region = this.region;
+        request.user = this.user;
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'stop-application');
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
 

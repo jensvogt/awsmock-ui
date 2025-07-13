@@ -7,7 +7,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {State, Store} from "@ngrx/store";
 import {PageEvent} from "@angular/material/paginator";
-import {ApplicationItem, Environment, GetApplicationRequest, Options, UpdateApplicationRequest} from "../model/application-item";
+import {ApplicationItem, Environment, GetApplicationRequest, Tag, UpdateApplicationRequest} from "../model/application-item";
 import {ApplicationService} from "../service/application-service.component";
 import {ApplicationDetailsState} from "./state/application-details.reducer";
 import {applicationDetailsActions} from "./state/application-details.actions";
@@ -20,6 +20,8 @@ import {ApplicationEnvironmentAddDialog} from "../application-environment-add/ap
 import {ApplicationEnvironmentEditDialog} from "../application-environment-edit/application-environment-edit.component";
 import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
 import {convertObjectToArray} from "../../../shared/paging-utils.component";
+import {ApplicationTagAddDialog} from "../application-tag-add/application-tag-add.component";
+import {ApplicationTagEditDialog} from "../application-tag-edit/application-tag-edit.component";
 
 @Component({
     selector: 'application-detail-component',
@@ -48,14 +50,14 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     environmentPageIndex: number = 0;
     environmentPageSizeOptions = [5, 10, 20, 50, 100];
 
-    // Options
-    optionsColumns: string[] = ['key', 'value', 'actions'];
-    optionsSortColumn: SortColumn = {column: 'key', sortDirection: -1};
-    optionsDatasource: MatTableDataSource<Options> = {} as MatTableDataSource<Options>;
-    optionsTotal: number = 0;
-    optionsPageSize: number = 5;
-    optionsPageIndex: number = 0;
-    optionsPageSizeOptions = [5, 10, 20, 50, 100];
+    // Tag
+    tagColumns: string[] = ['key', 'value', 'actions'];
+    tagSortColumn: SortColumn = {column: 'key', sortDirection: -1};
+    tagDatasource: MatTableDataSource<Tag> = {} as MatTableDataSource<Tag>;
+    tagTotal: number = 0;
+    tagPageSize: number = 5;
+    tagPageIndex: number = 0;
+    tagPageSizeOptions = [5, 10, 20, 50, 100];
 
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
@@ -70,14 +72,13 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
             this.loadApplication();
         });
         this.applicationDetails$.subscribe(applicationDetails => {
-            console.log("applicationDetails: ", applicationDetails);
             this.applicationItem = applicationDetails;
             this.environmentTotal = Object.getOwnPropertyNames(applicationDetails.environment).length;
             this.environmentDatasource = convertObjectToArray(applicationDetails.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
+            this.tagTotal = Object.getOwnPropertyNames(applicationDetails.tags).length;
+            this.tagDatasource = convertObjectToArray(applicationDetails.tags, this.tagPageSize, this.tagPageIndex, this.tagSortColumn);
         })
-        //this.lambdaEnvironment$.subscribe((data) => console.log(data));
-        //this.lambdaTags$.subscribe((data) => console.log(data));
-        //this.lambdaInstances$.subscribe((data) => console.log("Lambda instances: ", data));
+        this.applicationDetails$.subscribe((data) => console.log("Application data:", data));
     }
 
     ngOnDestroy() {
@@ -117,6 +118,13 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    enabledChanged(event: any) {
+        this.applicationItem.enabled = event.checked;
+        let request: UpdateApplicationRequest = {application: this.applicationItem}
+        this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+        this.lastUpdate = new Date();
     }
 
     // ===================================================================================================================
@@ -177,5 +185,65 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         let request: UpdateApplicationRequest = {application: this.applicationItem}
         this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
         this.snackBar.open('Application environment variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
+    }
+
+    // ===================================================================================================================
+    // Tag
+    // ===================================================================================================================
+    handleTagPageEvent(e: PageEvent) {
+        this.tagPageSize = e.pageSize;
+        this.tagPageIndex = e.pageIndex;
+        this.tagDatasource = convertObjectToArray(this.applicationItem.tags, e.pageSize, e.pageIndex, this.tagSortColumn);
+    }
+
+    tagSortChanged(sortState: Sort) {
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.tagSortColumn = {column: sortState.active, sortDirection: direction};
+        this.tagDatasource = convertObjectToArray(this.applicationItem.tags, this.tagPageSize, this.tagPageIndex, this.tagSortColumn);
+    }
+
+    addTag() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+
+        this.dialog.open(ApplicationTagAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result?.key && result.value) {
+                this.applicationItem.tags[result.key] = result.value;
+                let request: UpdateApplicationRequest = {application: this.applicationItem}
+                this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+                this.snackBar.open('Application tag updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+            } else {
+                this.snackBar.open('Application tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+            }
+        });
+    }
+
+    editTag(key: string, value: string) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {key: key, value: value};
+
+        this.dialog.open(ApplicationTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result?.key && result.value) {
+                this.applicationItem.tags[result.key] = result.value;
+                let request: UpdateApplicationRequest = {application: this.applicationItem}
+                this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+                this.snackBar.open('Application tag updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+            } else {
+                this.snackBar.open('Application tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+            }
+        });
+    }
+
+    deleteTag(key: string) {
+        delete this.applicationItem.tags[key];
+        let request: UpdateApplicationRequest = {application: this.applicationItem}
+        this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+        this.snackBar.open('Application tag variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
     }
 }

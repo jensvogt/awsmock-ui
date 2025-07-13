@@ -35,18 +35,30 @@ export class ApplicationListEffects {
         ),
     ));
 
-    /*    updateParameter$ = createEffect(() => this.actions$.pipe(
-            ofType(applicationListActions.updateParameter),
-            mergeMap(action =>
-                this.ssmService.updateParameter(action.request)
-                    .pipe(map((parameters: any) => applicationListActions.updateParameterSuccess({parameters})),
-                        catchError((error) =>
-                            of(applicationListActions.updateParameterFailure({error: error.message}))
-                        )
+    startApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.startApplication),
+        mergeMap(action =>
+            this.applicationService.startApplication(action.request)
+                .pipe(map((applications: any) => applicationListActions.startApplicationSuccess({applications})),
+                    catchError((error) =>
+                        of(applicationListActions.startApplicationFailure({error: error.message}))
                     )
-            ),
-        ));
-*/
+                )
+        ),
+    ));
+
+    stopApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.stopApplication),
+        mergeMap(action =>
+            this.applicationService.stopApplication(action.request)
+                .pipe(map((applications: any) => applicationListActions.stopApplicationSuccess({applications})),
+                    catchError((error) =>
+                        of(applicationListActions.stopApplicationFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     deleteApplication$ = createEffect(() => this.actions$.pipe(
         ofType(applicationListActions.deleteApplication),
         mergeMap((action) =>

@@ -128,6 +128,12 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this.lastUpdate = new Date();
     }
 
+    saveDescription() {
+        let request: UpdateApplicationRequest = {application: this.applicationItem}
+        this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+        this.lastUpdate = new Date();
+    }
+
     // ===================================================================================================================
     // Environment
     // ===================================================================================================================

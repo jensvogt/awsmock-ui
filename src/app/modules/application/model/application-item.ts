@@ -22,8 +22,10 @@ export interface ApplicationItem {
     version: string;
     containerId: string;
     containerName: string;
+    imageId: string;
     status: string;
     enabled: boolean;
+    description: string;
     environment: any;
     tags: any;
     options: any;

@@ -24,7 +24,7 @@
         <mat-card-content>
             @if (applicationDetails$ | async; as application) {
                 <mat-grid-list cols="4" rowHeight="400px">
-                    <mat-grid-tile [colspan]="2" [rowspan]="1">
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
                         <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
@@ -78,6 +78,32 @@
                                     <p class="mat-list-span-value" matListItemLine>
                                         <mat-slide-toggle (change)="enabledChanged($event)" [checked]="application.enabled" labelPosition="before"></mat-slide-toggle>
                                     </p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                        <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
+                            <mat-list>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Archive: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ application.archive }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Public Port: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ application.publicPort }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Private Port: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ application.privatePort }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Image ID: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ application.imageId.substring(0, 12) }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Image Name: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ application.name + ':' + application.version }}</p>
                                 </mat-list-item>
                             </mat-list>
                         </div>
@@ -203,6 +229,19 @@
                                        [showFirstLastButtons]="true"
                                        aria-label="Select page">
                         </mat-paginator>
+                    </mat-tab>
+                    <mat-tab [matTooltipShowDelay]="1000" label="Description" matTooltip="Application description">
+                        <mat-card-actions class="head-buttons">
+                            <button (click)="saveDescription()" [matTooltipShowDelay]="1000" aria-label="Save description" mat-icon-button matTooltip="Saves the description">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </mat-card-actions>
+                        <mat-card-content>
+                            <mat-form-field style="width: 100%;height:100%">
+                                <mat-label>Description:</mat-label>
+                                <textarea [(ngModel)]="applicationItem.description" cdkAutosizeMinRows="10" cdkTextareaAutosize matInput placeholder="Description" style="width:100%; height:100%"></textarea>
+                            </mat-form-field>
+                        </mat-card-content>
                     </mat-tab>
                 </mat-tab-group>
             }

@@ -59,6 +59,18 @@ export class ApplicationListEffects {
         ),
     ));
 
+    rebuildApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.rebuildApplication),
+        mergeMap(action =>
+            this.applicationService.rebuildApplication(action.request)
+                .pipe(map((applications: any) => applicationListActions.rebuildApplicationSuccess({applications})),
+                    catchError((error) =>
+                        of(applicationListActions.rebuildApplicationFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     deleteApplication$ = createEffect(() => this.actions$.pipe(
         ofType(applicationListActions.deleteApplication),
         mergeMap((action) =>

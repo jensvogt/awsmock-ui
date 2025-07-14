@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest, StartApplicationRequest, StopApplicationRequest, UpdateApplicationRequest} from "../model/application-item";
+import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest, RebuildApplicationRequest, StartApplicationRequest, StopApplicationRequest, UpdateApplicationRequest} from "../model/application-item";
 
 @Injectable({providedIn: 'root'})
 export class ApplicationService {
@@ -84,6 +84,18 @@ export class ApplicationService {
         request.region = this.region;
         request.user = this.user;
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'stop-application');
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+    
+    /**
+     * @brief Rebuilds an application
+     *
+     * @param request stop application request
+     */
+    public rebuildApplication(request: RebuildApplicationRequest) {
+        request.region = this.region;
+        request.user = this.user;
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'rebuild-application');
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
 

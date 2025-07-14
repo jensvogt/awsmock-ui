@@ -74,6 +74,16 @@ export interface StopApplicationRequest {
     sortColumns: SortColumn[]
 }
 
+export interface RebuildApplicationRequest {
+    region?: string;
+    user?: string;
+    application: ApplicationItem;
+    prefix: string,
+    pageSize: number,
+    pageIndex: number,
+    sortColumns: SortColumn[]
+}
+
 export interface GetApplicationRequest {
     name: string;
 }

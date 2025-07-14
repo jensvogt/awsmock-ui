@@ -95,8 +95,14 @@
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:120px">Actions</th>
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:160px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
+                                    <button (click)="startApplication(row)" [hidden]="startDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Start application" mat-icon-button matTooltip="Start application">
+                                        <mat-icon>play_arrow</mat-icon>
+                                    </button>
+                                    <button (click)="stopApplication(row)" [hidden]="stopDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Stop application" mat-icon-button matTooltip="Stop application">
+                                        <mat-icon>stop</mat-icon>
+                                    </button>
                                     <button (click)="deleteApplication(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the application">
                                         <mat-icon>delete</mat-icon>
                                     </button>
@@ -112,6 +118,11 @@
                                             <button (click)="stopApplication(row)" [disabled]="stopDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Stop application" mat-menu-item matTooltip="Stop application">
                                                 <mat-icon>stop</mat-icon>
                                                 <span>Stop application</span>
+                                            </button>
+                                            <mat-divider/>
+                                            <button (click)="rebuildApplication(row)" [matTooltipShowDelay]="1000" aria-label="Stop application" mat-menu-item matTooltip="Stop application">
+                                                <mat-icon><span class="material-symbols-outlined">reset_wrench</span></mat-icon>
+                                                <span>Rebuild application</span>
                                             </button>
                                             <!--button (click)="clearResults(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Delete results" mat-menu-item matTooltip="Delete results">
                                                 <mat-icon>history</mat-icon>

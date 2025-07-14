@@ -48,6 +48,11 @@ export const applicationListReducer = createReducer(
     on(applicationListActions.stopApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications})),
     on(applicationListActions.stopApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error})),
 
+    // Rebuild application
+    on(applicationListActions.rebuildApplication, (state: ApplicationListState) => ({...state, stopping: true, restart: false})),
+    on(applicationListActions.rebuildApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications})),
+    on(applicationListActions.rebuildApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error})),
+
     // Delete application
     on(applicationListActions.deleteApplication, (state: ApplicationListState) => ({...state, loading: true})),
     on(applicationListActions.deleteApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false, reload: true})),

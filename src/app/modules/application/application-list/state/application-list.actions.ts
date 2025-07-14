@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest, ListApplicationCountersResponse, StartApplicationRequest, StopApplicationRequest} from "../../model/application-item";
+import {AddApplicationRequest, DeleteApplicationRequest, ListApplicationCountersResponse, RebuildApplicationRequest, StartApplicationRequest, StopApplicationRequest} from "../../model/application-item";
 
 export const applicationListActions = {
     initialize: createAction('[application-list] initialize'),
@@ -14,6 +14,11 @@ export const applicationListActions = {
     addApplication: createAction('[application-list] Add application', props<{ request: AddApplicationRequest }>()),
     addApplicationSuccess: createAction('[application-list] Add application success', props<{ applications: ListApplicationCountersResponse }>()),
     addApplicationFailure: createAction('[application-list] Add application error', props<{ error: string }>()),
+
+    // rebuild application
+    rebuildApplication: createAction('[application-list] Rebuild application', props<{ request: RebuildApplicationRequest }>()),
+    rebuildApplicationSuccess: createAction('[application-list] Rebuild application success', props<{ applications: ListApplicationCountersResponse }>()),
+    rebuildApplicationFailure: createAction('[application-list] Rebuild application error', props<{ error: string }>()),
 
     // Start application
     startApplication: createAction('[application-list] Start application', props<{ request: StartApplicationRequest }>()),

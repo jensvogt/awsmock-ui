@@ -243,6 +243,44 @@
                             </mat-form-field>
                         </mat-card-content>
                     </mat-tab>
+                    <mat-tab [matTooltipShowDelay]="1000" label="Dependencies" matTooltip="Application dependencies">
+                        <mat-card-actions class="head-buttons">
+                            <button (click)="addDependency()" [matTooltipShowDelay]="1000" aria-label="Add dependency" mat-icon-button matTooltip="Add a new dependency">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </mat-card-actions>
+                        <table (matSortChange)="dependencySortChanged($event)" [dataSource]="dependencyDatasource" class="mat-elevation-z8" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Dependency name" sortActionDescription="Sort by name">Name</th>
+                                <td *matCellDef="let element" mat-cell> {{ element }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="deleteDependency(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete appplicaiton dependency">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="dependencyColumns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: dependencyColumns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="dependencyColumns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator (page)="handleDependencyPageEvent($event)"
+                                       [disabled]="false"
+                                       [hidePageSize]="false"
+                                       [length]="dependencyTotal"
+                                       [pageIndex]="dependencyPageIndex"
+                                       [pageSizeOptions]="dependencyPageSizeOptions"
+                                       [pageSize]="dependencyPageSize"
+                                       [showFirstLastButtons]="true"
+                                       aria-label="Select page">
+                        </mat-paginator>
+                    </mat-tab>
                 </mat-tab-group>
             }
         </mat-card-content>

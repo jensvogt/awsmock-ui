@@ -32,6 +32,14 @@ export class ApplicationService {
     }
 
     /**
+     * @brief List all application names
+     */
+    public listApplicationNames() {
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'list-application-names');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
+    }
+
+    /**
      * @brief Adds a new application
      *
      * @param request add application request
@@ -86,7 +94,7 @@ export class ApplicationService {
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'stop-application');
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
-    
+
     /**
      * @brief Rebuilds an application
      *

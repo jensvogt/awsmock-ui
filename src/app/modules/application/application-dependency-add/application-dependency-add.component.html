@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Add Application Dependency</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-form-field style="width: 100%">
+        <mat-label>Name</mat-label>
+        <mat-select [(ngModel)]="selectedName">
+            @for (name of applicationNames; track name) {
+                <mat-option [value]="name">{{ name }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+</mat-dialog-actions>

@@ -26,3 +26,23 @@ export function convertObjectToArray(obj: any, pageSize: number, pageIndex: numb
         return new MatTableDataSource<Environment>([]);
     }
 }
+
+export function convertArrayToArray(obj: any, pageSize: number, pageIndex: number, sortColumn: SortColumn): MatTableDataSource<string> {
+    if (obj === undefined || obj === null) {
+        return new MatTableDataSource<string>([]);
+    }
+    if (obj.length > 0) {
+
+        let array: string[] = obj;
+        array = array.sort((a: any, b: any) => a.localeCompare(b));
+        if (sortColumn.sortDirection === 1) {
+            array = array.reverse();
+        }
+        if (array.length > pageSize) {
+            array = array.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+        }
+        return new MatTableDataSource<string>(array);
+    } else {
+        return new MatTableDataSource<string>([]);
+    }
+}

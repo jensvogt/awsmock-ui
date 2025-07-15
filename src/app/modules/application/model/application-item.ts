@@ -28,7 +28,7 @@ export interface ApplicationItem {
     description: string;
     environment: any;
     tags: any;
-    options: any;
+    dependencies: string[];
     lastStarted: Date | undefined;
     created: Date | undefined;
     modified: Date | undefined;
@@ -49,10 +49,6 @@ export interface AddApplicationRequest {
 }
 
 export interface UpdateApplicationRequest {
-    application: ApplicationItem;
-}
-
-export interface UpdateApplicationResponse {
     application: ApplicationItem;
 }
 

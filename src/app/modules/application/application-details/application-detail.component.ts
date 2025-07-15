@@ -18,9 +18,10 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ApplicationEnvironmentAddDialog} from "../application-environment-add/application-environment-add.component";
 import {ApplicationEnvironmentEditDialog} from "../application-environment-edit/application-environment-edit.component";
 import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
-import {convertObjectToArray} from "../../../shared/paging-utils.component";
+import {convertArrayToArray, convertObjectToArray} from "../../../shared/paging-utils.component";
 import {ApplicationTagAddDialog} from "../application-tag-add/application-tag-add.component";
 import {ApplicationTagEditDialog} from "../application-tag-edit/application-tag-edit.component";
+import {ApplicationDependencyAddDialog} from "../application-dependency-add/application-dependency-add.component";
 
 @Component({
     selector: 'application-detail-component',
@@ -58,6 +59,15 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     tagPageIndex: number = 0;
     tagPageSizeOptions = [5, 10, 20, 50, 100];
 
+    // Dependency
+    dependencyColumns: string[] = ['name', 'actions'];
+    dependencySortColumn: SortColumn = {column: 'name', sortDirection: -1};
+    dependencyDatasource: MatTableDataSource<string> = {} as MatTableDataSource<string>;
+    dependencyTotal: number = 0;
+    dependencyPageSize: number = 5;
+    dependencyPageIndex: number = 0;
+    dependencyPageSizeOptions = [5, 10, 20, 50, 100];
+
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
@@ -74,6 +84,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
             if (this.applicationItem.tags) {
                 this.tagTotal = Object.keys(this.applicationItem.tags).length;
                 this.tagDatasource = convertObjectToArray(this.applicationItem.tags, this.tagPageSize, this.tagPageIndex, this.tagSortColumn);
+            }
+            if (this.applicationItem.dependencies) {
+                this.dependencyTotal = this.applicationItem.dependencies.length;
+                this.dependencyDatasource = convertArrayToArray(this.applicationItem.dependencies, this.dependencyPageSize, this.dependencyPageIndex, this.dependencySortColumn);
             }
         })
         //this.applicationDetails$.subscribe((data) => console.log("Application data:", data));
@@ -252,5 +266,50 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         let request: UpdateApplicationRequest = {application: this.applicationItem}
         this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
         this.snackBar.open('Application tag variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
+    }
+
+    // ===================================================================================================================
+    // Dependency
+    // ===================================================================================================================
+    handleDependencyPageEvent(e: PageEvent) {
+        this.dependencyPageSize = e.pageSize;
+        this.dependencyPageIndex = e.pageIndex;
+        this.dependencyDatasource = convertArrayToArray(this.applicationItem.dependencies, e.pageSize, e.pageIndex, this.dependencySortColumn);
+    }
+
+    dependencySortChanged(sortState: Sort) {
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.dependencySortColumn = {column: sortState.active, sortDirection: direction};
+        this.dependencyDatasource = convertArrayToArray(this.applicationItem.dependencies, this.dependencyPageSize, this.dependencyPageIndex, this.dependencySortColumn);
+    }
+
+    addDependency() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {self: this.applicationItem.name};
+
+        this.dialog.open(ApplicationDependencyAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result?.name) {
+                if (this.applicationItem.dependencies.indexOf('result.name') < 0) {
+                    this.applicationItem.dependencies.push(result.name);
+                    let request: UpdateApplicationRequest = {application: this.applicationItem}
+                    this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+                    this.snackBar.open('Application dependencies updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+                } else {
+                    this.snackBar.open('Application dependency exists already, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            } else {
+                this.snackBar.open('Application dependencies unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+            }
+        });
+    }
+
+    deleteDependency(name: string) {
+        this.applicationItem.dependencies = this.applicationItem.dependencies.filter(dependency => dependency !== name);
+        let request: UpdateApplicationRequest = {application: this.applicationItem}
+        this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
+        this.snackBar.open('Application dependency deleted, name: ' + name, 'Dismiss', {duration: 5000});
     }
 }

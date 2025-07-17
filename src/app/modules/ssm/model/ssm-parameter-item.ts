@@ -12,16 +12,16 @@ export interface ListParameterCountersResponse {
 }
 
 export interface SsmParameterDetails {
-    region: string | undefined;
-    name: string | undefined;
-    value: string | undefined;
-    type: string | undefined;
-    description: string | undefined;
-    keyId: string | undefined;
-    kmsKeyArn: string | undefined;
-    arn: string | undefined;
-    created: Date | undefined;
-    modified: Date | undefined;
+    Region: string | undefined;
+    Name: string | undefined;
+    Value: string | undefined;
+    Type: string | undefined;
+    Description: string | undefined;
+    KeyId: string | undefined;
+    MmsKeyArn: string | undefined;
+    ARN: string | undefined;
+    Created: Date | undefined;
+    Modified: Date | undefined;
 }
 
 export interface SsmParameterDetailsResponse {

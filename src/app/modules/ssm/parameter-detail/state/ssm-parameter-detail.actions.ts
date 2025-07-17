@@ -13,5 +13,4 @@ export const ssmParameterDetailsActions = {
     // loadTags: createAction('[sns-parameter-details] Load parameter tags', props<{ parameterArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     // loadTagsSuccess: createAction('[sns-parameter-details] Load parameter tags success', props<{ tags: SsmTagCountersResponse }>()),
     // loadTagsFailure: createAction('[sns-parameter-details] Load parameter tags error', props<{ error: string }>()),
-
 }

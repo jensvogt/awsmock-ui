@@ -77,6 +77,12 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.applicationDetails$.subscribe((applicationDetails: ApplicationItem) => {
             this.applicationItem = applicationDetails;
+            if (applicationDetails.description) {
+                this.applicationItem.description = atob(applicationDetails.description);
+            }
+            if (applicationDetails.dockerfile) {
+                this.applicationItem.dockerfile = atob(applicationDetails.dockerfile);
+            }
             if (this.applicationItem.environment) {
                 this.environmentTotal = Object.keys(this.applicationItem.environment).length;
                 this.environmentDatasource = convertObjectToArray(this.applicationItem.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
@@ -142,8 +148,11 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this.lastUpdate = new Date();
     }
 
-    saveDescription() {
-        let request: UpdateApplicationRequest = {application: this.applicationItem}
+    saveApplication() {
+        let appItem = {...this.applicationItem};
+        appItem.description = btoa(this.applicationItem.description);
+        appItem.dockerfile = btoa(this.applicationItem.dockerfile);
+        let request: UpdateApplicationRequest = {application: appItem}
         this.store.dispatch(applicationDetailsActions.updateApplication({request: request}));
         this.lastUpdate = new Date();
     }

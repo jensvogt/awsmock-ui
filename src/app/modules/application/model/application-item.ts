@@ -29,6 +29,7 @@ export interface ApplicationItem {
     environment: any;
     tags: any;
     dependencies: string[];
+    dockerfile: string;
     lastStarted: Date | undefined;
     created: Date | undefined;
     modified: Date | undefined;

@@ -21,11 +21,11 @@ export class SsmService {
      * @brief Get a parameter
      *
      * @param name parameter ARN
-     * @param withDescription with description
+     * @param withDecryption with decryption
      */
-    public getParameter(name: string, withDescription: boolean = true) {
+    public getParameter(name: string, withDecryption: boolean = true) {
         let headers = this.headers.set('x-awsmock-target', 'ssm').set('x-awsmock-action', 'GetParameterCounter');
-        return this.http.post(this.baseUrl, {name: name, withDescription: withDescription}, {headers: headers});
+        return this.http.post(this.baseUrl, {Name: name, WithDescription: withDecryption}, {headers: headers});
     }
 
     /**

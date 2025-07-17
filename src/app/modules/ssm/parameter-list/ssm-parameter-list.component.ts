@@ -64,7 +64,7 @@ export class SsmParameterListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.listParameterCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
+        this.listParameterCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
     }
 
     ngOnInit(): void {

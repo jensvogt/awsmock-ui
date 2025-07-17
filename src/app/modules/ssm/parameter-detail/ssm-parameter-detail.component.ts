@@ -5,10 +5,11 @@ import {Location} from "@angular/common";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {selectDetails, selectError} from "./state/ssm-parameter-detail.selectors";
-import {MatDialog} from "@angular/material/dialog";
-import {MatTabChangeEvent} from "@angular/material/tabs";
-import {SsmParameterDetailsResponse} from "../model/ssm-parameter-item";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {SsmParameterDetails, SsmParameterDetailsResponse, UpdateParameterCounterRequest} from "../model/ssm-parameter-item";
 import {ssmParameterDetailsActions} from "./state/ssm-parameter-detail.actions";
+import {ParameterEditDialogComponent} from "../parameter-edit/parameter-edit-component";
+import {ssmParameterListActions} from "../parameter-list/state/ssm-parameter-list.actions";
 
 @Component({
     selector: 'ssm-parameter-detail-component',
@@ -21,6 +22,7 @@ export class SsmParameterDetailComponent implements OnInit, OnDestroy {
 
     parameterName: string = '';
     parameterValue: string = '';
+    parameterItem: SsmParameterDetails = {} as SsmParameterDetails;
     kmsKeyId: string = '';
     parameterDetails$: Observable<SsmParameterDetailsResponse> = this.store.select(selectDetails);
     parameterDetailsError$: Observable<string> = this.store.select(selectError);
@@ -49,9 +51,9 @@ export class SsmParameterDetailComponent implements OnInit, OnDestroy {
         });
         this.parameterDetails$.subscribe((data: any) => {
             if (data?.Parameter) {
-                console.log(data?.Parameter);
-                this.kmsKeyId = data.Parameter.kmsKeyArn.substring(data.Parameter.kmsKeyArn.lastIndexOf('/') + 1);
-                this.parameterValue = atob(data.Parameter.value);
+                this.kmsKeyId = data.Parameter.KmsKeyArn.substring(data.Parameter.KmsKeyArn.lastIndexOf('/') + 1);
+                this.parameterValue = atob(data.Parameter.Value);
+                this.parameterItem = data.Parameter;
             }
         });
         //this.parameterDetails$.subscribe((data: any) => console.log("ParameterDetails: ", data));
@@ -72,21 +74,35 @@ export class SsmParameterDetailComponent implements OnInit, OnDestroy {
         this.location.back();
     }
 
-    tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-        // switch (tabChangeEvent.index) {
-        //     case 0:
-        //         this.loadAttributes();
-        //         break;
-        //     case 1:
-        //         this.loadLambdaTrigger();
-        //         break;
-        //     case 3:
-        //         this.loadTags();
-        //         break;
-        //     case 4:
-        //         this.loadDefaultMessageAttributes();
-        //         break;
-        // }
+    editParameter() {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+        dialogConfig.minWidth = '580px'
+        dialogConfig.data = this.parameterItem;
+
+        this.dialog.open(ParameterEditDialogComponent, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                let request: UpdateParameterCounterRequest = {
+                    name: result.name,
+                    value: result.value,
+                    description: result.description,
+                    type: result.type,
+                    kmsKeyArn: result.kmsKeyArn,
+                    prefix: '',
+                    pageSize: -1,
+                    pageIndex: -1,
+                    sortColumns: []
+                };
+                this.store.dispatch(ssmParameterListActions.updateParameter({request: request}));
+            }
+        });
     }
 
     // ===================================================================================================================

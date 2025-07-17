@@ -20,20 +20,20 @@ interface DataType {
     templateUrl: './parameter-edit-component.html',
     standalone: true,
     imports: [
-    MatDialogContent,
-    MatDialogTitle,
-    MatDialogActions,
-    MatButton,
-    MatDialogClose,
-    MatFormField,
-    MatLabel,
-    FormsModule,
-    MatInput,
-    ReactiveFormsModule,
-    CdkTextareaAutosize,
-    MatOption,
-    MatSelect
-],
+        MatDialogContent,
+        MatDialogTitle,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+        MatFormField,
+        MatLabel,
+        FormsModule,
+        MatInput,
+        ReactiveFormsModule,
+        CdkTextareaAutosize,
+        MatOption,
+        MatSelect
+    ],
     styleUrls: ['./parameter-edit-component.scss']
 })
 export class ParameterEditDialogComponent implements OnInit {
@@ -54,12 +54,12 @@ export class ParameterEditDialogComponent implements OnInit {
     selectedDataType: string = 'String';
 
     constructor(private readonly dialogRef: MatDialogRef<ParameterEditDialogComponent>, private readonly kmsService: KmsService, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.parameterName = data.name;
-        this.parameterValue = data.value;
-        this.selectedKmsKeyArn = data.type;
-        this.description = data.description;
-        this.selectedDataType = data.type;
-        this.selectedKmsKeyArn = data.kmsKeyArn;
+        this.parameterName = data.Name;
+        this.parameterValue = data.Value;
+        this.selectedKmsKeyArn = data.Type;
+        this.description = data.Description;
+        this.selectedDataType = data.Type;
+        this.selectedKmsKeyArn = data.KmsKeyArn;
     }
 
     ngOnInit(): void {

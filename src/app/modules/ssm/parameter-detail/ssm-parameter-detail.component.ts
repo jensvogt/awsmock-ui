@@ -78,6 +78,8 @@ export class SsmParameterDetailComponent implements OnInit, OnDestroy {
 
         const dialogConfig = new MatDialogConfig();
 
+        let pItem = {...this.parameterItem};
+        pItem.Value = this.parameterValue;
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.maxWidth = '100vw';
@@ -85,7 +87,7 @@ export class SsmParameterDetailComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "40%"
         dialogConfig.minWidth = '580px'
-        dialogConfig.data = this.parameterItem;
+        dialogConfig.data = pItem;
 
         this.dialog.open(ParameterEditDialogComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {

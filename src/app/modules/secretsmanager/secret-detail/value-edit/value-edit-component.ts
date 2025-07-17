@@ -1,16 +1,10 @@
-import {
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle
-} from "@angular/material/dialog";
-import {Component, Inject, OnInit} from "@angular/core";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
+import {Component, Inject} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 interface SecretKeyValuePair {
     key: string,
@@ -39,16 +33,20 @@ export class SecretValueEditDialogComponent {
 
     valueArray: SecretKeyValuePair[] = [];
 
-    constructor(private dialogRef: MatDialogRef<SecretValueEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        let valueObject = JSON.parse(data.secretString);
-        for(let key of Object.keys(valueObject)) {
-            this.valueArray.push({key: key, value: valueObject[key]});
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<SecretValueEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        if (data.secretString.length > 0) {
+            let valueObject = JSON.parse(data.secretString);
+            for (let key of Object.keys(valueObject)) {
+                this.valueArray.push({key: key, value: valueObject[key]});
+            }
+        } else {
+            this.snackBar.open("Empty secret string", 'Done', {duration: 5000});
         }
     }
 
     save() {
         let valueObject: any = {};
-        for(let key of this.valueArray) {
+        for (let key of this.valueArray) {
             valueObject[key.key] = key.value;
         }
         this.dialogRef.close(JSON.stringify(valueObject));

@@ -35,7 +35,7 @@ export class SecretValueEditDialogComponent {
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<SecretValueEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data.secretString.length > 0) {
-            let valueObject = JSON.parse(data.secretString);
+            let valueObject = JSON.parse(data.secretString.substring(0, data.secretString.length - 1));
             for (let key of Object.keys(valueObject)) {
                 this.valueArray.push({key: key, value: valueObject[key]});
             }
@@ -49,6 +49,13 @@ export class SecretValueEditDialogComponent {
         for (let key of this.valueArray) {
             valueObject[key.key] = key.value;
         }
+        valueObject["engine"] = "mongo";
+        valueObject["host"] = "localhost";
+        valueObject["port"] = 27017;
+        valueObject["ssl"] = false;
+        valueObject["dbname"] = "admin";
         this.dialogRef.close(JSON.stringify(valueObject));
     }
 }
+
+//{"username": "root", "password": "password", "engine": "mongo", "host": "localhost", "port": 27017, "ssl": false, "dbname": "admin"}

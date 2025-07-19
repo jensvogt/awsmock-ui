@@ -12,6 +12,9 @@
             <button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>upload</mat-icon>
             </button>
+            <button (click)="applicationLogs()" [matTooltipShowDelay]="1000" aria-label="See logs" mat-icon-button matTooltip="See applicsiton logs">
+                <mat-icon>notes</mat-icon>
+            </button>
             <button (click)="rebuildApplication()" [matTooltipShowDelay]="1000" aria-label="Rebuild application" mat-icon-button matTooltip="Stop application">
                 <mat-icon><span class="material-symbols-outlined">reset_wrench</span></mat-icon>
             </button>
@@ -89,10 +92,6 @@
                         <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Archive: </p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.archive }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
                                     <p class="mat-list-span-title" matListItemTitle>Public Port: </p>
                                     <p class="mat-list-span-value" matListItemLine>{{ application.publicPort }}</p>
                                 </mat-list-item>
@@ -101,12 +100,16 @@
                                     <p class="mat-list-span-value" matListItemLine>{{ application.privatePort }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Image ID: </p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.imageId.substring(0, 12) }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
                                     <p class="mat-list-span-title" matListItemTitle>Image Name: </p>
                                     <p class="mat-list-span-value" matListItemLine>{{ application.name + ':' + application.version }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Image ID: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ application.imageId.substring(application.imageId.lastIndexOf(':') + 1) }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
+                                    <p class="mat-list-span-title" matListItemTitle>Container ID: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ application.containerId }}</p>
                                 </mat-list-item>
                             </mat-list>
                         </div>

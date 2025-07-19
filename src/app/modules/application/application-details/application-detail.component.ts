@@ -23,6 +23,7 @@ import {ApplicationTagAddDialog} from "../application-tag-add/application-tag-ad
 import {ApplicationTagEditDialog} from "../application-tag-edit/application-tag-edit.component";
 import {ApplicationDependencyAddDialog} from "../application-dependency-add/application-dependency-add.component";
 import {applicationListActions} from "../application-list/state/application-list.actions";
+import {ApplicationLogsDialog} from "../application-logs/application-logs.component";
 
 @Component({
     selector: 'application-detail-component',
@@ -77,11 +78,14 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.applicationDetails$.subscribe((applicationDetails: ApplicationItem) => {
+            if (applicationDetails === undefined) {
+                return;
+            }
             this.applicationItem = applicationDetails;
-            if (applicationDetails.description) {
+            if (this.applicationItem.description) {
                 this.applicationItem.description = atob(applicationDetails.description);
             }
-            if (applicationDetails.dockerfile) {
+            if (this.applicationItem.dockerfile) {
                 this.applicationItem.dockerfile = atob(applicationDetails.dockerfile);
             }
             if (this.applicationItem.environment) {
@@ -96,7 +100,8 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
                 this.dependencyTotal = this.applicationItem.dependencies.length;
                 this.dependencyDatasource = convertArrayToArray(this.applicationItem.dependencies, this.dependencyPageSize, this.dependencyPageIndex, this.dependencySortColumn);
             }
-        })
+        });
+
         //this.applicationDetails$.subscribe((data) => console.log("Application data:", data));
         this.routerSubscription = this.route.params.subscribe(params => {
             this.applicationName = atob(params['name']);
@@ -153,6 +158,20 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
                 sortColumns: []
             }
         }));
+    }
+
+    applicationLogs() {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {applicationName: this.applicationItem.name, containerId: this.applicationItem.containerId};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "80%"
+
+        this.dialog.open(ApplicationLogsDialog, dialogConfig);
     }
 
     enabledChanged(event: any) {

@@ -22,6 +22,7 @@ import {convertArrayToArray, convertObjectToArray} from "../../../shared/paging-
 import {ApplicationTagAddDialog} from "../application-tag-add/application-tag-add.component";
 import {ApplicationTagEditDialog} from "../application-tag-edit/application-tag-edit.component";
 import {ApplicationDependencyAddDialog} from "../application-dependency-add/application-dependency-add.component";
+import {applicationListActions} from "../application-list/state/application-list.actions";
 
 @Component({
     selector: 'application-detail-component',
@@ -139,6 +140,19 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    rebuildApplication() {
+        this.lastUpdate = new Date();
+        this.store.dispatch(applicationListActions.rebuildApplication({
+            request: {
+                application: this.applicationItem,
+                prefix: '',
+                pageSize: -1,
+                pageIndex: -1,
+                sortColumns: []
+            }
+        }));
     }
 
     enabledChanged(event: any) {

@@ -111,6 +111,10 @@
                                     </button>
                                     <mat-menu #lambdaListMenu="matMenu" xPosition="before">
                                         <button mat-menu-item>
+                                            <button (click)="uploadCode(row)" [matTooltipShowDelay]="1000" aria-label="Upload application archive" mat-menu-item matTooltip="Upload application archive">
+                                                <mat-icon>upload</mat-icon>
+                                                <span>Upload code</span>
+                                            </button>
                                             <button (click)="startApplication(row)" [disabled]="startDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Start application" mat-menu-item matTooltip="Start application">
                                                 <mat-icon>start</mat-icon>
                                                 <span>Start application</span>

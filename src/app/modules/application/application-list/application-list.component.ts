@@ -14,6 +14,8 @@ import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.compon
 import {AddApplicationRequest, ApplicationItem, DeleteApplicationRequest, ListApplicationCountersResponse} from "../model/application-item";
 import {ApplicationListState} from "./state/application-list.reducer";
 import {ApplicationAddDialog} from "../application-add/application-add-dialog.component";
+import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
+import {ApplicationService} from "../service/application-service.component";
 
 @Component({
     selector: 'application-list',
@@ -54,7 +56,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     protected readonly btoa = btoa;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<ApplicationListState>,
-                private readonly location: Location, private readonly store: Store, private readonly router: Router) {
+                private readonly location: Location, private readonly store: Store, private readonly router: Router, private readonly applicationService: ApplicationService) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data?.length) {
@@ -146,6 +148,26 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
             pageIndex: this.state.value['application-list'].pageIndex,
             sortColumns: this.state.value['application-list'].sortColumns
         }));
+    }
+
+    uploadCode(application: ApplicationItem) {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {applicationName: application.name};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+
+        this.dialog.open(ApplicationUploadDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                this.applicationService.uploadApplicationCode(result.applicationName, result.applicationCode, result.version).subscribe(() => {
+                    this.snackBar.open('Application code uploaded, name: ' + result.applicationName, 'Done', {duration: 5000});
+                });
+            }
+        });
     }
 
     startApplication(application: ApplicationItem) {

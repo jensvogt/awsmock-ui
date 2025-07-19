@@ -12,6 +12,9 @@
             <button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>upload</mat-icon>
             </button>
+            <button (click)="rebuildApplication()" [matTooltipShowDelay]="1000" aria-label="Rebuild application" mat-icon-button matTooltip="Stop application">
+                <mat-icon><span class="material-symbols-outlined">reset_wrench</span></mat-icon>
+            </button>
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
             </button>

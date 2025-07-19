@@ -5,6 +5,7 @@ import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 
 interface SecretKeyValuePair {
     key: string,
@@ -25,19 +26,20 @@ interface SecretKeyValuePair {
         MatLabel,
         FormsModule,
         MatInput,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        CdkTextareaAutosize
     ],
     styleUrls: ['./value-edit-component.scss']
 })
 export class SecretValueEditDialogComponent {
 
     valueArray: SecretKeyValuePair[] = [];
+    valueJson: string | undefined;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<SecretValueEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data.secretString.length > 0) {
-            let valueObject = JSON.parse(data.secretString.substring(0, data.secretString.length - 1));
-            for (let key of Object.keys(valueObject)) {
-                this.valueArray.push({key: key, value: valueObject[key]});
+            if (!this.getValueArray(data)) {
+                this.valueJson = data.secretString;
             }
         } else {
             this.snackBar.open("Empty secret string", 'Done', {duration: 5000});
@@ -46,16 +48,26 @@ export class SecretValueEditDialogComponent {
 
     save() {
         let valueObject: any = {};
-        for (let key of this.valueArray) {
-            valueObject[key.key] = key.value;
+        if (this.valueJson) {
+            valueObject = JSON.parse(this.valueJson);
+        } else {
+            for (let key of this.valueArray) {
+                valueObject[key.key] = key.value;
+            }
         }
-        valueObject["engine"] = "mongo";
-        valueObject["host"] = "localhost";
-        valueObject["port"] = 27017;
-        valueObject["ssl"] = false;
-        valueObject["dbname"] = "admin";
         this.dialogRef.close(JSON.stringify(valueObject));
     }
-}
 
-//{"username": "root", "password": "password", "engine": "mongo", "host": "localhost", "port": 27017, "ssl": false, "dbname": "admin"}
+    getValueArray(data: any): boolean {
+        try {
+            let valueObject = JSON.parse(data.secretString);
+            for (let key of Object.keys(valueObject)) {
+                this.valueArray.push({key: key, value: valueObject[key]});
+            }
+        } catch (err: unknown) {
+            console.error(err);
+            return false;
+        }
+        return true;
+    }
+}

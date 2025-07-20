@@ -1,8 +1,8 @@
-<h2 mat-dialog-title>Application Logs {{ applicationName }}</h2>
+<h2 mat-dialog-title>Application Logs: {{ applicationName }}</h2>
 <mat-dialog-content class="mat-typography">
     <mat-form-field style="width: 100%;height:100%">
         <mat-label>Application logs</mat-label>
-        <textarea #logMessages [(ngModel)]="logs" cdkAutosizeMinRows="20" cdkTextareaAutosize matInput readonly></textarea>
+        <textarea #logMessages [(ngModel)]="logs" [scrollTop]="logMessages.scrollHeight" cdkAutosizeMinRows="20" cdkTextareaAutosize matInput readonly></textarea>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

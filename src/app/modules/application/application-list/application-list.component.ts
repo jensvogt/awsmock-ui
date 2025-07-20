@@ -16,6 +16,7 @@ import {ApplicationListState} from "./state/application-list.reducer";
 import {ApplicationAddDialog} from "../application-add/application-add-dialog.component";
 import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
 import {ApplicationService} from "../service/application-service.component";
+import {ApplicationLogsDialog} from "../application-logs/application-logs.component";
 
 @Component({
     selector: 'application-list',
@@ -52,8 +53,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
     // Misc
     protected readonly byteConversion = byteConversion;
-    protected readonly encodeURI = encodeURI;
-    protected readonly btoa = btoa;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<ApplicationListState>,
                 private readonly location: Location, private readonly store: Store, private readonly router: Router, private readonly applicationService: ApplicationService) {
@@ -196,6 +195,19 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         }));
     }
 
+    restartApplication(application: ApplicationItem) {
+        this.lastUpdate = new Date();
+        this.store.dispatch(applicationListActions.restartApplication({
+            request: {
+                application: application,
+                prefix: this.state.value['application-list'].prefix,
+                pageSize: this.state.value['application-list'].pageSize,
+                pageIndex: this.state.value['application-list'].pageIndex,
+                sortColumns: this.state.value['application-list'].sortColumns
+            }
+        }));
+    }
+
     rebuildApplication(application: ApplicationItem) {
         this.lastUpdate = new Date();
         this.store.dispatch(applicationListActions.rebuildApplication({
@@ -207,6 +219,20 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
                 sortColumns: this.state.value['application-list'].sortColumns
             }
         }));
+    }
+
+    applicationLogs(application: ApplicationItem) {
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {applicationName: application.name, containerId: application.containerId};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "80%"
+
+        this.dialog.open(ApplicationLogsDialog, dialogConfig);
     }
 
     startDisabled(application: ApplicationItem) {

@@ -100,6 +100,18 @@ export class ApplicationService {
      *
      * @param request stop application request
      */
+    public restartApplication(request: RebuildApplicationRequest) {
+        request.region = this.region;
+        request.user = this.user;
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'restart-application');
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    /**
+     * @brief Rebuilds an application
+     *
+     * @param request stop application request
+     */
     public rebuildApplication(request: RebuildApplicationRequest) {
         request.region = this.region;
         request.user = this.user;

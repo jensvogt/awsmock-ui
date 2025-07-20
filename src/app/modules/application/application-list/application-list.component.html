@@ -111,6 +111,11 @@
                                     </button>
                                     <mat-menu #lambdaListMenu="matMenu" xPosition="before">
                                         <button mat-menu-item>
+                                            <button (click)="applicationLogs(row)" [matTooltipShowDelay]="1000" aria-label="See application logs" mat-menu-item matTooltip="See application logs">
+                                                <mat-icon>notes</mat-icon>
+                                                <span>Application logs</span>
+                                            </button>
+                                            <mat-divider/>
                                             <button (click)="uploadCode(row)" [matTooltipShowDelay]="1000" aria-label="Upload application archive" mat-menu-item matTooltip="Upload application archive">
                                                 <mat-icon>upload</mat-icon>
                                                 <span>Upload code</span>
@@ -124,27 +129,14 @@
                                                 <span>Stop application</span>
                                             </button>
                                             <mat-divider/>
-                                            <button (click)="rebuildApplication(row)" [matTooltipShowDelay]="1000" aria-label="Stop application" mat-menu-item matTooltip="Stop application">
+                                            <button (click)="restartApplication(row)" [matTooltipShowDelay]="1000" aria-label="Restart application" mat-menu-item matTooltip="Restart application">
+                                                <mat-icon><span class="material-symbols-outlined">refresh</span></mat-icon>
+                                                <span>Restart application</span>
+                                            </button>
+                                            <button (click)="rebuildApplication(row)" [matTooltipShowDelay]="1000" aria-label="Rebuild application" mat-menu-item matTooltip="Rebuild application">
                                                 <mat-icon><span class="material-symbols-outlined">reset_wrench</span></mat-icon>
                                                 <span>Rebuild application</span>
                                             </button>
-                                            <!--button (click)="clearResults(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Delete results" mat-menu-item matTooltip="Delete results">
-                                                <mat-icon>history</mat-icon>
-                                                <span>Clear results</span>
-                                            </button>
-                                            <button (click)="resetCounters(row.functionName)" [matTooltipShowDelay]="1000" aria-label="Reset counters" mat-menu-item matTooltip="Reset counters">
-                                                <mat-icon>history</mat-icon>
-                                                <span>Reset counters</span>
-                                            </button>
-                                            <mat-divider/>
-                                            <button (click)="deleteImage(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
-                                                <mat-icon>delete</mat-icon>
-                                                <span>Delete image</span>
-                                            </button>
-                                            <button (click)="deleteFunction(row.functionName)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
-                                                <mat-icon>delete</mat-icon>
-                                                <span>Delete function</span>
-                                            </button-->
                                         </button>
                                     </mat-menu>
                                 </td>

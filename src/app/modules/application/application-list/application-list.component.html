@@ -4,8 +4,8 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-      Applications ({{ (listApplicationCountersResponse$ | async)?.total }})
-    </span>
+            Applications ({{ (listApplicationCountersResponse$ | async)?.total }})
+        </span>
         <button (click)="addApplication()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new application">
             <mat-icon>add</mat-icon>
         </button>

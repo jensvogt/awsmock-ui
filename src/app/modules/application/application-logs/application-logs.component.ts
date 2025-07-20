@@ -1,10 +1,13 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {AfterViewChecked, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatInput} from "@angular/material/input";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {interval, Subscription} from "rxjs";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatIcon} from "@angular/material/icon";
+import {MatCard, MatCardActions, MatCardContent} from "@angular/material/card";
 
 @Component({
     selector: 'application-logs-dialog',
@@ -20,7 +23,13 @@ import {interval, Subscription} from "rxjs";
         MatInput,
         ReactiveFormsModule,
         CdkTextareaAutosize,
-        MatFormField
+        MatFormField,
+        MatIcon,
+        MatTooltip,
+        MatIconButton,
+        MatCard,
+        MatCardContent,
+        MatCardActions
     ],
     styleUrls: ['./application-logs.component.scss'],
 })
@@ -30,6 +39,7 @@ export class ApplicationLogsDialog implements OnInit, OnDestroy, AfterViewChecke
     logs: string = '';
     applicationName: string = '';
     containerId: string = '';
+    scrollToEnd = true;
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -73,13 +83,17 @@ export class ApplicationLogsDialog implements OnInit, OnDestroy, AfterViewChecke
         this.ws?.send(JSON.stringify(request));
     }
 
+    stopScrolling(flag: boolean) {
+        this.scrollToEnd = flag;
+    }
+
     close() {
         // this.ws?.close();
     }
 
     scrollToBottom(): void {
         try {
-            if (this.logTextContainer)
+            if (this.scrollToEnd && this.logTextContainer)
                 this.logTextContainer.nativeElement.scrollTop = this.logTextContainer?.nativeElement.scrollHeight;
         } catch (err) {
             console.log(err);

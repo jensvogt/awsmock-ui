@@ -2,7 +2,7 @@ import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Mat
 import {AfterViewChecked, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
-import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
+import {MatFormField, MatInput} from "@angular/material/input";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {interval, Subscription} from "rxjs";
 
@@ -20,8 +20,7 @@ import {interval, Subscription} from "rxjs";
         MatInput,
         ReactiveFormsModule,
         CdkTextareaAutosize,
-        MatFormField,
-        MatLabel
+        MatFormField
     ],
     styleUrls: ['./application-logs.component.scss'],
 })

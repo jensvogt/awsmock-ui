@@ -148,7 +148,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     tabChanged($event: any) {
         let clickedIndex = $event.index;
-        console.log(this.tabNames[clickedIndex]);
         switch (this.tabNames[clickedIndex]) {
             case 'environments':
                 this.loadEnvironment();
@@ -398,15 +397,12 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         dialogConfig.data = {functionArn: this.functionArn};
 
         this.dialog.open(LambdaEventSourceAddDialog, dialogConfig).afterClosed().subscribe((result: AddEventSourceRequest) => {
-            if (result.EventSourceArn) {
-                console.log("Event source result: ", result);
+            if (result) {
                 this.lambdaService.addEventSource(result)
                     .subscribe(() => {
                         this.loadEventSource();
                         this.snackBar.open('Lambda event source added, ARN: ' + result.EventSourceArn, 'Dismiss', {duration: 5000});
                     })
-            } else {
-                this.snackBar.open('Lambda event source unchanged, ARN: ' + result.EventSourceArn, 'Dismiss', {duration: 5000});
             }
         });
     }

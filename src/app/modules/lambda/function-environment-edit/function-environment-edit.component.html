@@ -1,15 +1,15 @@
-<h2 mat-dialog-title>Add Function Tag</h2>
+<h2 mat-dialog-title>Edit Function Environment Variable</h2>
 <mat-dialog-content class="mat-typography" style="width: 500px">
     <mat-form-field style="width: 100%">
         <mat-label>Key</mat-label>
-        <input [(ngModel)]="key" matInput value="">
+        <input [(ngModel)]="key" matInput matTooltip="Environment Variable Key" value="">
     </mat-form-field>
     <mat-form-field style="width: 100%">
         <mat-label>Value</mat-label>
-        <input [(ngModel)]="value" matInput value="">
+        <input [(ngModel)]="value" matInput matTooltip="Environment Variable Value" value="">
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button (click)="save()" cdkFocusInitial mat-button>Add</button>
+    <button (click)="save()" cdkFocusInitial mat-button>Save</button>
 </mat-dialog-actions>

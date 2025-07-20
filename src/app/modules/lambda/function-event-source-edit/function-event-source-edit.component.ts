@@ -30,20 +30,20 @@ const EventTypes: Array<EventType> = [
     templateUrl: './function-event-source-edit.component.html',
     standalone: true,
     imports: [
-    MatDialogContent,
-    MatDialogTitle,
-    MatDialogActions,
-    MatButton,
-    MatDialogClose,
-    MatFormField,
-    MatLabel,
-    FormsModule,
-    ReactiveFormsModule,
-    MatOption,
-    MatSelect,
-    MatInput,
-    MatSlideToggle
-],
+        MatDialogContent,
+        MatDialogTitle,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+        MatFormField,
+        MatLabel,
+        FormsModule,
+        ReactiveFormsModule,
+        MatOption,
+        MatSelect,
+        MatInput,
+        MatSlideToggle
+    ],
     styleUrls: ['./function-event-source-edit.component.scss'],
 })
 export class LambdaEventSourceEditDialog {
@@ -100,7 +100,8 @@ export class LambdaEventSourceEditDialog {
 
     loadSqsArns() {
         this.sqsService.listQueueArns().subscribe((data: any) => {
-            this.queueArns = data.QueueArns;
+            this.selectedQueueArn = this.eventSourceArn;
+            this.queueArns = data.QueueArn;
         });
     }
 
@@ -123,7 +124,6 @@ export class LambdaEventSourceEditDialog {
             });
         } else if (this.eventSourceType == 'SQS') {
             this.sqsService.getEventSource(this.functionArn, this.eventSourceArn).subscribe((data: any) => {
-                console.log("Selected data: ", data);
                 this.loadSqsArns();
                 this.selectedType = 'SQS';
                 this.selectedQueueArn = data.lambdaConfiguration.arn;

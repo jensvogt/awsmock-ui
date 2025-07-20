@@ -31,20 +31,20 @@ const EventTypes: Array<EventType> = [
     templateUrl: './function-event-source-add.component.html',
     standalone: true,
     imports: [
-    MatDialogContent,
-    MatDialogTitle,
-    MatDialogActions,
-    MatButton,
-    MatDialogClose,
-    MatFormField,
-    MatLabel,
-    FormsModule,
-    ReactiveFormsModule,
-    MatOption,
-    MatSelect,
-    MatInput,
-    MatSlideToggle
-],
+        MatDialogContent,
+        MatDialogTitle,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+        MatFormField,
+        MatLabel,
+        FormsModule,
+        ReactiveFormsModule,
+        MatOption,
+        MatSelect,
+        MatInput,
+        MatSlideToggle
+    ],
     styleUrls: ['./function-event-source-add.component.scss'],
 })
 export class LambdaEventSourceAddDialog {
@@ -69,7 +69,7 @@ export class LambdaEventSourceAddDialog {
     // S3 Events
     bucketArns: string[] = [];
     selectedBucketArn: string[] = [];
-    selectedEvent: string = '';
+    selectedEvents: string[] = [];
 
     // S3 Filter
     selectedFilterRuleType: string = '';
@@ -97,7 +97,7 @@ export class LambdaEventSourceAddDialog {
 
     loadSqsArns() {
         this.sqsService.listQueueArns().subscribe((data: any) => {
-            this.queueArns = data.QueueArns;
+            this.queueArns = data.QueueArn;
         });
     }
 
@@ -122,7 +122,7 @@ export class LambdaEventSourceAddDialog {
             Type: this.selectedType,
             EventSourceArn: this.eventSourceArn,
             FunctionArn: this.functionArn,
-            Events: this.selectedEvent,
+            Events: this.selectedEvents,
             FilterRuleType: this.selectedFilterRuleType,
             FilterRuleValue: this.filterRuleValue,
             UUID: uuid.v4(),

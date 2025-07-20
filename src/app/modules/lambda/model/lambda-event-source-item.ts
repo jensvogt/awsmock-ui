@@ -16,7 +16,7 @@ export interface AddEventSourceRequest {
     Type: string;
     EventSourceArn: string;
     FunctionArn: string;
-    Events: string;
+    Events: string[];
     FilterRuleType: string;
     FilterRuleValue: string;
     BatchSize: number;

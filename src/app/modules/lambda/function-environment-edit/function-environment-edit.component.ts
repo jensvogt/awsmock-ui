@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
+import {MatTooltip} from "@angular/material/tooltip";
 
 interface DataType {
     value: string;
@@ -24,7 +25,8 @@ interface DataType {
         MatLabel,
         FormsModule,
         MatInput,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatTooltip
     ],
     styleUrls: ['./function-environment-edit.component.scss'],
 })
@@ -35,7 +37,7 @@ export class LambdaEnvironmentEditDialog implements OnInit {
     key: string = '';
     value: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<LambdaEnvironmentEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly fb: FormBuilder, private readonly dialogRef: MatDialogRef<LambdaEnvironmentEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.key = data.key;
         this.value = data.value;
     }

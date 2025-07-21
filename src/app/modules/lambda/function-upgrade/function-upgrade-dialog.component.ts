@@ -9,6 +9,7 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {BinaryFileUploadComponent} from "../../../shared/binary-file-upload/binary-file-upload.component";
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
+import {getVersion} from "../../../shared/version-utils.componen";
 
 interface Runtime {
     value: string;
@@ -64,6 +65,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     onFileChange(event: any): void {
         this.file = event.target.files[0];
         this.fileName = this.file.name;
+        this.version = getVersion(this.fileName);
         this.uploadDisabled = !(this.version && this.fileName)
     }
 
@@ -73,6 +75,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
         if (event.dataTransfer) {
             this.file = event.dataTransfer.files[0];
             this.fileName = this.file.name;
+            this.version = getVersion(this.fileName);
         }
         this.uploadDisabled = !(this.file && this.fileName && this.version?.length)
     }

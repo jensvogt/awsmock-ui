@@ -8,6 +8,7 @@ import {LambdaChartsComponent} from "./modules/lambda/charts/lambda-charts.compo
 import {CognitoUserDetailsComponent} from "./modules/cognito/user-detail/user-detail.component";
 import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 import {CognitoChartsComponent} from "./modules/cognito/charts/cognito-charts.component";
+import {ApplicationChartsComponent} from "./modules/application/charts/application-charts.component";
 
 export const routes: Routes = [
     {
@@ -147,6 +148,10 @@ export const routes: Routes = [
             {
                 path: 'application-list',
                 loadChildren: () => import('./modules/application/application.module').then(module => module.ApplicationModule),
+            },
+            {
+                path: 'application-charts',
+                component: ApplicationChartsComponent,
             },
             //=========================================================================
             // Not found

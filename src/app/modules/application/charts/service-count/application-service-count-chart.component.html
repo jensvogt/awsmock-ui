@@ -1,0 +1,40 @@
+<mat-card class="mat-elevation-z4">
+    <mat-card-header>
+        <div class="container">
+            <div class="flex-container-left">
+                <div class="flex-item">
+                </div>
+            </div>
+            <div class="flex-container-right">
+                <div class="flex-item">
+                    <mat-card-actions>
+                        <mat-select (selectionChange)="loadServiceCountChart()" [(ngModel)]="selectedTimeRange" style="width:200px;margin-right: 10px">
+                            @for (range of ranges; track range) {
+                                <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                        <mat-select (selectionChange)="loadServiceCountChart()" [(ngModel)]="selectedTopx" style="width:200px">
+                            @for (range of topx; track range) {
+                                <mat-option [value]="range.value">{{ range.viewValue }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-card-actions>
+                </div>
+            </div>
+        </div>
+    </mat-card-header>
+    <mat-card-content>
+        <apx-chart
+                [chart]="serviceCountChartOptions?.chart"
+                [dataLabels]="serviceCountChartOptions?.dataLabels"
+                [grid]="serviceCountChartOptions?.grid"
+                [legend]="serviceCountChartOptions?.legend"
+                [series]="serviceCountChartOptions?.series"
+                [stroke]="serviceCountChartOptions?.stroke"
+                [title]="serviceCountChartOptions?.title"
+                [tooltip]="serviceCountChartOptions?.tooltip"
+                [xaxis]="serviceCountChartOptions?.xaxis"
+                [yaxis]="serviceCountChartOptions?.yaxis"
+        ></apx-chart>
+    </mat-card-content>
+</mat-card>

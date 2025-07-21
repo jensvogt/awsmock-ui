@@ -1,0 +1,27 @@
+<mat-card appearance="outlined" style="margin: 3px">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
+            Application Monitoring
+        </span>
+        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card class="mat-elevation-z4">
+            <mat-card-content>
+                <div class="wrapper">
+                    <application-service-time-chart-component></application-service-time-chart-component>
+                    <application-service-count-chart-component></application-service-count-chart-component>
+                    <application-counter-chart-component></application-counter-chart-component>
+                </div>
+                <div class="footer">
+                    Last update: {{ lastUpdate }}
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-card-content>
+</mat-card>

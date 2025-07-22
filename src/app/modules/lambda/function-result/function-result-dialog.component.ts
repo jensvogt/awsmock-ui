@@ -18,6 +18,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {RouterLink} from "@angular/router";
 import {LambdaResultDetail} from "./function-result-view/function-result-detail.component";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
+import {durationConversion} from "../../../shared/duration-utils.component";
 
 @Component({
     selector: 'function-result-dialog',
@@ -74,7 +75,7 @@ export class LambdaResultDialog implements OnInit {
     sortColumns: SortColumn[] = [{column: "timestamp", sortDirection: -1}]
 
     // Lambda result table
-    lambdaResultColumns: any[] = ['name', 'containerId', 'status', 'timestamp', 'actions'];
+    lambdaResultColumns: any[] = ['name', 'containerId', 'status', 'timestamp', 'duration', 'actions'];
     lambdaResultData: LambdaResultItem[] = [];
     lambdaResultDataSource = new MatTableDataSource(this.lambdaResultData);
     lambdaResultPageSizeOptions = [5, 10, 20, 50, 100];
@@ -82,6 +83,7 @@ export class LambdaResultDialog implements OnInit {
     showPageSizeOptions = true;
     showFirstLastButtons = true;
     disabled = false;
+    protected readonly durationConversion = durationConversion;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly dialogRef: MatDialogRef<LambdaResultDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
                 private readonly lambdaService: LambdaService) {

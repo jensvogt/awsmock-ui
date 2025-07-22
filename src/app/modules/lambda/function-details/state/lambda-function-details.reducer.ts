@@ -66,7 +66,7 @@ export const initialState: LambdaFunctionDetailsState = {
     lambdaInstances: {} as LambdaInstanceCountersResponse,
     instancePageSize: 5,
     instancePageIndex: 0,
-    instanceSortColumns: [{column: 'key', sortDirection: -1}],
+    instanceSortColumns: [{column: 'lastStarted', sortDirection: -1}],
 };
 
 export const lambdaFunctionDetailsReducer = createReducer(

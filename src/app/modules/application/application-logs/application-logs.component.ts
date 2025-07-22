@@ -1,4 +1,4 @@
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContainer, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {AfterViewChecked, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -32,8 +32,7 @@ import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
         MatCardContent,
         MatCardActions,
         CdkDrag,
-        CdkDragHandle,
-        MatDialogContainer
+        CdkDragHandle
     ],
     styleUrls: ['./application-logs.component.scss'],
 })

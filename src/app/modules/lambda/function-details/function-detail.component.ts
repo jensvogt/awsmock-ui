@@ -76,7 +76,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     tagPageSizeOptions = [5, 10, 20, 50, 100];
 
     // Instances Table
-    instanceColumns: any[] = ['instanceId', 'containerId', 'status', 'actions'];
+    instanceColumns: any[] = ['instanceId', 'containerId', 'status', 'lastStarted', 'actions'];
     lambdaInstances$: Observable<LambdaInstanceCountersResponse> = this.store.select(selectInstances);
     instancePageSize$: Observable<number> = this.store.select(selectInstancePageSize);
     instancePageIndex$: Observable<number> = this.store.select(selectInstancePageIndex);
@@ -84,7 +84,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     // Tab
     selectedTabIndex: string | undefined;
-    tabNames: string[] = ['environments', 'eventSources', 'tags', 'instances'];
+    tabNames: string[] = ['instances', 'environments', 'eventSources', 'tags'];
 
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
@@ -98,7 +98,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.functionArn = params['functionArn'];
             this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(":") + 1)
             this.loadFunction();
-            this.loadEnvironment();
+            this.loadInstances();
         });
         //this.lambdaEnvironment$.subscribe((data) => console.log(data));
         //this.lambdaTags$.subscribe((data) => console.log(data));
@@ -345,10 +345,10 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
                     this.lambdaService.updateEnvironment(this.functionArn, result.Key, result.Value)
                         .subscribe(() => {
                             this.loadTags();
-                            this.snackBar.open('Lambda environment variable updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+                            this.snackBar.open('Lambda environment variable updated, name: ' + result.Key, 'Dismiss', {duration: 5000});
                         })
                 } else {
-                    this.snackBar.open('Lambda environment variable unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                    this.snackBar.open('Lambda environment variable unchanged, name: ' + result.Key, 'Dismiss', {duration: 5000});
                 }
             }
         });

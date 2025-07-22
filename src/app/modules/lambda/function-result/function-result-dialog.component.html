@@ -48,6 +48,10 @@
                             <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Timestamp" sortActionDescription="Sort by timestamp">Timestamp</th>
                             <td *matCellDef="let element" mat-cell> {{ element.timestamp ? (element.timestamp | date: 'dd-MM-yyyy HH:mm:ss') : '-' }}</td>
                         </ng-container>
+                        <ng-container matColumnDef="duration">
+                            <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Duration" sortActionDescription="Sort by duration">Duration</th>
+                            <td *matCellDef="let element" mat-cell> {{ durationConversion(element.duration) }}</td>
+                        </ng-container>
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell style="width:120px">Actions</th>
                             <td *matCellDef="let row" mat-cell>

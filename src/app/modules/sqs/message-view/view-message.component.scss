@@ -23,3 +23,10 @@ td, th {
   word-wrap: break-word;
   max-width: 400px;
 }
+
+::ng-deep.cdk-overlay-pane {
+  resize: both;
+  overflow: auto;
+  background: #fff;
+  border-radius: 30px !important;
+}

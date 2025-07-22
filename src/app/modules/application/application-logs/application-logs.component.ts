@@ -1,4 +1,4 @@
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContainer, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {AfterViewChecked, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -8,6 +8,7 @@ import {interval, Subscription} from "rxjs";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {MatCard, MatCardActions, MatCardContent} from "@angular/material/card";
+import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 
 @Component({
     selector: 'application-logs-dialog',
@@ -29,7 +30,10 @@ import {MatCard, MatCardActions, MatCardContent} from "@angular/material/card";
         MatIconButton,
         MatCard,
         MatCardContent,
-        MatCardActions
+        MatCardActions,
+        CdkDrag,
+        CdkDragHandle,
+        MatDialogContainer
     ],
     styleUrls: ['./application-logs.component.scss'],
 })

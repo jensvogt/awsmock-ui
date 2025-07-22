@@ -20,3 +20,10 @@
   padding-top: 15px;
   padding-left: 15px;
 }
+
+::ng-deep.cdk-overlay-pane {
+  resize: both;
+  overflow: auto;
+  background: #fff;
+  border-radius: 30px !important;
+}

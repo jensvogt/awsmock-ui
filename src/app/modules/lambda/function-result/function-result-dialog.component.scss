@@ -64,3 +64,20 @@
   margin-bottom: 10px;
   font-size: x-large;
 }
+
+.head-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 8px;
+  justify-content: flex-end;
+}
+
+::ng-deep.cdk-overlay-pane {
+  resize: both;
+  overflow: auto;
+  background: #fff;
+  border-radius: 30px !important;
+}

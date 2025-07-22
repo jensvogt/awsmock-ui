@@ -120,3 +120,12 @@
   vertical-align: bottom;
   font-size: 16px !important;
 }
+
+
+.resizable-mat-dialog-panel {
+  resize: both;
+  overflow: auto;
+  max-width: unset !important;
+  max-height: unset !important;
+  position: absolute !important;
+}

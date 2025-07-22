@@ -9,6 +9,8 @@ import {MonitoringService} from "../../../services/monitoring.service";
 import {ApplicationServiceTimeChartComponent} from "./service-time/application-service-time-chart.component";
 import {ApplicationCounterChartComponent} from "./application-counter/application-counter-chart.component";
 import {ApplicationServiceCountChartComponent} from "./service-count/application-service-count-chart.component";
+import {MatDialogTitle} from "@angular/material/dialog";
+import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 
 @Component({
     selector: 's3-chart-component',
@@ -24,6 +26,9 @@ import {ApplicationServiceCountChartComponent} from "./service-count/application
         ApplicationServiceTimeChartComponent,
         ApplicationCounterChartComponent,
         ApplicationServiceCountChartComponent,
+        MatDialogTitle,
+        CdkDrag,
+        CdkDragHandle,
     ],
     providers: [MonitoringService],
     styleUrls: ['./application-charts.component.scss']

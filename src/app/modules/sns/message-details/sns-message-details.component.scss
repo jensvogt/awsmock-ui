@@ -17,3 +17,10 @@
   margin-bottom: 10px;
   font-size: x-large;
 }
+
+::ng-deep.cdk-overlay-pane {
+  resize: both;
+  overflow: auto;
+  background: #fff;
+  border-radius: 30px !important;
+}

@@ -1,9 +1,9 @@
+<h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>
+    Application Logs: {{ applicationName }}
+</h2>
 <mat-dialog-content class="mat-typography">
     <mat-card appearance="outlined" style="margin: 3px;">
         <mat-card-actions class="head-buttons">
-            <span class="fill-remaining-space">
-                <h2 mat-dialog-title>Application Logs: {{ applicationName }}</h2>
-            </span>
             @if (scrollToEnd) {
                 <button (click)="stopScrolling(false)" [matTooltipShowDelay]="1000" aria-label="Stop scrolling" mat-icon-button matTooltip="Stop scrolling to end">
                     <mat-icon>file_download_off</mat-icon>
@@ -24,4 +24,3 @@
 <mat-dialog-actions align="end">
     <button (click)="close()" mat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>
-

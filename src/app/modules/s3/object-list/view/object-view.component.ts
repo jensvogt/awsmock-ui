@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {S3Service} from "../../service/s3-service.component";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
@@ -31,43 +31,43 @@ import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
     standalone: true,
     providers: [S3Service],
     imports: [
-    CdkDrag,
-    CdkDragHandle,
-    CdkTextareaAutosize,
-    MatButton,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogTitle,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    ReactiveFormsModule,
-    FormsModule,
-    MatSlideToggle,
-    MatTab,
-    MatTabGroup,
-    MatTabLabel,
-    MatTooltip,
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatPaginator,
-    MatRow,
-    MatRowDef,
-    MatSort,
-    MatSortHeader,
-    MatTable,
-    MatHeaderCellDef,
-    MatNoDataRow,
-    MatIcon,
-    MatIconButton
-]
+        CdkDrag,
+        CdkDragHandle,
+        CdkTextareaAutosize,
+        MatButton,
+        MatDialogActions,
+        MatDialogClose,
+        MatDialogContent,
+        MatDialogTitle,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        ReactiveFormsModule,
+        FormsModule,
+        MatSlideToggle,
+        MatTab,
+        MatTabGroup,
+        MatTabLabel,
+        MatTooltip,
+        MatCell,
+        MatCellDef,
+        MatColumnDef,
+        MatHeaderCell,
+        MatHeaderRow,
+        MatHeaderRowDef,
+        MatPaginator,
+        MatRow,
+        MatRowDef,
+        MatSort,
+        MatSortHeader,
+        MatTable,
+        MatHeaderCellDef,
+        MatNoDataRow,
+        MatIcon,
+        MatIconButton
+    ]
 })
-export class S3ObjectViewDialog {
+export class S3ObjectViewDialog implements OnInit {
 
     bucketName: string = '';
     key: string = '';
@@ -77,6 +77,7 @@ export class S3ObjectViewDialog {
     transformedBody: string = '';
     isImage: boolean = false;
     image: any = '';
+    downloadFlag: boolean = false;
 
     // Message attributes table
     metadataDatasource = new MatTableDataSource<S3ObjectMetadata>();
@@ -88,15 +89,20 @@ export class S3ObjectViewDialog {
     metadataSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     metadataPageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private s3Service: S3Service, private dialog: MatDialog, private store: Store<S3ObjectListState>) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private readonly s3Service: S3Service, private readonly dialog: MatDialog, private readonly store: Store<S3ObjectListState>) {
         this.bucketName = data.bucketName;
         this.key = data.key;
         this.contentType = data.contentType;
+        this.downloadFlag = data.downloadFlag;
         if (data.metadata !== undefined) {
             this.metadataLength = data.metadata.length;
             this.metadataDatasource.data = data.metadata;
         }
-        if (data.downloadFlag) {
+
+    }
+
+    ngOnInit(): void {
+        if (this.downloadFlag) {
             this.s3Service.getObject(this.bucketName, this.key).then((data: GetObjectCommandOutput) => {
                 if (!data.ContentType?.startsWith("image")) {
                     data.Body?.transformToString().then((data: string) => {
@@ -109,7 +115,7 @@ export class S3ObjectViewDialog {
                     });
                 } else {
                     this.isImage = true;
-                    data.Body?.transformToByteArray().then((data:any) => {
+                    data.Body?.transformToByteArray().then((data: any) => {
                         const reader = new FileReader();
                         reader.onload = (e) => this.image = e.target?.result;
                         reader.readAsDataURL(new Blob([data]));

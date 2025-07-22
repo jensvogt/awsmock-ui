@@ -84,3 +84,6 @@ export class ApplicationServiceCountChartComponent implements OnInit {
             });
     }
 }
+
+export class ServiceTimeChartComponent {
+}

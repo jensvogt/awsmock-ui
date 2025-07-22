@@ -26,3 +26,10 @@
   padding: 8px;
   justify-content: flex-end;
 }
+
+::ng-deep.cdk-overlay-pane {
+  resize: both;
+  overflow: auto;
+  background: #fff;
+  border-radius: 30px !important;
+}

@@ -227,10 +227,11 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {applicationName: application.name, containerId: application.containerId};
-        dialogConfig.maxWidth = '100vw';
-        dialogConfig.maxHeight = '100vh';
+        dialogConfig.maxWidth = '100%';
+        dialogConfig.maxHeight = '100%';
         dialogConfig.panelClass = 'full-screen-modal';
-        dialogConfig.width = "80%"
+        dialogConfig.width = "80%";
+        //dialogConfig.panelClass = 'resizable-mat-dialog-panel';
 
         this.dialog.open(ApplicationLogsDialog, dialogConfig);
     }

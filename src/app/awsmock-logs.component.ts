@@ -1,12 +1,31 @@
 import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent} from "@angular/material/card";
-import {MatFormField, MatInput} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIconButton} from "@angular/material/button";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {interval, Subscription} from "rxjs";
+import {EditorComponent, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
+
+const emailBodyConfig = {
+    selector: '.tinymce-body',
+    menubar: false,
+    inline: true,
+    plugins: [
+        'link', 'lists', 'powerpaste',
+        'autolink', 'tinymcespellchecker'
+    ],
+    toolbar: [
+        'undo redo | bold italic underline | fontfamily fontsize',
+        'forecolor backcolor | alignleft aligncenter alignright alignfull | numlist bullist outdent indent'
+    ],
+    valid_elements: 'p[style],strong,em,span[style],a[href],ul,ol,li',
+    valid_styles: {
+        '*': 'font-size,font-family,color,text-decoration,text-align'
+    },
+    powerpaste_word_import: 'clean',
+    powerpaste_html_import: 'clean',
+};
 
 @Component({
     selector: 'awsmock-logs',
@@ -14,18 +33,18 @@ import {interval, Subscription} from "rxjs";
     imports: [
         MatCard,
         MatCardContent,
-        MatFormField,
         ReactiveFormsModule,
-        MatFormField,
         MatCardActions,
         MatIcon,
         MatIconButton,
         MatTooltip,
-        CdkTextareaAutosize,
-        MatInput,
-        FormsModule
+        FormsModule,
+        EditorComponent
     ],
-    styleUrl: './awsmock-logs.component.scss'
+    styleUrl: './awsmock-logs.component.scss',
+    providers: [
+        {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
+    ]
 })
 export class AwsMockLogsComponent implements OnInit, AfterViewChecked {
 
@@ -34,17 +53,22 @@ export class AwsMockLogsComponent implements OnInit, AfterViewChecked {
     scrollToEnd = true;
     // Auto-update
     updateSubscription: Subscription | undefined;
+    maxChars: number = 100000;
     @ViewChild('logMessages') private readonly logTextContainer: ElementRef | undefined;
 
     constructor() {
     }
 
     ngOnInit(): void {
+
         let url = <string>localStorage.getItem("backendUrl")?.replace(/http/g, 'ws')?.replace(/:\d+/g, ':4568');
         this.ws = new WebSocket(url);
         this.ws.addEventListener("message", (event) => {
             if (event.data) {
-                this.logs += event.data + '\n';
+                this.logs += '<span style="color:darkgreen">' + event.data + '</span><br>';
+                if (this.logs.length > this.maxChars) {
+                    this.logs = this.logs.substring(0, this.maxChars / 10);
+                }
                 this.scrollToBottom();
             }
         });

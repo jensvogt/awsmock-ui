@@ -10,10 +10,14 @@
             </button>
         }
     </mat-card-actions>
-    <mat-card-content style="height:100%">
-        <mat-form-field style="height: 100%; width:100%">
-            <textarea #logMessages (scrollend)="scrollToBottom()" [(ngModel)]="logs" cdkAutosizeMaxRows="36" cdkTextareaAutosize matInput readonly></textarea>
-        </mat-form-field>
+    <mat-card-content style="height:95%">
+        <form method="post" style="height:100%">
+            <div #logMessages style="overflow: auto; height:100%">
+                <editor [disabled]="false" [init]="{ selector: 'textarea', plugins: 'code help image lists link powerpaste table wordcount',  base_url: '/tinymce', suffix: '.min',ui_mode: 'split'}" [inline]="true" [innerHTML]="logs"
+                        apiKey="no-api-key" id="logMessages" toolbar="bold italic underline | formatpainter | aligncenter alignleft alignright alignjustify | selectall | ltr rtl | code | help">
+                </editor>
+            </div>
+        </form>
     </mat-card-content>
 </mat-card>
 

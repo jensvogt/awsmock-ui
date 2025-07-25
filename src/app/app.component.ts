@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ConfigComponentDialog} from "./modules/dashboard/settings/config.component";
 import {BackendDialog} from "./modules/dashboard/backend/backend.component";
+import {EditorComponent} from "@tinymce/tinymce-angular";
 
 @Component({
     selector: 'app-root',
@@ -11,6 +12,12 @@ import {BackendDialog} from "./modules/dashboard/backend/backend.component";
     standalone: false
 })
 export class AppComponent {
+
+    init: EditorComponent['init'] = {
+        plugins: 'lists link image table code help wordcount',
+        base_url: '/tinymce', // Root for resources
+        suffix: '.min'
+    };
 
     service: string = '';
     title: string = 'awsmock.ui';

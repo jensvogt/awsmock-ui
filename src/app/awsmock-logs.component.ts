@@ -67,7 +67,7 @@ export class AwsMockLogsComponent implements OnInit, AfterViewChecked {
             if (event.data) {
                 this.logs += '<span style="color:darkgreen">' + event.data + '</span><br>';
                 if (this.logs.length > this.maxChars) {
-                    this.logs = this.logs.substring(0, this.maxChars / 10);
+                    this.logs = this.logs.substring(0, this.logs.indexOf('\n', this.maxChars / 10));
                 }
                 this.scrollToBottom();
             }

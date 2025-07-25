@@ -9,6 +9,7 @@ import {CognitoUserDetailsComponent} from "./modules/cognito/user-detail/user-de
 import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 import {CognitoChartsComponent} from "./modules/cognito/charts/cognito-charts.component";
 import {ApplicationChartsComponent} from "./modules/application/charts/application-charts.component";
+import {AwsMockLogsComponent} from "./awsmock-logs.component";
 
 export const routes: Routes = [
     {
@@ -152,6 +153,13 @@ export const routes: Routes = [
             {
                 path: 'application-charts',
                 component: ApplicationChartsComponent,
+            },
+            //=========================================================================
+            // awsmock logs
+            //=========================================================================
+            {
+                path: 'awsmock-logs',
+                component: AwsMockLogsComponent,
             },
             //=========================================================================
             // Not found

@@ -18,6 +18,11 @@
             </mat-icon>
         </button>
         <mat-menu #menu="matMenu">
+            <button (click)="showLogs()" mat-menu-item>
+                <mat-icon>notes</mat-icon>
+                <span>Show Logs</span>
+            </button>
+            <mat-divider/>
             <button (click)="backend()" mat-menu-item>
                 <mat-icon [ngStyle]="{'color': 'black'}">
                     <svg fill="#000000" height="24px" viewBox="0 -960 960 960" width="24px" xmlns="http://www.w3.org/2000/svg">

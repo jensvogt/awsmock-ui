@@ -11,7 +11,7 @@ import {ApplicationCounterChartComponent} from "./application-counter/applicatio
 import {ApplicationServiceCountChartComponent} from "./service-count/application-service-count-chart.component";
 
 @Component({
-    selector: 's3-chart-component',
+    selector: 'application-chart-component',
     templateUrl: './application-charts.component.html',
     standalone: true,
     imports: [

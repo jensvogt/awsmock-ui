@@ -1,0 +1,19 @@
+<mat-card class="mat-elevation-z4">
+    <mat-card-actions class="head-buttons">
+        @if (scrollToEnd) {
+            <button (click)="stopScrolling(false)" [matTooltipShowDelay]="1000" aria-label="Stop scrolling" mat-icon-button matTooltip="Stop scrolling to end">
+                <mat-icon>file_download_off</mat-icon>
+            </button>
+        } @else {
+            <button (click)="stopScrolling(true)" [matTooltipShowDelay]="1000" aria-label="Start scrolling" mat-icon-button matTooltip="Start scrolling to end">
+                <mat-icon>download</mat-icon>
+            </button>
+        }
+    </mat-card-actions>
+    <mat-card-content style="height:100%">
+        <mat-form-field style="height: 100%; width:100%">
+            <textarea #logMessages (scrollend)="scrollToBottom()" [(ngModel)]="logs" cdkAutosizeMaxRows="36" cdkTextareaAutosize matInput readonly></textarea>
+        </mat-form-field>
+    </mat-card-content>
+</mat-card>
+

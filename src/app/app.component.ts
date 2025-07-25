@@ -66,5 +66,10 @@ export class AppComponent {
 
         this.dialog.open(BackendDialog, dialogBackend);
     }
+
+    showLogs() {
+        let url = '/awsmock-logs';
+        window.open(url, "_blank");
+    }
 }
 

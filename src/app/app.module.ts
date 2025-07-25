@@ -19,6 +19,7 @@ import {MatInput} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {BinaryFileUploadComponent} from "./shared/binary-file-upload/binary-file-upload.component";
+import {MatDivider} from "@angular/material/divider";
 
 @NgModule({
     declarations: [AppComponent],
@@ -52,7 +53,8 @@ import {BinaryFileUploadComponent} from "./shared/binary-file-upload/binary-file
         MatSuffix,
         MatMenuTrigger,
         MatMenu,
-        MatMenuItem
+        MatMenuItem,
+        MatDivider
     ],
     bootstrap: [AppComponent]
 })

@@ -91,6 +91,11 @@ export class LambdaResultDialog implements OnInit {
     }
 
     ngOnInit() {
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.close();
+            }
+        });
         this.dialogRef.updateSize("1400px", "630px");
         this.loadLambdaResults();
     }
@@ -153,6 +158,10 @@ export class LambdaResultDialog implements OnInit {
         this.lambdaService.deleteLambdaResultCounters(this.lambdaArn).subscribe(() => {
             this.loadLambdaResults();
         });
+    }
+
+    close() {
+        this.dialogRef.close(false);
     }
 }
 

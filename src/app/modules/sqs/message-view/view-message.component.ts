@@ -93,6 +93,11 @@ export class ViewMessageComponentDialog implements OnInit {
     }
 
     ngOnInit() {
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.close();
+            }
+        });
         this.dialogRef.updateSize("1200px", "800px");
         this.loadMessageAttributes();
     }
@@ -180,5 +185,9 @@ export class ViewMessageComponentDialog implements OnInit {
             });
             this.messageAttributesDatasource = new MatTableDataSource(this.messageAttributeList);
         }
+    }
+
+    close() {
+        this.dialogRef.close(false);
     }
 }

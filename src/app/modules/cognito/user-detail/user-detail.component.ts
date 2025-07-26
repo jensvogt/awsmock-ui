@@ -27,7 +27,7 @@ export class CognitoUserDetailsComponent implements OnInit, OnDestroy {
     // Subscriptions
     private sub: any;
 
-    constructor(private location: Location, private route: ActivatedRoute, private cognitoService: CognitoService) {
+    constructor(private readonly location: Location, private readonly route: ActivatedRoute, private readonly cognitoService: CognitoService) {
     }
 
     ngOnInit() {

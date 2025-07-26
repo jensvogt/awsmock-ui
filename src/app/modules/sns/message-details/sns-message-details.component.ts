@@ -36,7 +36,7 @@ export class SnsMessageDetailsDialog implements OnInit {
     attributeSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     attributePageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(private dialogRef: MatDialogRef<SnsMessageDetailsDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<SNSMessageListState>) {
+    constructor(private readonly dialogRef: MatDialogRef<SnsMessageDetailsDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly store: Store<SNSMessageListState>) {
         this.message = data.message;
         this.rawMessage = this.message?.message;
         this.messageId = this.message?.messageId;
@@ -61,6 +61,11 @@ export class SnsMessageDetailsDialog implements OnInit {
     }
 
     ngOnInit() {
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.close();
+            }
+        });
         this.dialogRef.updateSize("1200px", "800px");
     }
 
@@ -110,5 +115,9 @@ export class SnsMessageDetailsDialog implements OnInit {
                 this.messageAttributeLength = this.attributes.length;
             }
         });*/
+    }
+
+    close() {
+        this.dialogRef.close(false);
     }
 }

@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from "@angular/core";
 import {MatButton} from "@angular/material/button";
-import { SlicePipe } from "@angular/common";
+import {SlicePipe} from "@angular/common";
 import {MatList, MatListItem} from "@angular/material/list";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MonitoringService} from "../../../services/monitoring.service";
@@ -32,27 +32,27 @@ const AllModules = {
     templateUrl: './clean-infrastructure.component.html',
     standalone: true,
     imports: [
-    MatButton,
-    MatList,
-    MatListItem,
-    FormsModule,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogTitle,
-    CdkDrag,
-    CdkDragHandle,
-    MatCheckbox,
-    FormsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    SlicePipe
-],
+        MatButton,
+        MatList,
+        MatListItem,
+        FormsModule,
+        MatDialogActions,
+        MatDialogClose,
+        MatDialogContent,
+        MatDialogTitle,
+        CdkDrag,
+        CdkDragHandle,
+        MatCheckbox,
+        FormsModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        SlicePipe
+    ],
     providers: [MonitoringService],
     styleUrls: ['./clean-infrastructure.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CleanInfrastructureComponentDialog implements OnInit, OnDestroy {
+export class CleanInfrastructureComponentDialog implements OnInit {
 
     title: string | undefined = "";
 
@@ -62,16 +62,18 @@ export class CleanInfrastructureComponentDialog implements OnInit, OnDestroy {
     mode: string = 'export';
     protected readonly allModules = AllModules.modules;
 
-    constructor(private dialogRef: MatDialogRef<CleanInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly dialogRef: MatDialogRef<CleanInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.title = data.title;
         this.mode = data.mode;
     }
 
     ngOnInit(): void {
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close(false);
+            }
+        });
         this.setSome()
-    }
-
-    ngOnDestroy(): void {
     }
 
     setAll() {

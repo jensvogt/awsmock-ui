@@ -1,4 +1,4 @@
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {AfterViewChecked, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -49,7 +49,7 @@ export class ApplicationLogsDialog implements OnInit, OnDestroy, AfterViewChecke
 
     @ViewChild('logMessages') private readonly logTextContainer: ElementRef | undefined;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly dialogRef: MatDialogRef<ApplicationLogsDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.applicationName = data.applicationName;
         this.containerId = data.containerId;
     }
@@ -65,6 +65,11 @@ export class ApplicationLogsDialog implements OnInit, OnDestroy, AfterViewChecke
         this.ws.addEventListener("open", (event) => {
             let request = {command: "open-log", application: this.applicationName, containerId: this.containerId};
             this.ws?.send(JSON.stringify(request));
+        });
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.close();
+            }
         });
         this.updateSubscription = interval(1000).subscribe(() => this.loadLogs());
     }
@@ -91,7 +96,7 @@ export class ApplicationLogsDialog implements OnInit, OnDestroy, AfterViewChecke
     }
 
     close() {
-        // this.ws?.close();
+        this.dialogRef.close(false);
     }
 
     scrollToBottom(): void {

@@ -4,6 +4,7 @@ import {ActivatedRoute} from "@angular/router";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3Service} from "../service/s3-service.component";
 import {S3ObjectItem} from "../model/s3-object-item";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
     selector: 's3-object-detail-component',
@@ -22,12 +23,17 @@ export class S3ObjectDetailComponent implements OnInit, OnDestroy {
     protected readonly byteConversion = byteConversion;
     private sub: any;
 
-    constructor(private location: Location, private route: ActivatedRoute, private s3Service: S3Service) {
+    constructor(private readonly dialogRef: MatDialogRef<S3ObjectDetailComponent>, private readonly location: Location, private readonly route: ActivatedRoute, private readonly s3Service: S3Service) {
     }
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.id = params['id'];
+        });
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close(false);
+            }
         });
         this.loadObject();
     }

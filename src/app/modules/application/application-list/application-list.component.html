@@ -95,13 +95,16 @@
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="actions">
-                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:160px">Actions</th>
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:200px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
                                     <button (click)="startApplication(row)" [hidden]="startDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Start application" mat-icon-button matTooltip="Start application">
                                         <mat-icon>play_arrow</mat-icon>
                                     </button>
                                     <button (click)="stopApplication(row)" [hidden]="stopDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Stop application" mat-icon-button matTooltip="Stop application">
                                         <mat-icon>stop</mat-icon>
+                                    </button>
+                                    <button (click)="applicationLogs(row)" [matTooltipShowDelay]="1000" aria-label="See application logs" mat-icon-button matTooltip="See application logs">
+                                        <mat-icon>notes</mat-icon>
                                     </button>
                                     <button (click)="deleteApplication(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the application">
                                         <mat-icon>delete</mat-icon>
@@ -111,11 +114,6 @@
                                     </button>
                                     <mat-menu #lambdaListMenu="matMenu" xPosition="before">
                                         <button mat-menu-item>
-                                            <button (click)="applicationLogs(row)" [matTooltipShowDelay]="1000" aria-label="See application logs" mat-menu-item matTooltip="See application logs">
-                                                <mat-icon>notes</mat-icon>
-                                                <span>Application logs</span>
-                                            </button>
-                                            <mat-divider/>
                                             <button (click)="uploadCode(row)" [matTooltipShowDelay]="1000" aria-label="Upload application archive" mat-menu-item matTooltip="Upload application archive">
                                                 <mat-icon>upload</mat-icon>
                                                 <span>Upload code</span>

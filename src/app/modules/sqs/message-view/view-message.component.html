@@ -125,5 +125,5 @@
     </mat-tab-group>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button [matTooltipShowDelay]="1000" mat-button mat-dialog-close matTooltip="Save the message and close the dialog">Close</button>
+    <button (click)="close()" [matTooltipShowDelay]="1000" mat-button mat-dialog-close matTooltip="Save the message and close the dialog">Close</button>
 </mat-dialog-actions>

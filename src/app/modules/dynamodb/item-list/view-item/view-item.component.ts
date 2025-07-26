@@ -1,5 +1,5 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {Component, Inject} from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -29,7 +29,7 @@ import {ItemItem, PutItemRequest} from "../../model/item-item";
     ],
     styleUrls: ['./view-item.component.scss']
 })
-export class DynamodbViewItemDialog {
+export class DynamodbViewItemDialog implements OnInit {
 
     itemJson: string = '';
     oid: string | undefined = '';
@@ -42,6 +42,14 @@ export class DynamodbViewItemDialog {
         this.oid = this.item.id;
         this.tableName = data.tableName;
         this.itemJson = JSON.stringify(this.item.attributes, null, 2);
+    }
+
+    ngOnInit(): void {
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close(false);
+            }
+        });
     }
 
     updateItem() {

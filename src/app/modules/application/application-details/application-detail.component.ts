@@ -82,12 +82,6 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
                 return;
             }
             this.applicationItem = applicationDetails;
-            if (this.applicationItem.description) {
-                this.applicationItem.description = atob(applicationDetails.description);
-            }
-            if (this.applicationItem.dockerfile) {
-                this.applicationItem.dockerfile = atob(applicationDetails.dockerfile);
-            }
             if (this.applicationItem.environment) {
                 this.environmentTotal = Object.keys(this.applicationItem.environment).length;
                 this.environmentDatasource = convertObjectToArray(this.applicationItem.environment, this.environmentPageSize, this.environmentPageIndex, this.environmentSortColumn);
@@ -99,6 +93,14 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
             if (this.applicationItem.dependencies) {
                 this.dependencyTotal = this.applicationItem.dependencies.length;
                 this.dependencyDatasource = convertArrayToArray(this.applicationItem.dependencies, this.dependencyPageSize, this.dependencyPageIndex, this.dependencySortColumn);
+            }
+            if (this.applicationItem.description) {
+                try {
+                    this.applicationItem.description = atob(applicationDetails.description);
+                } catch (e) {
+                    console.error(e);
+                    this.applicationItem.description = applicationDetails.description;
+                }
             }
         });
 

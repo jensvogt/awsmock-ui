@@ -156,7 +156,7 @@ export class S3Service {
         let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'GetObjectCounter');
         const body = {
             region: environment.awsmockRegion,
-            id: id
+            oid: id
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
     }

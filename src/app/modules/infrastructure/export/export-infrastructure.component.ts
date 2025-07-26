@@ -1,4 +1,4 @@
-import {Component, Inject} from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
@@ -30,12 +30,20 @@ import {FileExportComponent} from "./file-export/file-export.component";
     providers: [],
     styleUrls: ['./export-infrastructure.component.scss']
 })
-export class ExportInfrastructureComponentDialog {
+export class ExportInfrastructureComponentDialog implements OnInit {
 
     body: string | undefined;
 
     constructor(private readonly dialogRef: MatDialogRef<ExportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly dialog: MatDialog) {
         this.body = JSON.stringify(data, null, 4);
+    }
+
+    ngOnInit(): void {
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close(false);
+            }
+        });
     }
 
     fileExport() {

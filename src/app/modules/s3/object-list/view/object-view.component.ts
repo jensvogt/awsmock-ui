@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {S3Service} from "../../service/s3-service.component";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -89,7 +89,7 @@ export class S3ObjectViewDialog implements OnInit {
     metadataSortColumns: SortColumn[] = [{column: "key", sortDirection: -1}]
     metadataPageSizeOptions = [5, 10, 20, 50, 100];
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private readonly s3Service: S3Service, private readonly dialog: MatDialog, private readonly store: Store<S3ObjectListState>) {
+    constructor(private readonly dialogRef: MatDialogRef<S3ObjectViewDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly s3Service: S3Service, private readonly dialog: MatDialog, private readonly store: Store<S3ObjectListState>) {
         this.bucketName = data.bucketName;
         this.key = data.key;
         this.contentType = data.contentType;
@@ -125,6 +125,11 @@ export class S3ObjectViewDialog implements OnInit {
         } else {
             this.transformedBody = "File too big or invalid content. Not downloaded"
         }
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close(false);
+            }
+        });
     }
 
     changePrettyPrint(event: MatSlideToggleChange) {

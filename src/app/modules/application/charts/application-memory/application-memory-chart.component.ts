@@ -19,8 +19,8 @@ export type ChartOptions = {
 };
 
 @Component({
-    selector: 'application-counter-chart-component',
-    templateUrl: './application-counter-chart.component.html',
+    selector: 'application-memory-chart-component',
+    templateUrl: './application-memory-chart.component.html',
     standalone: true,
     imports: [
         ChartComponent,
@@ -33,15 +33,15 @@ export type ChartOptions = {
         FormsModule,
     ],
     providers: [MonitoringService],
-    styleUrls: ['./application-counter-chart.component.scss']
+    styleUrls: ['./application-memory-chart.component.scss']
 })
-export class ApplicationCounterChartComponent implements OnInit {
+export class ApplicationMemoryChartComponent implements OnInit {
 
-    public applicationServiceTimeChartOptions!: Partial<ChartOptions> | any;
+    public applicationMemoryChartOptions!: Partial<ChartOptions> | any;
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild('application-counter-chart-component') applicationCountChart: ChartComponent | undefined;
+    @ViewChild('applicationMemoryChartComponent') applicationMemoryChart: ChartComponent | undefined;
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
@@ -49,26 +49,31 @@ export class ApplicationCounterChartComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadApplicationCountChart();
+        this.loadApplicationMemoryChart();
     }
 
-    loadApplicationCountChart() {
+    loadApplicationMemoryChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getCounters('application_counter', start, end, 5)
+        this.monitoringService.getMultiCounters('application_mem_usage', 'application', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    this.applicationServiceTimeChartOptions = {
-                        series: [{name: "Applications", data: data.counters}],
-                        chart: {height: 350, type: "line"},
+                    let types = Object.getOwnPropertyNames(data);
+                    const series: any[] = [];
+                    types.forEach((t) => {
+                        series.push({name: t, data: data[t]});
+                    });
+                    this.applicationMemoryChartOptions = {
+                        series: series,
+                        chart: {height: 350, type: "line", animations: this.chartService.getAnimation()},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
-                        title: {text: "Applications", align: "center"},
+                        title: {text: "Memory Usage", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Count"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "Memory [%]"}, labels: {offsetX: 10}}
                     };
                 }
             });

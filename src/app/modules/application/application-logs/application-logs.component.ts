@@ -42,7 +42,7 @@ export class ApplicationLogsDialog implements OnInit, OnDestroy, AfterViewChecke
     logs: string = '';
     applicationName: string = '';
     containerId: string = '';
-    scrollToEnd = true;
+    scrollToEnd = false;
 
     // Auto-update
     updateSubscription: Subscription | undefined;

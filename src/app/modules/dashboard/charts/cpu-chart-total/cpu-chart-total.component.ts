@@ -24,15 +24,15 @@ export type ChartOptions = {
     templateUrl: './cpu-chart-total.component.html',
     styleUrls: ['./cpu-chart-total.component.scss'],
     imports: [
-    MatCard,
-    MatCardHeader,
-    MatCardActions,
-    MatSelect,
-    FormsModule,
-    MatOption,
-    MatCardContent,
-    ChartComponent
-],
+        MatCard,
+        MatCardHeader,
+        MatCardActions,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatCardContent,
+        ChartComponent
+    ],
     standalone: true
 })
 export class CpuChartTotalComponent implements OnInit {
@@ -43,7 +43,7 @@ export class CpuChartTotalComponent implements OnInit {
     selectedTimeRange: string = '';
     @ViewChild("cpuChartTotal") cpuChart: ChartComponent = new ChartComponent();
 
-    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {

@@ -17,11 +17,11 @@
                     <application-service-time-chart-component></application-service-time-chart-component>
                     <application-service-count-chart-component></application-service-count-chart-component>
                     <application-counter-chart-component></application-counter-chart-component>
-                </div>
-                <div class="footer">
-                    Last update: {{ lastUpdate }}
+                    <application-cpu-chart-component></application-cpu-chart-component>
+                    <application-memory-chart-component></application-memory-chart-component>
                 </div>
             </mat-card-content>
         </mat-card>
+        <footer-component [lastUpdate]="lastUpdate"/>
     </mat-card-content>
 </mat-card>

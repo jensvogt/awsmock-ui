@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
@@ -24,15 +24,15 @@ export type ChartOptions = {
     templateUrl: './cpu-chart-awsmock.component.html',
     styleUrls: ['./cpu-chart-awsmock.component.scss'],
     imports: [
-    MatCard,
-    MatCardHeader,
-    MatCardActions,
-    MatSelect,
-    FormsModule,
-    MatOption,
-    MatCardContent,
-    ChartComponent
-],
+        MatCard,
+        MatCardHeader,
+        MatCardActions,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatCardContent,
+        ChartComponent
+    ],
     standalone: true
 })
 export class CpuChartAwsmockComponent implements OnInit {
@@ -41,9 +41,8 @@ export class CpuChartAwsmockComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("cpuChartAwsmock") cpuChartAwsmock: ChartComponent = new ChartComponent();
 
-    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {

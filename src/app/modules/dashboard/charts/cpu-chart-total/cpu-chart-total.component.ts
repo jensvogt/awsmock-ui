@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
@@ -41,7 +41,6 @@ export class CpuChartTotalComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("cpuChartTotal") cpuChart: ChartComponent = new ChartComponent();
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }

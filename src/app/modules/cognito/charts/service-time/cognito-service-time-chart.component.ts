@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -41,7 +41,6 @@ export class CognitoServiceTimeChartComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("cognitoServiceTimeChart") cognitoServiceTimeChart: ChartComponent | undefined;
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }

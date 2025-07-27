@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
@@ -24,15 +24,15 @@ export type ChartOptions = {
     templateUrl: './threads-chart.component.html',
     styleUrls: ['./threads-chart.component.scss'],
     imports: [
-    MatCardHeader,
-    MatCard,
-    MatCardActions,
-    MatSelect,
-    FormsModule,
-    MatOption,
-    MatCardContent,
-    ChartComponent
-],
+        MatCardHeader,
+        MatCard,
+        MatCardActions,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatCardContent,
+        ChartComponent
+    ],
     standalone: true
 })
 export class ThreadsChartComponent implements OnInit {
@@ -41,9 +41,8 @@ export class ThreadsChartComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("threadsChart") threadsChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {

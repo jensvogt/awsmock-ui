@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MonitoringService} from "../../../../services/monitoring.service";
 import {ChartService, TimeRange} from "../../../../services/chart-service.component";
@@ -24,15 +24,15 @@ export type ChartOptions = {
     templateUrl: './memory-chart-awsmock.component.html',
     styleUrls: ['./memory-chart-awsmock.component.scss'],
     imports: [
-    MatCardActions,
-    MatSelect,
-    MatCardHeader,
-    MatCard,
-    MatCardContent,
-    ChartComponent,
-    FormsModule,
-    MatOption
-],
+        MatCardActions,
+        MatSelect,
+        MatCardHeader,
+        MatCard,
+        MatCardContent,
+        ChartComponent,
+        FormsModule,
+        MatOption
+    ],
     standalone: true
 })
 export class MemoryChartAwsmockComponent implements OnInit {
@@ -41,9 +41,8 @@ export class MemoryChartAwsmockComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild("memoryChart") memoryChart: ChartComponent | undefined;
 
-    constructor(private monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -43,7 +43,6 @@ export class SnsMessageCountChartComponent implements OnInit {
     selectedTimeRange: string = '';
     topx: Topx[] = [];
     selectedTopx: number = -1;
-    @ViewChild(`sns-message-count-chart-component`) messageCountChart: ChartComponent | undefined;
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }

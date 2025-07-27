@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
 import {ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexGrid, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis, ApexYAxis, ChartComponent} from "ng-apexcharts";
 import {MatOption, MatSelect} from "@angular/material/select";
@@ -41,7 +41,6 @@ export class ApplicationCounterChartComponent implements OnInit {
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
-    @ViewChild('application-counter-chart-component') applicationCountChart: ChartComponent | undefined;
 
     constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
@@ -61,6 +60,7 @@ export class ApplicationCounterChartComponent implements OnInit {
                 if (data) {
                     this.applicationServiceTimeChartOptions = {
                         series: [{name: "Applications", data: data.counters}],
+                        animations: {enabled: false},
                         chart: {height: 350, type: "line"},
                         dataLabels: {enabled: false},
                         stroke: {show: true, curve: "smooth", width: 2},

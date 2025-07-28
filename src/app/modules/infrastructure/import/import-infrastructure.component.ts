@@ -12,29 +12,26 @@ import {ModuleService} from "../../../services/module.service";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
-import {CdkScrollable} from "@angular/cdk/scrolling";
-
 @Component({
     selector: 'export-infrastructure-component',
     templateUrl: './import-infrastructure.component.html',
     standalone: true,
     imports: [
-    MatButton,
-    FormsModule,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogTitle,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    CdkDrag,
-    CdkDragHandle,
-    CdkTextareaAutosize,
-    MatCheckbox,
-    MatProgressSpinner,
-    CdkScrollable
-],
+        MatButton,
+        FormsModule,
+        MatDialogActions,
+        MatDialogClose,
+        MatDialogContent,
+        MatDialogTitle,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        CdkDrag,
+        CdkDragHandle,
+        CdkTextareaAutosize,
+        MatCheckbox,
+        MatProgressSpinner
+    ],
     providers: [ModuleService],
     styleUrls: ['./import-infrastructure.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -46,7 +43,7 @@ export class ImportInfrastructureComponentDialog implements OnInit {
     includeObjects = false;
     loadDisabled: boolean = true;
     loading = false;
-    @ViewChild('importButton') importButton: MatInput | undefined;
+    @ViewChild('importButton') importButton: MatButton | undefined;
 
     constructor(private readonly dialogRef: MatDialogRef<ImportInfrastructureComponentDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private readonly snackBar: MatSnackBar,
                 private readonly dialog: MatDialog, private readonly moduleService: ModuleService, private readonly cdr: ChangeDetectorRef) {
@@ -54,6 +51,11 @@ export class ImportInfrastructureComponentDialog implements OnInit {
 
     ngOnInit() {
         this.dialogRef.updateSize("1500px", "1000px");
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close(false);
+            }
+        });
     }
 
     importInfrastructure() {
@@ -90,11 +92,15 @@ export class ImportInfrastructureComponentDialog implements OnInit {
             if (result) {
                 this.body = result;
                 this.importButton?.focus();
+                this.loadDisabled = false;
             }
             this.loading = false;
-            this.loadDisabled = false;
             this.cdr.detectChanges();
         });
+    }
+
+    loadEnabled() {
+        return !this.loadDisabled;
     }
 
     close() {

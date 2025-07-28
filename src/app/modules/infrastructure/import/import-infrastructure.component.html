@@ -1,23 +1,23 @@
 <h2 cdkDrag cdkDragHandle cdkDragRootElement=".cdk-overlay-pane" mat-dialog-title>Import Infrastructure</h2>
 <mat-dialog-content class="mat-typography">
-  @if (loading) {
-    <div class="spinner-loading">
-      <div class="spinner-loading">
-        <mat-progress-spinner diameter="60" mode="indeterminate"></mat-progress-spinner>
-      </div>
-    </div>
-  } @else {
-    <mat-checkbox [(ngModel)]="cleanFirst" [checked]=cleanFirst>Clean first</mat-checkbox>
-    <mat-checkbox [(ngModel)]="includeObjects">Include Objects</mat-checkbox>
-    <mat-form-field appearance="fill" style="width:100%;height:95%">
-      <mat-label>Infrastructure:</mat-label>
-      <textarea (ngModelChange)="onChange($event)" [cdkAutosizeMaxRows]="50" [cdkAutosizeMinRows]="50" [ngModel]="body" cdkTextareaAutosize matInput md-detect-hidden md-resize-textarea placeholder="Infrastructure"></textarea>
-    </mat-form-field>
-  }
+    @if (loading) {
+        <div class="spinner-loading">
+            <div class="spinner-loading">
+                <mat-progress-spinner diameter="60" mode="indeterminate"></mat-progress-spinner>
+            </div>
+        </div>
+    } @else {
+        <mat-checkbox [(ngModel)]="cleanFirst" [checked]=cleanFirst>Clean first</mat-checkbox>
+        <mat-checkbox [(ngModel)]="includeObjects">Include Objects</mat-checkbox>
+        <mat-form-field appearance="fill" style="width:100%;height:95%">
+            <mat-label>Infrastructure:</mat-label>
+            <textarea (ngModelChange)="onChange($event)" [cdkAutosizeMaxRows]="50" [cdkAutosizeMinRows]="50" [ngModel]="body" cdkTextareaAutosize matInput md-detect-hidden md-resize-textarea placeholder="Infrastructure"></textarea>
+        </mat-form-field>
+    }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button (click)="onClear()" mat-button>Clear</button>
-  <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
-  <button (click)="loadFromFile()" mat-button>Load File</button>
-  <button #importButton (click)="importInfrastructure()" [disabled]="loadDisabled" cdkFocusInitial="loadEnabled" mat-button>Import</button>
+    <button (click)="onClear()" mat-button>Clear</button>
+    <button (click)="close()" mat-button mat-dialog-close>Cancel</button>
+    <button (click)="loadFromFile()" [autofocus]="!loadEnabled()" mat-button>Load File</button>
+    <button #importButton (click)="importInfrastructure()" [autofocus]="loadEnabled()" [disabled]="loadDisabled" mat-button>Import</button>
 </mat-dialog-actions>

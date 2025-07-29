@@ -139,12 +139,8 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        let column = sortState.active;
-        if (sortState.active === 'name') {
-            column = 'name'
-        }
         let direction = sortState.direction === 'asc' ? 1 : -1
-        this.state.value['application-list'].sortColumns = [{column: column, sortDirection: direction}];
+        this.state.value['application-list'].sortColumns = [{column: sortState.active, sortDirection: direction}];
         this.loadApplications();
     }
 

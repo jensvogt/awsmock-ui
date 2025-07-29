@@ -102,11 +102,11 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
                 return;
             }
             const reader = new FileReader();
-            reader.onload = () => {
+            reader.onloadend = () => {
                 const content: any = reader.result;
                 this.dialogRef.close({functionArn: this.functionArn, functionCode: content.split(',')[1], version: this.version});
             };
-            reader.addEventListener("progress", this.handleProgress);
+            //reader.addEventListener("progress", this.handleProgress);
             reader.readAsDataURL(file);
 
             this.uploadSuccess = true;

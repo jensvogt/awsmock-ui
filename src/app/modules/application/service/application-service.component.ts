@@ -1,7 +1,17 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest, RebuildApplicationRequest, StartApplicationRequest, StopApplicationRequest, UpdateApplicationRequest} from "../model/application-item";
+import {
+    AddApplicationRequest,
+    DeleteApplicationRequest,
+    GetApplicationRequest,
+    RebuildApplicationRequest,
+    StartAllApplicationsRequest,
+    StartApplicationRequest,
+    StopAllApplicationsRequest,
+    StopApplicationRequest,
+    UpdateApplicationRequest
+} from "../model/application-item";
 
 @Injectable({providedIn: 'root'})
 export class ApplicationService {
@@ -84,6 +94,18 @@ export class ApplicationService {
     }
 
     /**
+     * @brief Starts all application
+     *
+     * @param request start all applications request
+     */
+    public startAllApplications(request: StartAllApplicationsRequest) {
+        request.region = this.region;
+        request.user = this.user;
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'start-all-applications');
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    /**
      * @brief Stops an application
      *
      * @param request stop application request
@@ -92,6 +114,16 @@ export class ApplicationService {
         request.region = this.region;
         request.user = this.user;
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'stop-application');
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    /**
+     * @brief Stops all applications
+     *
+     * @param request stop all applications request
+     */
+    public stopAllApplications(request: StopAllApplicationsRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'stop-all-applications');
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
 

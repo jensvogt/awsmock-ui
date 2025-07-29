@@ -121,11 +121,20 @@
   font-size: 16px !important;
 }
 
-
 .resizable-mat-dialog-panel {
   resize: both;
   overflow: auto;
   max-width: unset !important;
   max-height: unset !important;
   position: absolute !important;
+}
+
+.spinner-loading {
+  display: flex;
+  justify-content: center;
+  vertical-align: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  height: 100%;
 }

@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
-import {selectApplicationCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/application-list.selectors";
+import {selectApplicationCounters, selectIsLoading, selectPageIndex, selectPageSize, selectPrefix} from "./state/application-list.selectors";
 import {applicationListActions} from "./state/application-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -17,6 +17,7 @@ import {ApplicationAddDialog} from "../application-add/application-add-dialog.co
 import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
 import {ApplicationService} from "../service/application-service.component";
 import {ApplicationLogsDialog} from "../application-logs/application-logs.component";
+import {ProgressSpinnerDialogComponent} from "../../../shared/spinner/progress-spinner.component";
 
 @Component({
     selector: 'application-list',
@@ -28,12 +29,12 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
     // Last update
     lastUpdate: Date = new Date();
-    loading: boolean = false;
 
     // Observables
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
+    loading$: Observable<boolean> = this.store.select(selectIsLoading);
     listApplicationCountersResponse$: Observable<ListApplicationCountersResponse> = this.store.select(selectApplicationCounters);
     columns: any[] = ['name', 'version', 'enabled', 'status', 'lastStarted', 'created', 'modified', 'actions'];
 
@@ -51,6 +52,8 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     prefixValue: string = this.state.value['application-list'].prefix;
     prefixSet: boolean = false;
 
+    dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> | undefined;
+
     // Misc
     protected readonly byteConversion = byteConversion;
 
@@ -67,9 +70,19 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.loadParameters();
+        this.loadApplications();
         const period = parseInt(<string>localStorage.getItem("autoReload"));
-        this.updateSubscription = interval(period).subscribe(() => this.loadParameters());
+        this.updateSubscription = interval(period).subscribe(() => this.loadApplications());
+        this.loading$.subscribe((response: any) => {
+            if (response) {
+                this.dialogRef = this.dialog.open(ProgressSpinnerDialogComponent, {
+                    panelClass: 'transparent',
+                    disableClose: true
+                });
+            } else {
+                this.dialogRef?.close();
+            }
+        });
     }
 
     ngOnDestroy(): void {
@@ -92,7 +105,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
             if (result) {
                 const period = parseInt(<string>localStorage.getItem("autoReload"));
                 this.updateSubscription?.unsubscribe();
-                this.updateSubscription = interval(period).subscribe(() => this.loadParameters());
+                this.updateSubscription = interval(period).subscribe(() => this.loadApplications());
             }
         });
     }
@@ -102,27 +115,27 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-        this.loadParameters();
+        this.loadApplications();
     }
 
     setPrefix() {
         this.prefixSet = true;
         this.state.value['application-list'].pageIndex = 0;
         this.state.value['application-list'].prefix = this.prefixValue;
-        this.loadParameters();
+        this.loadApplications();
     }
 
     unsetPrefix() {
         this.prefixValue = '';
         this.prefixSet = false;
         this.state.value['application-list'].prefix = '';
-        this.loadParameters();
+        this.loadApplications();
     }
 
     handlePageEvent(e: PageEvent) {
         this.state.value['application-list'].pageSize = e.pageSize;
         this.state.value['application-list'].pageIndex = e.pageIndex;
-        this.loadParameters();
+        this.loadApplications();
     }
 
     sortChange(sortState: Sort) {
@@ -132,20 +145,44 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         }
         let direction = sortState.direction === 'asc' ? 1 : -1
         this.state.value['application-list'].sortColumns = [{column: column, sortDirection: direction}];
-        this.loadParameters();
+        this.loadApplications();
     }
 
     navigateToDetails(name: string) {
         this.router.navigate(['/application-list/details/' + btoa(name)]);
     }
 
-    loadParameters() {
+    loadApplications() {
         this.lastUpdate = new Date();
         this.store.dispatch(applicationListActions.loadApplications({
             prefix: this.state.value['application-list'].prefix,
             pageSize: this.state.value['application-list'].pageSize,
             pageIndex: this.state.value['application-list'].pageIndex,
             sortColumns: this.state.value['application-list'].sortColumns
+        }));
+    }
+
+    startAll() {
+        this.lastUpdate = new Date();
+        this.store.dispatch(applicationListActions.startAllApplications({
+            request: {
+                prefix: this.state.value['application-list'].prefix,
+                pageSize: this.state.value['application-list'].pageSize,
+                pageIndex: this.state.value['application-list'].pageIndex,
+                sortColumns: this.state.value['application-list'].sortColumns
+            }
+        }));
+    }
+
+    stopAll() {
+        this.lastUpdate = new Date();
+        this.store.dispatch(applicationListActions.stopAllApplications({
+            request: {
+                prefix: this.state.value['application-list'].prefix,
+                pageSize: this.state.value['application-list'].pageSize,
+                pageIndex: this.state.value['application-list'].pageIndex,
+                sortColumns: this.state.value['application-list'].sortColumns
+            }
         }));
     }
 

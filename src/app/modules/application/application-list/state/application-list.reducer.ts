@@ -39,22 +39,32 @@ export const applicationListReducer = createReducer(
     on(applicationListActions.loadApplicationsFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
 
     // Start application
-    on(applicationListActions.startApplication, (state: ApplicationListState) => ({...state, starting: true, restart: false})),
-    on(applicationListActions.startApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications})),
-    on(applicationListActions.startApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error})),
+    on(applicationListActions.startApplication, (state: ApplicationListState) => ({...state, loading: true})),
+    on(applicationListActions.startApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false})),
+    on(applicationListActions.startApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
+
+    // Start all applications
+    on(applicationListActions.startAllApplications, (state: ApplicationListState) => ({...state, loading: true})),
+    on(applicationListActions.startAllApplicationsSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false})),
+    on(applicationListActions.startAllApplicationsFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
 
     // Stop application
-    on(applicationListActions.stopApplication, (state: ApplicationListState) => ({...state, stopping: true, restart: false})),
-    on(applicationListActions.stopApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications})),
-    on(applicationListActions.stopApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error})),
+    on(applicationListActions.stopApplication, (state: ApplicationListState) => ({...state, loading: true})),
+    on(applicationListActions.stopApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false})),
+    on(applicationListActions.stopApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
+
+    // Stop all applications
+    on(applicationListActions.stopAllApplications, (state: ApplicationListState) => ({...state, loading: true})),
+    on(applicationListActions.stopAllApplicationsSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false})),
+    on(applicationListActions.stopAllApplicationsFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
 
     // Rebuild application
-    on(applicationListActions.rebuildApplication, (state: ApplicationListState) => ({...state, stopping: true, restart: false})),
-    on(applicationListActions.rebuildApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications})),
-    on(applicationListActions.rebuildApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error})),
+    on(applicationListActions.rebuildApplication, (state: ApplicationListState) => ({...state, loading: true})),
+    on(applicationListActions.rebuildApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false})),
+    on(applicationListActions.rebuildApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
 
     // Delete application
     on(applicationListActions.deleteApplication, (state: ApplicationListState) => ({...state, loading: true})),
-    on(applicationListActions.deleteApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false, reload: true})),
-    on(applicationListActions.deleteApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false, reload: true})),
+    on(applicationListActions.deleteApplicationSuccess, (state: ApplicationListState, {applications}) => ({...state, listApplicationResponse: applications, loading: false})),
+    on(applicationListActions.deleteApplicationFailure, (state: ApplicationListState, {error}) => ({...state, error: error, loading: false})),
 );

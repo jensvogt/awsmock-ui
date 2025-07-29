@@ -73,6 +73,24 @@ export interface StopApplicationRequest {
     sortColumns: SortColumn[]
 }
 
+export interface StartAllApplicationsRequest {
+    region?: string;
+    user?: string;
+    prefix: string,
+    pageSize: number,
+    pageIndex: number,
+    sortColumns: SortColumn[]
+}
+
+export interface StopAllApplicationsRequest {
+    region?: string;
+    user?: string;
+    prefix: string,
+    pageSize: number,
+    pageIndex: number,
+    sortColumns: SortColumn[]
+}
+
 export interface RestartApplicationRequest {
     region?: string;
     user?: string;

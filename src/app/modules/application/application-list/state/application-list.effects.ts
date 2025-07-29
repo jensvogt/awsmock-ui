@@ -47,6 +47,18 @@ export class ApplicationListEffects {
         ),
     ));
 
+    startAllApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.startAllApplications),
+        mergeMap(action =>
+            this.applicationService.startAllApplications(action.request)
+                .pipe(map((applications: any) => applicationListActions.startAllApplicationsSuccess({applications})),
+                    catchError((error) =>
+                        of(applicationListActions.startAllApplicationsFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
     stopApplication$ = createEffect(() => this.actions$.pipe(
         ofType(applicationListActions.stopApplication),
         mergeMap(action =>
@@ -54,6 +66,18 @@ export class ApplicationListEffects {
                 .pipe(map((applications: any) => applicationListActions.stopApplicationSuccess({applications})),
                     catchError((error) =>
                         of(applicationListActions.stopApplicationFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    stopAllApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.stopAllApplications),
+        mergeMap(action =>
+            this.applicationService.stopAllApplications(action.request)
+                .pipe(map((applications: any) => applicationListActions.stopAllApplicationsSuccess({applications})),
+                    catchError((error) =>
+                        of(applicationListActions.stopAllApplicationsFailure({error: error.message}))
                     )
                 )
         ),

@@ -4,8 +4,8 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="fill-remaining-space">
-            Applications ({{ (listApplicationCountersResponse$ | async)?.total }})
-        </span>
+                Applications ({{ (listApplicationCountersResponse$ | async)?.total }})
+            </span>
         <button (click)="addApplication()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new application">
             <mat-icon>add</mat-icon>
         </button>
@@ -22,6 +22,19 @@
         </button>
         <mat-menu #mainmenu="matMenu" xPosition="before">
             <button mat-menu-item>
+                <button (click)="startAll()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">power</span>
+                    </mat-icon>
+                    <span>Start all applications</span>
+                </button>
+                <button (click)="stopAll()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">power_off</span>
+                    </mat-icon>
+                    <span>Stop all applications</span>
+                </button>
+                <mat-divider/>
                 <button (click)="autoReload()" mat-menu-item>
                     <mat-icon>
                         <span class="material-symbols-outlined">hourglass</span>
@@ -156,7 +169,7 @@
                            [length]="(listApplicationCountersResponse$ | async)?.total"
                            [pageIndex]="(pageIndex$ | async)"
                            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-                           [pageSize]="(pageSize$ | async)??false"
+                           [pageSize]="(pageSize$ | async)"
                            [showFirstLastButtons]="showFirstLastButtons"
                            aria-label="Select page" style="width:99%; margin-left:15px">
 

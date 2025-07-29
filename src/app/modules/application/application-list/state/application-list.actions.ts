@@ -1,6 +1,16 @@
 import {createAction, props} from '@ngrx/store';
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
-import {AddApplicationRequest, DeleteApplicationRequest, ListApplicationCountersResponse, RebuildApplicationRequest, RestartApplicationRequest, StartApplicationRequest, StopApplicationRequest} from "../../model/application-item";
+import {
+    AddApplicationRequest,
+    DeleteApplicationRequest,
+    ListApplicationCountersResponse,
+    RebuildApplicationRequest,
+    RestartApplicationRequest,
+    StartAllApplicationsRequest,
+    StartApplicationRequest,
+    StopAllApplicationsRequest,
+    StopApplicationRequest
+} from "../../model/application-item";
 
 export const applicationListActions = {
     initialize: createAction('[application-list] initialize'),
@@ -34,6 +44,16 @@ export const applicationListActions = {
     stopApplication: createAction('[application-list] Stop application', props<{ request: StopApplicationRequest }>()),
     stopApplicationSuccess: createAction('[application-list] Stop application success', props<{ applications: ListApplicationCountersResponse }>()),
     stopApplicationFailure: createAction('[application-list] Stop application error', props<{ error: string }>()),
+
+    // Start all application
+    startAllApplications: createAction('[application-list] Start all applications', props<{ request: StartAllApplicationsRequest }>()),
+    startAllApplicationsSuccess: createAction('[application-list] Start all applications success', props<{ applications: ListApplicationCountersResponse }>()),
+    startAllApplicationsFailure: createAction('[application-list] Start all applications error', props<{ error: string }>()),
+
+    // Stop all application
+    stopAllApplications: createAction('[application-list] Stop all applications', props<{ request: StopAllApplicationsRequest }>()),
+    stopAllApplicationsSuccess: createAction('[application-list] Stop all applications success', props<{ applications: ListApplicationCountersResponse }>()),
+    stopAllApplicationsFailure: createAction('[application-list] Stop all applications error', props<{ error: string }>()),
 
     // Delete application
     deleteApplication: createAction('[application-list] Delete application', props<{ request: DeleteApplicationRequest }>()),

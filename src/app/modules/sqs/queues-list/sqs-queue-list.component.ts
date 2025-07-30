@@ -3,13 +3,13 @@ import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {ListQueueCountersResponse, SqsQueueItem} from "../model/sqs-queue-item";
 import {Sort} from "@angular/material/sort";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
 import {SqsService} from "../service/sqs-service.component";
 import {SendMessageComponentDialog} from "../message-send/send-message.component";
 import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
-import {selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from "./state/sqs-queue-list.selectors";
+import {selectIsLoading, selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from "./state/sqs-queue-list.selectors";
 import {sqsQueueListActions} from "./state/sqs-queue-list.actions";
 import {SQSQueueListState} from "./state/sqs-queue-list.reducer";
 import {byteConversion} from "../../../shared/byte-utils.component";
@@ -18,6 +18,7 @@ import {SqsMessageDialogResult} from "../model/sqs-message-item";
 import {MessageExportComponent} from "../message-export/message-export.component";
 import {ImportMessagesComponentDialog} from "../message-import/message-import.component";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {ProgressSpinnerDialogComponent} from "../../../shared/spinner/progress-spinner.component";
 
 @Component({
     selector: 'sqs-queue-list',
@@ -52,11 +53,21 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
     prefixValue: string = this.state.value['sqs-queue-list'].prefix;
     prefixSet: boolean = false;
 
+    // Loading
+    loading$: Observable<boolean> = this.store.select(selectIsLoading);
+    dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> | undefined;
+
     // Misc
     protected readonly byteConversion = byteConversion;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<SQSQueueListState>, private readonly sqsService: SqsService,
                 private readonly location: Location, private readonly store: Store) {
+    }
+
+    ngOnInit(): void {
+        this.loadQueues();
+        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        this.updateSubscription = interval(period).subscribe(() => this.loadQueues());
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data?.length) {
@@ -64,13 +75,16 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        //this.listQueueCountersResponse$.subscribe((data) => console.log("Data: ", data));
-    }
-
-    ngOnInit(): void {
-        this.loadQueues();
-        const period = parseInt(<string>localStorage.getItem("autoReload"));
-        this.updateSubscription = interval(period).subscribe(() => this.loadQueues());
+        this.loading$.subscribe((response: any) => {
+            if (response) {
+                this.dialogRef = this.dialog.open(ProgressSpinnerDialogComponent, {
+                    panelClass: 'transparent',
+                    disableClose: true
+                });
+            } else {
+                this.dialogRef?.close();
+            }
+        });
     }
 
     ngOnDestroy(): void {

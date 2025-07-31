@@ -59,6 +59,11 @@ export class ApplicationUploadDialog implements OnInit {
 
     ngOnInit() {
         this.dialogRef.updateSize("620px", "500px");
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close();
+            }
+        });
     }
 
     // Method to handle file upload Handler for file input change

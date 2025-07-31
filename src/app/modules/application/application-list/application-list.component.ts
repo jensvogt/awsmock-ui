@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
-import {selectApplicationCounters, selectIsLoading, selectPageIndex, selectPageSize, selectPrefix} from "./state/application-list.selectors";
+import {selectApplicationCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/application-list.selectors";
 import {applicationListActions} from "./state/application-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -17,7 +17,6 @@ import {ApplicationAddDialog} from "../application-add/application-add-dialog.co
 import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
 import {ApplicationService} from "../service/application-service.component";
 import {ApplicationLogsDialog} from "../application-logs/application-logs.component";
-import {ProgressSpinnerDialogComponent} from "../../../shared/spinner/progress-spinner.component";
 
 @Component({
     selector: 'application-list',
@@ -34,7 +33,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
-    loading$: Observable<boolean> = this.store.select(selectIsLoading);
     listApplicationCountersResponse$: Observable<ListApplicationCountersResponse> = this.store.select(selectApplicationCounters);
     columns: any[] = ['name', 'version', 'enabled', 'status', 'lastStarted', 'created', 'modified', 'actions'];
 
@@ -51,8 +49,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     // Prefix
     prefixValue: string = this.state.value['application-list'].prefix;
     prefixSet: boolean = false;
-
-    dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> | undefined;
 
     // Misc
     protected readonly byteConversion = byteConversion;
@@ -73,16 +69,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         this.loadApplications();
         const period = parseInt(<string>localStorage.getItem("autoReload"));
         this.updateSubscription = interval(period).subscribe(() => this.loadApplications());
-        this.loading$.subscribe((response: any) => {
-            if (response) {
-                this.dialogRef = this.dialog.open(ProgressSpinnerDialogComponent, {
-                    panelClass: 'transparent',
-                    disableClose: true
-                });
-            } else {
-                this.dialogRef?.close();
-            }
-        });
     }
 
     ngOnDestroy(): void {

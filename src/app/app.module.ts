@@ -10,7 +10,7 @@ import {provideStore, StoreModule} from "@ngrx/store";
 import {reducers} from "./state/root.reducer";
 import {RootEffect} from "./state/root.effect";
 import {MatIconModule} from "@angular/material/icon";
-import {provideHttpClient} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -20,14 +20,17 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {BinaryFileUploadComponent} from "./shared/binary-file-upload/binary-file-upload.component";
 import {MatDivider} from "@angular/material/divider";
+import {LoadingIndicatorComponent} from "./shared/spinner/loading-spinner.component";
+import {LoadingInterceptor} from "./shared/spinner/loading-interceptor.component";
 
 @NgModule({
     declarations: [AppComponent],
     providers: [
         provideRouter(routes),
-        provideHttpClient(),
+        provideHttpClient(withInterceptorsFromDi()),
         provideStore(reducers, {}),
         provideEffects(RootEffect),
+        {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
     ],
     imports: [
         BrowserModule,
@@ -54,7 +57,8 @@ import {MatDivider} from "@angular/material/divider";
         MatMenuTrigger,
         MatMenu,
         MatMenuItem,
-        MatDivider
+        MatDivider,
+        LoadingIndicatorComponent
     ],
     bootstrap: [AppComponent]
 })

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
-import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {SqsService} from "../service/sqs-service.component";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
@@ -12,12 +12,11 @@ import {ViewMessageComponentDialog} from "../message-view/view-message.component
 import {SendMessageComponentDialog} from "../message-send/send-message.component";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
-import {selectIsLoading, selectMessageCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/sqs-message-list.selectors";
+import {selectMessageCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/sqs-message-list.selectors";
 import {sqsMessageListActions} from "./state/sqs-message-list.actions";
 import {SQSMessageListState} from "./state/sqs-message-list.reducer";
 import {byteConversion} from '../../../shared/byte-utils.component';
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
-import {ProgressSpinnerDialogComponent} from "../../../shared/spinner/progress-spinner.component";
 
 @Component({
     selector: 'sqs-message-list',
@@ -59,10 +58,6 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
     // Sorting, default create descending
     sortColumns: SortColumn[] = [{column: 'created', sortDirection: 1}];
 
-    // Loading
-    loading$: Observable<boolean> = this.store.select(selectIsLoading);
-    dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> | undefined;
-
     protected readonly byteConversion = byteConversion;
     private routerSubscription: any;
 
@@ -93,16 +88,6 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
             if (data?.length) {
                 this.prefixValue = data;
                 this.prefixSet = true;
-            }
-        });
-        this.loading$.subscribe((response: any) => {
-            if (response) {
-                this.dialogRef = this.dialog.open(ProgressSpinnerDialogComponent, {
-                    panelClass: 'transparent',
-                    disableClose: true
-                });
-            } else {
-                this.dialogRef?.close();
             }
         });
         //this.listMessageCountersResponse$.subscribe((data) => console.log("Message Data: ", data));

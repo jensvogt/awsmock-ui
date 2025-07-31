@@ -3,7 +3,7 @@ import {PageEvent} from "@angular/material/paginator";
 import {Location} from "@angular/common";
 import {Sort} from "@angular/material/sort";
 import {interval, Observable, Subscription} from "rxjs";
-import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ListTopicCountersResponse} from "../model/sns-topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
 import {SnsService} from "../service/sns-service.component";
@@ -11,12 +11,11 @@ import {PublishMessageComponentDialog} from "../message-publish/publish-message.
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {State, Store} from "@ngrx/store";
 import {snsTopicListActions} from "./state/sns-topic-list.actions";
-import {selectIsLoading, selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
+import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
 import {SNSTopicListState} from "./state/sns-topic-list.reducer";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
-import {ProgressSpinnerDialogComponent} from "../../../shared/spinner/progress-spinner.component";
 
 @Component({
     selector: 'sns-topic-list-component',
@@ -51,10 +50,6 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     prefixSet: boolean = false;
     prefixValue: string = '';
 
-    // Loading
-    loading$: Observable<boolean> = this.store.select(selectIsLoading);
-    dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> | undefined;
-    
     protected readonly byteConversion = byteConversion;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly state: State<SNSTopicListState>, private readonly store: Store,
@@ -66,16 +61,6 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
         const period = parseInt(<string>localStorage.getItem("autoReload"));
         this.updateSubscription = interval(period).subscribe(() => this.loadTopics());
         this.listTopicCountersResponse$.subscribe((data) => console.log("Topic list data: ", data));
-        this.loading$.subscribe((response: any) => {
-            if (response) {
-                this.dialogRef = this.dialog.open(ProgressSpinnerDialogComponent, {
-                    panelClass: 'transparent',
-                    disableClose: true
-                });
-            } else {
-                this.dialogRef?.close();
-            }
-        });
     }
 
     ngOnDestroy(): void {

@@ -3,7 +3,7 @@ import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
-import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {interval, Observable, Subscription} from "rxjs";
 import {SnsMessageCountersResponse, SnsMessageItem} from "../model/sns-message-item";
 import {PublishMessageComponentDialog} from "../message-publish/publish-message.component";
@@ -16,8 +16,6 @@ import {SnsMessageDetailsDialog} from "../message-details/sns-message-details.co
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
-import {selectIsLoading} from "../topic-list/state/sns-topic-list.selectors";
-import {ProgressSpinnerDialogComponent} from "../../../shared/spinner/progress-spinner.component";
 
 @Component({
     selector: 'sns-message-list-component',
@@ -51,10 +49,6 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
     // Prefix
     prefixSet: boolean = false;
     prefixValue: string = '';
-
-    // Loading
-    loading$: Observable<boolean> = this.store.select(selectIsLoading);
-    dialogRef: MatDialogRef<ProgressSpinnerDialogComponent> | undefined;
     protected readonly byteConversion = byteConversion;
 
     // Auto-update
@@ -72,16 +66,6 @@ export class SnsMessageListComponent implements OnInit, OnDestroy {
         });
         const period = parseInt(<string>localStorage.getItem("autoReload"));
         this.updateSubscription = interval(period).subscribe(() => this.loadMessages());
-        this.loading$.subscribe((response: any) => {
-            if (response) {
-                this.dialogRef = this.dialog.open(ProgressSpinnerDialogComponent, {
-                    panelClass: 'transparent',
-                    disableClose: true
-                });
-            } else {
-                this.dialogRef?.close();
-            }
-        });
         this.loadMessages();
     }
 

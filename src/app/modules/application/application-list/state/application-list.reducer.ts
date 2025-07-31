@@ -23,7 +23,7 @@ export const initialState: ApplicationListState = {
     pageIndex: 0,
     loading: false,
     reload: false,
-    sortColumns: [{column: 'name', sortDirection: -1}],
+    sortColumns: [{column: 'name', sortDirection: 1}],
     error: {}
 };
 

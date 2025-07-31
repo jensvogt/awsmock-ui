@@ -8,11 +8,6 @@ export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
 const selectApplicationDetailsFeature: SelectorFeatureType<ApplicationDetailsState> =
     createFeatureSelector<ApplicationDetailsState>(applicationDetailFeatureKey);
 
-export const selectIsLoading: SelectorType<boolean> = createSelector(
-    selectApplicationDetailsFeature,
-    (state: ApplicationDetailsState) => state.loading
-);
-
 export const selectApplicationItem: SelectorType<ApplicationItem> = createSelector(
     selectApplicationDetailsFeature,
     (state: ApplicationDetailsState) => state?.getApplicationResponse.application

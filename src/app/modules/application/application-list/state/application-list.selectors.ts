@@ -9,11 +9,6 @@ export type SelectorFeatureType<T> = MemoizedSelector<object, T>;
 const selectApplicationListFeature: SelectorFeatureType<ApplicationListState> =
     createFeatureSelector<ApplicationListState>(applicationListFeatureKey);
 
-export const selectIsLoading: SelectorType<boolean> = createSelector(
-    selectApplicationListFeature,
-    (state: ApplicationListState) => state.loading
-);
-
 export const selectPrefix: SelectorType<string> = createSelector(
     selectApplicationListFeature,
     (state: ApplicationListState) => state?.prefix

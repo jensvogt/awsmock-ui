@@ -9,10 +9,11 @@ import {MatSelect} from "@angular/material/select";
 import {SqsService} from "../../sqs/service/sqs-service.component";
 import {SnsService} from "../../sns/service/sns-service.component";
 import {MatInput} from "@angular/material/input";
-import {FilterRuleTypes, NotificationEvents} from "../../s3/model/s3-notification-event";
+import {S3FilterRuleTypes, S3NotificationEvents} from "../../s3/model/s3-notification-event";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {UpdateEventSourceRequest} from "../model/lambda-event-source-item";
 import {S3Service} from "../../s3/service/s3-service.component";
+import {DynamodbService} from "../../dynamodb/service/dynamodb.service";
 
 export interface EventType {
     value: string;
@@ -23,6 +24,7 @@ const EventTypes: Array<EventType> = [
     {value: 'SQS', viewValue: 'SQS'},
     {value: 'SNS', viewValue: 'SNS'},
     {value: 'S3', viewValue: 'S3'},
+    {value: 'DynamoDB', viewValue: 'DynamoDB'},
 ];
 
 @Component({
@@ -75,12 +77,17 @@ export class LambdaEventSourceEditDialog {
     selectedFilterRuleType: string = '';
     filterRuleValue: string = '';
 
+    // DynamoDB Events
+    tableArns: string[] = [];
+    selectedTableArn: string[] = [];
+
     protected readonly EventTypes = EventTypes;
-    protected readonly events = NotificationEvents;
-    protected readonly filterRuleTypes = FilterRuleTypes;
+    protected readonly events = S3NotificationEvents;
+    protected readonly filterRuleTypes = S3FilterRuleTypes;
 
     constructor(private readonly dialogRef: MatDialogRef<LambdaEventSourceEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
-                private readonly sqsService: SqsService, private readonly snsService: SnsService, private readonly s3Service: S3Service) {
+                private readonly sqsService: SqsService, private readonly snsService: SnsService, private readonly s3Service: S3Service,
+                private readonly dynamoDbService: DynamodbService) {
         this.functionArn = data.functionArn;
         this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(':') + 1);
         this.eventSourceArn = data.eventSourceArn;
@@ -95,6 +102,8 @@ export class LambdaEventSourceEditDialog {
             this.loadSnsArns();
         } else if (event.value === 'S3') {
             this.loadS3Arns();
+        } else if (event.value === 'DynamoDB') {
+            this.loadTableArns();
         }
     }
 
@@ -114,6 +123,12 @@ export class LambdaEventSourceEditDialog {
     loadS3Arns() {
         this.s3Service.listBucketArns().subscribe((data: any) => {
             this.bucketArns = data.bucketArns;
+        });
+    }
+
+    loadTableArns() {
+        this.dynamoDbService.listTableArns().subscribe((data: any) => {
+            this.tableArns = data.tableArns;
         });
     }
 

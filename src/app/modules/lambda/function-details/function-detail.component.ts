@@ -395,6 +395,11 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {functionArn: this.functionArn};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "30%"
+        dialogConfig.minWidth = '380px'
 
         this.dialog.open(LambdaEventSourceAddDialog, dialogConfig).afterClosed().subscribe((result: AddEventSourceRequest) => {
             if (result) {
@@ -414,7 +419,12 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {functionArn: this.functionArn, eventSourceArn: eventSourceArn, type: eventSourceType};
-        console.log("Event source type: ", eventSourceType);
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "30%"
+        dialogConfig.minWidth = '380px'
+        
         this.dialog.open(LambdaEventSourceEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result.EventSourceArn) {
                 this.lambdaService.updateEventSource(result)

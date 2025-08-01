@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>Add Event Source: {{ functionName }}</h2>
-<mat-dialog-content class="mat-typography" style="width: 500px">
+<mat-dialog-content class="mat-typography" style="width: 100%">
     <!------------------------------------------------------->
     <!-- Type selection                                    -->
     <!------------------------------------------------------->
@@ -74,6 +74,19 @@
         <mat-form-field style="width: 100%">
             <mat-label>Filter Rule Value</mat-label>
             <input [(ngModel)]="filterRuleValue" matInput value="">
+        </mat-form-field>
+    }
+    <!------------------------------------------------------->
+    <!-- DynamoDB                                               -->
+    <!------------------------------------------------------->
+    @if (selectedType === 'DynamoDB') {
+        <mat-form-field style="width: 100%">
+            <mat-label>Table ARN</mat-label>
+            <mat-select (selectionChange)="arnSelectionChanged($event)" [(ngModel)]="selectedTableArn" style="width:100%; margin-right:10px">
+                @for (arn of tableArns; track arn) {
+                    <mat-option [value]="arn">{{ arn }}</mat-option>
+                }
+            </mat-select>
         </mat-form-field>
     }
     <!------------------------------------------------------->

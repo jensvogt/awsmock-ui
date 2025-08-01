@@ -31,6 +31,7 @@ import {FooterComponent} from "../../shared/footer/footer.component";
 import {SqsService} from "../sqs/service/sqs-service.component";
 import {SnsService} from "../sns/service/sns-service.component";
 import {S3Service} from "../s3/service/s3-service.component";
+import {DynamodbService} from "../dynamodb/service/dynamodb.service";
 
 @NgModule({
     declarations: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
@@ -88,7 +89,7 @@ import {S3Service} from "../s3/service/s3-service.component";
         FooterComponent,
     ],
     exports: [LambdaFunctionListComponent, LambdaFunctionDetailsComponent],
-    providers: [LambdaService, SqsService, SnsService, S3Service],
+    providers: [LambdaService, SqsService, SnsService, S3Service, DynamodbService],
 })
 export class LambdaModule {
 }

@@ -1,4 +1,4 @@
-export const NotificationEvents = [
+export const S3NotificationEvents = [
     's3:ReducedRedundancyLostObject',
     's3:ObjectCreated:*',
     's3:ObjectCreated:Put',
@@ -28,7 +28,7 @@ export const NotificationEvents = [
     's3:ObjectTagging:Delete'
 ];
 
-export const FilterRuleTypes = [
+export const S3FilterRuleTypes = [
     'prefix',
     'postfix',
 ];

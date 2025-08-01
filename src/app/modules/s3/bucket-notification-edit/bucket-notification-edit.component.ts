@@ -9,7 +9,7 @@ import {MatSelect} from "@angular/material/select";
 import {LambdaService} from "../../lambda/service/lambda-service.component";
 import {LambdaFunctionItem} from "../../lambda/model/lambda-item";
 import {LambdaConfiguration} from "../model/s3-bucket-item";
-import {FilterRuleTypes, NotificationEvents} from "../model/s3-notification-event";
+import {S3FilterRuleTypes, S3NotificationEvents} from "../model/s3-notification-event";
 
 
 @Component({
@@ -36,12 +36,12 @@ export class BucketNotificationEditDialog implements OnInit {
 
     bucketName: string = '';
     notification: LambdaConfiguration = {} as any;
-    events: string[] = NotificationEvents;
+    events: string[] = S3NotificationEvents;
     selectedEvent: string = 's3:ObjectCreated:*';
     functionArns: string[] = [];
-    selectedFunction: string = NotificationEvents[0];
-    filterRuleTypes: string[] = FilterRuleTypes
-    selectedFilterRuleType: string = FilterRuleTypes[0];
+    selectedFunction: string = S3NotificationEvents[0];
+    filterRuleTypes: string[] = S3FilterRuleTypes
+    selectedFilterRuleType: string = S3FilterRuleTypes[0];
     filterRuleValue: string = '';
 
     constructor(private dialogRef: MatDialogRef<BucketNotificationEditDialog>, @Inject(MAT_DIALOG_DATA) public data: any, private lambdaService: LambdaService) {

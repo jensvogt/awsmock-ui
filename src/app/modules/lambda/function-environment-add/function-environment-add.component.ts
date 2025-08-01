@@ -30,7 +30,7 @@ export class LambdaEnvironmentAddDialog implements OnInit {
     key: string = '';
     value: string = '';
 
-    constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<LambdaEnvironmentAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly fb: FormBuilder, private readonly dialogRef: MatDialogRef<LambdaEnvironmentAddDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
     }
 
     ngOnInit() {

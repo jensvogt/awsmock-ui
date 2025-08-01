@@ -6,7 +6,7 @@ import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {Attribute, PutItemRequest} from "../model/item-item";
 import {CreateTableRequest} from "../model/table-item";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class DynamodbService {
 
     // Default headers for AwsMock HTTP requests
@@ -31,6 +31,11 @@ export class DynamodbService {
             sortColumns: sortColumns
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
+    }
+
+    public listTableArns() {
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "ListTableArns");
+        return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 
     public deleteTable(tableName: string) {

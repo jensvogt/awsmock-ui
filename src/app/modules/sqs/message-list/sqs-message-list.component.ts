@@ -168,13 +168,14 @@ export class SqsMessageListComponent implements OnInit, OnDestroy {
 
         const dialogConfig = new MatDialogConfig();
 
-        dialogConfig.disableClose = true;
+        dialogConfig.disableClose = false;
         dialogConfig.autoFocus = true;
         dialogConfig.data = {message: message};
-        dialogConfig.maxWidth = '100vw';
-        dialogConfig.maxHeight = '90vh';
+        dialogConfig.maxWidth = '100%';
+        dialogConfig.maxHeight = '100%';
+        dialogConfig.minHeight = '800px';
         dialogConfig.panelClass = 'full-screen-modal';
-        dialogConfig.width = "70%"
+        dialogConfig.width = "80%";
 
         this.dialog.open(ViewMessageComponentDialog, dialogConfig).afterClosed().subscribe(() => {
             this.loadMessages();

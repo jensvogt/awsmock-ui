@@ -98,7 +98,6 @@ export class ViewMessageComponentDialog implements OnInit {
                 this.close();
             }
         });
-        this.dialogRef.updateSize("1200px", "800px");
         this.loadMessageAttributes();
     }
 

@@ -23,6 +23,7 @@ import {s3ObjectListActions} from "../state/s3-object-list.actions";
 import {Store} from "@ngrx/store";
 import {S3ObjectListState} from "../state/s3-object-list.reducer";
 import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
+import {MatCardActions} from "@angular/material/card";
 
 @Component({
     selector: 's3-object-view',
@@ -64,7 +65,8 @@ import {GetObjectCommandOutput} from "@aws-sdk/client-s3";
         MatHeaderCellDef,
         MatNoDataRow,
         MatIcon,
-        MatIconButton
+        MatIconButton,
+        MatCardActions
     ]
 })
 export class S3ObjectViewDialog implements OnInit {
@@ -171,6 +173,27 @@ export class S3ObjectViewDialog implements OnInit {
         this.metadataSortColumns = [{column: column, sortDirection: direction}];
     }
 
+    addMetadata() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+
+        this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result?.metadata) {
+                this.metadata = this.metadataDatasource.data;
+                this.metadata.push(result.metadata);
+                this.metadataDatasource = new MatTableDataSource(this.metadata);
+                this.metadataLength = this.metadata.length;
+                let md: any = {};
+                this.metadata.forEach((element: S3ObjectMetadata) => {
+                    md[element.key!] = element.value;
+                });
+                this.store.dispatch(s3ObjectListActions.updateObject({bucketName: this.bucketName, key: this.key, metadata: md}));
+            }
+        });
+    }
+
     editMetadata(metadata: S3ObjectMetadata) {
         if (metadata) {
             const dialogConfig = new MatDialogConfig();
@@ -180,13 +203,17 @@ export class S3ObjectViewDialog implements OnInit {
             dialogConfig.data = {metadata: metadata};
 
             this.dialog.open(S3MetadataEditDialog, dialogConfig).afterClosed().subscribe(result => {
-                if (result && result.metadata) {
+                if (result?.metadata) {
                     let index = this.metadata.findIndex(x => x.key === result.metadata.key)
                     if (index > 0) {
                         this.metadata[index] = result.metadata
                         this.metadataDatasource = new MatTableDataSource(this.metadata);
                         this.metadataLength = this.metadata.length;
-                        this.store.dispatch(s3ObjectListActions.updateObject({bucketName: this.bucketName, key: this.key, metadata: this.metadata}));
+                        let md: any = {};
+                        this.metadata.forEach((element: S3ObjectMetadata) => {
+                            md[element.key!] = element.value;
+                        });
+                        this.store.dispatch(s3ObjectListActions.updateObject({bucketName: this.bucketName, key: this.key, metadata: md}));
                     }
                 }
             });
@@ -195,11 +222,16 @@ export class S3ObjectViewDialog implements OnInit {
 
     deleteMetadata(metadata: S3ObjectMetadata) {
         if (metadata.key) {
+            this.metadata = this.metadataDatasource.data;
             this.metadata = this.metadata.filter(element => {
                 return element.key !== metadata.key
             });
             this.metadataDatasource = new MatTableDataSource(this.metadata);
-            this.store.dispatch(s3ObjectListActions.updateObject({bucketName: this.bucketName, key: this.key, metadata: this.metadata}));
+            let md: any = {};
+            this.metadata.forEach((element: S3ObjectMetadata) => {
+                md[element.key!] = element.value;
+            });
+            this.store.dispatch(s3ObjectListActions.updateObject({bucketName: this.bucketName, key: this.key, metadata: md}));
         }
     }
 }

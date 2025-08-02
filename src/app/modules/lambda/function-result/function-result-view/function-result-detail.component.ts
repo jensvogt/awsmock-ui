@@ -57,6 +57,11 @@ export class LambdaResultDetail implements OnInit {
 
     ngOnInit() {
         this.dialogRef.updateSize("1400px", "830px");
+        this.dialogRef.keydownEvents().subscribe(event => {
+            if (event.key === "Escape") {
+                this.dialogRef.close();
+            }
+        });
         this.loadLambdaResults();
     }
 

@@ -57,20 +57,12 @@ export interface StartApplicationRequest {
     region?: string;
     user?: string;
     application: ApplicationItem;
-    prefix: string,
-    pageSize: number,
-    pageIndex: number,
-    sortColumns: SortColumn[]
 }
 
 export interface StopApplicationRequest {
     region?: string;
     user?: string;
     application: ApplicationItem;
-    prefix: string,
-    pageSize: number,
-    pageIndex: number,
-    sortColumns: SortColumn[]
 }
 
 export interface StartAllApplicationsRequest {
@@ -95,20 +87,12 @@ export interface RestartApplicationRequest {
     region?: string;
     user?: string;
     application: ApplicationItem;
-    prefix: string,
-    pageSize: number,
-    pageIndex: number,
-    sortColumns: SortColumn[]
 }
 
 export interface RebuildApplicationRequest {
     region?: string;
     user?: string;
     application: ApplicationItem;
-    prefix: string,
-    pageSize: number,
-    pageIndex: number,
-    sortColumns: SortColumn[]
 }
 
 export interface GetApplicationRequest {

@@ -151,15 +151,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     rebuildApplication() {
         this.lastUpdate = new Date();
-        this.store.dispatch(applicationListActions.rebuildApplication({
-            request: {
-                application: this.applicationItem,
-                prefix: '',
-                pageSize: -1,
-                pageIndex: -1,
-                sortColumns: []
-            }
-        }));
+        this.store.dispatch(applicationListActions.rebuildApplication({request: {application: this.applicationItem}}));
     }
 
     applicationLogs() {

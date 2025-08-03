@@ -146,26 +146,17 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
     startAll() {
         this.lastUpdate = new Date();
-        this.store.dispatch(applicationListActions.startAllApplications({
-            request: {
-                prefix: this.state.value['application-list'].prefix,
-                pageSize: this.state.value['application-list'].pageSize,
-                pageIndex: this.state.value['application-list'].pageIndex,
-                sortColumns: this.state.value['application-list'].sortColumns
-            }
-        }));
+        this.store.dispatch(applicationListActions.startAllApplications());
     }
 
     stopAll() {
         this.lastUpdate = new Date();
-        this.store.dispatch(applicationListActions.stopAllApplications({
-            request: {
-                prefix: this.state.value['application-list'].prefix,
-                pageSize: this.state.value['application-list'].pageSize,
-                pageIndex: this.state.value['application-list'].pageIndex,
-                sortColumns: this.state.value['application-list'].sortColumns
-            }
-        }));
+        this.store.dispatch(applicationListActions.stopAllApplications());
+    }
+
+    restartAll() {
+        this.lastUpdate = new Date();
+        this.store.dispatch(applicationListActions.restartAllApplications());
     }
 
     uploadCode(application: ApplicationItem) {
@@ -190,54 +181,22 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
     startApplication(application: ApplicationItem) {
         this.lastUpdate = new Date();
-        this.store.dispatch(applicationListActions.startApplication({
-            request: {
-                application: application,
-                prefix: this.state.value['application-list'].prefix,
-                pageSize: this.state.value['application-list'].pageSize,
-                pageIndex: this.state.value['application-list'].pageIndex,
-                sortColumns: this.state.value['application-list'].sortColumns
-            }
-        }));
+        this.store.dispatch(applicationListActions.startApplication({request: {application: application}}));
     }
 
     stopApplication(application: ApplicationItem) {
         this.lastUpdate = new Date();
-        this.store.dispatch(applicationListActions.stopApplication({
-            request: {
-                application: application,
-                prefix: this.state.value['application-list'].prefix,
-                pageSize: this.state.value['application-list'].pageSize,
-                pageIndex: this.state.value['application-list'].pageIndex,
-                sortColumns: this.state.value['application-list'].sortColumns
-            }
-        }));
+        this.store.dispatch(applicationListActions.stopApplication({request: {application: application}}));
     }
 
     restartApplication(application: ApplicationItem) {
         this.lastUpdate = new Date();
-        this.store.dispatch(applicationListActions.restartApplication({
-            request: {
-                application: application,
-                prefix: this.state.value['application-list'].prefix,
-                pageSize: this.state.value['application-list'].pageSize,
-                pageIndex: this.state.value['application-list'].pageIndex,
-                sortColumns: this.state.value['application-list'].sortColumns
-            }
-        }));
+        this.store.dispatch(applicationListActions.restartApplication({request: {application: application}}));
     }
 
     rebuildApplication(application: ApplicationItem) {
         this.lastUpdate = new Date();
-        this.store.dispatch(applicationListActions.rebuildApplication({
-            request: {
-                application: application,
-                prefix: this.state.value['application-list'].prefix,
-                pageSize: this.state.value['application-list'].pageSize,
-                pageIndex: this.state.value['application-list'].pageIndex,
-                sortColumns: this.state.value['application-list'].sortColumns
-            }
-        }));
+        this.store.dispatch(applicationListActions.rebuildApplication({request: {application: application}}));
     }
 
     applicationLogs(application: ApplicationItem) {

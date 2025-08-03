@@ -39,7 +39,7 @@ export class ApplicationListEffects {
         ofType(applicationListActions.startApplication),
         mergeMap(action =>
             this.applicationService.startApplication(action.request)
-                .pipe(map((applications: any) => applicationListActions.startApplicationSuccess({applications})),
+                .pipe(map(() => applicationListActions.startApplicationSuccess()),
                     catchError((error) =>
                         of(applicationListActions.startApplicationFailure({error: error.message}))
                     )
@@ -50,8 +50,8 @@ export class ApplicationListEffects {
     startAllApplication$ = createEffect(() => this.actions$.pipe(
         ofType(applicationListActions.startAllApplications),
         mergeMap(action =>
-            this.applicationService.startAllApplications(action.request)
-                .pipe(map((applications: any) => applicationListActions.startAllApplicationsSuccess({applications})),
+            this.applicationService.startAllApplications()
+                .pipe(map(() => applicationListActions.startAllApplicationsSuccess()),
                     catchError((error) =>
                         of(applicationListActions.startAllApplicationsFailure({error: error.message}))
                     )
@@ -63,7 +63,7 @@ export class ApplicationListEffects {
         ofType(applicationListActions.stopApplication),
         mergeMap(action =>
             this.applicationService.stopApplication(action.request)
-                .pipe(map((applications: any) => applicationListActions.stopApplicationSuccess({applications})),
+                .pipe(map(() => applicationListActions.stopApplicationSuccess()),
                     catchError((error) =>
                         of(applicationListActions.stopApplicationFailure({error: error.message}))
                     )
@@ -74,8 +74,8 @@ export class ApplicationListEffects {
     stopAllApplication$ = createEffect(() => this.actions$.pipe(
         ofType(applicationListActions.stopAllApplications),
         mergeMap(action =>
-            this.applicationService.stopAllApplications(action.request)
-                .pipe(map((applications: any) => applicationListActions.stopAllApplicationsSuccess({applications})),
+            this.applicationService.stopAllApplications()
+                .pipe(map(() => applicationListActions.stopAllApplicationsSuccess()),
                     catchError((error) =>
                         of(applicationListActions.stopAllApplicationsFailure({error: error.message}))
                     )
@@ -87,9 +87,21 @@ export class ApplicationListEffects {
         ofType(applicationListActions.restartApplication),
         mergeMap(action =>
             this.applicationService.restartApplication(action.request)
-                .pipe(map((applications: any) => applicationListActions.restartApplicationSuccess({applications})),
+                .pipe(map(() => applicationListActions.restartApplicationSuccess()),
                     catchError((error) =>
                         of(applicationListActions.restartApplicationFailure({error: error.message}))
+                    )
+                )
+        ),
+    ));
+
+    restartAllApplication$ = createEffect(() => this.actions$.pipe(
+        ofType(applicationListActions.restartAllApplications),
+        mergeMap(action =>
+            this.applicationService.restartAllApplications()
+                .pipe(map(() => applicationListActions.restartAllApplicationsSuccess()),
+                    catchError((error) =>
+                        of(applicationListActions.restartAllApplicationsFailure({error: error.message}))
                     )
                 )
         ),
@@ -99,7 +111,7 @@ export class ApplicationListEffects {
         ofType(applicationListActions.rebuildApplication),
         mergeMap(action =>
             this.applicationService.rebuildApplication(action.request)
-                .pipe(map((applications: any) => applicationListActions.rebuildApplicationSuccess({applications})),
+                .pipe(map(() => applicationListActions.rebuildApplicationSuccess()),
                     catchError((error) =>
                         of(applicationListActions.rebuildApplicationFailure({error: error.message}))
                     )

@@ -1,17 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {
-    AddApplicationRequest,
-    DeleteApplicationRequest,
-    GetApplicationRequest,
-    RebuildApplicationRequest,
-    StartAllApplicationsRequest,
-    StartApplicationRequest,
-    StopAllApplicationsRequest,
-    StopApplicationRequest,
-    UpdateApplicationRequest
-} from "../model/application-item";
+import {AddApplicationRequest, DeleteApplicationRequest, GetApplicationRequest, RebuildApplicationRequest, StartApplicationRequest, StopApplicationRequest, UpdateApplicationRequest} from "../model/application-item";
 
 @Injectable({providedIn: 'root'})
 export class ApplicationService {
@@ -96,13 +86,12 @@ export class ApplicationService {
     /**
      * @brief Starts all application
      *
-     * @param request start all applications request
+     * @par
+     * This call is asynchronous. so no return value
      */
-    public startAllApplications(request: StartAllApplicationsRequest) {
-        request.region = this.region;
-        request.user = this.user;
+    public startAllApplications() {
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'start-all-applications');
-        return this.http.post(this.baseUrl, request, {headers: headers});
+        return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 
     /**
@@ -120,11 +109,12 @@ export class ApplicationService {
     /**
      * @brief Stops all applications
      *
-     * @param request stop all applications request
+     * @par
+     * This call is asynchronous. so no return value
      */
-    public stopAllApplications(request: StopAllApplicationsRequest) {
+    public stopAllApplications() {
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'stop-all-applications');
-        return this.http.post(this.baseUrl, request, {headers: headers});
+        return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 
     /**
@@ -137,6 +127,14 @@ export class ApplicationService {
         request.user = this.user;
         let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'restart-application');
         return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    /**
+     * @brief Restarts all applications
+     */
+    public restartAllApplications() {
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'restart-all-application');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 
     /**

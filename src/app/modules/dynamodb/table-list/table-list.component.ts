@@ -53,6 +53,7 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
     prefixValue: string = this.state.value['dynamodb-table-list'].prefix;
     prefixSet: boolean = false;
     protected readonly byteConversion = byteConversion;
+    protected readonly btoa = btoa;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly location: Location, private readonly state: State<DynamodbTableListState>, private readonly store: Store, private readonly dynamodbService: DynamodbService) {
         this.prefix$.subscribe((data: string) => {
@@ -168,6 +169,29 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
 
     createTable(tableName: string) {
         this.store.dispatch(dynamodbTableListActions.addTable({tableName: tableName}));
+    }
+
+    editTable(tableName: string) {
+
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {};
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '100vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "70%"
+
+        /*this.dialog.open(DynamoDbEditTableDialog, dialogConfig).afterClosed().subscribe((result: CreateTableRequest) => {
+            if (result) {
+                this.dynamodbService.createTable(result)
+                    .subscribe(() => {
+                        this.snackBar.open('Table added, tableName: ' + result.TableName, 'Done', {duration: 5000});
+                        this.loadTables();
+                    });
+            }
+        });*/
     }
 
     deleteTable(tableName: string) {

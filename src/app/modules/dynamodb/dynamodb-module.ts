@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {AsyncPipe, DatePipe, NgIf} from '@angular/common';
+import {AsyncPipe, DatePipe} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
@@ -26,9 +26,12 @@ import {dynamodbItemListFeatureKey, dynamodbItemListReducer} from "./item-list/s
 import {DynamodbItemListEffects} from "./item-list/state/dynamodb-item-list.effects";
 import {FooterComponent} from "../../shared/footer/footer.component";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {TableDetailsComponent} from "./table-details/table-detail.component";
+import {dynamodbTableDetailFeatureKey, dynamodbTableDetailReducer} from "./table-details/state/table-details.reducer";
+import {DynamodbTableDetailEffects} from "./table-details/state/table-details.effects";
 
 @NgModule({
-    declarations: [DynamodbTableListComponent, DynamodbItemListComponent],
+    declarations: [DynamodbTableListComponent, DynamodbItemListComponent, TableDetailsComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -67,20 +70,20 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
         MatTabGroup,
         MatTab,
         MatButton,
-        NgIf,
         ReactiveFormsModule,
         FormsModule,
         AsyncPipe,
         DynamodbRoutingModule,
         StoreModule.forFeature(dynamodbTableListFeatureKey, dynamodbTableListReducer),
         StoreModule.forFeature(dynamodbItemListFeatureKey, dynamodbItemListReducer),
-        EffectsModule.forFeature([DynamodbTableListEffects, DynamodbItemListEffects]),
+        StoreModule.forFeature(dynamodbTableDetailFeatureKey, dynamodbTableDetailReducer),
+        EffectsModule.forFeature([DynamodbTableListEffects, DynamodbItemListEffects, DynamodbTableDetailEffects]),
         FooterComponent,
         MatMenu,
         MatMenuItem,
         MatMenuTrigger,
     ],
-    exports: [DynamodbTableListComponent],
+    exports: [DynamodbTableListComponent, DynamodbItemListComponent, TableDetailsComponent],
     providers: [DynamodbService],
 })
 export class DynamodbModule {

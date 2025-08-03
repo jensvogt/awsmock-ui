@@ -10,7 +10,9 @@ export interface KeySchema {
 
 export interface TableItem {
     id: string | undefined;
+    region: string | undefined;
     tableName: string | undefined;
+    status: string | undefined;
     items: number;
     size: number;
     created: Date | undefined;
@@ -33,4 +35,23 @@ export interface CreateTableRequest {
     AttributeDefinitions: Attribute[];
     KeySchema: KeySchema[];
     ProvisionedThroughput: ProvisionedThroughput;
+}
+
+export interface GetTableRequest {
+    region: string;
+    tableName: string;
+}
+
+export interface GetTableResponse {
+    tableCounters: TableItem;
+}
+
+export interface UpdateTableRequest {
+    region: string;
+    tableName: string;
+}
+
+export interface UpdateTableResponse {
+    region: string;
+    tableName: string;
 }

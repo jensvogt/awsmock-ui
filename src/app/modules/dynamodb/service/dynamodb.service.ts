@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from "../../../../environments/environment";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {Attribute, PutItemRequest} from "../model/item-item";
-import {CreateTableRequest} from "../model/table-item";
+import {CreateTableRequest, GetTableRequest, UpdateTableRequest} from "../model/table-item";
 
 @Injectable({providedIn: 'root'})
 export class DynamodbService {
@@ -52,7 +52,7 @@ export class DynamodbService {
         return this.http.post(this.baseUrl, request, {headers: headers});
     }
 
-    public getTable(tableId: string, userName: string) {
+    /*public getTable(tableId: string, userName: string) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "GetTableDetails");
         const body = {
             Region: environment.awsmockRegion,
@@ -60,6 +60,16 @@ export class DynamodbService {
             TableId: tableId
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
+    }*/
+
+    public getTable(request: GetTableRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "GetTableDetailCounters");
+        return this.http.post(this.baseUrl, request, {headers: headers});
+    }
+
+    public updateTable(request: UpdateTableRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "UpdateTable");
+        return this.http.post(this.baseUrl, request, {headers: headers});
     }
 
     public listItemCounters(tableName: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {

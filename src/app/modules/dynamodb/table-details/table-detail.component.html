@@ -6,18 +6,18 @@
             </button>
         </span>
         <span class="fill-remaining-space">
-            Application Details: {{ this.applicationName }}
+            Table Details: {{ tableName }}
         </span>
         <span>
-            <button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
+            <!--button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>upload</mat-icon>
             </button>
             <button (click)="applicationLogs()" [matTooltipShowDelay]="1000" aria-label="Show application logs" mat-icon-button matTooltip="Show application logs">
                 <mat-icon>notes</mat-icon>
             </button>
-            <button (click)="rebuildApplication()" [matTooltipShowDelay]="1000" aria-label="Rebuild application" mat-icon-button matTooltip="Rebuild application">
+            <button- (click)="rebuildApplication()" [matTooltipShowDelay]="1000" aria-label="Rebuild application" mat-icon-button matTooltip="Rebuild application">
                 <mat-icon><span class="material-symbols-outlined">reset_wrench</span></mat-icon>
-            </button>
+            </button-->
             <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -28,39 +28,35 @@
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            @if (applicationDetails$ | async; as application) {
-                <mat-grid-list cols="4" rowHeight="400px">
+            @if (tableDetails$ | async; as table) {
+                <mat-grid-list cols="2" rowHeight="400px">
                     <mat-grid-tile [colspan]="1" [rowspan]="1">
                         <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
                                     <p class="mat-list-span-title" matListItemTitle>Region: </p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.region }}</p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ table.region }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Application name: </p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.name }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Table name: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ table.tableName }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Archive: </p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.archive }}
-                                        <button [cdkCopyToClipboard]="application.archive" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                                            <mat-icon class="copy-icon">content_copy</mat-icon>
-                                        </button>
-                                    </p>
+                                    <p class="mat-list-span-title" matListItemTitle>Status: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ table.status }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Type: </p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.runType }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Items: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ table.items }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Container Name: </p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.containerName }}</p>
+                                    <p class="mat-list-span-title" matListItemTitle>Size: </p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ byteConversion(table.size) }}</p>
                                 </mat-list-item>
                             </mat-list>
                         </div>
                     </mat-grid-tile>
-                    <mat-grid-tile [colspan]="1" [rowspan]="1">
+                    <!--mat-grid-tile [colspan]="1" [rowspan]="1">
                         <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
@@ -113,21 +109,19 @@
                                 </mat-list-item>
                             </mat-list>
                         </div>
-                    </mat-grid-tile>
+                    </mat-grid-tile-->
                     <mat-grid-tile [colspan]="1" [rowspan]="1">
                         <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                             <mat-list>
                                 <mat-list-item style="height:80px">
-                                    <p class="mat-list-span-title" matListItemTitle>Last Started:</p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.lastStarted ? (application.lastStarted | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                                </mat-list-item>
-                                <mat-list-item style="height:80px">
                                     <p class="mat-list-span-title" matListItemTitle>Created:</p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.created ? (application.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ table.created ? (table.created | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
                                     <p class="mat-list-span-title" matListItemTitle>Modified:</p>
-                                    <p class="mat-list-span-value" matListItemLine>{{ application.modified ? (application.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                                    <p class="mat-list-span-value" matListItemLine>{{ table.modified ? (table.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                                </mat-list-item>
+                                <mat-list-item style="height:80px">
                                 </mat-list-item>
                                 <mat-list-item style="height:80px">
                                 </mat-list-item>
@@ -142,9 +136,9 @@
     </mat-card>
     <mat-card appearance="outlined" style="margin-top: 5px;">
         <mat-card-content>
-            @if (applicationDetails$ | async; as application) {
+            @if (tableDetails$ | async; as application) {
                 <mat-tab-group>
-                    <mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Application environment variables">
+                    <!--mat-tab [matTooltipShowDelay]="1000" label="Environment" matTooltip="Application environment variables">
                         <mat-card-actions class="head-buttons">
                             <button (click)="addEnvironment()" [matTooltipShowDelay]="1000" aria-label="Add environment variable" mat-icon-button matTooltip="Add a new environment variable">
                                 <mat-icon>add</mat-icon>
@@ -286,7 +280,7 @@
                                        [showFirstLastButtons]="true"
                                        aria-label="Select page">
                         </mat-paginator>
-                    </mat-tab>
+                    </mat-tab-->
                 </mat-tab-group>
             }
         </mat-card-content>

@@ -2,6 +2,8 @@ export function byteConversion(bytes: number | undefined, decimals = 2): string 
 
     if (bytes === 0 || bytes === undefined) return '0';
 
+    // if (bytes < 1024) return '' + bytes + "b";
+
     const kiloByte = 1024;
     const decimal = decimals < 0 ? 0 : decimals;
     const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];

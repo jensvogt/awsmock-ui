@@ -1,118 +1,118 @@
 <mat-card appearance="outlined" style="margin: 3px">
-  <mat-card-header>
-    <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <span class="fill-remaining-space">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
       SNS Messages: {{ topicName }} ({{ (listMessageCountersResponse$ | async)?.total }})
     </span>
-    <button (click)="publishMessage()" aria-label="Refresh" mat-icon-button>
-      <mat-icon>add</mat-icon>
-    </button>
-    <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
-      <mat-icon>refresh</mat-icon>
-    </button>
-    <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #mainmenu="matMenu" xPosition="before">
-      <button mat-menu-item>
-        <button (click)="autoReload()" mat-menu-item>
-          <mat-icon>
-            <span class="material-symbols-outlined">hourglass</span>
-          </mat-icon>
-          <span>Auto Reload</span>
+        <button (click)="publishMessage()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>add</mat-icon>
         </button>
-      </button>
-    </mat-menu>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-card appearance="outlined" style="margin: -10px">
-      <mat-card-actions align="start">
-        <mat-form-field style="width:100%">
-          <mat-label>Prefix</mat-label>
-          <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
-          @if (prefixSet) {
-            <button (click)="unsetPrefix()" mat-icon-button matSuffix style="float: right">
-              <mat-icon matSuffix>close</mat-icon>
+        <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #mainmenu="matMenu" xPosition="before">
+            <button mat-menu-item>
+                <button (click)="autoReload()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">hourglass</span>
+                    </mat-icon>
+                    <span>Auto Reload</span>
+                </button>
             </button>
-          }
-          <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
-            <mat-icon matSuffix>search</mat-icon>
-          </button>
-        </mat-form-field>
-      </mat-card-actions>
-      <div class="table-container">
-        @if (listMessageCountersResponse$ | async; as messageCounters) {
-          <div class="row">
-            <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.messages" class="mat-elevation-z8 queue-table" mat-table matSort>
-              <ng-container matColumnDef="messageId">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
-                <td *matCellDef="let element" mat-cell>
-                  <div class="with-icon">
-                    <mat-nav-list>
-                      <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
-                    </mat-nav-list>
-                    <button [cdkCopyToClipboard]="element.key" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
-                      <mat-icon class="copy-icon">content_copy</mat-icon>
+        </mat-menu>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-card appearance="outlined" style="margin: -10px">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+                    @if (prefixSet) {
+                        <button (click)="unsetPrefix()" mat-icon-button matSuffix style="float: right">
+                            <mat-icon matSuffix>close</mat-icon>
+                        </button>
+                    }
+                    <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
                     </button>
-                  </div>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="contentType">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Content type" sortActionDescription="Sort by content type">Content Type</th>
-                <td *matCellDef="let element" mat-cell> {{ element.contentType }}</td>
-              </ng-container>
-              <ng-container matColumnDef="size">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by message size">Size</th>
-                <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
-              </ng-container>
-              <ng-container matColumnDef="status">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by message status">Status</th>
-                <td *matCellDef="let element" mat-cell> {{ element.messageStatus }}</td>
-              </ng-container>
-              <ng-container matColumnDef="created">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by created">Created</th>
-                <td *matCellDef="let element" mat-cell> {{ element.created | date:'dd-MM-yyyy HH:mm:ss' }}</td>
-              </ng-container>
-              <ng-container matColumnDef="modified">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
-                <td *matCellDef="let element" mat-cell> {{ element.modified | date:'dd-MM-yyyy HH:mm:ss' }}</td>
-              </ng-container>
-              <ng-container matColumnDef="lastSend">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Last sent" sortActionDescription="Sort by last send">Last Send</th>
-                <td *matCellDef="let element" mat-cell> {{ element.lastSend | date:'dd-MM-yyyy HH:mm:ss' }}</td>
-              </ng-container>
-              <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
-                <td *matCellDef="let row" mat-cell>
-                  <button (click)="deleteMessage(row.messageId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-              <tr *matHeaderRowDef="columns" mat-header-row></tr>
-              <tr *matRowDef="let row; columns: columns;" mat-row></tr>
-              <tr *matNoDataRow class="mat-row">
-                <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
-                  No data matching the filter.
-                </td>
-              </tr>
-            </table>
-          </div>
-        }
-      </div>
-      <mat-paginator (page)="handlePageEvent($event)"
-        [disabled]="disabled"
-        [hidePageSize]="hidePageSize"
-        [length]="(listMessageCountersResponse$ | async)?.total"
-        [pageIndex]="(pageIndex$ | async)"
-        [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-        [pageSize]="(pageSize$ | async)"
-        [showFirstLastButtons]="showFirstLastButtons"
-        aria-label="Select page" style="width:99%; margin-left:15px">
-      </mat-paginator>
-    </mat-card>
-    <footer-component [lastUpdate]="lastUpdate"/>
-  </mat-card-content>
+                </mat-form-field>
+            </mat-card-actions>
+            <div class="table-container">
+                @if (listMessageCountersResponse$ | async; as messageCounters) {
+                    <div class="row">
+                        <table (matSortChange)="sortChange($event)" [dataSource]="messageCounters.messages" class="mat-elevation-z8 queue-table" mat-table matSort>
+                            <ng-container matColumnDef="messageId">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Message ID" sortActionDescription="Sort by id">Message ID</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    <div class="with-icon">
+                                        <mat-nav-list>
+                                            <a (click)="editMessage(element)" mat-list-item> {{ element.messageId }}</a>
+                                        </mat-nav-list>
+                                        <button [cdkCopyToClipboard]="element.messageId" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                            <mat-icon class="copy-icon">content_copy</mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="contentType">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Content type" sortActionDescription="Sort by content type">Content Type</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.contentType }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="size">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Size" sortActionDescription="Sort by message size">Size</th>
+                                <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by message status">Status</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.messageStatus }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="created">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Created" sortActionDescription="Sort by created">Created</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.created | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="modified">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Modified" sortActionDescription="Sort by modified">Modified</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.modified | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="lastSend">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Last sent" sortActionDescription="Sort by last send">Last Send</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.lastSend | date:'dd-MM-yyyy HH:mm:ss' }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef mat-header-cell style="width:80px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="deleteMessage(row.messageId)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the message">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="columns.length" class="mat-cell" style="padding-left: 20px;padding-top: 10px">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            </div>
+            <mat-paginator (page)="handlePageEvent($event)"
+                           [disabled]="disabled"
+                           [hidePageSize]="hidePageSize"
+                           [length]="(listMessageCountersResponse$ | async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
+                           [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                           [pageSize]="(pageSize$ | async)"
+                           [showFirstLastButtons]="showFirstLastButtons"
+                           aria-label="Select page" style="width:99%; margin-left:15px">
+            </mat-paginator>
+        </mat-card>
+        <footer-component [lastUpdate]="lastUpdate"/>
+    </mat-card-content>
 </mat-card>

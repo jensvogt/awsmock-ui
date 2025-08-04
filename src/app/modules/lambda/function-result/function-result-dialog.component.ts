@@ -67,6 +67,7 @@ export class LambdaResultDialog implements OnInit {
     lastUpdate: Date = new Date();
 
     lambdaArn: string = '';
+    lambdaName: string = '';
     total: number = 0;
     pageSize: number = 5;
     pageIndex: number = 0;
@@ -88,6 +89,7 @@ export class LambdaResultDialog implements OnInit {
     constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly dialogRef: MatDialogRef<LambdaResultDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
                 private readonly lambdaService: LambdaService) {
         this.lambdaArn = data.lambdaArn;
+        this.lambdaName = this.lambdaArn.substring(this.lambdaArn.lastIndexOf(":") + 1);
     }
 
     ngOnInit() {

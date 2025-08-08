@@ -74,6 +74,14 @@ export class SnsService {
     }
 
     /**
+     * @brief Purges all topic, this will delete all the messages in the SNS topic.
+     */
+    public purgeAllTopics() {
+        let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'PurgeAllTopics');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
+    }
+
+    /**
      * @brief Subscribe to a topic
      *
      * @param topicArn topic ARN

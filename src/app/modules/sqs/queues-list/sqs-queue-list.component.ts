@@ -105,6 +105,12 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
         });
     }
 
+    purgeAll() {
+        this.sqsService.purgeAllQueues().subscribe(() => {
+            this.loadQueues();
+        })
+    }
+
     reloadCounters(queueArn: string) {
         this.sqsService.reloadCounters(queueArn).subscribe(() => {
             this.loadQueues();

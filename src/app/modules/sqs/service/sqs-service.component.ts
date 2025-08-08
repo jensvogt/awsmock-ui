@@ -171,6 +171,14 @@ export class SqsService {
     }
 
     /**
+     * @brief Purge all queues
+     */
+    public purgeAllQueues() {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'PurgeAllQueues');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
+    }
+
+    /**
      * @brief Delete a queue tag
      *
      * @param queueUrl queue URL

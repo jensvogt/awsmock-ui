@@ -187,6 +187,13 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
         });
     }
 
+    purgeAll() {
+        this.snsService.purgeAllTopics().subscribe(() => {
+            this.loadTopics();
+            this.snackBar.open('All SNS topics purged', 'Done', {duration: 5000});
+        })
+    }
+
     deleteTopic(topicArn: string) {
         this.snsService.deleteTopic(topicArn).subscribe(() => {
             this.loadTopics();

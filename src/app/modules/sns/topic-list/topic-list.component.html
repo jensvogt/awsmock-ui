@@ -22,6 +22,13 @@
         </button>
         <mat-menu #mainmenu="matMenu" xPosition="before">
             <button mat-menu-item>
+                <button (click)="purgeAll()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">clear_all</span>
+                    </mat-icon>
+                    <span>Purge all topics</span>
+                </button>
+                <mat-divider/>
                 <button (click)="autoReload()" mat-menu-item>
                     <mat-icon>
                         <span class="material-symbols-outlined">hourglass</span>

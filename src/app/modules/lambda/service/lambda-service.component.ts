@@ -85,6 +85,7 @@ export class LambdaService {
      * @param version function code version
      */
     public uploadFunctionCode(functionArn: string, functionCode: string, version: string) {
+        console.log('Uploading, functionArn: ' + functionArn + ', size: ' + functionCode.length + ', version: ' + version);
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'upload-function-code');
         return this.http.post(this.baseUrl, {functionArn: functionArn, functionCode: functionCode, version: version}, {headers: headers});
     }

@@ -133,7 +133,7 @@ export class ApplicationService {
      * @brief Restarts all applications
      */
     public restartAllApplications() {
-        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'restart-all-application');
+        let headers = this.headers.set('x-awsmock-target', 'application').set('x-awsmock-action', 'restart-all-applications');
         return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 

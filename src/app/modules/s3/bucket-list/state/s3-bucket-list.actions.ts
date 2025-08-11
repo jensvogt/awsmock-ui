@@ -23,5 +23,11 @@ export const s3BucketListActions = {
     // Purge bucket
     purgeBucket: createAction('[s3-bucket-list] Purge Bucket', props<{ bucketName: string }>()),
     purgeBucketSuccess: createAction('[s3-bucket-list] Purge Bucket Success'),
-    purgeBucketFailure: createAction('[s3-bucket-list] Purge Bucket Error', props<{ error: string }>())
+    purgeBucketFailure: createAction('[s3-bucket-list] Purge Bucket Error', props<{ error: string }>()),
+
+    // Purge all buckets
+    purgeAllBuckets: createAction('[s3-bucket-list] Purge all bucket'),
+    purgeAllBucketsSuccess: createAction('[s3-bucket-list] Purge all bucket success'),
+    purgeAllBucketsFailure: createAction('[s3-bucket-list] Purge all buckets error', props<{ error: string }>())
+
 }

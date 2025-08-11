@@ -185,6 +185,10 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
         this.store.dispatch(s3BucketListActions.purgeBucket({bucketName: bucketName}));
     }
 
+    purgeAll() {
+        this.store.dispatch(s3BucketListActions.purgeAllBuckets());
+    }
+
     deleteBucket(bucketName: string) {
         this.store.dispatch(s3BucketListActions.deleteBucket({bucketName: bucketName}));
     }

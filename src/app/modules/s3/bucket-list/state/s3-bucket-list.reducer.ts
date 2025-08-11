@@ -37,21 +37,21 @@ export const s3BucketListReducer = createReducer(
 
     // Bucket list
     on(s3BucketListActions.loadBuckets, (state: S3BucketListState) => ({...state, loading: true})),
-    on(s3BucketListActions.loadBucketsSuccess, (state: S3BucketListState, {buckets}) => ({...state, s3BucketCounters: buckets, loading: false})),
-    on(s3BucketListActions.loadBucketsFailure, (state: S3BucketListState, {error}) => ({...state, error: error, loading: false})),
+    on(s3BucketListActions.loadBucketsSuccess, (state: S3BucketListState, {buckets}) => ({...state, s3BucketCounters: buckets})),
+    on(s3BucketListActions.loadBucketsFailure, (state: S3BucketListState, {error}) => ({...state, error: error})),
 
     // Add bucket
     on(s3BucketListActions.addBucket, (state: S3BucketListState) => ({...state, loading: true})),
-    on(s3BucketListActions.addBucketSuccess, (state: S3BucketListState) => ({...state, loading: false})),
-    on(s3BucketListActions.addBucketFailure, (state: S3BucketListState, {error}) => ({...state, error: error, loading: false})),
+    on(s3BucketListActions.addBucketSuccess, (state: S3BucketListState) => ({...state})),
+    on(s3BucketListActions.addBucketFailure, (state: S3BucketListState, {error}) => ({...state, error: error})),
 
-    // Purge queue
-    //on(s3ObjectListActions.purgeQueue, (state: SQSQueueListState) => ({...state, loading: true})),
-    //on(s3ObjectListActions.purgeQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false})),
-    //on(s3ObjectListActions.purgeQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
+    // Purge bucket
+    on(s3BucketListActions.purgeBucket, (state: S3BucketListState) => ({...state, loading: true})),
+    on(s3BucketListActions.purgeBucketSuccess, (state: S3BucketListState) => ({...state})),
+    on(s3BucketListActions.purgeBucketFailure, (state: S3BucketListState, {error}) => ({...state, error: error})),
 
-    // Delete queue
-    //on(s3ObjectListActions.deleteQueue, (state: SQSQueueListState) => ({...state, loading: true})),
-    //on(s3ObjectListActions.deleteQueueSuccess, (state: SQSQueueListState) => ({...state, loading: false})),
-    //on(s3ObjectListActions.deleteQueueFailure, (state: SQSQueueListState, {error}) => ({...state, error: error, loading: false})),
+    // Purge all buckets
+    on(s3BucketListActions.purgeAllBuckets, (state: S3BucketListState) => ({...state, loading: true})),
+    on(s3BucketListActions.purgeAllBucketsSuccess, (state: S3BucketListState) => ({...state})),
+    on(s3BucketListActions.purgeAllBucketsFailure, (state: S3BucketListState, {error}) => ({...state, error: error})),
 );

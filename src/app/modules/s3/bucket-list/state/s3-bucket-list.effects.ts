@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {catchError, mergeMap, of} from 'rxjs';
 import {s3BucketListActions} from './s3-bucket-list.actions';
-import {AwsMockHttpService} from "../../../../services/awsmock-http.service";
 import {SortColumn} from "../../../../shared/sorting/sorting.component";
 import {S3Service} from "../../service/s3-service.component";
 import {map} from "rxjs/operators";
@@ -54,6 +53,18 @@ export class S3BucketListEffects {
         )
     ));
 
-    constructor(private actions$: Actions, private awsmockHttpService: AwsMockHttpService, private s3Service: S3Service) {
+    purgeAllBuckets$ = createEffect(() => this.actions$.pipe(
+        ofType(s3BucketListActions.purgeAllBuckets),
+        mergeMap(action =>
+            this.s3Service.purgeAllBuckets()
+                .pipe(map(() => s3BucketListActions.purgeAllBucketsSuccess()),
+                    catchError((error) =>
+                        of(s3BucketListActions.purgeAllBucketsFailure({error: error.message}))
+                    )
+                )
+        )
+    ));
+
+    constructor(private readonly actions$: Actions, private readonly s3Service: S3Service) {
     }
 }

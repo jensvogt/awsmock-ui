@@ -192,6 +192,15 @@ export class S3Service {
     }
 
     /**
+     * @brief Deletes all S3 bucket objects.
+     */
+    public purgeAllBuckets() {
+        let headers = this.headers.set('x-awsmock-target', 's3').set('x-awsmock-action', 'PurgeAllBuckets');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
+    }
+
+
+    /**
      * @brief Touched a S3 bucket.
      *
      * @param bucket name of the bucket

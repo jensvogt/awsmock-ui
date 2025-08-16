@@ -22,7 +22,7 @@
             <mat-card-title>Details</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <mat-grid-list cols="5" rowHeight="420px">
+            <mat-grid-list cols="5" rowHeight="480px">
                 <mat-grid-tile [colspan]="2" [rowspan]="1">
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
@@ -58,6 +58,10 @@
                                     </button>
                                 </p>
                             </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Status: </p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.state }}</p>
+                            </mat-list-item>
                         </mat-list>
                     </div>
                 </mat-grid-tile>
@@ -84,6 +88,12 @@
                                 <p class="mat-list-span-title" matListItemTitle>Concurrency:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.concurrency }}</p>
                             </mat-list-item>
+                            <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Enabled: </p>
+                                <p class="mat-list-span-value" matListItemLine>
+                                    <mat-slide-toggle (change)="enabledChanged($event)" [checked]="functionItem.enabled" labelPosition="before"></mat-slide-toggle>
+                                </p>
+                            </mat-list-item>
                         </mat-list>
                     </div>
                 </mat-grid-tile>
@@ -109,6 +119,8 @@
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Modified:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.modified ? (functionItem.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -139,6 +151,8 @@
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Instances:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.instances }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
                             </mat-list-item>
                         </mat-list>
                     </div>

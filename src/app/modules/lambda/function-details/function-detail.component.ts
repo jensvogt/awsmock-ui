@@ -100,6 +100,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             this.loadFunction();
             this.loadInstances();
         });
+        //this.functionItem$.subscribe((data) => console.log(data));
         //this.lambdaEnvironment$.subscribe((data) => console.log(data));
         //this.lambdaTags$.subscribe((data) => console.log(data));
         //this.lambdaInstances$.subscribe((data) => console.log("Lambda instances: ", data));
@@ -122,6 +123,13 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         this.lambdaService.getFunction(this.functionArn).subscribe((data: any) => {
             this.lastUpdate = new Date();
             this.functionItem = data;
+        });
+    }
+
+    enabledChanged(event: any) {
+        this.functionItem.enabled = event.checked;
+        this.lambdaService.updateFunction(this.functionItem).subscribe(() => {
+            this.loadFunction();
         });
     }
 
@@ -424,7 +432,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "30%"
         dialogConfig.minWidth = '380px'
-        
+
         this.dialog.open(LambdaEventSourceEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result.EventSourceArn) {
                 this.lambdaService.updateEventSource(result)

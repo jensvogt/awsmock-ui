@@ -16,6 +16,7 @@ export interface LambdaFunctionItem {
     runtime: string | undefined;
     handler: string;
     state: string | undefined;
+    enabled: boolean | undefined;
     tags: any;
     version: string;
     environment: Environment[];

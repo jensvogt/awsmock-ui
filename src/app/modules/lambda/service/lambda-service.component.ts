@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {CreateFunctionRequest} from "../model/lambda-item";
+import {CreateFunctionRequest, LambdaFunctionItem} from "../model/lambda-item";
 import {AddEventSourceRequest, UpdateEventSourceRequest} from "../model/lambda-event-source-item";
 
 @Injectable({providedIn: 'root'})
@@ -63,6 +63,21 @@ export class LambdaService {
         const body = {
             region: environment.awsmockRegion,
             functionName: name
+        }
+        return this.http.post(this.baseUrl, body, {headers: headers});
+    }
+
+    /**
+     * @brief Update lambda function
+     *
+     * @param functionItem function item
+     */
+    public updateFunction(functionItem: LambdaFunctionItem) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'UpdateLambda');
+        const body = {
+            region: environment.awsmockRegion,
+            functionArn: functionItem.functionArn,
+            enabled: functionItem.enabled
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
     }

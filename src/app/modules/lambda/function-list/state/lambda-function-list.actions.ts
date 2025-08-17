@@ -20,6 +20,16 @@ export const lambdaFunctionListActions = {
     resetCountersSuccess: createAction('[lambda-function-list] Reset counters success'),
     resetCountersFailure: createAction('[lambda-function-list] Reset counters error', props<{ error: string }>()),
 
+    // start all lambda function
+    startAllLambdas: createAction('[lambda-function-list] Start all lambda functions'),
+    startAllLambdasSuccess: createAction('[lambda-function-list] Start all lambda functions success'),
+    startAllLambdasFailure: createAction('[lambda-function-list] Start all lambda functions error', props<{ error: string }>()),
+
+    // Stop all lambda function
+    stopAllLambdas: createAction('[lambda-function-list] Stop all lambda functions'),
+    stopAllLambdasSuccess: createAction('[lambda-function-list] Stop all lambda functions success'),
+    stopAllLambdasFailure: createAction('[lambda-function-list] Stop all lambda functions error', props<{ error: string }>()),
+
     // Delete image
     deleteImage: createAction('[lambda-function-list] Delete function image', props<{ functionArn: string }>()),
     deleteImageSuccess: createAction('[lambda-function-list] Delete function image success'),

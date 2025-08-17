@@ -111,7 +111,7 @@ export class LambdaService {
      * @param functionArn lambda function AWS ARN
      */
     public startFunction(functionArn: string) {
-        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'start-function');
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'start-lambda');
         return this.http.post(this.baseUrl, {FunctionArn: functionArn}, {headers: headers});
     }
 
@@ -121,7 +121,7 @@ export class LambdaService {
      * @param functionArn lambda function AWS ARN
      */
     public stopFunction(functionArn: string) {
-        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-function');
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-lambda');
         return this.http.post(this.baseUrl, {FunctionArn: functionArn}, {headers: headers});
     }
 
@@ -283,6 +283,28 @@ export class LambdaService {
     public listInstanceCounters(lambdaArn: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'list-instance-counters');
         return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Starts all lambdas
+     *
+     * @par
+     * This call is asynchronous.
+     */
+    public startAllLambdas() {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'start-all-functions');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
+    }
+
+    /**
+     * @brief Stops all lambdas
+     *
+     * @par
+     * This call is asynchronous.
+     */
+    public stopAllLambdas() {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-all-functions');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
     }
 
     /**

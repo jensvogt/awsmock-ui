@@ -35,6 +35,28 @@ export class LambdaFunctionListEffects {
                 )
         )));
 
+    startAllLambdas$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionListActions.startAllLambdas),
+        mergeMap(action =>
+            this.lambdaService.startAllLambdas()
+                .pipe(map(() => lambdaFunctionListActions.startAllLambdasSuccess()),
+                    catchError((error) =>
+                        of(lambdaFunctionListActions.startAllLambdasFailure({error: error.message}))
+                    )
+                )
+        )));
+
+    stopAllLambdas$ = createEffect(() => this.actions$.pipe(
+        ofType(lambdaFunctionListActions.stopAllLambdas),
+        mergeMap(action =>
+            this.lambdaService.stopAllLambdas()
+                .pipe(map(() => lambdaFunctionListActions.stopAllLambdasSuccess()),
+                    catchError((error) =>
+                        of(lambdaFunctionListActions.stopAllLambdasFailure({error: error.message}))
+                    )
+                )
+        )));
+
     deleteImage$ = createEffect(() => this.actions$.pipe(
         ofType(lambdaFunctionListActions.deleteImage),
         mergeMap(action =>
@@ -57,6 +79,6 @@ export class LambdaFunctionListEffects {
                 )
         )));
 
-    constructor(private actions$: Actions, private lambdaService: LambdaService) {
+    constructor(private readonly actions$: Actions, private readonly lambdaService: LambdaService) {
     }
 }

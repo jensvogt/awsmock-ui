@@ -21,13 +21,24 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #mainmenu="matMenu" xPosition="before">
-            <button mat-menu-item>
-                <button (click)="autoReload()" mat-menu-item>
-                    <mat-icon>
-                        <span class="material-symbols-outlined">hourglass</span>
-                    </mat-icon>
-                    <span>Auto Reload</span>
-                </button>
+            <button (click)="startAllLambdas()" mat-menu-item>
+                <mat-icon>
+                    <span class="material-symbols-outlined">power</span>
+                </mat-icon>
+                <span>Start all lambdas</span>
+            </button>
+            <button (click)="stopAllLambdas()" mat-menu-item>
+                <mat-icon>
+                    <span class="material-symbols-outlined">power_off</span>
+                </mat-icon>
+                <span>Stop all lambdas</span>
+            </button>
+            <mat-divider/>
+            <button (click)="autoReload()" mat-menu-item>
+                <mat-icon>
+                    <span class="material-symbols-outlined">hourglass</span>
+                </mat-icon>
+                <span>Auto Reload</span>
             </button>
         </mat-menu>
     </mat-card-header>
@@ -71,6 +82,10 @@
                             <ng-container matColumnDef="version">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Version" sortActionDescription="Sort by version">Version</th>
                                 <td *matCellDef="let element" mat-cell> {{ element.version }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="enabled">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Enabled flag" sortActionDescription="Sort by enabled">Enabled</th>
+                                <td *matCellDef="let element" mat-cell> {{ element.enabled }}</td>
                             </ng-container>
                             <ng-container matColumnDef="status">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>

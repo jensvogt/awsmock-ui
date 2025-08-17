@@ -171,6 +171,14 @@ export class SqsService {
     }
 
     /**
+     * @brief Reload all message counters
+     */
+    public reloadAllCounters() {
+        let headers = this.headers.set('x-awsmock-target', 'sqs').set('x-awsmock-action', 'ReloadAllCounters');
+        return this.http.post(this.baseUrl, {}, {headers: headers});
+    }
+
+    /**
      * @brief Purge all queues
      */
     public purgeAllQueues() {

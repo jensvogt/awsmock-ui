@@ -22,6 +22,12 @@
         </button>
         <mat-menu #mainmenu="matMenu" xPosition="before">
             <button mat-menu-item>
+                <button (click)="reloadAllCounters()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">pin</span>
+                    </mat-icon>
+                    <span>Reload all counters</span>
+                </button>
                 <button (click)="purgeAll()" mat-menu-item>
                     <mat-icon>
                         <span class="material-symbols-outlined">clear_all</span>

@@ -36,7 +36,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
-    columns: any[] = ['name', 'runtime', 'version', 'status', 'instances', 'invocations', 'averageRuntime', 'actions'];
+    columns: any[] = ['name', 'runtime', 'version', 'enabled', 'status', 'instances', 'invocations', 'averageRuntime', 'actions'];
     dataSource: MatTableDataSource<LambdaFunctionItem> = new MatTableDataSource();
     defaultSort: Sort = {active: "name", direction: "asc"};
     filterSubject = new Subject<string>();
@@ -62,10 +62,10 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
 
     // Byte conversion
     protected readonly byteConversion = byteConversion;
-    @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator | undefined;
-    private filter: string = "";
+    @ViewChild(MatPaginator, {static: false}) private readonly paginator: MatPaginator | undefined;
 
-    constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private lambdaService: LambdaService, private state: State<LambdaFunctionListState>, private store: Store, private actionsSubj$: ActionsSubject, private location: Location) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly lambdaService: LambdaService, private readonly state: State<LambdaFunctionListState>,
+                private readonly store: Store, private readonly actionsSubj$: ActionsSubject, private readonly location: Location) {
 
         // Subscribe to action events, reload table when the action got successful executed
         this.actionsSubj$.pipe(
@@ -102,7 +102,6 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 if (this.paginator) {
                     this.paginator.pageIndex = 0;
                 }
-                this.filter = value;
             })
         );
 
@@ -209,6 +208,16 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
             pageIndex: this.state.value['lambda-function-list'].pageIndex,
             sortColumns: this.state.value['lambda-function-list'].sortColumns
         }));
+    }
+
+    startAllLambdas() {
+        this.lastUpdate = new Date();
+        this.store.dispatch(lambdaFunctionListActions.startAllLambdas());
+    }
+
+    stopAllLambdas() {
+        this.lastUpdate = new Date();
+        this.store.dispatch(lambdaFunctionListActions.stopAllLambdas());
     }
 
     deleteFunction(functionName: string) {

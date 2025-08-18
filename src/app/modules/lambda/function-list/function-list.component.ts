@@ -305,10 +305,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
         dialogConfig.panelClass = 'full-screen-modal';
         dialogConfig.width = "40%"
 
-        this.dialog.open(LambdaResultDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-            }
-        });
+        this.dialog.open(LambdaResultDialog, dialogConfig);
     }
 
     startDisabled(functionArn: string) {
@@ -322,7 +319,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     stopDisabled(functionArn: string) {
         const found = this.dataSource.data.find((functionItem) => functionItem.functionArn === functionArn);
         if (found) {
-            return !(found.state === "Active");
+            return found.state !== "Active";
         }
         return true;
     }

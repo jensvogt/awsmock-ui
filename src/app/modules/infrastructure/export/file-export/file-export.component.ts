@@ -28,7 +28,7 @@ import {saveAs} from "file-saver";
 export class FileExportComponent {
 
     body: string = '';
-    filename: string | undefined = '';
+    filename: string | undefined = 'full.json';
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<FileExportComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.body = data.body;

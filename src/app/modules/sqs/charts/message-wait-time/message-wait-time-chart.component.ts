@@ -45,7 +45,7 @@ export class SqsMessageWaitTimeChartComponent implements OnInit {
     selectedTopx: number = -1;
     @ViewChild(`sqs-message-wait-time-chart-component`) waitTimeChart: ChartComponent | undefined;
 
-    constructor(private readonly monitoringService: MonitoringService, private chartService: ChartService) {
+    constructor(private readonly monitoringService: MonitoringService, private readonly chartService: ChartService) {
     }
 
     ngOnInit(): void {
@@ -68,6 +68,11 @@ export class SqsMessageWaitTimeChartComponent implements OnInit {
                     functions.forEach((f) => {
                         series.push({name: f, data: data[f]});
                     });
+                    for (const serie of series) {
+                        for (const element of serie.data) {
+                            element[1] /= 3600000.0;
+                        }
+                    }
                     this.serviceTimeChartOptions = {
                         series: series,
                         chart: {height: 350, type: "line"},
@@ -78,7 +83,7 @@ export class SqsMessageWaitTimeChartComponent implements OnInit {
                         title: {text: "SQS Wait Time [s]", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Time [ms]"}, labels: {offsetX: 10}}
+                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "Time [h]"}, labels: {offsetX: 10}}
                     };
                 }
             });

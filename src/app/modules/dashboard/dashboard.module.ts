@@ -31,6 +31,14 @@ import {FooterComponent} from "../../shared/footer/footer.component";
 import {CpuChartTotalComponent} from "./charts/cpu-chart-total/cpu-chart-total.component";
 import {MemoryChartTotalComponent} from "./charts/memory-chart-total/memory-chart-total.component";
 import {MemoryChartAwsmockComponent} from "./charts/memory-chart-awsmock/memory-chart-awsmock.component";
+import {NgxEchartsModule} from "ngx-echarts";
+import * as echarts from 'echarts/core';
+// import necessary echarts components
+import {BarChart, LineChart} from 'echarts/charts';
+import {GridComponent} from 'echarts/components';
+import {CanvasRenderer} from 'echarts/renderers';
+
+echarts.use([LineChart, BarChart, GridComponent, CanvasRenderer]);
 
 @NgModule({
     declarations: [DashboardComponent],
@@ -71,6 +79,7 @@ import {MemoryChartAwsmockComponent} from "./charts/memory-chart-awsmock/memory-
         MemoryChartTotalComponent,
         MemoryChartTotalComponent,
         MemoryChartAwsmockComponent,
+        NgxEchartsModule.forRoot({echarts})
     ],
     exports: [DashboardComponent],
     providers: [MonitoringService, ModuleService],

@@ -76,8 +76,8 @@ export class SqsServiceCountChartComponent implements OnInit {
                         tooltip: {shared: true, x: {format: "dd/MM HH:mm:ss"}},
                         title: {text: "S3 Service Count", align: "center"},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
-                        xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {min: 0, decimalsInFloat: 0, title: {text: "Count"}, labels: {offsetX: 10}}
+                        xaxis: {type: "datetime", title: {text: "Count/s"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
+                        yaxis: {min: 0, decimalsInFloat: 3, title: {text: "Count"}, labels: {offsetX: 10}}
                     };
                 }
             });

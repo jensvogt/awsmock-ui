@@ -72,14 +72,7 @@ export class GatewayRequestsComponent implements OnInit {
                         tooltip: {x: {format: "dd/MM HH:mm:ss"}},
                         grid: {row: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}, column: {colors: ["#f3f3f3", "transparent"], opacity: 0.5}},
                         xaxis: {type: "datetime", title: {text: "Time"}, labels: {datetimeUTC: false}, min: start.getTime(), max: end.getTime()},
-                        yaxis: {
-                            min: 0, forceNiceScale: true, decimalsInFloat: 0, title: {text: "HTTP Requests"}, labels: {
-                                formatter: function (val: number) {
-                                    return val.toFixed(0)
-                                },
-                                offsetX: 10
-                            }
-                        }
+                        yaxis: {min: 0, forceNiceScale: true, decimalsInFloat: 3, title: {text: "HTTP Requests/s"}, labels: {offsetX: 10}}
                     };
                 }
             });

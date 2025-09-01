@@ -99,7 +99,13 @@ export class MemoryChartAwsmockComponent implements OnInit {
                                 }
                             }
                         },
-                        yAxis: {type: 'value', name: 'Memory [mb]', nameGap: 50},
+                        yAxis: {
+                            type: 'value', name: 'Memory [mb]', nameGap: 50, axisLabel: {
+                                formatter: (value: number) => {
+                                    return (value / 1024 / 1024).toFixed(0);
+                                }
+                            }
+                        },
                         series: dataSeries,
                         toolbox: {
                             feature: {

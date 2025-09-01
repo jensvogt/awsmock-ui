@@ -5,20 +5,20 @@ import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/m
 import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import * as echarts from 'echarts/core';
+import {NgxEchartsDirective} from "ngx-echarts";
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 import 'echarts/lib/component/toolbox'
 import 'echarts/lib/component/dataZoom'
-import {NgxEchartsDirective} from "ngx-echarts";
 
 @Component({
-    selector: 'gateway-requests-chart-component',
-    templateUrl: './gateway-requests.component.html',
-    styleUrls: ['./gateway-requests.component.scss'],
+    selector: 'cpu-chart-docker-total-component',
+    templateUrl: './cpu-chart-docker-total.component.html',
+    styleUrls: ['./cpu-chart-docker-total.component.scss'],
     imports: [
-        MatCardHeader,
         MatCard,
+        MatCardHeader,
         MatCardActions,
         MatSelect,
         FormsModule,
@@ -28,10 +28,10 @@ import {NgxEchartsDirective} from "ngx-echarts";
     ],
     standalone: true
 })
-export class GatewayRequestsComponent implements OnInit {
+export class CpuChartTotalDockerComponent implements OnInit {
 
     // bound to the ngx-echarts directive in the template
-    httpTimeChartOptions: echarts.EChartsCoreOption = {};
+    cpuChartOptions: echarts.EChartsCoreOption = {};
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
@@ -42,14 +42,15 @@ export class GatewayRequestsComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadHttpRequestsChart();
+        this.loadCpuChartDocker();
     }
 
-    loadHttpRequestsChart() {
+    loadCpuChartDocker() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('gateway_http_counter', 'method', start, end, 5)
+
+        this.monitoringService.getMultiCounters('docker_cpu_total_counter', 'container', start, end, 5, 5)
             .subscribe((data: any) => {
                 if (data) {
                     let types = Object.getOwnPropertyNames(data);
@@ -57,19 +58,23 @@ export class GatewayRequestsComponent implements OnInit {
                     const legendValue: any[] = [];
                     types.forEach((t) => {
                         legendValue.push(t);
-                        dataSeries.push({
-                            name: t, type: 'line', smooth: true, showSymbols: false, data: data[t]
-                        });
+                        dataSeries.push({name: t, type: 'line', smooth: true, showSymbols: false, data: data[t]});
                     });
-                    this.httpTimeChartOptions = {
-                        title: {text: 'Gateway Requests per second', left: 'center'},
+                    this.cpuChartOptions = {
+                        title: {text: 'CPU Utilization Docker', left: 'center'},
                         tooltip: {
                             trigger: 'item',
                             axisPointer: {
                                 type: 'cross'
                             },
                             backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                            extraCssText: 'width: 170px'
+                            extraCssText: 'width: 170px',
+                            label: {
+                                formatter: (value: number) => {
+                                    return value.toFixed(3);
+                                }
+                            },
+                            valueFormatter: (value: number) => value.toFixed(3)
                         },
                         axisPointer: {
                             type: 'cross'
@@ -99,13 +104,7 @@ export class GatewayRequestsComponent implements OnInit {
                                 }
                             }
                         },
-                        yAxis: {
-                            type: 'value', name: 'Count/s', nameGap: 50, axisLabel: {
-                                formatter: (value: number) => {
-                                    return value.toFixed(3);
-                                }
-                            }
-                        },
+                        yAxis: {type: 'value', name: 'CPU [%]', nameGap: 50},
                         series: dataSeries,
                         toolbox: {
                             feature: {

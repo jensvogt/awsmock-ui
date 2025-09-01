@@ -53,7 +53,6 @@ export class CpuChartTotalComponent implements OnInit {
         this.monitoringService.getMultiCounters('cpu_usage_total', 'cpu_type', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    console.log("Result Data: ", data);
                     let types = Object.getOwnPropertyNames(data);
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];

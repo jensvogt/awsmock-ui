@@ -13,25 +13,25 @@ import 'echarts/lib/component/dataZoom'
 import {NgxEchartsDirective} from "ngx-echarts";
 
 @Component({
-    selector: 'gateway-requests-chart-component',
-    templateUrl: './gateway-requests.component.html',
-    styleUrls: ['./gateway-requests.component.scss'],
+    selector: 'memory-chart-docker-total-component',
+    templateUrl: './memory-chart-docker-total.component.html',
+    styleUrls: ['./memory-chart-docker-total.component.scss'],
     imports: [
-        MatCardHeader,
-        MatCard,
         MatCardActions,
         MatSelect,
+        MatCardHeader,
+        MatCard,
+        MatCardContent,
         FormsModule,
         MatOption,
-        MatCardContent,
         NgxEchartsDirective
     ],
     standalone: true
 })
-export class GatewayRequestsComponent implements OnInit {
+export class MemoryChartDockerTotalComponent implements OnInit {
 
     // bound to the ngx-echarts directive in the template
-    httpTimeChartOptions: echarts.EChartsCoreOption = {};
+    memChartOptions: echarts.EChartsCoreOption = {};
 
     ranges: TimeRange[] = [];
     selectedTimeRange: string = '';
@@ -42,14 +42,14 @@ export class GatewayRequestsComponent implements OnInit {
     ngOnInit(): void {
         this.ranges = this.chartService.getRanges();
         this.selectedTimeRange = this.chartService.getDefaultRange();
-        this.loadHttpRequestsChart();
+        this.loadMemoryChart();
     }
 
-    loadHttpRequestsChart() {
+    loadMemoryChart() {
 
         let start = this.chartService.getStartTime(this.selectedTimeRange);
         let end = this.chartService.getEndTime();
-        this.monitoringService.getMultiCounters('gateway_http_counter', 'method', start, end, 5)
+        this.monitoringService.getMultiCounters('docker_memory_counter', "container", start, end, 5, 5)
             .subscribe((data: any) => {
                 if (data) {
                     let types = Object.getOwnPropertyNames(data);
@@ -61,8 +61,8 @@ export class GatewayRequestsComponent implements OnInit {
                             name: t, type: 'line', smooth: true, showSymbols: false, data: data[t]
                         });
                     });
-                    this.httpTimeChartOptions = {
-                        title: {text: 'Gateway Requests per second', left: 'center'},
+                    this.memChartOptions = {
+                        title: {text: 'Memory Utilization Docker', left: 'center'},
                         tooltip: {
                             trigger: 'item',
                             axisPointer: {
@@ -99,13 +99,7 @@ export class GatewayRequestsComponent implements OnInit {
                                 }
                             }
                         },
-                        yAxis: {
-                            type: 'value', name: 'Count/s', nameGap: 50, axisLabel: {
-                                formatter: (value: number) => {
-                                    return value.toFixed(3);
-                                }
-                            }
-                        },
+                        yAxis: {type: 'value', name: 'Docker Memory [%]', nameGap: 50},
                         series: dataSeries,
                         toolbox: {
                             feature: {

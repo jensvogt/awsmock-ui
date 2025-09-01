@@ -37,6 +37,8 @@ import * as echarts from 'echarts/core';
 import {BarChart, LineChart} from 'echarts/charts';
 import {GridComponent} from 'echarts/components';
 import {CanvasRenderer} from 'echarts/renderers';
+import {CpuChartTotalDockerComponent} from "./charts/cpu-chart-docker-total/cpu-chart-docker-total.component";
+import {MemoryChartDockerTotalComponent} from "./charts/memory-chart-docker-total/memory-chart-docker-total.component";
 
 echarts.use([LineChart, BarChart, GridComponent, CanvasRenderer]);
 
@@ -65,6 +67,8 @@ echarts.use([LineChart, BarChart, GridComponent, CanvasRenderer]);
         DashboardRoutingModule,
         CpuChartAwsmockComponent,
         MemoryChartTotalComponent,
+        CpuChartTotalDockerComponent,
+        MemoryChartDockerTotalComponent,
         GatewayTimeComponent,
         ThreadsChartComponent,
         StoreModule.forFeature(dashboardFeatureKey, dashboardReducer),
@@ -79,7 +83,8 @@ echarts.use([LineChart, BarChart, GridComponent, CanvasRenderer]);
         MemoryChartTotalComponent,
         MemoryChartTotalComponent,
         MemoryChartAwsmockComponent,
-        NgxEchartsModule.forRoot({echarts})
+        NgxEchartsModule.forRoot({echarts}),
+        MemoryChartDockerTotalComponent
     ],
     exports: [DashboardComponent],
     providers: [MonitoringService, ModuleService],

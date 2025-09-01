@@ -99,7 +99,13 @@ export class GatewayTimeComponent implements OnInit {
                                 }
                             }
                         },
-                        yAxis: {type: 'value', name: 'Time [ms]', nameGap: 50},
+                        yAxis: {
+                            type: 'value', name: 'Time [ms]', nameGap: 50, axisLabel: {
+                                formatter: (value: number) => {
+                                    return value.toFixed(0);
+                                }
+                            }
+                        },
                         series: dataSeries,
                         toolbox: {
                             feature: {

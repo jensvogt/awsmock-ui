@@ -1,6 +1,6 @@
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject} from "@angular/core";
-import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {KmsKeyAddRequest} from "../model/key-add-request";
@@ -74,12 +74,11 @@ export class KeyAddComponentDialog {
     protected readonly KeySpec = KeySpec;
     protected readonly Origin = Origin;
 
-    constructor(private readonly fb: FormBuilder, private readonly dialogRef: MatDialogRef<KeyAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public portList: any) {
+    constructor(private readonly dialogRef: MatDialogRef<KeyAddComponentDialog>, @Inject(MAT_DIALOG_DATA) public portList: any) {
     }
 
     save() {
         this.keyAddRequest = {keySpec: this.selectedKeySpec, keyUsage: this.selectedKeyUsage, description: this.description, origin: this.selectedOrigin}
-        console.log(this.keyAddRequest);
         this.dialogRef.close(this.keyAddRequest);
     }
 }

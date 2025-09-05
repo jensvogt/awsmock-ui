@@ -1,0 +1,174 @@
+<mat-card appearance="outlined" style="margin: 3px;">
+    <mat-card-header>
+        <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="fill-remaining-space">
+                API Gateway ({{ (listApiKeysCountersResponse$ | async)?.total }})
+            </span>
+        <button (click)="addApiKey()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new API key">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh" mat-icon-button matTooltip="Refresh the application list">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button [matTooltipShowDelay]="1000" [routerLink]="['/application-charts']" aria-label="Refresh" mat-icon-button matTooltip="Monitoring of the SQS counters">
+            <mat-icon>
+                <span class="material-symbols-outlined">monitoring</span>
+            </mat-icon>
+        </button>
+        <button [matMenuTriggerFor]="mainmenu" [matTooltipShowDelay]="1000" aria-label="Main menu" mat-icon-button matTooltip="More...">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #mainmenu="matMenu" xPosition="before">
+            <button mat-menu-item>
+                <!--button (click)="startAll()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">power</span>
+                    </mat-icon>
+                    <span>Start all applications</span>
+                </button>
+                <button (click)="stopAll()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">power_off</span>
+                    </mat-icon>
+                    <span>Stop all applications</span>
+                </button>
+                <button (click)="restartAll()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">autorenew</span>
+                    </mat-icon>
+                    <span>Restart all applications</span>
+                </button-->
+                <mat-divider/>
+                <button (click)="autoReload()" mat-menu-item>
+                    <mat-icon>
+                        <span class="material-symbols-outlined">hourglass</span>
+                    </mat-icon>
+                    <span>Auto Reload</span>
+                </button>
+            </button>
+        </mat-menu>
+    </mat-card-header>
+    <mat-card-content>
+        <!--mat-sidenav-container class="sidenav-container">
+            <mat-nav-list>
+                <a mat-list-item routerLink="./keys/"></a>
+            </mat-nav-list>
+        </mat-sidenav-container-->
+        <!--mat-sidenav-content-->
+        <mat-card appearance="outlined" style="margin: -10px;">
+            <mat-card-actions align="start">
+                <mat-form-field style="width:100%">
+                    <mat-label>Prefix</mat-label>
+                    <input (keyup.enter)="setPrefix()" [(ngModel)]="prefixValue" matInput name="search" placeholder="Search" type="text">
+                    @if (prefixSet) {
+                        <button (click)="unsetPrefix()" mat-icon-button matSuffix style="float: right">
+                            <mat-icon matSuffix>close</mat-icon>
+                        </button>
+                    }
+                    <button (click)="setPrefix()" mat-icon-button matSuffix style="float: right">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-card-actions>
+            <div class="table-container">
+                @if (listApiKeysCountersResponse$ | async; as apiKeyCounters) {
+                    <div class="row">
+                        <table (matSortChange)="sortChange($event)" [dataSource]="apiKeyCounters.apiKeys" class="mat-elevation-z8 application-table" mat-table matSort>
+                            <ng-container matColumnDef="name">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Application name" sortActionDescription="Sort by application name">Name</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    <div class="with-icon">
+                                        <mat-nav-list>
+                                            <a (click)="navigateToDetails(element.name)" mat-list-item> {{ element.name }}</a>
+                                        </mat-nav-list>
+                                        <button [cdkCopyToClipboard]="element.name" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
+                                            <mat-icon class="copy-icon">content_copy</mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="id">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application version" sortActionDescription="Sort by version">ID</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.id }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="enabled">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application enabled" sortActionDescription="Sort by enabled">Enabled</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.enabled }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="created">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application creation timestamp" sortActionDescription="Sort by created">Created</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    {{ element.created ? (element.created | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="modified">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell mat-sort-header matTooltip="Application modified timestamp" sortActionDescription="Sort by modified">Modified</th>
+                                <td *matCellDef="let element" mat-cell>
+                                    {{ element.modified ? (element.modified | date:'dd-MM-yyyy HH:mm:ss') : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th *matHeaderCellDef [matTooltipShowDelay]="1000" mat-header-cell matTooltip="Actions" style="width:120px">Actions</th>
+                                <td *matCellDef="let row" mat-cell>
+                                    <button (click)="deleteApiKey(row)" [matTooltipShowDelay]="1000" aria-label="Delete" mat-icon-button matTooltip="Delete the API key">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                    <button [matMenuTriggerFor]="lambdaListMenu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #lambdaListMenu="matMenu" xPosition="before">
+                                        <button mat-menu-item>
+                                            <!--button (click)="uploadCode(row)" [matTooltipShowDelay]="1000" aria-label="Upload application archive" mat-menu-item matTooltip="Upload application archive">
+                                                <mat-icon>upload</mat-icon>
+                                                <span>Upload code</span>
+                                            </button>
+                                            <button (click)="startApplication(row)" [disabled]="startDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Start application" mat-menu-item matTooltip="Start application">
+                                                <mat-icon>start</mat-icon>
+                                                <span>Start application</span>
+                                            </button>
+                                            <button (click)="stopApplication(row)" [disabled]="stopDisabled(row)" [matTooltipShowDelay]="1000" aria-label="Stop application" mat-menu-item matTooltip="Stop application">
+                                                <mat-icon>stop</mat-icon>
+                                                <span>Stop application</span>
+                                            </button>
+                                            <mat-divider/>
+                                            <button (click)="restartApplication(row)" [matTooltipShowDelay]="1000" aria-label="Restart application" mat-menu-item matTooltip="Restart application">
+                                                <mat-icon><span class="material-symbols-outlined">refresh</span></mat-icon>
+                                                <span>Restart application</span>
+                                            </button>
+                                            <button (click)="rebuildApplication(row)" [matTooltipShowDelay]="1000" aria-label="Rebuild application" mat-menu-item matTooltip="Rebuild application">
+                                                <mat-icon><span class="material-symbols-outlined">reset_wrench</span></mat-icon>
+                                                <span>Rebuild application</span>
+                                            </button-->
+                                        </button>
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+                            <tr *matHeaderRowDef="columns" mat-header-row></tr>
+                            <tr *matRowDef="let row; columns: columns;" mat-row></tr>
+                            <tr *matNoDataRow class="mat-row">
+                                <td [attr.colspan]="columns.length" class="mat-cell">
+                                    No data matching the filter.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            </div>
+            <mat-paginator (page)="handlePageEvent($event)"
+                           [disabled]="disabled"
+                           [hidePageSize]="hidePageSize"
+                           [length]="(listApiKeysCountersResponse$ | async)?.total"
+                           [pageIndex]="(pageIndex$ | async)"
+                           [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                           [pageSize]="(pageSize$ | async)"
+                           [showFirstLastButtons]="showFirstLastButtons"
+                           aria-label="Select page" style="width:99%; margin-left:15px">
+
+            </mat-paginator>
+        </mat-card>
+        <footer-component [lastUpdate]="lastUpdate"/>
+        <!--/mat-sidenav-content-->
+    </mat-card-content>
+</mat-card>

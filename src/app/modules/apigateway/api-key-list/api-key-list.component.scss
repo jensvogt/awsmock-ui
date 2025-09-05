@@ -1,0 +1,148 @@
+.queue-table {
+  width: 100%;
+  height: 100%;
+}
+
+:host {
+  position: relative;
+  width: 100%;
+  height: 30%;
+  margin-top: 0;
+  padding-bottom: 33%;
+}
+
+.head-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+  justify-content: flex-end;
+}
+
+.footer-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 8px;
+  width: 50%;
+  justify-content: flex-end;
+}
+
+.full-screen-modal .mat-dialog-container {
+  padding: 1em;
+  width: 90%;
+  height: 80%;
+  overflow-y: scroll;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+  padding-top: 6px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-size: x-large;
+}
+
+.table-container {
+  max-height: calc(100vh - 10px); // or height:calc(100vh - 155px); depending on your need  change
+  overflow: auto;
+}
+
+.cdk-global-overlay-wrapper {
+  pointer-events: auto;
+  display: block;
+  position: relative;
+  overflow: auto;
+  text-align: center;
+}
+
+.cdk-global-overlay-wrapper::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.cdk-overlay-pane {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  white-space: normal;
+}
+
+.footer {
+  display: flex;
+  width: 50%;
+  font-size: x-small;
+  color: black;
+  padding-top: 15px;
+}
+
+.mat-column-messagesAvailable {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-messagesInFlight {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-messagesDelayed {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-size {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-created {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-modified {
+  flex: 0 0 10% !important;
+}
+
+.mat-column-actions {
+  flex: 0 0 10% !important;
+}
+
+.with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.copy-icon {
+  display: inline-flex;
+  vertical-align: bottom;
+  font-size: 16px !important;
+}
+
+.resizable-mat-dialog-panel {
+  resize: both;
+  overflow: auto;
+  max-width: unset !important;
+  max-height: unset !important;
+  position: absolute !important;
+}
+
+.spinner-loading {
+  display: flex;
+  justify-content: center;
+  vertical-align: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.sidenav-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

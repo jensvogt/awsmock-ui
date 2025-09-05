@@ -56,8 +56,8 @@ export class ThreadsChartComponent implements OnInit {
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];
                     types.forEach((t) => {
-                        legendValue.push(t);
-                        dataSeries.push({name: t, type: 'line', smooth: true, showSymbols: false, data: data[t]});
+                        legendValue.push('threads');
+                        dataSeries.push({name: 'threads', type: 'line', smooth: true, showSymbols: false, data: data[t]});
                     });
                     this.threadsChartOptions = {
                         title: {text: 'Total Threads', left: 'center'},

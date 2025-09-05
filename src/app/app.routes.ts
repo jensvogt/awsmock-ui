@@ -144,7 +144,7 @@ export const routes: Routes = [
                 loadChildren: () => import('./modules/ssm/ssm.module').then(module => module.SsmModule),
             },
             //=========================================================================
-            // application
+            // Applications
             //=========================================================================
             {
                 path: 'application-list',
@@ -153,6 +153,13 @@ export const routes: Routes = [
             {
                 path: 'application-charts',
                 component: ApplicationChartsComponent,
+            },
+            //=========================================================================
+            // API gateway
+            //=========================================================================
+            {
+                path: 'api-gateway-list',
+                loadChildren: () => import('./modules/apigateway/api-gateway.module').then(module => module.ApiGatewayModule),
             },
             //=========================================================================
             // awsmock logs

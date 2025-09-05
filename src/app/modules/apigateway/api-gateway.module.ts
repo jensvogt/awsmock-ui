@@ -27,17 +27,15 @@ import {MatDivider} from "@angular/material/divider";
 import {FooterComponent} from "../../shared/footer/footer.component";
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {ApplicationListComponent} from "./application-list/application-list.component";
-import {ApplicationService} from "./service/application-service.component";
-import {ApplicationRoutingModule} from "./application-routing.module";
-import {applicationListFeatureKey, applicationListReducer} from "./application-list/state/application-list.reducer";
-import {ApplicationListEffects} from "./application-list/state/application-list.effects";
-import {applicationDetailFeatureKey, applicationDetailReducer} from "./application-details/state/application-details.reducer";
-import {ApplicationDetailEffects} from "./application-details/state/application-details.effects";
-import {ApplicationDetailsComponent} from "./application-details/application-detail.component";
+import {ApiGatewayRoutingModule} from "./api-gateway-routing.module";
+import {ApiGatewayService} from "./service/api-gateway-service.component";
+import {ApiKeyListComponent} from "./api-key-list/api-key-list.component";
+import {ApiKeyListEffects} from "./api-key-list/state/api-key-list.effects";
+import {apiKeyListReducer, apiKeysListFeatureKey} from "./api-key-list/state/api-key-list.reducer";
+import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
 
 @NgModule({
-    declarations: [ApplicationListComponent, ApplicationDetailsComponent],
+    declarations: [ApiKeyListComponent/*, KeyDetailsComponent*/],
     imports: [
         MatCard,
         MatCardHeader,
@@ -79,10 +77,10 @@ import {ApplicationDetailsComponent} from "./application-details/application-det
         ReactiveFormsModule,
         FormsModule,
         AsyncPipe,
-        ApplicationRoutingModule,
-        StoreModule.forFeature(applicationListFeatureKey, applicationListReducer),
-        StoreModule.forFeature(applicationDetailFeatureKey, applicationDetailReducer),
-        EffectsModule.forFeature([ApplicationListEffects, ApplicationDetailEffects]),
+        ApiGatewayRoutingModule,
+        StoreModule.forFeature(apiKeysListFeatureKey, apiKeyListReducer),
+//        StoreModule.forFeature(apiKeysDetailFeatureKey, KeyDetailReducer),
+        EffectsModule.forFeature([ApiKeyListEffects/*, KeyDetailEffects*/]),
         CdkTextareaAutosize,
         CdkDrag,
         CdkDragHandle,
@@ -100,10 +98,12 @@ import {ApplicationDetailsComponent} from "./application-details/application-det
         MatDivider,
         FooterComponent,
         CdkVirtualScrollViewport,
-        MatProgressSpinner
+        MatProgressSpinner,
+        MatSidenavContainer,
+        MatSidenavContent
     ],
-    exports: [ApplicationListComponent, ApplicationDetailsComponent],
-    providers: [ApplicationService],
+    exports: [ApiKeyListComponent/*, KeyDetailsComponent*/],
+    providers: [ApiGatewayService],
 })
-export class ApplicationModule {
+export class ApiGatewayModule {
 }

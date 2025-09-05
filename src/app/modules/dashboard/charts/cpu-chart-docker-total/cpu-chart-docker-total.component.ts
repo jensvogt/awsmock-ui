@@ -53,6 +53,7 @@ export class CpuChartTotalDockerComponent implements OnInit {
         this.monitoringService.getMultiCounters('docker_cpu_total_counter', 'container', start, end, 5, 5)
             .subscribe((data: any) => {
                 if (data) {
+                    console.log("Docker DPU:", data);
                     let types = Object.getOwnPropertyNames(data);
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];
@@ -74,7 +75,6 @@ export class CpuChartTotalDockerComponent implements OnInit {
                                     return value.toFixed(3);
                                 }
                             },
-                            valueFormatter: (value: number) => value.toFixed(3)
                         },
                         axisPointer: {
                             type: 'cross'

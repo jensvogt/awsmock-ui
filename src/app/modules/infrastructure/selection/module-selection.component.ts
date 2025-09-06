@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from "@angular/core";
 import {MatButton} from "@angular/material/button";
-import { SlicePipe } from "@angular/common";
+import {SlicePipe} from "@angular/common";
 import {MatList, MatListItem} from "@angular/material/list";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
@@ -22,6 +22,7 @@ const AllModules = {
         {name: 'lambda', displayName: 'Lambda', selected: false},
         {name: 'transfer', displayName: 'Transfer', selected: false},
         {name: 'application', displayName: 'Applications', selected: false},
+        {name: 'apigateway', displayName: 'API Gateway', selected: false},
     ]
 }
 
@@ -30,20 +31,20 @@ const AllModules = {
     templateUrl: './module-selection.component.html',
     standalone: true,
     imports: [
-    MatButton,
-    MatList,
-    MatListItem,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogTitle,
-    MatCheckbox,
-    MatCheckboxModule,
-    SlicePipe,
-    FormsModule,
-    CdkDrag,
-    CdkDragHandle
-],
+        MatButton,
+        MatList,
+        MatListItem,
+        MatDialogActions,
+        MatDialogClose,
+        MatDialogContent,
+        MatDialogTitle,
+        MatCheckbox,
+        MatCheckboxModule,
+        SlicePipe,
+        FormsModule,
+        CdkDrag,
+        CdkDragHandle
+    ],
     providers: [ModuleService],
     styleUrls: ['./module-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

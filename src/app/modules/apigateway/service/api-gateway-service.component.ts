@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
-import {AddApiKeyRequest} from "../model/api-key-item";
+import {AddApiKeyRequest, ApiKeyUpdateRequest} from "../model/api-key-item";
 
 @Injectable({providedIn: 'root'})
 export class ApiGatewayService {
@@ -41,6 +41,15 @@ export class ApiGatewayService {
         return this.http.post(this.baseUrl, addApiKeyRequest, {headers: headers});
     }
 
+    /**
+     * @brief Update an API key
+     *
+     * @param request update key request
+     */
+    public updateApiKey(request: ApiKeyUpdateRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'update-api-key-counter');
+        return this.http.post(this.baseUrl, {apiKey: request.apiKey}, {headers: headers});
+    }
 
     /**
      * @brief Delete an API key
@@ -50,5 +59,15 @@ export class ApiGatewayService {
     public deleteApiKey(id: string) {
         let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'delete-api-key');
         return this.http.delete(this.baseUrl + '/apikeys/' + id, {headers: headers});
+    }
+
+    /**
+     * @brief Delete an API key
+     *
+     * @param id API key ID
+     */
+    public getApiKeyDetails(id: string) {
+        let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'get-api-key-counter');
+        return this.http.post(this.baseUrl, {id: id}, {headers: headers});
     }
 }

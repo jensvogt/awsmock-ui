@@ -33,9 +33,12 @@ import {ApiKeyListComponent} from "./api-key-list/api-key-list.component";
 import {ApiKeyListEffects} from "./api-key-list/state/api-key-list.effects";
 import {apiKeyListReducer, apiKeysListFeatureKey} from "./api-key-list/state/api-key-list.reducer";
 import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
+import {ApiKeyDetailComponent} from "./api-key-detail/api-key-detail.component";
+import {apiApiKeyDetailReducer, apiKeyDetailsFeatureKey} from "./api-key-detail/state/api-key-detail.reducer";
+import {ApiKeyDetailEffects} from "./api-key-detail/state/api-key-detail.effects";
 
 @NgModule({
-    declarations: [ApiKeyListComponent/*, KeyDetailsComponent*/],
+    declarations: [ApiKeyListComponent, ApiKeyDetailComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -79,8 +82,8 @@ import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav"
         AsyncPipe,
         ApiGatewayRoutingModule,
         StoreModule.forFeature(apiKeysListFeatureKey, apiKeyListReducer),
-//        StoreModule.forFeature(apiKeysDetailFeatureKey, KeyDetailReducer),
-        EffectsModule.forFeature([ApiKeyListEffects/*, KeyDetailEffects*/]),
+        StoreModule.forFeature(apiKeyDetailsFeatureKey, apiApiKeyDetailReducer),
+        EffectsModule.forFeature([ApiKeyListEffects, ApiKeyDetailEffects]),
         CdkTextareaAutosize,
         CdkDrag,
         CdkDragHandle,
@@ -102,7 +105,7 @@ import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav"
         MatSidenavContainer,
         MatSidenavContent
     ],
-    exports: [ApiKeyListComponent/*, KeyDetailsComponent*/],
+    exports: [ApiKeyListComponent, ApiKeyDetailComponent],
     providers: [ApiGatewayService],
 })
 export class ApiGatewayModule {

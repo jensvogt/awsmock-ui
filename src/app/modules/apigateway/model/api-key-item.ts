@@ -5,6 +5,8 @@ export interface ApiKeyItem {
     name: string;
     enabled: boolean;
     customerId: string;
+    description: string;
+    value: string;
     created: Date | undefined;
     modified: Date | undefined;
 }
@@ -19,4 +21,12 @@ export interface AddApiKeyRequest {
     value: string;
     description: string;
     enabled: boolean;
+}
+
+export interface ApiKeyDetailsResponse {
+    apiKey: ApiKeyItem;
+}
+
+export interface ApiKeyUpdateRequest {
+    apiKey: ApiKeyItem;
 }

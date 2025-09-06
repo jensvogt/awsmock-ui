@@ -12,7 +12,7 @@
                 <button (click)="back()" aria-label="Back" class="head-buttons-left" mat-icon-button>
                     <mat-icon>arrow_back</mat-icon>
                 </button>
-                <span class="fill-remaining-space">API Keys ({{ (listApiKeysCountersResponse$ | async)?.total }})</span>
+                <span class="fill-remaining-space">Rest APIs ({{ (listRestApiCountersResponse$ | async)?.total }})</span>
                 <button (click)="addApiKey()" [matTooltipShowDelay]="1000" aria-label="Create" mat-icon-button matTooltip="Create a new API key">
                     <mat-icon>add</mat-icon>
                 </button>
@@ -80,9 +80,9 @@
                         </mat-form-field>
                     </mat-card-actions>
                     <div class="table-container">
-                        @if (listApiKeysCountersResponse$ | async; as apiKeyCounters) {
+                        @if (listRestApiCountersResponse$ | async; as apiKeyCounters) {
                             <div class="row">
-                                <table (matSortChange)="sortChange($event)" [dataSource]="apiKeyCounters.apiKeys" class="mat-elevation-z8 application-table" mat-table matSort>
+                                <table (matSortChange)="sortChange($event)" [dataSource]="apiKeyCounters.restApis" class="mat-elevation-z8 application-table" mat-table matSort>
                                     <ng-container matColumnDef="name">
                                         <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Application name" sortActionDescription="Sort by API key name">Name</th>
                                         <td *matCellDef="let element" mat-cell>
@@ -166,7 +166,7 @@
                     <mat-paginator (page)="handlePageEvent($event)"
                                    [disabled]="disabled"
                                    [hidePageSize]="hidePageSize"
-                                   [length]="(listApiKeysCountersResponse$ | async)?.total"
+                                   [length]="(listRestApiCountersResponse$ | async)?.total"
                                    [pageIndex]="(pageIndex$ | async)"
                                    [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
                                    [pageSize]="(pageSize$ | async)"

@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {AddApiKeyRequest, ApiKeyUpdateRequest} from "../model/api-key-item";
+import {AddRestApiRequest, RestApiUpdateRequest} from "../model/rest-api-item";
 
 @Injectable({providedIn: 'root'})
 export class ApiGatewayService {
@@ -69,5 +70,49 @@ export class ApiGatewayService {
     public getApiKeyDetails(id: string) {
         let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'get-api-key-counter');
         return this.http.post(this.baseUrl, {id: id}, {headers: headers});
+    }
+
+
+    /**
+     * @brief List all api keys
+     *
+     * @param prefix api key name prefix
+     * @param pageSize page size
+     * @param pageIndex page index
+     * @param sortColumns sorting columns
+     */
+    public listRestApiCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
+        let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'list-rest-api-counters');
+        return this.http.post(this.baseUrl, {prefix: prefix, pageSize: pageSize, pageIndex: pageIndex, sortColumns: sortColumns}, {headers: headers});
+    }
+
+    /**
+     * @brief Adds a new api keys
+     *
+     * @param addRestApiRequest add API key request
+     */
+    public addRestApi(addRestApiRequest: AddRestApiRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'create-rest-api');
+        return this.http.post(this.baseUrl, addRestApiRequest, {headers: headers});
+    }
+
+    /**
+     * @brief Update an API key
+     *
+     * @param request update key request
+     */
+    public updateRestApi(request: RestApiUpdateRequest) {
+        let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'update-rest-api-counter');
+        return this.http.post(this.baseUrl, {restApi: request.restApi}, {headers: headers});
+    }
+
+    /**
+     * @brief Delete an API key
+     *
+     * @param id API key ID
+     */
+    public deleteRestApi(id: string) {
+        let headers = this.headers.set('x-awsmock-target', 'apigateway').set('x-awsmock-action', 'delete-rest-api');
+        return this.http.delete(this.baseUrl + '/restApis/' + id, {headers: headers});
     }
 }

@@ -17,7 +17,7 @@ export class ModuleService {
 
     /**
      * @brief Returns the available modules names
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     * This is a fake AWS Node.js SDK request. This will only work, if runs against a AwsMock instance.
      */
     public getModuleList() {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'list-modules');
@@ -25,7 +25,7 @@ export class ModuleService {
     }
 
     /**
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     * This is a fake AWS Node.js SDK request. This will only work, if runs against a AwsMock instance.
      */
     public exportInfrastructure(moduleList: string[], includeObjects: boolean, prettyPrint: boolean) {
         let body = {
@@ -38,7 +38,7 @@ export class ModuleService {
     }
 
     /**
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     * This is a fake AWS Node.js SDK request. This will only work, if runs against a AwsMock instance.
      */
     public importInfrastructure(body: string) {
         let headers = this.managerConfig.managerHttpOptions.headers.set('x-awsmock-target', 'module').set('x-awsmock-action', 'import');

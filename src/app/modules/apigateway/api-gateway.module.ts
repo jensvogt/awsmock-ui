@@ -36,9 +36,13 @@ import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav"
 import {ApiKeyDetailComponent} from "./api-key-detail/api-key-detail.component";
 import {apiApiKeyDetailReducer, apiKeyDetailsFeatureKey} from "./api-key-detail/state/api-key-detail.reducer";
 import {ApiKeyDetailEffects} from "./api-key-detail/state/api-key-detail.effects";
+import {ApiGatewaySideNavComponent} from "./side-nav/api-gateway-side-nav.component";
+import {RestApiListEffects} from "./rest-api-list/state/rest-api-list.effects";
+import {restApiListReducer, restApisListFeatureKey} from "./rest-api-list/state/rest-api-list.reducer";
+import {RestApiListComponent} from "./rest-api-list/rest-api-list.component";
 
 @NgModule({
-    declarations: [ApiKeyListComponent, ApiKeyDetailComponent],
+    declarations: [ApiKeyListComponent, ApiKeyDetailComponent, RestApiListComponent],
     imports: [
         MatCard,
         MatCardHeader,
@@ -83,7 +87,8 @@ import {ApiKeyDetailEffects} from "./api-key-detail/state/api-key-detail.effects
         ApiGatewayRoutingModule,
         StoreModule.forFeature(apiKeysListFeatureKey, apiKeyListReducer),
         StoreModule.forFeature(apiKeyDetailsFeatureKey, apiApiKeyDetailReducer),
-        EffectsModule.forFeature([ApiKeyListEffects, ApiKeyDetailEffects]),
+        StoreModule.forFeature(restApisListFeatureKey, restApiListReducer),
+        EffectsModule.forFeature([ApiKeyListEffects, ApiKeyDetailEffects, RestApiListEffects]),
         CdkTextareaAutosize,
         CdkDrag,
         CdkDragHandle,
@@ -103,9 +108,10 @@ import {ApiKeyDetailEffects} from "./api-key-detail/state/api-key-detail.effects
         CdkVirtualScrollViewport,
         MatProgressSpinner,
         MatSidenavContainer,
-        MatSidenavContent
+        MatSidenavContent,
+        ApiGatewaySideNavComponent
     ],
-    exports: [ApiKeyListComponent, ApiKeyDetailComponent],
+    exports: [ApiKeyListComponent, ApiKeyDetailComponent, RestApiListComponent],
     providers: [ApiGatewayService],
 })
 export class ApiGatewayModule {

@@ -29,10 +29,10 @@ export class SnsTopicListEffects {
     ));
 
     /*addTopic$ = createEffect(() => this.actions$.pipe(
-        ofType(apiKeyListActions.addTopic),
+        ofType(restApiListActions.addTopic),
         mergeMap(action =>
             this.snsService.createTopic(action.name)
-                .then(() => apiKeyListActions.addTopicSuccess()))
+                .then(() => restApiListActions.addTopicSuccess()))
     ));*/
 
     publishMessage$ = createEffect(() => this.actions$.pipe(
@@ -60,10 +60,10 @@ export class SnsTopicListEffects {
     ));
 
     /* deleteTopic$ = createEffect(() => this.actions$.pipe(
-         ofType(apiKeyListActions.deleteTopic),
+         ofType(restApiListActions.deleteTopic),
          mergeMap(action =>
              this.snsService.deleteTopic(action.topicArn)
-                 .then(() => apiKeyListActions.addTopicSuccess()))
+                 .then(() => restApiListActions.addTopicSuccess()))
      ));*/
 
     constructor(private actions$: Actions, private snsService: SnsService) {

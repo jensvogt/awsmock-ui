@@ -10,6 +10,8 @@ import {SqsChartsComponent} from "./modules/sqs/charts/sqs-charts.component";
 import {CognitoChartsComponent} from "./modules/cognito/charts/cognito-charts.component";
 import {ApplicationChartsComponent} from "./modules/application/charts/application-charts.component";
 import {AwsMockLogsComponent} from "./awsmock-logs.component";
+import {RestApiListComponent} from "./modules/apigateway/rest-api-list/rest-api-list.component";
+import {ApiKeyListComponent} from "./modules/apigateway/api-key-list/api-key-list.component";
 
 export const routes: Routes = [
     {
@@ -158,8 +160,16 @@ export const routes: Routes = [
             // API gateway
             //=========================================================================
             {
-                path: 'api-gateway-list',
+                path: 'api-gateway',
                 loadChildren: () => import('./modules/apigateway/api-gateway.module').then(module => module.ApiGatewayModule),
+            },
+            {
+                path: 'api-gateway/rest-api-list',
+                component: RestApiListComponent,
+            },
+            {
+                path: 'api-gateway/api-key-list',
+                component: ApiKeyListComponent,
             },
             //=========================================================================
             // awsmock logs

@@ -5,24 +5,26 @@ import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {State, Store} from "@ngrx/store";
 import {Location} from "@angular/common";
-import {selectApiKeysCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/api-key-list.selectors";
-import {apiKeyListActions} from "./state/api-key-list.actions";
+import {selectPageIndex, selectPageSize, selectPrefix, selectRestApisCounters} from "./state/rest-api-list.selectors";
+import {restApiListActions} from "./state/rest-api-list.actions";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
-import {ApiKeyItem, ListApiKeyCountersResponse} from "../model/api-key-item";
-import {ApiKeysListState} from "./state/api-key-list.reducer";
+import {ApiKeyItem} from "../model/api-key-item";
+import {ApiGatewayService} from "../service/api-gateway-service.component";
 import {KeyAddComponentDialog} from "../api-key-add/api-key-add.component";
 import {Actions, ofType} from "@ngrx/effects";
+import {ListRestApiCountersResponse} from "../model/rest-api-item";
+import {RestApisListState} from "./state/rest-api-list.reducer";
 
 @Component({
-    selector: 'api-key-list',
-    templateUrl: './api-key-list.component.html',
-    styleUrls: ['./api-key-list.component.scss'],
+    selector: 'rest-api-list',
+    templateUrl: './rest-api-list.component.html',
+    styleUrls: ['./rest-api-list.component.scss'],
     standalone: false
 })
-export class ApiKeyListComponent implements OnInit, OnDestroy {
+export class RestApiListComponent implements OnInit, OnDestroy {
 
     // Last update
     lastUpdate: Date = new Date();
@@ -31,7 +33,7 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
-    listApiKeysCountersResponse$: Observable<ListApiKeyCountersResponse> = this.store.select(selectApiKeysCounters);
+    listRestApiCountersResponse$: Observable<ListRestApiCountersResponse> = this.store.select(selectRestApisCounters);
     columns: any[] = ['name', 'id', 'enabled', 'created', 'modified', 'actions'];
 
     // Auto-update
@@ -51,8 +53,8 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
     // Misc
     protected readonly byteConversion = byteConversion;
 
-    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<ApiKeysListState>,
-                private _actions$: Actions, private readonly location: Location, private readonly store: Store, private readonly router: Router) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<RestApisListState>, private readonly _actions$: Actions,
+                private readonly location: Location, private readonly store: Store, private readonly router: Router, private readonly apiGatewayService: ApiGatewayService) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
             if (data?.length) {
@@ -61,18 +63,18 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
             }
         });
         this._actions$.pipe(ofType("[api-key-list] Add key success")).subscribe(() => {
-            this.loadApiKeys();
+            this.loadRestApis();
         });
         this._actions$.pipe(ofType("[api-key-list] Delete key success")).subscribe(() => {
-            this.loadApiKeys();
+            this.loadRestApis();
         });
         //this.listApiKeysCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
     }
 
     ngOnInit(): void {
-        this.loadApiKeys();
+        this.loadRestApis();
         const period = parseInt(<string>localStorage.getItem("autoReload"));
-        this.updateSubscription = interval(period).subscribe(() => this.loadApiKeys());
+        this.updateSubscription = interval(period).subscribe(() => this.loadRestApis());
     }
 
     ngOnDestroy(): void {
@@ -95,7 +97,7 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
             if (result) {
                 const period = parseInt(<string>localStorage.getItem("autoReload"));
                 this.updateSubscription?.unsubscribe();
-                this.updateSubscription = interval(period).subscribe(() => this.loadApiKeys());
+                this.updateSubscription = interval(period).subscribe(() => this.loadRestApis());
             }
         });
     }
@@ -105,42 +107,38 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
     }
 
     refresh() {
-        this.loadApiKeys();
+        this.loadRestApis();
     }
 
     setPrefix() {
         this.prefixSet = true;
         this.state.value['api-key-list'].pageIndex = 0;
         this.state.value['api-key-list'].prefix = this.prefixValue;
-        this.loadApiKeys();
+        this.loadRestApis();
     }
 
     unsetPrefix() {
         this.prefixValue = '';
         this.prefixSet = false;
         this.state.value['api-key-list'].prefix = '';
-        this.loadApiKeys();
+        this.loadRestApis();
     }
 
     handlePageEvent(e: PageEvent) {
         this.state.value['api-key-list'].pageSize = e.pageSize;
         this.state.value['api-key-list'].pageIndex = e.pageIndex;
-        this.loadApiKeys();
+        this.loadRestApis();
     }
 
     sortChange(sortState: Sort) {
         let direction = sortState.direction === 'asc' ? 1 : -1
         this.state.value['api-key-list'].sortColumns = [{column: sortState.active, sortDirection: direction}];
-        this.loadApiKeys();
+        this.loadRestApis();
     }
 
-    navigateToDetails(name: string) {
-        this.router.navigate(['/api-key-list/details/' + btoa(name)]);
-    }
-
-    loadApiKeys() {
+    loadRestApis() {
         this.lastUpdate = new Date();
-        this.store.dispatch(apiKeyListActions.loadApiKeys({
+        this.store.dispatch(restApiListActions.loadRestApis({
             prefix: this.state.value['api-key-list'].prefix,
             pageSize: this.state.value['api-key-list'].pageSize,
             pageIndex: this.state.value['api-key-list'].pageIndex,
@@ -162,13 +160,13 @@ export class ApiKeyListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(KeyAddComponentDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.store.dispatch(apiKeyListActions.addApiKey({request: result}));
+                this.store.dispatch(restApiListActions.addRestApi({request: result}));
             }
         });
     }
 
     deleteApiKey(apiKey: ApiKeyItem) {
         this.lastUpdate = new Date();
-        this.store.dispatch(apiKeyListActions.deleteApiKey({id: apiKey.id}));
+        this.store.dispatch(restApiListActions.deleteRestApi({id: apiKey.id}));
     }
 }

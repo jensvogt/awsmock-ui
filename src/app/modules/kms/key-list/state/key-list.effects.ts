@@ -29,17 +29,17 @@ export class KMSKeyListEffects {
     ));
 
     /*addTopic$ = createEffect(() => this.actions$.pipe(
-        ofType(apiKeyListActions.addTopic),
+        ofType(restApiListActions.addTopic),
         mergeMap(action =>
             this.snsService.createTopic(action.name)
-                .then(() => apiKeyListActions.addTopicSuccess()))
+                .then(() => restApiListActions.addTopicSuccess()))
     ));*/
 
     /* deleteTopic$ = createEffect(() => this.actions$.pipe(
-         ofType(apiKeyListActions.deleteTopic),
+         ofType(restApiListActions.deleteTopic),
          mergeMap(action =>
              this.snsService.deleteTopic(action.topicArn)
-                 .then(() => apiKeyListActions.addTopicSuccess()))
+                 .then(() => restApiListActions.addTopicSuccess()))
      ));*/
 
     constructor(private readonly actions$: Actions, private readonly kmsService: KmsService) {

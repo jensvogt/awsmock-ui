@@ -37,22 +37,22 @@ export const kmsKeyListReducer = createReducer(
     on(keyListActions.loadKeysFailure, (state: KMSKeyListState, {error}) => ({...state, error: error, loading: false})),
 
     // // Add topic
-    // on(apiKeyListActions.addTopic, (state: SNSTopicListState) => ({...state, loading: true})),
-    // on(apiKeyListActions.addTopicSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
-    // on(apiKeyListActions.addTopicFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
+    // on(restApiListActions.addTopic, (state: SNSTopicListState) => ({...state, loading: true})),
+    // on(restApiListActions.addTopicSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
+    // on(restApiListActions.addTopicFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
     //
     // // Purge topic
-    // on(apiKeyListActions.purgeTopic, (state: SNSTopicListState) => ({...state, loading: true})),
-    // on(apiKeyListActions.purgeTopicSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
-    // on(apiKeyListActions.purgeTopicFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
+    // on(restApiListActions.purgeTopic, (state: SNSTopicListState) => ({...state, loading: true})),
+    // on(restApiListActions.purgeTopicSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
+    // on(restApiListActions.purgeTopicFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
     //
     // // Publish message
-    // on(apiKeyListActions.publishMessage, (state: SNSTopicListState) => ({...state, loading: true})),
-    // on(apiKeyListActions.publishMessageSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
-    // on(apiKeyListActions.publishMessageFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
+    // on(restApiListActions.publishMessage, (state: SNSTopicListState) => ({...state, loading: true})),
+    // on(restApiListActions.publishMessageSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
+    // on(restApiListActions.publishMessageFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
     //
     // // Delete topic
-    // on(apiKeyListActions.deleteTopic, (state: SNSTopicListState) => ({...state, loading: true})),
-    // on(apiKeyListActions.deleteTopicSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
-    // on(apiKeyListActions.deleteTopicFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
+    // on(restApiListActions.deleteTopic, (state: SNSTopicListState) => ({...state, loading: true})),
+    // on(restApiListActions.deleteTopicSuccess, (state: SNSTopicListState) => ({...state, loading: false})),
+    // on(restApiListActions.deleteTopicFailure, (state: SNSTopicListState, {error}) => ({...state, error: error, loading: false})),
 );

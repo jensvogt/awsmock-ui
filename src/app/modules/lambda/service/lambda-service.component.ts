@@ -33,8 +33,8 @@ export class LambdaService {
         const body = {
             region: environment.awsmockRegion,
             prefix: prefix,
-            maxResults: pageSize,
-            skip: pageSize * pageIndex,
+            pageSize: pageSize,
+            pageIndex: pageIndex,
             sortColumns: sortColumns
         }
         return this.http.post(this.baseUrl, body, {headers: headers});

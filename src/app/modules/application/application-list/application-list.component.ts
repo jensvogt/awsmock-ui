@@ -17,6 +17,7 @@ import {ApplicationAddDialog} from "../application-add/application-add-dialog.co
 import {ApplicationUploadDialog} from "../application-upload/application-upload-dialog.component";
 import {ApplicationService} from "../service/application-service.component";
 import {ApplicationLogsDialog} from "../application-logs/application-logs.component";
+import {Actions, ofType} from "@ngrx/effects";
 
 @Component({
     selector: 'application-list',
@@ -53,7 +54,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     // Misc
     protected readonly byteConversion = byteConversion;
 
-    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<ApplicationListState>,
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialog: MatDialog, private readonly state: State<ApplicationListState>, private readonly _actions$: Actions,
                 private readonly location: Location, private readonly store: Store, private readonly router: Router, private readonly applicationService: ApplicationService) {
         this.prefix$.subscribe((data: string) => {
             this.prefixSet = false;
@@ -61,6 +62,9 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
                 this.prefixValue = data;
                 this.prefixSet = true;
             }
+        });
+        this._actions$.pipe(ofType(applicationListActions.addApplication)).subscribe(() => {
+            this.loadApplications();
         });
         //this.listApplicationCountersResponse$.subscribe((data) => console.log("Response load data: ", data));
     }

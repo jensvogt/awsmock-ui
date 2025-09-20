@@ -8,7 +8,6 @@ import {ListTopicCountersResponse} from "../model/sns-topic-item";
 import {TopicAddComponentDialog} from "../topic-add/topic-add.component";
 import {SnsService} from "../service/sns-service.component";
 import {PublishMessageComponentDialog} from "../message-publish/publish-message.component";
-import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {State, Store} from "@ngrx/store";
 import {snsTopicListActions} from "./state/sns-topic-list.actions";
 import {selectPageIndex, selectPageSize, selectTopicCounters} from "./state/sns-topic-list.selectors";
@@ -33,8 +32,8 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     pageSize$: Observable<number> = this.store.select(selectPageSize);
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     listTopicCountersResponse$: Observable<ListTopicCountersResponse> = this.store.select(selectTopicCounters);
-    sortColumns: SortColumn[] = [{column: 'name', sortDirection: -1}];
-    columns: any[] = ['topicName', 'availableMessages', 'size', 'created', 'modified', 'actions'];
+    columns: any[] = ['topicName', 'messages', 'messagesSend', 'messagesResend', 'size', 'created', 'modified', 'actions'];
+    defaultSort: Sort = {active: "messages", direction: "desc"};
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -60,7 +59,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
         this.loadTopics();
         const period = parseInt(<string>localStorage.getItem("autoReload"));
         this.updateSubscription = interval(period).subscribe(() => this.loadTopics());
-        this.listTopicCountersResponse$.subscribe((data) => console.log("Topic list data: ", data));
+        //this.listTopicCountersResponse$.subscribe((data) => console.log("Topic list data: ", data));
     }
 
     ngOnDestroy(): void {
@@ -117,18 +116,7 @@ export class SnsTopicListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        this.state.value['sns-topic-list'].sortColumns = [];
-        let direction: number;
-        let column = 'topicName';
-        if (sortState.active === 'availableMessages') {
-            column = 'attributes.availableMessages'
-        }
-        if (sortState.direction === 'asc') {
-            direction = 1;
-        } else {
-            direction = -1;
-        }
-        this.state.value['sns-topic-list'].sortColumns = [{column: column, sortDirection: direction}];
+        this.state.value['sns-topic-list'].sortColumns = [{column: sortState.active, sortDirection: sortState.direction === 'asc' ? 1 : -1}];
         this.loadTopics();
     }
 

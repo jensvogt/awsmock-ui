@@ -57,7 +57,8 @@
             <div class="table-container">
                 @if (listTopicCountersResponse$ | async; as topicCounters) {
                     <div class="row">
-                        <table (matSortChange)="sortChange($event)" [dataSource]="topicCounters.topicCounters" class="mat-elevation-z8 queue-table" mat-table matSort>
+                        <table (matSortChange)="sortChange($event)" [dataSource]="topicCounters.topicCounters" class="mat-elevation-z8 queue-table" mat-table matSort matSortDisableClear="false"
+                               [matSortActive]="defaultSort.active" [matSortDirection]="defaultSort.direction">
                             <ng-container matColumnDef="topicName">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Topic name" sortActionDescription="Sort by queueUrl">Name</th>
                                 <td *matCellDef="let element" mat-cell>
@@ -71,13 +72,17 @@
                                     </div>
                                 </td>
                             </ng-container>
-                            <ng-container matColumnDef="availableMessages">
-                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Available messages in topic" sortActionDescription="Sort by created">
-                                    Available
-                                </th>
-                                <td *matCellDef="let element" mat-cell>
-                                    {{ element.availableMessages }}
-                                </td>
+                            <ng-container matColumnDef="messages">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Available messages in topic" sortActionDescription="Sort by message number">Available</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.messages }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="messagesSend">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Send messages in topic" sortActionDescription="Sort by send">Send</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.messagesSend }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="messagesResend">
+                                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Resend messages in topic" sortActionDescription="Sort by resend">Resend</th>
+                                <td *matCellDef="let element" mat-cell>{{ element.messagesResend }}</td>
                             </ng-container>
                             <ng-container matColumnDef="size">
                                 <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="SIze of all messages in bytes" sortActionDescription="Sort by size">

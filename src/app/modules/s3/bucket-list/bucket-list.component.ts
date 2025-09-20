@@ -144,16 +144,7 @@ export class S3BucketListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        this.state.value['s3-bucket-list'].sortColumns = [];
-        let direction;
-        let column = 'keys';
-        if (sortState.active === 'size') {
-            column = 'size'
-        } else if (sortState.active === 'name') {
-            column = 'name';
-        }
-        direction = sortState.direction === 'asc' ? 1 : -1;
-        this.state.value['s3-bucket-list'].sortColumns = [{column: column, sortDirection: direction}];
+        this.state.value['s3-bucket-list'].sortColumns = [{column: sortState.active, sortDirection: sortState.direction === 'asc' ? 1 : -1}];
         this.loadBuckets();
     }
 

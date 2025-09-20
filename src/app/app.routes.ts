@@ -12,6 +12,7 @@ import {ApplicationChartsComponent} from "./modules/application/charts/applicati
 import {AwsMockLogsComponent} from "./awsmock-logs.component";
 import {RestApiListComponent} from "./modules/apigateway/rest-api-list/rest-api-list.component";
 import {ApiKeyListComponent} from "./modules/apigateway/api-key-list/api-key-list.component";
+import {DatabaseChartComponent} from "./modules/database/charts/database-chart.component";
 
 export const routes: Routes = [
     {
@@ -177,6 +178,13 @@ export const routes: Routes = [
             {
                 path: 'awsmock-logs',
                 component: AwsMockLogsComponent,
+            },
+            //=========================================================================
+            // Database
+            //=========================================================================
+            {
+                path: 'database-charts',
+                component: DatabaseChartComponent,
             },
             //=========================================================================
             // Not found

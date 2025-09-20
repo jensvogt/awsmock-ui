@@ -180,6 +180,14 @@
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by container ID">Container ID</th>
                                     <td *matCellDef="let element" mat-cell> {{ element.containerId }}</td>
                                 </ng-container>
+                                <ng-container matColumnDef="host">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container hostname" sortActionDescription="Sort by host">Host</th>
+                                    <td *matCellDef="let element" mat-cell> {{ element.hostname }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="port">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container port" sortActionDescription="Sort by port">Port</th>
+                                    <td *matCellDef="let element" mat-cell> {{ element.port }}</td>
+                                </ng-container>
                                 <ng-container matColumnDef="status">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>
                                     <td *matCellDef="let element" mat-cell> {{ element.status }}</td>

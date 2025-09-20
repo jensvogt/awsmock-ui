@@ -76,7 +76,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     tagPageSizeOptions = [5, 10, 20, 50, 100];
 
     // Instances Table
-    instanceColumns: any[] = ['instanceId', 'containerId', 'status', 'lastStarted', 'actions'];
+    instanceColumns: any[] = ['instanceId', 'containerId', 'host', 'port', 'status', 'lastStarted', 'actions'];
     lambdaInstances$: Observable<LambdaInstanceCountersResponse> = this.store.select(selectInstances);
     instancePageSize$: Observable<number> = this.store.select(selectInstancePageSize);
     instancePageIndex$: Observable<number> = this.store.select(selectInstancePageIndex);

@@ -95,6 +95,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
         if (file) {
             this.selectedFile = file;
             this.fileSize.set(Math.round(file.size / 1024)); // Set file size in KB
+            this.version = getVersion(this.selectedFile.name);
 
             if (file.size > this.maxSize) {
                 const fileSizeInMegaBytes = (file.size / 1024 / 1024).toFixed(0);

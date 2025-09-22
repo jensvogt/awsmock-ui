@@ -21,7 +21,7 @@ export const initialState: SNSTopicListState = {
     pageSize: 10,
     pageIndex: 0,
     loading: false,
-    sortColumns: [{column: 'attributes.availableMessages', sortDirection: -1}],
+    sortColumns: [{column: 'messages', sortDirection: -1}],
     error: {}
 };
 

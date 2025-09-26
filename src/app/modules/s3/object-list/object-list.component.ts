@@ -217,7 +217,7 @@ export class S3ObjectListComponent implements OnInit, OnDestroy {
 
         let downloadFlag = true;
         if (object !== undefined) {
-            if (object.size !== undefined && object.size > 1024 * 1024) {
+            if (object.size !== undefined && object.size > 64 * 1024 * 1024) {
                 this.snackBar.open("Object to big, maxSize: 1MB", "Error", {duration: 5000});
                 downloadFlag = false;
             }

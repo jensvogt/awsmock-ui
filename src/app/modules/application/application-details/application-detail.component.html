@@ -9,7 +9,7 @@
             Application Details: {{ this.applicationName }}
         </span>
         <span>
-            <button (click)="uploadCode()" aria-label="Refresh" mat-icon-button>
+            <button (click)="uploadCode()" [matTooltipShowDelay]="1000"  aria-label="Upload application code" mat-icon-button matTooltip="Upload application code">
                 <mat-icon>upload</mat-icon>
             </button>
             <button (click)="applicationLogs()" [matTooltipShowDelay]="1000" aria-label="Show application logs" mat-icon-button matTooltip="Show application logs">
@@ -18,7 +18,7 @@
             <button (click)="rebuildApplication()" [matTooltipShowDelay]="1000" aria-label="Rebuild application" mat-icon-button matTooltip="Rebuild application">
                 <mat-icon><span class="material-symbols-outlined">reset_wrench</span></mat-icon>
             </button>
-            <button (click)="refresh()" aria-label="Refresh" mat-icon-button>
+            <button (click)="refresh()" [matTooltipShowDelay]="1000" aria-label="Refresh application details" mat-icon-button matTooltip="Reload application details">
                 <mat-icon>refresh</mat-icon>
             </button>
         </span>

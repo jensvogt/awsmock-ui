@@ -80,6 +80,7 @@ export class ApplicationUploadDialog implements OnInit {
         if (event.dataTransfer) {
             this.file = event.dataTransfer.files[0];
             this.fileName = this.file.name;
+            this.version = getVersion(this.fileName);
         }
         this.uploadDisabled = !(this.file && this.fileName && this.version?.length)
     }

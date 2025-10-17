@@ -118,9 +118,5 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     onUpgrade() {
         this.uploadFile(this.file);
     }
-
-    handleProgress(event: ProgressEvent) {
-        this.progress = (event.loaded / event.total) * 100;
-    }
 }
 

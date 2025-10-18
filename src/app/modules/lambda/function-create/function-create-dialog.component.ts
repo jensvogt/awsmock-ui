@@ -13,6 +13,7 @@ import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {MatIcon} from "@angular/material/icon";
+import {getVersion} from "../../../shared/version-utils.componen";
 
 interface Runtime {
     value: string;
@@ -52,6 +53,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
     functionName: string | undefined;
     handlerName: string | undefined;
     memorySize: number = 512;
+    version: string = 'latest';
     timeout: number = 3600;
     jsonEnvironment: string | undefined;
     jsonTags: string | undefined;
@@ -85,7 +87,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
     // Byte conversion
     protected readonly byteConversion = byteConversion;
 
-    constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<LambdaFunctionCreateDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<LambdaFunctionCreateDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
     }
 
     ngOnInit() {
@@ -96,6 +98,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
     onFileChange(event: any): void {
         this.file = event.target.files[0];
         this.fileName = this.file.name;
+        this.version = getVersion(this.fileName)
         this.createDisabled = !(this.functionName && this.fileName && this.handlerName && this.selectedRuntime)
     }
 
@@ -105,6 +108,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
         if (event.dataTransfer) {
             this.file = event.dataTransfer.files[0];
             this.fileName = this.file.name;
+            this.version = getVersion(this.fileName)
         }
         this.createDisabled = !(this.file && this.fileName)
     }
@@ -133,7 +137,7 @@ export class LambdaFunctionCreateDialog implements OnInit {
             reader.onload = () => {
                 const content: any = reader.result;
                 this.dialogRef.close({
-                    content: content.split(',')[1], functionName: this.functionName, fileName: this.fileName, handler: this.handlerName,
+                    content: content.split(',')[1], functionName: this.functionName, fileName: this.fileName, handler: this.handlerName, version: this.version,
                     runtime: this.selectedRuntime, memorySize: this.memorySize, timeout: this.timeout, jsonEnvironment: this.jsonEnvironment
                 });
             };

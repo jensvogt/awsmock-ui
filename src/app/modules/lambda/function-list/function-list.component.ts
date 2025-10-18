@@ -251,6 +251,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 request.Code.ZipFile = result.content;
                 request.FunctionName = result.functionName;
                 request.Runtime = result.runtime;
+                request.Version = result.version;
                 request.Handler = result.handler;
                 request.MemorySize = result.memorySize;
                 request.Timeout = result.timeout;

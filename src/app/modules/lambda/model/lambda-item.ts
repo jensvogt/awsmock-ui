@@ -60,6 +60,7 @@ export interface CreateFunctionRequest {
     Runtime: string;
     Code: Code;
     Role: string;
+    Version: string;
     MemorySize: number;
     Timeout: number;
     EphemeralStorage: EphemeralStorage;

@@ -6,7 +6,7 @@ export const cognitoUserActions = {
     initialize: createAction('[cognito-user-list] initialize'),
 
     // Load users
-    loadUsers: createAction('[cognito-user-list] Load users', props<{ prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
+    loadUsers: createAction('[cognito-user-list] Load users', props<{ userPoolId: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[] }>()),
     loadUsersSuccess: createAction('[cognito-user-list] Load users success', props<{ users: UserCountersResponse }>()),
     loadUsersFailure: createAction('[cognito-user-list] Load users error', props<{ error: string }>()),
 

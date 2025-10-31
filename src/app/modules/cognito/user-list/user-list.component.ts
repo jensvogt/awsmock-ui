@@ -74,6 +74,9 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
                 this.loadUsers();
             }
         );
+       /* this.listUserCountersResponse$.subscribe((data) => {
+            console.log("ListUserCountersResponse", data);
+        })*/
     }
 
     ngOnInit(): void {
@@ -141,17 +144,14 @@ export class CognitoUserListComponent implements OnInit, OnDestroy {
 
     sortChange(sortState: Sort) {
         this.sortColumns = [];
-        if (sortState.direction === 'asc') {
-            this.sortColumns.push({column: sortState.active, sortDirection: 1});
-        } else {
-            this.sortColumns.push({column: sortState.active, sortDirection: -1});
-        }
+        this.state.value['cognito-user-list'].sortColumns = [{column: sortState.active, sortDirection: sortState.direction === 'asc' ? 1 : -1}];
         this.loadUsers();
     }
 
     loadUsers() {
         this.lastUpdate = new Date();
         this.store.dispatch(cognitoUserActions.loadUsers({
+            userPoolId: this.userPoolId,
             prefix: this.state.value['cognito-user-list'].prefix,
             pageSize: this.state.value['cognito-user-list'].pageSize,
             pageIndex: this.state.value['cognito-user-list'].pageIndex,

@@ -70,9 +70,7 @@ export class SqsQueueListComponent implements OnInit, OnDestroy {
                 this.prefixSet = true;
             }
         });
-        this.listQueueCountersResponse$.subscribe((data) => {
-            console.log("ListQueueCounterResponse", data);
-        })
+        //this.listQueueCountersResponse$.subscribe((data) => {console.log("ListQueueCounterResponse", data);})
     }
 
     ngOnDestroy(): void {

@@ -20,7 +20,7 @@ export class CognitoService {
     }
 
     /**
-     * This is a fake AWS NodeJS SDK request. This will only work, if runs against a AwsMock instance.
+     * This is a fake AWS Node.js SDK request. This will only work if runs against an AwsMock instance.
      */
     public listUserPoolCounters(prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', 'ListUserPoolCounters');
@@ -34,14 +34,15 @@ export class CognitoService {
         return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
-    public listUserCounters(userPoolId: string, maxResults: number, pageIndex: number, sortColumns: SortColumn[]) {
+    public listUserCounters(userPoolId: string, prefix: string, pageSize: number, pageIndex: number, sortColumns: SortColumn[]) {
         let headers = this.headers.set('x-awsmock-target', 'cognito-idp').set('x-awsmock-action', "ListUserCounters");
         const body = {
-            Region: environment.awsmockRegion,
-            UserPoolId: userPoolId,
-            MaxResults: maxResults,
-            PageIndex: pageIndex,
-            SortColumns: sortColumns
+            region: environment.awsmockRegion,
+            userPoolId: userPoolId,
+            prefix: prefix,
+            pageSize: pageSize,
+            pageIndex: pageIndex,
+            sortColumns: sortColumns
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
     }

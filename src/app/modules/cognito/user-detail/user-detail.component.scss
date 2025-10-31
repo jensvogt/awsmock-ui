@@ -43,3 +43,14 @@ body {
   margin-bottom: 10px;
   font-size: x-large;
 }
+
+.with-icon {
+  display: flex;
+  align-items: baseline;
+}
+
+.copy-icon {
+  display: inline-flex;
+  align-content: baseline;
+  font-size: 16px !important;
+}

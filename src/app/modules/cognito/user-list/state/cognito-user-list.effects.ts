@@ -13,6 +13,7 @@ export class CognitoUserListEffects {
         ofType(cognitoUserActions.loadUsers),
         mergeMap(action =>
             this.cognitoService.listUserCounters(
+                action.userPoolId,
                 action.prefix,
                 action.pageSize,
                 action.pageIndex,

@@ -126,3 +126,4 @@ dist
 **/*.db
 **/*.db-lock
 .angular
+**/package-lock.json

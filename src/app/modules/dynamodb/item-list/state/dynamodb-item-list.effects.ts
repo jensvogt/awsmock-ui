@@ -36,6 +36,6 @@ export class DynamodbItemListEffects {
                  )
          )));*/
 
-    constructor(private actions$: Actions, private dynamodbService: DynamodbService) {
+    constructor(private readonly actions$: Actions, private readonly dynamodbService: DynamodbService) {
     }
 }

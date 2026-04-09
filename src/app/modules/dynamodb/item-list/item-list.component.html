@@ -46,16 +46,20 @@
         @if (listItemCountersResponse$ | async; as itemCounters) {
           <div class="row">
             <table (matSortChange)="sortChange($event)" [dataSource]="itemCounters.itemCounters" class="mat-elevation-z8 queue-item" mat-table matSort>
-              <ng-container matColumnDef="id" matTooltip="Item ID">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Item ID" sortActionDescription="Sort by item ID">ID</th>
+              <ng-container matColumnDef="partitionKey" matTooltip="Partition key">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Partition key" sortActionDescription="Sort by partition key">Partition Key</th>
                 <td *matCellDef="let element" mat-cell>
                   <mat-nav-list>
-                    <a (click)="editItem(element)" mat-list-item>{{ element.id }}</a>
+                    <a (click)="editItem(element)" mat-list-item>{{ element.partitionKey }}</a>
                   </mat-nav-list>
                 </ng-container>
+                <ng-container matColumnDef="sortKey" matTooltip="Sort key">
+                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Sort key" sortActionDescription="Sort by sort key">Sort Key</th>
+                  <td *matCellDef="let element" mat-cell> {{ element.sortKey }}</td>
+                </ng-container>
                 <ng-container matColumnDef="size" matTooltip="Total size of item">
-                  <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Item size" sortActionDescription="Sort by size">Size</th>
-                  <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Item size" sortActionDescription="Sort by size">Size</th>
+                    <td *matCellDef="let element" mat-cell> {{ byteConversion(element.size) }}</td>
                 </ng-container>
                 <ng-container matColumnDef="created" matTooltip="Created">
                   <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Create timestamp" sortActionDescription="Sort by created">Created</th>

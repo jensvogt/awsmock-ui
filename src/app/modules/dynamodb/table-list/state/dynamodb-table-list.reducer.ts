@@ -21,7 +21,7 @@ export const initialState: DynamodbTableListState = {
     pageSize: 10,
     pageIndex: 0,
     loading: false,
-    sortColumns: [{column: 'tableName', sortDirection: -1}],
+    sortColumns: [{column: 'items', sortDirection: -1}],
     error: {}
 };
 

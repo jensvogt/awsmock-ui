@@ -5,7 +5,8 @@ export interface Attribute {
 export interface ItemItem {
     id: string | undefined;
     attributes: Attribute[] | undefined;
-    keys: Attribute[] | undefined;
+    partitionKey: string | undefined;
+    sortKey: string | undefined;
     size: number;
     created: Date | undefined;
     modified: Date | undefined;

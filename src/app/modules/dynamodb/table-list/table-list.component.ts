@@ -68,7 +68,7 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadTables();
-        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        const period = Number.parseInt(<string>localStorage.getItem("autoReload"));
         this.updateSubscription = interval(period).subscribe(() => this.loadTables());
     }
 
@@ -90,7 +90,7 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                const period = Number.parseInt(<string>localStorage.getItem("autoReload"));
                 this.updateSubscription?.unsubscribe();
                 this.updateSubscription = interval(period).subscribe(() => this.loadTables());
             }
@@ -126,12 +126,7 @@ export class DynamodbTableListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        this.sortColumns = [];
-        if (sortState.direction === 'asc') {
-            this.sortColumns.push({column: sortState.active, sortDirection: 1});
-        } else {
-            this.sortColumns.push({column: sortState.active, sortDirection: -1});
-        }
+        this.state.value['dynamodb-item-list'].sortColumns = [{column: sortState.active, sortDirection: sortState.direction === 'asc' ? 1 : -1}];
         this.loadTables();
     }
 

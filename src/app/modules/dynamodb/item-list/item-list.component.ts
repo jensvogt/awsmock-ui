@@ -23,7 +23,7 @@ import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.compon
     selector: 'dynamodb-item-list',
     templateUrl: './item-list.component.html',
     styleUrls: ['./item-list.component.scss'],
-    standalone: false,
+    standalone:false,
     providers: [CognitoService]
 })
 export class DynamodbItemListComponent implements OnInit, OnDestroy {
@@ -39,7 +39,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     pageIndex$: Observable<number> = this.store.select(selectPageIndex);
     prefix$: Observable<string> = this.store.select(selectPrefix);
     listItemCountersResponse$: Observable<ItemCountersResponse> = this.store.select(selectItemCounters);
-    columns: any[] = ['id', 'size', 'created', 'modified', 'actions'];
+    columns: any[] = ['partitionKey', 'sortKey', 'size', 'created', 'modified', 'actions'];
 
     // Auto-update
     updateSubscription: Subscription | undefined;
@@ -78,7 +78,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
             this.tableName = decodeURI(params['tableName']);
         });
         this.loadItems();
-        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        const period = Number.parseInt(<string>localStorage.getItem("autoReload"));
         this.updateSubscription = interval(period).subscribe(() => this.loadItems());
     }
 
@@ -101,7 +101,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
 
         this.dialog.open(AutoReloadComponent, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                const period = parseInt(<string>localStorage.getItem("autoReload"));
+                const period = Number.parseInt(<string>localStorage.getItem("autoReload"));
                 this.updateSubscription?.unsubscribe();
                 this.updateSubscription = interval(period).subscribe(() => this.loadItems());
             }
@@ -137,12 +137,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     }
 
     sortChange(sortState: Sort) {
-        this.sortColumns = [];
-        if (sortState.direction === 'asc') {
-            this.sortColumns.push({column: sortState.active, sortDirection: 1});
-        } else {
-            this.sortColumns.push({column: sortState.active, sortDirection: -1});
-        }
+        this.state.value['dynamodb-item-list'].sortColumns = [{column: sortState.active, sortDirection: sortState.direction === 'asc' ? 1 : -1}];
         this.loadItems();
     }
 
@@ -203,7 +198,7 @@ export class DynamodbItemListComponent implements OnInit, OnDestroy {
     }
 
     deleteItem(item: ItemItem) {
-        this.dynamodbService.deleteItem(this.tableName, item.keys)
+        this.dynamodbService.deleteItem(this.tableName, item.partitionKey, item.sortKey)
             .subscribe(() => {
                 this.snackBar.open('Item deleted, ID: ' + item.id, 'Done', {duration: 5000});
                 this.loadItems();

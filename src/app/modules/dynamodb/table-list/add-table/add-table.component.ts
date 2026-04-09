@@ -45,7 +45,7 @@ export class DynamoDbAddTableDialog implements OnInit {
     writeCapacity: number = 1;
     request: CreateTableRequest = {} as CreateTableRequest;
 
-    constructor(private dialogRef: MatDialogRef<DynamoDbAddTableDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly dialogRef: MatDialogRef<DynamoDbAddTableDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.tableName = data.tableName;
     }
 

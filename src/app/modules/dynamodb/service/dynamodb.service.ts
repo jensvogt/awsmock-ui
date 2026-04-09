@@ -30,6 +30,7 @@ export class DynamodbService {
             pageIndex: pageIndex,
             sortColumns: sortColumns
         }
+        console.log("Sorting: ", JSON.stringify(body));
         return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
@@ -99,12 +100,13 @@ export class DynamodbService {
         return this.http.post(this.baseUrl, body, {headers: headers});
     }
 
-    public deleteItem(tableName: string, keys: Attribute[] | undefined) {
+    public deleteItem(tableName: string, partitionKey: string| undefined, sortKey: string| undefined) {
         let headers = this.headers.set('x-awsmock-target', 'dynamodb').set('x-awsmock-action', "DeleteItem");
         const body = {
             Region: environment.awsmockRegion,
             TableName: tableName,
-            Key: keys
+            PartitionKey: partitionKey,
+            SortKey: sortKey
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
     }

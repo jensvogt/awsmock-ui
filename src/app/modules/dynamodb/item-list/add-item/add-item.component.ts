@@ -35,7 +35,7 @@ export class DynamoDbAddItemDialog implements OnInit {
     item: ItemItem = {} as ItemItem;
     request: PutItemRequest = {} as PutItemRequest;
 
-    constructor(private dialogRef: MatDialogRef<DynamoDbAddItemDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(private readonly dialogRef: MatDialogRef<DynamoDbAddItemDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.tableName = data.tableName;
     }
 

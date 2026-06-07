@@ -25,7 +25,7 @@ export class SnsService {
      */
     createTopic(topicName: string) {
         let headers = this.headers.set('x-awsmock-target', 'sns').set('x-awsmock-action', 'CreateTopic');
-        return this.http.post(this.baseUrl, "Name=" + topicName, {headers: headers, responseType: 'text'});
+        return this.http.post(this.baseUrl, {topicName: topicName, owner: this.user}, {headers: headers, responseType: 'text'});
     }
 
     /**

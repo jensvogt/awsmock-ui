@@ -23,7 +23,6 @@ import {SnsMessageCountChartComponent} from "./message-count-time/message-count-
         MatIconButton,
         SnsServiceTimeChartComponent,
         SnsMessageCountChartComponent,
-
     ],
     providers: [MonitoringService],
     styleUrls: ['./sns-charts.component.scss']

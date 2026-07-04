@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {selectDetails, selectError} from "./state/ssm-parameter-detail.selectors";
@@ -10,12 +10,33 @@ import {SsmParameterDetails, SsmParameterDetailsResponse, UpdateParameterCounter
 import {ssmParameterDetailsActions} from "./state/ssm-parameter-detail.actions";
 import {ParameterEditDialogComponent} from "../parameter-edit/parameter-edit-component";
 import {ssmParameterListActions} from "../parameter-list/state/ssm-parameter-list.actions";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 'ssm-parameter-detail-component',
     templateUrl: './ssm-parameter-detail.component.html',
     styleUrls: ['./ssm-parameter-detail.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardTitle,
+        MatIcon,
+        MatIconButton,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+        FooterComponent,
+    ],
 })
 export class SsmParameterDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();

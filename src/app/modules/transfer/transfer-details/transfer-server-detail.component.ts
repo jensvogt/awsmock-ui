@@ -1,8 +1,20 @@
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 import {State, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {TransferService} from "../service/transfer.service";
@@ -23,7 +35,39 @@ import {TransferServerTagsResponse} from "../model/transfer-server-tags";
     selector: 'transfer-server-detail-component',
     templateUrl: './transfer-server-detail.component.html',
     styleUrls: ['./transfer-server-detail.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+        MatTabGroup,
+        MatTab,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatPaginator,
+        CdkCopyToClipboard,
+        FooterComponent,
+    ],
     providers: [TransferService]
 })
 export class TransferServerDetailComponent implements OnInit, OnDestroy {

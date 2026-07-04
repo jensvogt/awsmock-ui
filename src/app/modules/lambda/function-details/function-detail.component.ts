@@ -1,6 +1,18 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 import {Sort} from "@angular/material/sort";
 import {LambdaService} from "../service/lambda-service.component";
 import {LambdaFunctionItem} from "../model/lambda-item";
@@ -42,7 +54,40 @@ import {LambdaEventSourceEditDialog} from "../function-event-source-edit/functio
     selector: 'lambda-function-detail-component',
     templateUrl: './function-detail.component.html',
     styleUrls: ['./function-detail.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatCardTitle,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+        MatTabGroup,
+        MatTab,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatPaginator,
+        MatSlideToggle,
+        CdkCopyToClipboard,
+    ],
     providers: [LambdaService]
 })
 export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {

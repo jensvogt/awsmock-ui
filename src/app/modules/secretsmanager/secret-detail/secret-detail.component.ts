@@ -1,8 +1,25 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {State, Store} from "@ngrx/store";
+import {FormsModule} from "@angular/forms";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 import {Observable} from "rxjs";
 import {selectDetails, selectError, selectRotationLambdaARNs, selectTagPageIndex, selectTagPageSize, selectTags, selectVersionPageIndex, selectVersionPageSize, selectVersions} from "./state/secret-detail.selectors";
 import {PageEvent} from "@angular/material/paginator";
@@ -25,7 +42,46 @@ interface LambdaSelect {
     selector: 'sqs-secret-detail-component',
     templateUrl: './secret-detail.component.html',
     styleUrls: ['./secret-detail.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        FormsModule,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatCardTitle,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+        MatTabGroup,
+        MatTab,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatPaginator,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatOption,
+        MatSelect,
+        CdkCopyToClipboard,
+        FooterComponent,
+    ],
 })
 export class SecretDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();

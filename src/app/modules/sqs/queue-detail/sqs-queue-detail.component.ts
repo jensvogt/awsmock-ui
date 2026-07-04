@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SqsQueueAttributeCountersResponse, SqsQueueDetails} from "../model/sqs-queue-details";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {State, Store} from "@ngrx/store";
 import {sqsQueueDetailsActions} from "./state/sqs-queue-detail.actions";
 import {Observable} from "rxjs";
@@ -34,15 +34,54 @@ import {SqsDqlEditDialog} from "./dlq-edit/dlq-edit.component";
 import {SqsTagCountersResponse} from "../model/sqs-tag-item";
 import {SqsDefaultMessageAttributeItem, SqsDefaultMessageAttributeResponse} from "../model/sqs-default-message-attribute";
 import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatTabChangeEvent} from "@angular/material/tabs";
+import {MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatCellDef, MatHeaderCell, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow} from "@angular/material/table";
+import {MatTabChangeEvent, MatTabGroup, MatTab} from "@angular/material/tabs";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatIconButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
 
 @Component({
     selector: 'sqs-queue-detail-component',
     templateUrl: './sqs-queue-detail.component.html',
     styleUrls: ['./sqs-queue-detail.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatCardTitle,
+        MatIconButton,
+        MatIcon,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+        MatTabGroup,
+        MatTab,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatPaginator,
+        AsyncPipe,
+        DatePipe,
+        FooterComponent,
+    ]
 })
 export class SqsQueueDetailComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();

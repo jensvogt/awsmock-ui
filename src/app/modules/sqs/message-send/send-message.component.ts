@@ -1,21 +1,65 @@
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
 import {FileImportComponent} from "../../infrastructure/import/file-import/file-import.component";
-import {MatTableDataSource} from "@angular/material/table";
-import {PageEvent} from "@angular/material/paginator";
+import {MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatCellDef, MatHeaderCell, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow} from "@angular/material/table";
+import {PageEvent, MatPaginator} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {SqsMessageAttribute} from "../model/sqs-message-item";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {SqsMessageAttributeAddDialog} from "../attribute-add/attribute-add.component";
 import {SqsMessageAttributeEditDialog} from "../attribute-edit/attribute-edit.component";
 import {SqsService} from "../service/sqs-service.component";
+import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {MatTabGroup, MatTab} from "@angular/material/tabs";
+import {MatCardActions} from "@angular/material/card";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {MatSortModule} from "@angular/material/sort";
+import {MatIconButton, MatButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
     selector: 'queue-send-message-dialog',
     templateUrl: './send-message.component.html',
     styleUrls: ['./send-message.component.scss'],
-    standalone: false,
-    providers: []
+    standalone: true,
+    providers: [],
+    imports: [
+        CdkDrag,
+        CdkDragHandle,
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogClose,
+        MatTabGroup,
+        MatTab,
+        MatCardActions,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        CdkTextareaAutosize,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatPaginator,
+        MatIconButton,
+        MatButton,
+        MatIcon,
+        MatTooltip,
+    ]
 })
 export class SendMessageComponentDialog implements OnInit {
 

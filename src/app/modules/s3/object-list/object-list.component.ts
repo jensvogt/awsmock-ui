@@ -4,13 +4,12 @@ import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
 import {S3Service} from "../service/s3-service.component";
 import {ActivatedRoute} from "@angular/router";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {ActionsSubject, State, Store} from "@ngrx/store";
 import {S3BucketListState} from "../bucket-list/state/s3-bucket-list.reducer";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {s3ObjectListActions} from "./state/s3-object-list.actions";
 import {selectPageIndex, selectPageSize} from "../bucket-list/state/s3-bucket-list.selectors";
 import {S3ObjectCounterResponse, S3ObjectItem, S3ObjectMetadata} from "../model/s3-object-item";
@@ -22,13 +21,20 @@ import {S3ObjectViewDialog} from "./view/object-view.component";
 import {ofType} from "@ngrx/effects";
 import {s3BucketListActions} from "../bucket-list/state/s3-bucket-list.actions";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {FormsModule} from "@angular/forms";
+import {MatSortModule} from "@angular/material/sort";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 's3-object-list',
     templateUrl: './object-list.component.html',
     styleUrls: ['./object-list.component.scss'],
-    standalone: false,
-    providers: [S3Service, AwsMockHttpService]
+    standalone: true,
+    imports: [
+        FormsModule,
+        MatSortModule,
+        FooterComponent,
+    ],
 })
 export class S3ObjectListComponent implements OnInit, OnDestroy {
 

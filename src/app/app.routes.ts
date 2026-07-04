@@ -32,7 +32,7 @@ export const routes: Routes = [
             //=========================================================================
             {
                 path: 'sqs-queue-list',
-                loadChildren: () => import('./modules/sqs/sqs.module').then(module => module.SQSModule),
+                loadChildren: () => import('./modules/sqs/sqs.routes').then(m => m.sqsRoutes),
             },
             {
                 path: 'sqs-charts',
@@ -40,14 +40,14 @@ export const routes: Routes = [
             },
             {
                 path: 'sqs',
-                loadChildren: () => import('./modules/sqs/sqs.module').then(module => module.SQSModule),
+                loadChildren: () => import('./modules/sqs/sqs.routes').then(m => m.sqsRoutes),
             },
             //=========================================================================
             // SNS
             //=========================================================================
             {
                 path: 'sns-topic-list',
-                loadChildren: () => import('./modules/sns/sns.module').then(module => module.SnsModule),
+                loadChildren: () => import('./modules/sns/sns.routes').then(m => m.snsRoutes),
             },
             {
                 path: 'sns-charts',
@@ -55,14 +55,14 @@ export const routes: Routes = [
             },
             {
                 path: 'sns',
-                loadChildren: () => import('./modules/sns/sns.module').then(module => module.SnsModule),
+                loadChildren: () => import('./modules/sns/sns.routes').then(m => m.snsRoutes),
             },
             //=========================================================================
             // S3
             //=========================================================================
             {
                 path: 's3-bucket-list',
-                loadChildren: () => import('./modules/s3/s3.module').then(module => module.S3Module),
+                loadChildren: () => import('./modules/s3/s3.routes').then(m => m.s3Routes),
             },
             {
                 path: 's3-charts',
@@ -70,7 +70,7 @@ export const routes: Routes = [
             },
             {
                 path: 's3',
-                loadChildren: () => import('./modules/s3/s3.module').then(module => module.S3Module),
+                loadChildren: () => import('./modules/s3/s3.routes').then(m => m.s3Routes),
             },
             //=========================================================================
             // Cognito
@@ -97,11 +97,11 @@ export const routes: Routes = [
             //=========================================================================
             {
                 path: 'lambda-function-list',
-                loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
+                loadChildren: () => import('./modules/lambda/lambda.routes').then(m => m.lambdaRoutes),
             },
             {
                 path: 'lambda',
-                loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
+                loadChildren: () => import('./modules/lambda/lambda.routes').then(m => m.lambdaRoutes),
             },
             {
                 path: 'lambda-charts',
@@ -112,39 +112,39 @@ export const routes: Routes = [
             //=========================================================================
             {
                 path: 'dynamodb-table-list',
-                loadChildren: () => import('./modules/dynamodb/dynamodb-module').then(module => module.DynamodbModule),
+                loadChildren: () => import('./modules/dynamodb/dynamodb.routes').then(m => m.dynamodbRoutes),
             },
             //=========================================================================
             // Transfer server
             //=========================================================================
             {
                 path: 'transfer-server-list',
-                loadChildren: () => import('./modules/transfer/transfer.module').then(module => module.TransferModule),
+                loadChildren: () => import('./modules/transfer/transfer.routes').then(m => m.transferRoutes),
             },
             //=========================================================================
             // Secrets manager
             //=========================================================================
             {
                 path: 'secret-list',
-                loadChildren: () => import('./modules/secretsmanager/secretsmanager.module').then(module => module.SecretsmanagerModule),
+                loadChildren: () => import('./modules/secretsmanager/secretsmanager.routes').then(m => m.secretsmanagerRoutes),
             },
             //=========================================================================
             // KMS
             //=========================================================================
             {
                 path: 'kms-key-list',
-                loadChildren: () => import('./modules/kms/kms.module').then(module => module.KmsModule),
+                loadChildren: () => import('./modules/kms/kms.routes').then(m => m.kmsRoutes),
             },
             {
                 path: 'kms',
-                loadChildren: () => import('./modules/lambda/lambda.module').then(module => module.LambdaModule),
+                loadChildren: () => import('./modules/kms/kms.routes').then(m => m.kmsRoutes),
             },
             //=========================================================================
             // SSM
             //=========================================================================
             {
                 path: 'ssm-parameter-list',
-                loadChildren: () => import('./modules/ssm/ssm.module').then(module => module.SsmModule),
+                loadChildren: () => import('./modules/ssm/ssm.routes').then(m => m.ssmRoutes),
             },
             //=========================================================================
             // Applications

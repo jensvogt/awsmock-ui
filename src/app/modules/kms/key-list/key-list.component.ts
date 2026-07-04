@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PageEvent} from "@angular/material/paginator";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {Sort} from "@angular/material/sort";
 import {interval, Observable, Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -16,13 +16,64 @@ import {KmsService} from "../service/kms-service.component";
 import {KeyAddComponentDialog} from "../key-add/key-add.component";
 import {KmsKeyAddRequest} from "../model/key-add-request";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {FormsModule} from "@angular/forms";
+import {RouterLink} from "@angular/router";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {MatPaginator} from "@angular/material/paginator";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 'kms-key-list-component',
     templateUrl: './key-list.component.html',
     styleUrls: ['./key-list.component.scss'],
-    standalone: false,
-    providers: [KmsService]
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        FormsModule,
+        RouterLink,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatIcon,
+        MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
+        MatTooltip,
+        MatFormField,
+        MatLabel,
+        MatSuffix,
+        MatInput,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatNavList,
+        MatListItem,
+        MatPaginator,
+        CdkCopyToClipboard,
+        FooterComponent,
+    ],
 })
 export class KmsKeyListComponent implements OnInit, OnDestroy {
 

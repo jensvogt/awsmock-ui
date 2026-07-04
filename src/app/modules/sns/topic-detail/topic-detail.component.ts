@@ -1,11 +1,11 @@
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {Location} from "@angular/common";
-import {Sort} from "@angular/material/sort";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
+import {Sort, MatSortModule} from "@angular/material/sort";
 import {SnsSubscriptionCountersResponse} from "../model/sns-subscription-item";
 import {SnsTagCountersResponse} from "../model/sns-tag-item";
-import {PageEvent} from "@angular/material/paginator";
+import {PageEvent, MatPaginator} from "@angular/material/paginator";
 import {SubscriptionAddComponentDialog} from "./subscription-add/subscription-add.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnsTopicDetails} from "../model/sns-topic-details";
@@ -32,12 +32,50 @@ import {SnsAttributeCountersResponse} from "../model/sns-attribute-item";
 import {TagEditComponentDialog} from "./tag-edit/tag-edit.component";
 import {SubscriptionEditComponentDialog} from "./subscription-edit/subscription-edit.component";
 import {byteConversion} from "../../../shared/byte-utils.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatTable, MatColumnDef, MatHeaderCellDef, MatCellDef, MatHeaderCell, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow} from "@angular/material/table";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatList, MatListItem} from "@angular/material/list";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
 
 @Component({
     selector: 'sns-topic-detail-component',
     templateUrl: './topic-detail.component.html',
     styleUrls: ['./topic-detail.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatIcon,
+        MatIconButton,
+        MatPaginator,
+        MatTooltip,
+        MatList,
+        MatListItem,
+        MatGridList,
+        MatGridTile,
+        MatTab,
+        MatTabGroup,
+    ],
     providers: [SnsService]
 })
 export class SnsTopicDetailComponent implements OnInit, OnDestroy {

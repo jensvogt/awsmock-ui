@@ -1,21 +1,66 @@
-import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogConfig, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {Component, Inject, OnInit} from "@angular/core";
 import {SnsMessageAttribute, SnsMessageItem} from "../model/sns-message-item";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {MatSlideToggle, MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {isJson} from "../../../shared/format/message-format-component";
-import {MatTableDataSource} from "@angular/material/table";
-import {PageEvent} from "@angular/material/paginator";
-import {Sort} from "@angular/material/sort";
+import {MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatCellDef, MatHeaderCell, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow} from "@angular/material/table";
+import {PageEvent, MatPaginator} from "@angular/material/paginator";
+import {Sort, MatSortModule} from "@angular/material/sort";
 import {SortColumn} from "../../../shared/sorting/sorting.component";
 import {Store} from "@ngrx/store";
 import {SNSMessageListState} from "../message-list/state/sns-message-list.reducer";
 import {snsMessageListActions} from "../message-list/state/sns-message-list.actions";
+import {MatCard, MatCardActions} from "@angular/material/card";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton, MatButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {CdkDrag, CdkDragHandle} from "@angular/cdk/drag-drop";
 
 @Component({
     selector: 'sns-message-details-dialog',
     templateUrl: './sns-message-details.component.html',
     styleUrls: ['./sns-message-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        FormsModule,
+        MatCard,
+        MatCardActions,
+        MatTab,
+        MatTabGroup,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatIcon,
+        MatIconButton,
+        MatButton,
+        MatPaginator,
+        MatTooltip,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogClose,
+        MatSlideToggle,
+        CdkTextareaAutosize,
+        CdkDrag,
+        CdkDragHandle,
+    ]
 })
 export class SnsMessageDetailsDialog implements OnInit {
 

@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit} from "@angular/core";
-import {Location} from "@angular/common";
+import {DatePipe, Location} from "@angular/common";
 import {MatTableDataSource,} from "@angular/material/table";
 import {ActivatedRoute} from "@angular/router";
 import {Sort} from "@angular/material/sort";
@@ -10,12 +10,54 @@ import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {S3Service} from "../service/s3-service.component";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {BucketNotificationEditDialog} from "../bucket-notification-edit/bucket-notification-edit.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
+import {MatIcon} from "@angular/material/icon";
+import {MatSortHeader, MatSortModule} from "@angular/material/sort";
+import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatList, MatListItem} from "@angular/material/list";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
 
 @Component({
     selector: 'bucket-detail-component',
     templateUrl: './bucket-detail.component.html',
     styleUrls: ['./bucket-detail.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+        DatePipe,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatCardTitle,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatIcon,
+        MatSortModule,
+        MatSortHeader,
+        MatButton,
+        MatIconButton,
+        MatPaginator,
+        MatTooltip,
+        MatList,
+        MatListItem,
+        MatGridList,
+        MatGridTile,
+        MatTab,
+        MatTabGroup,
+    ],
     providers: [S3Service]
 })
 export class S3BucketDetailComponent implements OnInit, OnDestroy {

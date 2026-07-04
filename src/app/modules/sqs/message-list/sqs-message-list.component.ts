@@ -3,9 +3,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {SqsService} from "../service/sqs-service.component";
-import {PageEvent} from "@angular/material/paginator";
+import {PageEvent, MatPaginator} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {filter, interval, Observable, Subscription} from "rxjs";
 import {ListMessageCountersResponse, SqsMessageDialogResult, SqsMessageItem} from "../model/sqs-message-item";
 import {ViewMessageComponentDialog} from "../message-view/view-message.component";
@@ -17,12 +17,59 @@ import {sqsMessageListActions} from "./state/sqs-message-list.actions";
 import {SQSMessageListState} from "./state/sqs-message-list.reducer";
 import {byteConversion} from '../../../shared/byte-utils.component';
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIconButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {MatTable, MatColumnDef, MatHeaderCellDef, MatCellDef, MatHeaderCell, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatNavList, MatListItem} from "@angular/material/list";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 'sqs-message-list',
     templateUrl: './sqs-message-list.component.html',
     styleUrls: ['./sqs-message-list.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatIconButton,
+        MatIcon,
+        MatTooltip,
+        MatMenuModule,
+        MatFormField,
+        MatLabel,
+        MatSuffix,
+        MatInput,
+        FormsModule,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatNavList,
+        MatListItem,
+        CdkCopyToClipboard,
+        MatPaginator,
+        AsyncPipe,
+        DatePipe,
+        FooterComponent,
+    ]
 })
 export class SqsMessageListComponent implements OnInit, OnDestroy {
 

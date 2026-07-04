@@ -1,7 +1,12 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {Store} from "@ngrx/store";
+import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
 import {Observable} from "rxjs";
 import {KmsService} from "../service/kms-service.component";
 import {selectDetails, selectError} from "./state/kms-key-detail.selectors";
@@ -13,7 +18,20 @@ import {KeyDetailsResponse} from "../model/key-details";
     selector: 'kms-key-detail-component',
     templateUrl: './key-detail.component.html',
     styleUrls: ['./key-detail.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatIcon,
+        MatIconButton,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+    ],
     providers: [KmsService]
 })
 export class KmsKeyDetailComponent implements OnInit, OnDestroy {

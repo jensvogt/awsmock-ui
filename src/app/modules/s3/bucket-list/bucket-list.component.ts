@@ -4,8 +4,6 @@ import {PageEvent} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AwsMockHttpService} from "../../../services/awsmock-http.service";
-import {S3Service} from "../service/s3-service.component";
 import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3BucketCountersResponse, S3BucketItem} from "../model/s3-bucket-item";
@@ -17,13 +15,20 @@ import {s3BucketListActions} from "./state/s3-bucket-list.actions";
 import {MatTableDataSource} from "@angular/material/table";
 import {ofType} from "@ngrx/effects";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {FormsModule} from "@angular/forms";
+import {MatSortModule} from "@angular/material/sort";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 's3-bucket-list',
     templateUrl: './bucket-list.component.html',
     styleUrls: ['./bucket-list.component.scss'],
-    standalone: false,
-    providers: [S3Service, AwsMockHttpService]
+    standalone: true,
+    imports: [
+        FormsModule,
+        MatSortModule,
+        FooterComponent,
+    ],
 })
 export class S3BucketListComponent implements OnInit, OnDestroy {
 

@@ -7,8 +7,23 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {selectFunctionCounters, selectPageIndex, selectPageSize, selectPrefix, selectTotal} from "./state/lambda-function-list.selectors";
 import {ActionsSubject, select, State, Store} from "@ngrx/store";
-import {Location} from "@angular/common";
+import {AsyncPipe, Location} from "@angular/common";
 import {lambdaFunctionListActions} from "./state/lambda-function-list.actions";
+import {FormsModule} from "@angular/forms";
+import {RouterLink} from "@angular/router";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatDivider} from "@angular/material/divider";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 import {MatTableDataSource} from "@angular/material/table";
 import {Code, CreateFunctionRequest, EphemeralStorage, LambdaEnvironment, LambdaFunctionItem} from "../model/lambda-item";
 import {LambdaService} from "../service/lambda-service.component";
@@ -22,8 +37,44 @@ import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.compon
     selector: 'lambda-function-list',
     templateUrl: './function-list.component.html',
     styleUrls: ['./function-list.component.scss'],
-    standalone: false,
-    providers: [LambdaService]
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        FormsModule,
+        RouterLink,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatIcon,
+        MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
+        MatDivider,
+        MatTooltip,
+        MatFormField,
+        MatLabel,
+        MatSuffix,
+        MatInput,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatNavList,
+        MatListItem,
+        MatPaginator,
+        CdkCopyToClipboard,
+        FooterComponent,
+    ],
 })
 export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterViewInit {
 

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -10,12 +10,33 @@ import {DynamodbService} from "../service/dynamodb.service";
 import {tableDetailsActions} from "./state/table-details.actions";
 import {Observable} from "rxjs";
 import {selectError, selectTableItem} from "./state/table-details.selectors";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatList, MatListItem} from "@angular/material/list";
+import {MatTabGroup} from "@angular/material/tabs";
 
 @Component({
     selector: 'table-detail-component',
     templateUrl: './table-detail.component.html',
     styleUrls: ['./table-detail.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardTitle,
+        MatIcon,
+        MatIconButton,
+        MatGridList,
+        MatGridTile,
+        MatList,
+        MatListItem,
+        MatTabGroup,
+    ],
     providers: [DynamodbService]
 })
 export class TableDetailsComponent implements OnInit, OnDestroy {

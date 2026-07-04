@@ -3,7 +3,7 @@ import {interval, Observable, Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {State, Store} from "@ngrx/store";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectTransferServerCounters} from "./state/transfer-server-list.selectors";
 import {transferServerListActions} from "./state/transfer-server-list.actions";
 import {TransferServerListState} from "./state/transfer-server-list.reducer";
@@ -11,12 +11,62 @@ import {byteConversion} from "../../../shared/byte-utils.component";
 import {ListTransferServerCountersResponse} from "../model/transfer-server-item";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {FormsModule} from "@angular/forms";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {MatPaginator} from "@angular/material/paginator";
+import {RouterLink} from "@angular/router";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 'transfer-server-list',
     templateUrl: './transfer-server-list.component.html',
     styleUrls: ['./transfer-server-list.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        FormsModule,
+        RouterLink,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatIcon,
+        MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
+        MatTooltip,
+        MatFormField,
+        MatLabel,
+        MatSuffix,
+        MatInput,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatNavList,
+        MatListItem,
+        MatPaginator,
+        FooterComponent,
+    ],
 })
 export class TransferServerListComponent implements OnInit, OnDestroy {
 

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {interval, Observable, Subscription} from "rxjs";
-import {PageEvent} from "@angular/material/paginator";
+import {PageEvent, MatPaginator} from "@angular/material/paginator";
 import {ListQueueCountersResponse, SqsQueueItem} from "../model/sqs-queue-item";
 import {Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -8,7 +8,7 @@ import {QueueAddComponentDialog} from "../queue-add/queue-add-component";
 import {SqsService} from "../service/sqs-service.component";
 import {SendMessageComponentDialog} from "../message-send/send-message.component";
 import {State, Store} from "@ngrx/store";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {selectPageIndex, selectPageSize, selectPrefix, selectQueueCounters} from "./state/sqs-queue-list.selectors";
 import {sqsQueueListActions} from "./state/sqs-queue-list.actions";
 import {SQSQueueListState} from "./state/sqs-queue-list.reducer";
@@ -18,12 +18,63 @@ import {SqsMessageDialogResult} from "../model/sqs-message-item";
 import {MessageExportComponent} from "../message-export/message-export.component";
 import {ImportMessagesComponentDialog} from "../message-import/message-import.component";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIconButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
+import {RouterLink} from "@angular/router";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatDivider} from "@angular/material/divider";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {MatTable, MatColumnDef, MatHeaderCellDef, MatCellDef, MatHeaderCell, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatNavList, MatListItem} from "@angular/material/list";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 'sqs-queue-list',
     templateUrl: './sqs-queue-list.component.html',
     styleUrls: ['./sqs-queue-list.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatIconButton,
+        MatIcon,
+        MatTooltip,
+        RouterLink,
+        MatMenuModule,
+        MatDivider,
+        MatFormField,
+        MatLabel,
+        MatSuffix,
+        MatInput,
+        FormsModule,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatNavList,
+        MatListItem,
+        CdkCopyToClipboard,
+        MatPaginator,
+        AsyncPipe,
+        DatePipe,
+        FooterComponent,
+    ]
 })
 export class SqsQueueListComponent implements OnInit, OnDestroy {
 

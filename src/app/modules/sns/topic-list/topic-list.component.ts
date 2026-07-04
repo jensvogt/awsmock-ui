@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageEvent} from "@angular/material/paginator";
+import {AsyncPipe, DatePipe} from "@angular/common";
+import {PageEvent, MatPaginator} from "@angular/material/paginator";
 import {Location} from "@angular/common";
-import {Sort} from "@angular/material/sort";
+import {Sort, MatSortModule} from "@angular/material/sort";
 import {interval, Observable, Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ListTopicCountersResponse} from "../model/sns-topic-item";
@@ -15,12 +16,64 @@ import {SNSTopicListState} from "./state/sns-topic-list.reducer";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {byteConversion} from "../../../shared/byte-utils.component";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatTable, MatColumnDef, MatHeaderCellDef, MatCellDef, MatHeaderCell, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow} from "@angular/material/table";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {RouterLink} from "@angular/router";
+import {MatNavList, MatListItem} from "@angular/material/list";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatDivider} from "@angular/material/divider";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {FooterComponent} from "../../../shared/footer/footer.component";
 
 @Component({
     selector: 'sns-topic-list-component',
     templateUrl: './topic-list.component.html',
     styleUrls: ['./topic-list.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        DatePipe,
+        FormsModule,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
+        MatSortModule,
+        MatIcon,
+        MatIconButton,
+        MatPaginator,
+        MatTooltip,
+        RouterLink,
+        MatNavList,
+        MatListItem,
+        MatFormField,
+        MatLabel,
+        MatSuffix,
+        MatInput,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
+        MatDivider,
+        CdkCopyToClipboard,
+        FooterComponent,
+    ],
     providers: [SnsService]
 })
 export class SnsTopicListComponent implements OnInit, OnDestroy {

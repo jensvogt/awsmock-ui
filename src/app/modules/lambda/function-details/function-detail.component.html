@@ -101,12 +101,16 @@
                     <div style="width: 100%; display: flex; align-items: flex-start;align-content:flex-start">
                         <mat-list>
                             <mat-list-item style="height:80px">
+                                <p class="mat-list-span-title" matListItemTitle>Number of instances:</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.instances }}</p>
+                            </mat-list-item>
+                            <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Number of invocation:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.invocations }}</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Average Execution time:</p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.averageRuntime }} ms</p>
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.avgDuration }} ms</p>
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Last invocation:</p>
@@ -119,8 +123,6 @@
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>Modified:</p>
                                 <p class="mat-list-span-value" matListItemLine>{{ functionItem.modified ? (functionItem.modified | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-                            </mat-list-item>
-                            <mat-list-item style="height:80px">
                             </mat-list-item>
                         </mat-list>
                     </div>

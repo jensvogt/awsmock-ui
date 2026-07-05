@@ -29,7 +29,7 @@ export interface LambdaFunctionItem {
     s3ObjectVersion: string;
     concurrency: number;
     invocations: number;
-    averageRuntime: number;
+    avgDuration: number;
     instances: number;
     lastStarted: Date;
     lastInvocation: Date;

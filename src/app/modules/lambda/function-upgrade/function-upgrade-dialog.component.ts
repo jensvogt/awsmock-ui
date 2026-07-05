@@ -42,7 +42,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
 
     file: File = {} as File;
     fileName: string | undefined;
-    functionArn: string | undefined;
+    lambdaArn: string | undefined;
     version: string = "latest";
     uploadDisabled: boolean = true;
     uploadFocus: boolean = false;
@@ -54,7 +54,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
     uploadError: boolean = false;
 
     constructor(private readonly snackBar: MatSnackBar, private readonly dialogRef: MatDialogRef<LambdaFunctionUpgradeDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.functionArn = data.functionArn;
+        this.lambdaArn = data.functionArn;
     }
 
     ngOnInit() {
@@ -105,7 +105,7 @@ export class LambdaFunctionUpgradeDialog implements OnInit {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const content: any = reader.result;
-                this.dialogRef.close({functionArn: this.functionArn, functionCode: content.split(',')[1], version: this.version});
+                this.dialogRef.close({lambdaArn: this.lambdaArn, functionCode: content.split(',')[1], version: this.version});
             };
             //reader.addEventListener("progress", this.handleProgress);
             reader.readAsDataURL(file);

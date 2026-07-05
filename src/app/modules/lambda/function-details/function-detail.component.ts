@@ -199,7 +199,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
         this.dialog.open(LambdaFunctionUpgradeDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
-                this.lambdaService.uploadFunctionCode(result.functionArn, result.functionCode, result.version).subscribe(() => {
+                this.lambdaService.uploadFunctionCode(result.lambdaArn, result.functionCode, result.version).subscribe(() => {
                     this.loadFunction();
                     this.snackBar.open('Lambda function code uploaded, ARN: ' + this.functionItem.lambdaArn, 'Done', {duration: 5000});
                 });

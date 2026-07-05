@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {interval, Observable, Subscription} from "rxjs";
-import {PageEvent} from "@angular/material/paginator";
-import {MatSort, Sort} from "@angular/material/sort";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatSort, MatSortModule, Sort} from "@angular/material/sort";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {BucketAddComponentDialog} from "../bucket-add/bucket-add.component";
@@ -9,15 +9,38 @@ import {byteConversion} from "../../../shared/byte-utils.component";
 import {S3BucketCountersResponse, S3BucketItem} from "../model/s3-bucket-item";
 import {selectBucketCounters, selectPageIndex, selectPageSize, selectPrefix} from "./state/s3-bucket-list.selectors";
 import {ActionsSubject, State, Store} from "@ngrx/store";
-import {Location} from "@angular/common";
+import {AsyncPipe, DatePipe, Location} from "@angular/common";
 import {S3BucketListState} from "./state/s3-bucket-list.reducer";
 import {s3BucketListActions} from "./state/s3-bucket-list.actions";
-import {MatTableDataSource} from "@angular/material/table";
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatNoDataRow,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource
+} from "@angular/material/table";
 import {ofType} from "@ngrx/effects";
 import {AutoReloadComponent} from "../../../shared/autoreload/auto-reload.component";
 import {FormsModule} from "@angular/forms";
-import {MatSortModule} from "@angular/material/sort";
 import {FooterComponent} from "../../../shared/footer/footer.component";
+import {RouterLink} from "@angular/router";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatIconButton} from "@angular/material/button";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {MatDivider} from "@angular/material/divider";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 
 @Component({
     selector: 's3-bucket-list',
@@ -25,8 +48,41 @@ import {FooterComponent} from "../../../shared/footer/footer.component";
     styleUrls: ['./bucket-list.component.scss'],
     standalone: true,
     imports: [
+        AsyncPipe,
+        DatePipe,
         FormsModule,
+        RouterLink,
+        MatCard,
+        MatCardHeader,
+        MatCardContent,
+        MatCardActions,
+        MatIcon,
+        MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
+        MatTooltip,
+        MatFormField,
+        MatLabel,
+        MatSuffix,
+        MatInput,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatHeaderCell,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatNoDataRow,
         MatSortModule,
+        MatNavList,
+        MatListItem,
+        MatPaginator,
+        MatDivider,
+        CdkCopyToClipboard,
         FooterComponent,
     ],
 })

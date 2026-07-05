@@ -52,8 +52,8 @@
                             </mat-list-item>
                             <mat-list-item style="height:80px">
                                 <p class="mat-list-span-title" matListItemTitle>ARN: </p>
-                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.functionArn }}
-                                    <button [cdkCopyToClipboard]="functionItem.functionArn" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
+                                <p class="mat-list-span-value" matListItemLine>{{ functionItem.lambdaArn }}
+                                    <button [cdkCopyToClipboard]="functionItem.lambdaArn" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
                                         <mat-icon class="copy-icon">content_copy</mat-icon>
                                     </button>
                                 </p>
@@ -174,7 +174,11 @@
                             <table (matSortChange)="instanceSortChange($event)" [dataSource]="instances.instanceCounters" class="mat-elevation-z8" mat-table matSort>
                                 <ng-container matColumnDef="instanceId">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Instance ID" sortActionDescription="Sort by instance ID">Instance ID</th>
-                                    <td *matCellDef="let element" mat-cell> {{ element.instanceId }}</td>
+                                    <td *matCellDef="let element" mat-cell>
+                                        <mat-nav-list>
+                                            <a (click)="showInstanceDetail(element)" [matTooltipShowDelay]="1000" mat-list-item matTooltip="Show instance details">{{ element.instanceId }}</a>
+                                        </mat-nav-list>
+                                    </td>
                                 </ng-container>
                                 <ng-container matColumnDef="containerId">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container ID" sortActionDescription="Sort by container ID">Container ID</th>
@@ -186,7 +190,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="port">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Container port" sortActionDescription="Sort by port">Port</th>
-                                    <td *matCellDef="let element" mat-cell> {{ element.port }}</td>
+                                    <td *matCellDef="let element" mat-cell> {{ element.publicPort }}</td>
                                 </ng-container>
                                 <ng-container matColumnDef="status">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header matTooltip="Status" sortActionDescription="Sort by status">Status</th>

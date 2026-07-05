@@ -1,0 +1,14 @@
+::ng-deep {
+  .mat-dialog-content {
+    max-height: 90vh;
+  }
+}
+
+.mat-list-span-title {
+  color: #555555;
+}
+
+.copy-icon {
+  display: inline-flex;
+  font-size: 12px !important;
+}

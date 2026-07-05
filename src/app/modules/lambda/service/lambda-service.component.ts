@@ -48,7 +48,7 @@ export class LambdaService {
     public getFunction(functionArn: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'GetFunctionCounters');
         const body = {
-            functionArn: functionArn
+            lambdaArn: functionArn
         }
         return this.http.post(this.baseUrl, body, {headers: headers});
     }
@@ -76,7 +76,7 @@ export class LambdaService {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'UpdateLambda');
         const body = {
             region: environment.awsmockRegion,
-            functionArn: functionItem.functionArn,
+            functionArn: functionItem.lambdaArn,
             enabled: functionItem.enabled
         }
         return this.http.post(this.baseUrl, body, {headers: headers});

@@ -67,7 +67,7 @@
                                 <td *matCellDef="let element" mat-cell>
                                     <div class="with-icon">
                                         <mat-nav-list>
-                                            <a mat-list-item routerLink="./details/{{ element.functionArn }}"> {{ element.functionName }}</a>
+                                            <a mat-list-item routerLink="./details/{{ element.lambdaArn }}"> {{ element.functionName }}</a>
                                         </mat-nav-list>
                                         <button [cdkCopyToClipboard]="element.functionName" [matTooltipShowDelay]="1000" aria-label="List" mat-icon-button matTooltip="Copy to clipboard">
                                             <mat-icon class="copy-icon">content_copy</mat-icon>
@@ -108,10 +108,10 @@
                             <ng-container matColumnDef="actions">
                                 <th *matHeaderCellDef mat-header-cell style="width:160px">Actions</th>
                                 <td *matCellDef="let row" mat-cell>
-                                    <button (click)="loadLambdaLogs(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="See lambda log output" mat-icon-button matTooltip="See lambda log output">
+                                    <button (click)="loadLambdaLogs(row.lambdaArn)" [matTooltipShowDelay]="1000" aria-label="See lambda log output" mat-icon-button matTooltip="See lambda log output">
                                         <mat-icon>notes</mat-icon>
                                     </button>
-                                    <button (click)="uploadCode(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
+                                    <button (click)="uploadCode(row.lambdaArn)" [matTooltipShowDelay]="1000" aria-label="Upload function code" mat-icon-button matTooltip="Upload function code">
                                         <mat-icon>upload</mat-icon>
                                     </button>
                                     <button [matMenuTriggerFor]="lambdaListMenu" [matTooltipShowDelay]="1000" aria-label="Example icon-button with a menu" mat-icon-button matTooltip="More...">
@@ -119,15 +119,15 @@
                                     </button>
                                     <mat-menu #lambdaListMenu="matMenu" xPosition="before">
                                         <button mat-menu-item>
-                                            <button (click)="startFunction(row.functionArn)" [disabled]="startDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Start lambda function" mat-menu-item matTooltip="Start lambda function">
+                                            <button (click)="startFunction(row.lambdaArn)" [disabled]="startDisabled(row.lambdaArn)" [matTooltipShowDelay]="1000" aria-label="Start lambda function" mat-menu-item matTooltip="Start lambda function">
                                                 <mat-icon>start</mat-icon>
                                                 <span>Start function</span>
                                             </button>
-                                            <button (click)="stopFunction(row.functionArn)" [disabled]="stopDisabled(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Stop lambda function" mat-menu-item matTooltip="Stop lambda function">
+                                            <button (click)="stopFunction(row.lambdaArn)" [disabled]="stopDisabled(row.lambdaArn)" [matTooltipShowDelay]="1000" aria-label="Stop lambda function" mat-menu-item matTooltip="Stop lambda function">
                                                 <mat-icon>stop</mat-icon>
                                                 <span>Stop function</span>
                                             </button>
-                                            <button (click)="clearResults(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="Delete results" mat-menu-item matTooltip="Delete results">
+                                            <button (click)="clearResults(row.lambdaArn)" [matTooltipShowDelay]="1000" aria-label="Delete results" mat-menu-item matTooltip="Delete results">
                                                 <mat-icon>history</mat-icon>
                                                 <span>Clear results</span>
                                             </button>
@@ -136,7 +136,7 @@
                                                 <span>Reset counters</span>
                                             </button>
                                             <mat-divider/>
-                                            <button (click)="deleteImage(row.functionArn)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
+                                            <button (click)="deleteImage(row.lambdaArn)" [matTooltipShowDelay]="1000" aria-label="delete function" mat-menu-item matTooltip="Delete function">
                                                 <mat-icon>delete</mat-icon>
                                                 <span>Delete image</span>
                                             </button>

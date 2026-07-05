@@ -12,7 +12,7 @@ export interface LambdaFunctionItem {
     id: string | undefined;
     region: string | undefined;
     functionName: string | undefined;
-    functionArn: string;
+    lambdaArn: string;
     runtime: string | undefined;
     handler: string;
     state: string | undefined;

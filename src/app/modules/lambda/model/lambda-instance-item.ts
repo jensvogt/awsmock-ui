@@ -3,8 +3,10 @@ export interface LambdaInstanceItem {
     containerId: string | undefined;
     status: string | undefined;
     hostname: string | undefined;
-    port: number | undefined;
+    publicPort: number | undefined;
+    lastStart: Date | undefined;
     lastInvocation: Date | undefined;
+    lastStop: Date | undefined;
 }
 
 export interface LambdaInstanceCountersResponse {

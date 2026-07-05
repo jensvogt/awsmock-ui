@@ -6,7 +6,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
-import {MatList, MatListItem} from "@angular/material/list";
+import {MatList, MatListItem, MatNavList} from "@angular/material/list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
@@ -45,7 +45,8 @@ import {LambdaTagEditDialog} from "../function-tag-edit/function-tag-edit.compon
 import {LambdaEnvironmentCountersResponse} from "../model/lambda-environment-item";
 import {LambdaEnvironmentAddDialog} from "../function-environment-add/function-environment-add.component";
 import {LambdaEnvironmentEditDialog} from "../function-environment-edit/function-environment-edit.component";
-import {LambdaInstanceCountersResponse} from "../model/lambda-instance-item";
+import {LambdaInstanceCountersResponse, LambdaInstanceItem} from "../model/lambda-instance-item";
+import {LambdaInstanceDetailDialog} from "../function-instance-detail/function-instance-detail.component";
 import {AddEventSourceRequest, LambdaEventSourceCountersResponse} from "../model/lambda-event-source-item";
 import {LambdaEventSourceAddDialog} from "../function-event-source-add/function-event-source-add.component";
 import {LambdaEventSourceEditDialog} from "../function-event-source-edit/function-event-source-edit.component";
@@ -70,6 +71,7 @@ import {LambdaEventSourceEditDialog} from "../function-event-source-edit/functio
         MatGridTile,
         MatList,
         MatListItem,
+        MatNavList,
         MatTabGroup,
         MatTab,
         MatTable,
@@ -96,7 +98,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     lastUpdate: Date = new Date();
 
     functionItem = {} as LambdaFunctionItem;
-    functionArn: string = '';
+    lambdaArn: string = '';
     functionName: string = '';
 
     // Environment
@@ -140,8 +142,8 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.routerSubscription = this.route.params.subscribe(params => {
-            this.functionArn = params['functionArn'];
-            this.functionName = this.functionArn.substring(this.functionArn.lastIndexOf(":") + 1)
+            this.lambdaArn = params['functionArn'];
+            this.functionName = this.lambdaArn.substring(this.lambdaArn.lastIndexOf(":") + 1)
             this.loadFunction();
             this.loadInstances();
         });
@@ -165,9 +167,10 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     }
 
     loadFunction() {
-        this.lambdaService.getFunction(this.functionArn).subscribe((data: any) => {
+        this.lambdaService.getFunction(this.lambdaArn).subscribe((data: any) => {
             this.lastUpdate = new Date();
             this.functionItem = data;
+            console.log(this.functionItem);
         });
     }
 
@@ -183,7 +186,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionItem.functionArn};
+        dialogConfig.data = {functionArn: this.functionItem.lambdaArn};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
@@ -193,7 +196,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
             if (result) {
                 this.lambdaService.uploadFunctionCode(result.functionArn, result.functionCode, result.version).subscribe(() => {
                     this.loadFunction();
-                    this.snackBar.open('Lambda function code uploaded, ARN: ' + this.functionItem.functionArn, 'Done', {duration: 5000});
+                    this.snackBar.open('Lambda function code uploaded, ARN: ' + this.functionItem.lambdaArn, 'Done', {duration: 5000});
                 });
             }
         });
@@ -218,85 +221,6 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     }
 
     // ===================================================================================================================
-    // Tags
-    // ===================================================================================================================
-    handleTagPageEvent(e: PageEvent) {
-        this.state.value['lambda-function-details'].tagPageSize = e.pageSize;
-        this.state.value['lambda-function-details'].tagPageIndex = e.pageIndex;
-        this.loadTags();
-    }
-
-    loadTags() {
-        this.store.dispatch(lambdaFunctionDetailsActions.loadTags({
-            lambdaArn: this.functionArn,
-            pageSize: this.state.value['lambda-function-details'].tagPageSize,
-            pageIndex: this.state.value['lambda-function-details'].tagPageIndex,
-            sortColumns: this.state.value['lambda-function-details'].tagSortColumns
-        }));
-        this.lastUpdate = new Date();
-    }
-
-    tagSortChange(sortState: Sort) {
-        this.state.value['lambda-function-details'].tagSortColumns = [];
-        let column = sortState.active;
-        let direction = sortState.direction === 'asc' ? 1 : -1;
-        this.state.value['lambda-function-details'].tagSortColumns = [{column: column, sortDirection: direction}];
-        this.loadTags();
-    }
-
-    addTag() {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionArn};
-
-        this.dialog.open(LambdaTagAddDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                if (result.Key && result.Value) {
-                    this.lambdaService.addTag(this.functionArn, result.Key, result.Value)
-                        .subscribe(() => {
-                            this.loadTags();
-                            this.snackBar.open('Lambda tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
-                        })
-                } else {
-                    this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-                }
-            }
-        });
-    }
-
-    editTag(key: string, value: string) {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionArn, key: key, value: value};
-
-        this.dialog.open(LambdaTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
-            if (result) {
-                if (result.Key !== key || result.Value !== value) {
-                    this.lambdaService.updateTag(this.functionArn, result.Key, result.Value)
-                        .subscribe(() => {
-                            this.loadTags();
-                            this.snackBar.open('Lambda tag updated, name: ' + result.key, 'Dismiss', {duration: 5000});
-                        })
-                } else {
-                    this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
-                }
-            }
-        });
-    }
-
-    deleteTag(key: string) {
-        this.lambdaService.deleteTag(this.functionArn, key)
-            .subscribe(() => {
-                this.loadTags();
-                this.snackBar.open('Lambda tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
-            })
-    }
-
-    // ===================================================================================================================
     // Instances
     // ===================================================================================================================
     handleInstancePageEvent(e: PageEvent) {
@@ -307,7 +231,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     loadInstances() {
         this.store.dispatch(lambdaFunctionDetailsActions.loadInstances({
-            lambdaArn: this.functionArn,
+            lambdaArn: this.lambdaArn,
             pageSize: this.state.value['lambda-function-details'].instancePageSize,
             pageIndex: this.state.value['lambda-function-details'].instancePageIndex,
             sortColumns: this.state.value['lambda-function-details'].instanceSortColumns
@@ -328,11 +252,21 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     }
 
     deleteInstance(instanceId: string) {
-        this.lambdaService.deleteInstance(this.functionArn, instanceId)
+        this.lambdaService.deleteInstance(this.lambdaArn, instanceId)
             .subscribe(() => {
                 this.loadInstances();
                 this.snackBar.open('Lambda instance deleted, instanceId: ' + instanceId, 'Dismiss', {duration: 5000});
             })
+    }
+
+    showInstanceDetail(instanceItem: LambdaInstanceItem) {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionName: this.functionName, instanceItem: instanceItem};
+        dialogConfig.width = "60%"
+
+        this.dialog.open(LambdaInstanceDetailDialog, dialogConfig);
     }
 
     // ===================================================================================================================
@@ -346,7 +280,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     loadEnvironment() {
         this.store.dispatch(lambdaFunctionDetailsActions.loadEnvironment({
-            lambdaArn: this.functionArn,
+            lambdaArn: this.lambdaArn,
             pageSize: this.state.value['lambda-function-details'].environmentPageSize,
             pageIndex: this.state.value['lambda-function-details'].environmentPageIndex,
             sortColumns: this.state.value['lambda-function-details'].environmentSortColumns
@@ -367,12 +301,12 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionArn};
+        dialogConfig.data = {functionArn: this.lambdaArn};
 
         this.dialog.open(LambdaEnvironmentAddDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 if (result.Key && result.Value) {
-                    this.lambdaService.addEnvironment(this.functionArn, result.Key, result.Value)
+                    this.lambdaService.addEnvironment(this.lambdaArn, result.Key, result.Value)
                         .subscribe(() => {
                             this.loadEnvironment();
                             this.snackBar.open('Lambda environment variable changed, name: ' + result.key, 'Dismiss', {duration: 5000});
@@ -390,12 +324,12 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionArn, key: key, value: value};
+        dialogConfig.data = {functionArn: this.lambdaArn, key: key, value: value};
 
         this.dialog.open(LambdaEnvironmentEditDialog, dialogConfig).afterClosed().subscribe(result => {
             if (result) {
                 if (result.Key !== key || result.Value !== value) {
-                    this.lambdaService.updateEnvironment(this.functionArn, result.Key, result.Value)
+                    this.lambdaService.updateEnvironment(this.lambdaArn, result.Key, result.Value)
                         .subscribe(() => {
                             this.loadTags();
                             this.snackBar.open('Lambda environment variable updated, name: ' + result.Key, 'Dismiss', {duration: 5000});
@@ -408,7 +342,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     }
 
     deleteEnvironment(key: string) {
-        this.lambdaService.deleteEnvironment(this.functionArn, key)
+        this.lambdaService.deleteEnvironment(this.lambdaArn, key)
             .subscribe(() => {
                 this.loadEnvironment();
                 this.snackBar.open('Lambda environment variable deleted, name: ' + key, 'Dismiss', {duration: 5000});
@@ -426,7 +360,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     loadEventSource() {
         this.store.dispatch(lambdaFunctionDetailsActions.loadEventSource({
-            lambdaArn: this.functionArn,
+            lambdaArn: this.lambdaArn,
             pageSize: this.state.value['lambda-function-details'].eventSourcePageSize,
             pageIndex: this.state.value['lambda-function-details'].eventSourcePageIndex,
             sortColumns: this.state.value['lambda-function-details'].eventSourceSortColumns
@@ -447,7 +381,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionArn};
+        dialogConfig.data = {functionArn: this.lambdaArn};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
@@ -471,7 +405,7 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {functionArn: this.functionArn, eventSourceArn: eventSourceArn, type: eventSourceType};
+        dialogConfig.data = {functionArn: this.lambdaArn, eventSourceArn: eventSourceArn, type: eventSourceType};
         dialogConfig.maxWidth = '100vw';
         dialogConfig.maxHeight = '100vh';
         dialogConfig.panelClass = 'full-screen-modal';
@@ -492,10 +426,89 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
     }
 
     deleteEventSource(eventSourceArn: string) {
-        this.lambdaService.deleteEventSource(this.functionArn, eventSourceArn)
+        this.lambdaService.deleteEventSource(this.lambdaArn, eventSourceArn)
             .subscribe(() => {
                 this.loadEventSource();
                 this.snackBar.open('Lambda event source deleted, eventSourceArn: ' + eventSourceArn, 'Dismiss', {duration: 5000});
             });
+    }
+
+    // ===================================================================================================================
+    // Tags
+    // ===================================================================================================================
+    handleTagPageEvent(e: PageEvent) {
+        this.state.value['lambda-function-details'].tagPageSize = e.pageSize;
+        this.state.value['lambda-function-details'].tagPageIndex = e.pageIndex;
+        this.loadTags();
+    }
+
+    loadTags() {
+        this.store.dispatch(lambdaFunctionDetailsActions.loadTags({
+            lambdaArn: this.lambdaArn,
+            pageSize: this.state.value['lambda-function-details'].tagPageSize,
+            pageIndex: this.state.value['lambda-function-details'].tagPageIndex,
+            sortColumns: this.state.value['lambda-function-details'].tagSortColumns
+        }));
+        this.lastUpdate = new Date();
+    }
+
+    tagSortChange(sortState: Sort) {
+        this.state.value['lambda-function-details'].tagSortColumns = [];
+        let column = sortState.active;
+        let direction = sortState.direction === 'asc' ? 1 : -1;
+        this.state.value['lambda-function-details'].tagSortColumns = [{column: column, sortDirection: direction}];
+        this.loadTags();
+    }
+
+    addTag() {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.lambdaArn};
+
+        this.dialog.open(LambdaTagAddDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.Key && result.Value) {
+                    this.lambdaService.addTag(this.lambdaArn, result.Key, result.Value)
+                        .subscribe(() => {
+                            this.loadTags();
+                            this.snackBar.open('Lambda tag changed, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
+    }
+
+    editTag(key: string, value: string) {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = {functionArn: this.lambdaArn, key: key, value: value};
+
+        this.dialog.open(LambdaTagEditDialog, dialogConfig).afterClosed().subscribe(result => {
+            if (result) {
+                if (result.Key !== key || result.Value !== value) {
+                    this.lambdaService.updateTag(this.lambdaArn, result.Key, result.Value)
+                        .subscribe(() => {
+                            this.loadTags();
+                            this.snackBar.open('Lambda tag updated, name: ' + result.key, 'Dismiss', {duration: 5000});
+                        })
+                } else {
+                    this.snackBar.open('Lambda tag unchanged, name: ' + result.key, 'Dismiss', {duration: 5000});
+                }
+            }
+        });
+    }
+
+    deleteTag(key: string) {
+        this.lambdaService.deleteTag(this.lambdaArn, key)
+            .subscribe(() => {
+                this.loadTags();
+                this.snackBar.open('Lambda tag deleted, name: ' + key, 'Dismiss', {duration: 5000});
+            })
     }
 }

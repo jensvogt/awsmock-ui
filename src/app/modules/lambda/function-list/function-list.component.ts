@@ -135,12 +135,16 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 this.prefixSet = true;
             }
         })
+        // this.store.pipe(select(selectFunctionCounters)).subscribe((functionCounters) => {
+        //     console.log(JSON.stringify(functionCounters, null, 2));
+        //     this.initializeData(functionCounters.functionCounters);
+        // });
     }
 
     ngOnInit(): void {
         this.store.pipe(select(selectFunctionCounters)).subscribe((functionCounters) => this.initializeData(functionCounters.functionCounters));
         this.store.pipe(select(selectTotal)).subscribe((total) => (this.total = total));
-        const period = parseInt(<string>localStorage.getItem("autoReload"));
+        const period = Number.parseInt(<string>localStorage.getItem("autoReload"));
         this.updateSubscription = interval(period).subscribe(() => this.loadFunctions());
     }
 
@@ -361,7 +365,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     startDisabled(functionArn: string) {
-        const found = this.dataSource.data.find((functionItem) => functionItem.functionArn === functionArn);
+        const found = this.dataSource.data.find((functionItem) => functionItem.lambdaArn === functionArn);
         if (found) {
             return found.state === "Active";
         }
@@ -369,7 +373,7 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
     }
 
     stopDisabled(functionArn: string) {
-        const found = this.dataSource.data.find((functionItem) => functionItem.functionArn === functionArn);
+        const found = this.dataSource.data.find((functionItem) => functionItem.lambdaArn === functionArn);
         if (found) {
             return found.state !== "Active";
         }

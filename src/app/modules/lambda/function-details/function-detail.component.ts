@@ -4,6 +4,7 @@ import {ActivatedRoute} from "@angular/router";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatTooltip, MatTooltipModule} from "@angular/material/tooltip";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatList, MatListItem, MatNavList} from "@angular/material/list";
@@ -66,6 +67,9 @@ import {LambdaEventSourceEditDialog} from "../function-event-source-edit/functio
         MatCardTitle,
         MatIcon,
         MatIconButton,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger,
         MatTooltip,
         MatGridList,
         MatGridTile,
@@ -258,6 +262,16 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
                 this.loadInstances();
                 this.snackBar.open('Lambda instance added', 'Dismiss', {duration: 5000});
             })
+    }
+
+    stopInstance(instanceItem: LambdaInstanceItem) {
+        if (instanceItem.instanceId != null) {
+            this.lambdaService.stopInstance(this.lambdaArn, instanceItem.instanceId)
+                .subscribe(() => {
+                    this.loadInstances();
+                    this.snackBar.open('Lambda instance stopped', 'Dismiss', {duration: 5000});
+                })
+        }
     }
 
     deleteInstance(instanceId: string) {

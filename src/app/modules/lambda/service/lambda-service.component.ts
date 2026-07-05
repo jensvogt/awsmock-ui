@@ -320,12 +320,23 @@ export class LambdaService {
     /**
      * @brief Deletes a function docker container instance
      *
-     * @param functionArn function ARN
+     * @param lambdaArn function ARN
      * @param instanceId instance ID
      */
-    public deleteInstance(functionArn: string, instanceId: string) {
+    public stopInstance(lambdaArn: string, instanceId: string) {
         let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-instance');
-        return this.http.post(this.baseUrl, {functionArn: functionArn, instanceId: instanceId}, {headers: headers});
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, instanceId: instanceId}, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function docker container instance
+     *
+     * @param lambdaArn function ARN
+     * @param instanceId instance ID
+     */
+    public deleteInstance(lambdaArn: string, instanceId: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'stop-instance');
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn, instanceId: instanceId}, {headers: headers});
     }
 
     /**

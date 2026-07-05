@@ -82,8 +82,8 @@ export class S3DatabaseTimeChartComponent implements OnInit {
                         dataZoom: [
                             {
                                 type: 'inside',
-                                start: start,
-                                end: end,
+                                start: 0,
+                                end: 100,
                                 handleSize: 8
                             }
                         ],

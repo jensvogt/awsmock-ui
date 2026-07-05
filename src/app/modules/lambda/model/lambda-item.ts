@@ -30,6 +30,7 @@ export interface LambdaFunctionItem {
     concurrency: number;
     invocations: number;
     avgDuration: number;
+    lifetime: number;
     instances: number;
     lastStarted: Date;
     lastInvocation: Date;

@@ -19,8 +19,6 @@ import {LambdaInstanceItem} from "../model/lambda-instance-item";
         MatDialogActions,
         MatButton,
         MatIconButton,
-        MatList,
-        MatListItem,
         MatIcon,
         MatTooltip,
         CdkCopyToClipboard,

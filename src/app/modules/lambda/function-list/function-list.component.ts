@@ -135,10 +135,10 @@ export class LambdaFunctionListComponent implements OnInit, OnDestroy, AfterView
                 this.prefixSet = true;
             }
         })
-        // this.store.pipe(select(selectFunctionCounters)).subscribe((functionCounters) => {
-        //     console.log(JSON.stringify(functionCounters, null, 2));
-        //     this.initializeData(functionCounters.functionCounters);
-        // });
+         this.store.pipe(select(selectFunctionCounters)).subscribe((functionCounters) => {
+             console.log(JSON.stringify(functionCounters, null, 2));
+             this.initializeData(functionCounters.functionCounters);
+         });
     }
 
     ngOnInit(): void {

@@ -1,39 +1,31 @@
 <h2 mat-dialog-title>Instance Detail: {{ functionName }}</h2>
-<mat-dialog-content class="mat-typography" style="width: 100%">
-    <mat-list>
-        <mat-list-item style="height:60px">
-            <p class="mat-list-span-title" matListItemTitle>Instance ID: </p>
-            <p class="mat-list-span-value" matListItemLine>{{ instanceItem.instanceId }}
-                <button [cdkCopyToClipboard]="instanceItem.instanceId ?? ''" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
-                    <mat-icon class="copy-icon">content_copy</mat-icon>
-                </button>
-            </p>
-        </mat-list-item>
-        <mat-list-item style="height:60px">
-            <p class="mat-list-span-title" matListItemTitle>Container ID: </p>
-            <p class="mat-list-span-value" matListItemLine>{{ instanceItem.containerId }}
-                <button [cdkCopyToClipboard]="instanceItem.containerId ?? ''" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
-                    <mat-icon class="copy-icon">content_copy</mat-icon>
-                </button>
-            </p>
-        </mat-list-item>
-        <mat-list-item style="height:60px">
-            <p class="mat-list-span-title" matListItemTitle>Host: </p>
-            <p class="mat-list-span-value" matListItemLine>{{ instanceItem.hostname }}</p>
-        </mat-list-item>
-        <mat-list-item style="height:60px">
-            <p class="mat-list-span-title" matListItemTitle>Port: </p>
-            <p class="mat-list-span-value" matListItemLine>{{ instanceItem.port }}</p>
-        </mat-list-item>
-        <mat-list-item style="height:60px">
-            <p class="mat-list-span-title" matListItemTitle>Status: </p>
-            <p class="mat-list-span-value" matListItemLine>{{ instanceItem.status }}</p>
-        </mat-list-item>
-        <mat-list-item style="height:60px">
-            <p class="mat-list-span-title" matListItemTitle>Last Invoked: </p>
-            <p class="mat-list-span-value" matListItemLine>{{ instanceItem.lastInvocation ? (instanceItem.lastInvocation | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</p>
-        </mat-list-item>
-    </mat-list>
+<mat-dialog-content class="mat-typography">
+    <div style="display: grid; grid-template-columns: max-content 1fr max-content 1fr; column-gap: 32px; row-gap: 0; align-items: baseline; padding: 8px 0;">
+        <span class="mat-list-span-title">Instance ID:</span>
+        <span class="mat-list-span-value">{{ instanceItem.instanceId }}
+            <button [cdkCopyToClipboard]="instanceItem.instanceId ?? ''" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
+                <mat-icon class="copy-icon">content_copy</mat-icon>
+            </button>
+        </span>
+        <span class="mat-list-span-title">Port:</span>
+        <span class="mat-list-span-value">{{ instanceItem.publicPort }}</span>
+        <span class="mat-list-span-title">Container ID:</span>
+        <span class="mat-list-span-value">{{ instanceItem.containerId }}
+            <button [cdkCopyToClipboard]="instanceItem.containerId ?? ''" [matTooltipShowDelay]="1000" aria-label="Copy" mat-icon-button matTooltip="Copy to clipboard">
+                <mat-icon class="copy-icon">content_copy</mat-icon>
+            </button>
+        </span>
+        <span class="mat-list-span-title">Status:</span>
+        <span class="mat-list-span-value">{{ instanceItem.status }}</span>
+        <span class="mat-list-span-title">Host:</span>
+        <span class="mat-list-span-value">{{ instanceItem.hostname }}</span>
+        <span class="mat-list-span-title">Last Invoked:</span>
+        <span class="mat-list-span-value">{{ instanceItem.lastInvocation ? (instanceItem.lastInvocation | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</span>
+        <span class="mat-list-span-title">Last Start:</span>
+        <span class="mat-list-span-value">{{ instanceItem.lastStart ? (instanceItem.lastStart | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</span>
+        <span class="mat-list-span-title">Last Stop:</span>
+        <span class="mat-list-span-value">{{ instanceItem.lastStop ? (instanceItem.lastStop | date: 'yyyy-MM-dd HH:mm:ss') : '-' }}</span>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button (click)="close()" cdkFocusInitial mat-button>Close</button>

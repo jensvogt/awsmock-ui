@@ -310,6 +310,16 @@ export class LambdaService {
     /**
      * @brief Deletes a function docker container instance
      *
+     * @param lambdaArn lambda function ARN
+     */
+    public addInstance(lambdaArn: string) {
+        let headers = this.headers.set('x-awsmock-target', 'lambda').set('x-awsmock-action', 'start-lambda');
+        return this.http.post(this.baseUrl, {lambdaArn: lambdaArn}, {headers: headers});
+    }
+
+    /**
+     * @brief Deletes a function docker container instance
+     *
      * @param functionArn function ARN
      * @param instanceId instance ID
      */

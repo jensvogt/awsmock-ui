@@ -4,7 +4,7 @@ import {ActivatedRoute} from "@angular/router";
 import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
-import {MatTooltip} from "@angular/material/tooltip";
+import {MatTooltip, MatTooltipModule} from "@angular/material/tooltip";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatList, MatListItem, MatNavList} from "@angular/material/list";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
@@ -76,6 +76,7 @@ import {LambdaEventSourceEditDialog} from "../function-event-source-edit/functio
         MatTab,
         MatTable,
         MatColumnDef,
+        MatTooltipModule,
         MatHeaderCellDef,
         MatCellDef,
         MatHeaderCell,
@@ -251,6 +252,14 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
         this.loadInstances();
     }
 
+    addInstances() {
+        this.lambdaService.addInstance(this.lambdaArn)
+            .subscribe(() => {
+                this.loadInstances();
+                this.snackBar.open('Lambda instance added', 'Dismiss', {duration: 5000});
+            })
+    }
+
     deleteInstance(instanceId: string) {
         this.lambdaService.deleteInstance(this.lambdaArn, instanceId)
             .subscribe(() => {
@@ -261,10 +270,14 @@ export class LambdaFunctionDetailsComponent implements OnInit, OnDestroy {
 
     showInstanceDetail(instanceItem: LambdaInstanceItem) {
         const dialogConfig = new MatDialogConfig();
-
+        dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = '100vw';
+        dialogConfig.maxHeight = '200vh';
+        dialogConfig.panelClass = 'full-screen-modal';
+        dialogConfig.width = "40%"
+        dialogConfig.minWidth = '280px'
         dialogConfig.data = {functionName: this.functionName, instanceItem: instanceItem};
-        dialogConfig.width = "60%"
 
         this.dialog.open(LambdaInstanceDetailDialog, dialogConfig);
     }

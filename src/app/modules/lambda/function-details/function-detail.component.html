@@ -165,6 +165,9 @@
             <mat-tab-group (selectedTabChange)="tabChanged($event);" [(selectedIndex)]="selectedTabIndex">
                 <mat-tab [matTooltipShowDelay]="1000" label="Instances" matTooltip="Lambda function instances">
                     <mat-card-actions class="head-buttons">
+                        <button (click)="addInstances()" aria-label="Add instance" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
                         <button (click)="refreshInstances()" aria-label="Refresh" mat-icon-button>
                             <mat-icon>refresh</mat-icon>
                         </button>

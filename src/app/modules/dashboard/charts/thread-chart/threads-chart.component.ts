@@ -52,7 +52,7 @@ export class ThreadsChartComponent implements OnInit {
         this.monitoringService.getCounters('total_threads', start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    let types = Object.getOwnPropertyNames(data);
+                    let types = Object.getOwnPropertyNames(data).filter(t => Array.isArray(data[t]));
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];
                     types.forEach((t) => {

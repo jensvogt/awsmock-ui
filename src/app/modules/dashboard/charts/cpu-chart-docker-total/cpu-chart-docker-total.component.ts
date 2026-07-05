@@ -54,7 +54,7 @@ export class CpuChartTotalDockerComponent implements OnInit {
             .subscribe((data: any) => {
                 if (data) {
                     console.log("Docker DPU:", data);
-                    let types = Object.getOwnPropertyNames(data);
+                    let types = Object.getOwnPropertyNames(data).filter(t => Array.isArray(data[t]));
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];
                     types.forEach((t) => {

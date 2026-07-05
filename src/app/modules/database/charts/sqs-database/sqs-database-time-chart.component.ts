@@ -52,7 +52,7 @@ export class SqsDatabaseTimeChartComponent implements OnInit {
         this.monitoringService.getMultiCounters('sqs_database_timer', 'action', start, end, 5, this.selectedTopx)
             .subscribe((data: any) => {
                 if (data) {
-                    let types = Object.getOwnPropertyNames(data);
+                    let types = Object.getOwnPropertyNames(data).filter(t => Array.isArray(data[t]));
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];
                     types.forEach((t) => {

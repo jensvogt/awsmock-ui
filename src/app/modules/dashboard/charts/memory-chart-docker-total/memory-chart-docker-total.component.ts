@@ -52,7 +52,7 @@ export class MemoryChartDockerTotalComponent implements OnInit {
         this.monitoringService.getMultiCounters('docker_memory_counter', "container", start, end, 5, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    let types = Object.getOwnPropertyNames(data);
+                    let types = Object.getOwnPropertyNames(data).filter(t => Array.isArray(data[t]));
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];
                     types.forEach((t) => {

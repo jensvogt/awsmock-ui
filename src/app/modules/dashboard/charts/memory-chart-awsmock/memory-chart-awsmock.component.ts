@@ -52,7 +52,7 @@ export class MemoryChartAwsmockComponent implements OnInit {
         this.monitoringService.getMultiCounters('memory_usage_awsmock', "mem_type", start, end, 5)
             .subscribe((data: any) => {
                 if (data) {
-                    let types = Object.getOwnPropertyNames(data);
+                    let types = Object.getOwnPropertyNames(data).filter(t => Array.isArray(data[t]));
                     const dataSeries: any[] = [];
                     const legendValue: any[] = [];
                     types.forEach((t) => {
